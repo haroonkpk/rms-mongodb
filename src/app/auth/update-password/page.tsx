@@ -1,9 +1,4 @@
-import { UpdatePasswordForm } from '@/components/auth'
-import { Metadata } from 'next'
-
-export const metadata: Metadata = {
-  title: 'Update Password',
-}
+import { UpdatePasswordForm } from '@/components/update-password-form'
 
 export default function Page() {
   return (

@@ -1,8 +1,4 @@
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Auth Error",
-};
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default async function Page({ searchParams }: { searchParams: Promise<{ error: string }> }) {
   const params = await searchParams
@@ -10,23 +6,19 @@ export default async function Page({ searchParams }: { searchParams: Promise<{ e
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
-        <div className="flex flex-col gap-2 text-center">
-          <h1 className="text-2xl font-bold text-[#111827]">
-            Sorry, something went wrong.
-          </h1>
-
-          {/* Error Message */}
-          <div className="pt-2">
-            {params?.error ? (
-              <p className="text-sm text-[#64748B]">
-                Code error: <span className="font-mono">{params.error}</span>
-              </p>
-            ) : (
-              <p className="text-sm text-[#64748B]">
-                An unspecified error occurred.
-              </p>
-            )}
-          </div>
+        <div className="flex flex-col gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-2xl">Sorry, something went wrong.</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {params?.error ? (
+                <p className="text-sm text-muted-foreground">Code error: {params.error}</p>
+              ) : (
+                <p className="text-sm text-muted-foreground">An unspecified error occurred.</p>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
