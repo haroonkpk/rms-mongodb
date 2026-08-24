@@ -1,12 +1,12 @@
 import React from 'react'
 import { Header } from '@/components/layouts'
 
-export default function POSPage() {
+export default function AdminDashboardPage() {
   return (
     <div className="min-h-screen bg-(--color-page-bg) sm:p-[clamp(1rem,3vw,2.5rem)] pb-24">
-      <Header title="POS / Order Entry" />
+      <Header title="Admin Overview Dashboard" />
       <main>
-        <p className="text-slate-600">POS Content goes here...</p>
+        <p className="text-slate-600">Admin Dashboard Content goes here...</p>
       </main>
     </div>
   )
