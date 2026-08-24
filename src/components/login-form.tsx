@@ -3,16 +3,15 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-import { cn } from '@/lib/utils'
 import { safeNextPath } from '@/lib/safe-next-path'
-import { createClient } from '@/lib/supabase/client'
+import { login } from '@/actions/auth'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 
-export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -21,16 +20,19 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-      if (error) throw error
+      const formData = new FormData()
+      formData.append('email', email)
+      formData.append('password', password)
+      
+      const res = await login(formData)
+      if (!res.success) {
+        throw new Error(res.error)
+      }
+      
       // Update this route to redirect to an authenticated route. The user already has an active session.
       const next = new URLSearchParams(window.location.search).get('next')
       router.push(safeNextPath(next, '/pos'))
@@ -42,7 +44,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
   }
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className="flex flex-col gap-6">
       <Card>
         <div className="flex flex-col space-y-1.5 mb-6">
           <h3 className="font-semibold tracking-tight text-2xl">Login</h3>

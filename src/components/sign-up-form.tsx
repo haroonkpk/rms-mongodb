@@ -3,15 +3,14 @@
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
-import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
+import { signUp } from '@/actions/auth'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 
-export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
+export function SignUpForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [repeatPassword, setRepeatPassword] = useState('')
@@ -21,7 +20,6 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
     setIsLoading(true)
     setError(null)
 
@@ -32,15 +30,17 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
     }
 
     try {
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/pos`,
-        },
-      })
-      if (error) throw error
-      router.push('/auth/sign-up-success')
+      const formData = new FormData()
+      formData.append('email', email)
+      formData.append('password', password)
+      formData.append('repeatPassword', repeatPassword)
+
+      const res = await signUp(formData)
+      if (!res.success) {
+        throw new Error(res.error)
+      }
+
+      router.push('/pos')
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : 'An error occurred')
     } finally {
@@ -49,7 +49,7 @@ export function SignUpForm({ className, ...props }: React.ComponentPropsWithoutR
   }
 
   return (
-    <div className={cn('flex flex-col gap-6', className)} {...props}>
+    <div className="flex flex-col gap-6">
       <Card>
         <div className="flex flex-col space-y-1.5 mb-6">
           <h3 className="font-semibold tracking-tight text-2xl">Sign up</h3>
