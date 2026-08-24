@@ -1,4 +1,3 @@
-import React from 'react'
 import { LogoutButton } from '@/components/logout-button'
 
 interface HeaderProps {
