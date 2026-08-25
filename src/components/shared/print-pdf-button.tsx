@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { Printer, Download } from "lucide-react";
-import { Button } from "@/components/ui";
+import { Button } from "../ui/button";
 
 export interface PrintPdfButtonProps {
   headers: { key: string; label: string }[];
