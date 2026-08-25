@@ -1,8 +1,31 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { createSession, destroySession } from '@/lib/auth'
+import { createSession, destroySession, getSession } from '@/lib/auth'
 import bcrypt from 'bcryptjs'
+
+export async function getCurrentUser() {
+  try {
+    const session = await getSession()
+    if (!session || !session.userId) return null
+
+    const user = await prisma.user.findUnique({
+      where: { id: session.userId },
+      select: {
+        id: true,
+        email: true,
+        fullName: true,
+        role: true,
+        avatarUrl: true,
+      },
+    })
+
+    return user
+  } catch (error) {
+    console.error('Get current user error:', error)
+    return null
+  }
+}
 
 export async function login(formData: FormData) {
   const email = formData.get('email') as string

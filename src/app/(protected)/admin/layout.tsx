@@ -1,3 +1,4 @@
+import { getCurrentUser } from "@/actions/auth";
 import { Sidebar } from "@/components/layouts";
 import {
   LayoutDashboard,
@@ -47,16 +48,17 @@ const adminNavItems = [
   },
 ];
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+   const user = await getCurrentUser();
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar items={adminNavItems} brandName="RMS" brandTier="Admin" />
+      <Sidebar items={adminNavItems} brandName="RMS" brandTier="Admin" user={user}/>
 
-      <main className="flex-1 overflow-y-auto pb-10 md:pb-0 md:pl-14">
+      <main className="flex-1 overflow-y-auto pt-14 md:pt-0 pb-10 md:pb-0 md:pl-14">
         <div className="max-w-400 mx-auto w-full">{children}</div>
       </main>
     </div>

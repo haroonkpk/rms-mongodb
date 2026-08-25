@@ -2,9 +2,10 @@
 
 import { ReactNode, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Menu, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { Menu, X, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { logout as serverLogout } from "@/actions/auth";
 
 export interface NavItem {
   label: string;
@@ -13,12 +14,80 @@ export interface NavItem {
   exact?: boolean;
 }
 
+interface UserData {
+  id: string;
+  email: string;
+  fullName?: string | null;
+  role: string;
+  avatarUrl?: string | null;
+}
+
 export interface SidebarProps {
   brandName?: string;
   brandTier?: string;
   items: NavItem[];
-  primaryAction?: { label: string; href: string; icon: ReactNode };
-  onLogout?: () => void;
+  user: UserData | null;
+}
+
+// --- Profile button with avatar + logout ---
+function ProfileButton({
+  user,
+  variant,
+}: {
+  user: UserData | null;
+  variant: "collapsed" | "expanded" | "mobile";
+}) {
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const displayName = user?.fullName || user?.email?.split("@")[0] || "User";
+  const initial = displayName.charAt(0).toUpperCase();
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await serverLogout();
+    router.push("/auth/login");
+  };
+
+  return (
+    <div
+      className={cn(
+        "flex items-center rounded-xl p-2 gap-2",
+        variant === "mobile" && "p-1",
+      )}
+    >
+      <div className="relative flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-tr from-[var(--color-primary)] to-amber-500 text-white font-semibold text-sm shadow-sm shrink-0">
+        {user?.avatarUrl ? (
+          <img
+            src={user.avatarUrl}
+            alt={displayName}
+            className="w-full h-full rounded-full object-cover"
+          />
+        ) : (
+          <span>{initial}</span>
+        )}
+      </div>
+
+      {variant === "expanded" && (
+        <p className="flex-1 text-xs font-bold text-gray-900 min-w-0">
+          {displayName}
+        </p>
+      )}
+
+      <button
+        onClick={handleLogout}
+        disabled={loggingOut}
+        aria-label="Sign out"
+        title="Sign out"
+        className={cn(
+          "flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 hover:bg-rose-50 hover:text-rose-600 transition-colors shrink-0 disabled:opacity-50",
+          variant === "collapsed" && "hidden",
+        )}
+      >
+        <LogOut size={16} />
+      </button>
+    </div>
+  );
 }
 
 // --- Shared, reusable nav list ---
@@ -88,6 +157,7 @@ export function Sidebar({
   brandName = "",
   brandTier = "",
   items,
+  user,
 }: SidebarProps) {
   const pathname = usePathname();
   const [hovered, setHovered] = useState(false);
@@ -99,17 +169,19 @@ export function Sidebar({
   return (
     <>
       {/* MOBILE / TABLET — top bar */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-4 bg-white border-b border-gray-200/80">
-        <button
-          onClick={() => setMobileOpen(true)}
-          aria-label="Open menu"
-          className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-        >
-          <Menu size={22} />
-        </button>
-        <p className="ml-3 text-sm font-bold text-gray-900 truncate">
-          {brandName}
-        </p>
+      <div className="md:hidden fixed top-0 left-0 right-0 z-50 h-14 flex items-center justify-between px-4 bg-white border-b border-gray-200/80">
+        <div className="flex items-center">
+          <button
+            onClick={() => setMobileOpen(true)}
+            aria-label="Open menu"
+            className="flex items-center justify-center w-9 h-9 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+          >
+            <Menu size={22} />
+          </button>
+          <p className="ml-3 text-sm font-bold text-gray-900 truncate">
+            {brandName}
+          </p>
+        </div>
       </div>
 
       {/* Overlay */}
@@ -159,6 +231,9 @@ export function Sidebar({
             onNavigate={() => setMobileOpen(false)}
           />
         </nav>
+        <div className="p-3 border-t border-gray-200/50 mt-auto shrink-0">
+          <ProfileButton user={user} variant="expanded" />
+        </div>
       </aside>
 
       {/* DESKTOP */}
@@ -198,6 +273,12 @@ export function Sidebar({
             variant={hovered ? "desktop-expanded" : "desktop-collapsed"}
           />
         </nav>
+        <div className="p-2 border-t border-gray-200/50 mt-auto shrink-0">
+          <ProfileButton
+            user={user}
+            variant={hovered ? "expanded" : "collapsed"}
+          />
+        </div>
       </aside>
     </>
   );

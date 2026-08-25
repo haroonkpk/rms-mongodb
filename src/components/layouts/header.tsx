@@ -1,5 +1,3 @@
-import { LogoutButton } from "@/components/logout-button";
-
 interface HeaderProps {
   title: string;
 }
@@ -14,9 +12,6 @@ export function Header({ title }: HeaderProps) {
         >
           {title}
         </h1>
-      </div>
-      <div className="shrink-0 pt-2">
-        <LogoutButton />
       </div>
     </div>
   );

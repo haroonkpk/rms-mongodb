@@ -1,6 +1,4 @@
-"use client";
-
-import { usePathname } from "next/navigation";
+import { getCurrentUser } from "@/actions/auth";
 import { Sidebar } from "@/components/layouts";
 import { LayoutDashboard, UtensilsCrossed, ShieldAlert } from "lucide-react";
 
@@ -24,23 +22,22 @@ const mainNavItems = [
   },
 ];
 
-export default function ProtectedLayout({
+export default async function ProtectedLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const isAdminRoute = pathname?.startsWith("/admin");
-
-  if (isAdminRoute) {
-    return <>{children}</>;
-  }
-
+  const user = await getCurrentUser();
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar items={mainNavItems} brandName="RMS" brandTier="POS" />
+      <Sidebar
+        items={mainNavItems}
+        brandName="RMS"
+        brandTier="POS"
+        user={user}
+      />
 
-      <main className="flex-1 overflow-y-auto pb-10 md:pb-0 md:pl-14">
+      <main className="flex-1 overflow-y-auto pt-14 md:pt-0 pb-10 md:pb-0 md:pl-14">
         <div className="max-w-400 mx-auto w-full">{children}</div>
       </main>
     </div>
