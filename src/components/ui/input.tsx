@@ -32,8 +32,8 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             id={id}
             type={inputType}
             className={`
-              w-full bg-[var(--color-secondary-bg)] text-[#1E293B] placeholder-[#94A3B8]
-              rounded-md outline-none transition-all duration-200 border border-transparent
+              w-full bg-[var(--color-page-bg)] text-[#1E293B] placeholder-[#94A3B8]
+               outline-none transition-all duration-200 border border-transparent
               focus:border-[var(--color-primary)] focus:bg-white focus:shadow-sm
               p-[clamp(0.6rem,1.5vw,0.875rem)]
               text-[clamp(0.875rem,1vw+0.2rem,1rem)]
@@ -47,7 +47,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#475569] transition-colors p-1 rounded-md hover:bg-slate-100"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#475569] transition-colors p-1  hover:bg-slate-100"
               tabIndex={-1}
             >
               {showPassword ? (

@@ -5,7 +5,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --color-primary: #b80035;
+  --color-primary: #e11d48;
   --color-secondary-bg: #F5E5C8;
   --color-page-bg: #f8f2e5;
   --color-white: #ffffff;

@@ -1,15 +1,15 @@
-import { cn } from '@/lib/utils'
-import { ChevronDown } from 'lucide-react'
+import { cn } from "@/lib/utils";
+import { ChevronDown } from "lucide-react";
 
 export interface SelectOption {
-  value: string
-  label: string
+  value: string;
+  label: string;
 }
 
 interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
-  options: SelectOption[]
-  label?: string
-  error?: string
+  options: SelectOption[];
+  label?: string;
+  error?: string;
 }
 
 export const Select = ({
@@ -36,15 +36,15 @@ export const Select = ({
         <select
           id={id}
           className={cn(
-            'appearance-none w-full bg-[var(--color-secondary-bg)] text-[#1E293B]',
-            'rounded-md outline-none transition-all duration-200 border border-transparent',
-            'focus:border-[var(--color-primary)] focus:bg-white focus:shadow-sm',
-            'disabled:cursor-not-allowed disabled:opacity-50',
-            'py-[clamp(0.6rem,1.5vw,0.875rem)] pl-[clamp(0.6rem,1.5vw,0.875rem)] pr-10',
-            'text-[clamp(0.875rem,1vw+0.2rem,1rem)]',
+            "appearance-none w-full bg-[var(--color-page-bg)] text-[#1E293B]",
+            " outline-none transition-all duration-200 border border-transparent",
+            "focus:border-[var(--color-primary)] focus:bg-white focus:shadow-sm",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            "py-[clamp(0.6rem,1.5vw,0.875rem)] pl-[clamp(0.6rem,1.5vw,0.875rem)] pr-10",
+            "text-[clamp(0.875rem,1vw+0.2rem,1rem)]",
             // Error states
-            error && 'border-red-400 focus:border-red-400',
-            className
+            error && "border-red-400 focus:border-red-400",
+            className,
           )}
           {...props}
         >
@@ -69,5 +69,5 @@ export const Select = ({
         </p>
       )}
     </div>
-  )
-}
+  );
+};

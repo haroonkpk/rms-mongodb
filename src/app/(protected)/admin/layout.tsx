@@ -47,13 +47,18 @@ const adminNavItems = [
   },
 ];
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar items={adminNavItems} brandName="RMS" brandTier="Admin" />
-      <div className="max-w-400 mx-auto w-full overflow-y-auto">
-        {children}
-      </div>
+
+      <main className="flex-1 overflow-y-auto pb-10 md:pb-0 md:pl-14">
+        <div className="max-w-400 mx-auto w-full">{children}</div>
+      </main>
     </div>
   );
 }

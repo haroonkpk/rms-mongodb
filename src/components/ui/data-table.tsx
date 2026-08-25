@@ -120,7 +120,7 @@ export const DataTable = <T extends { id: string }>({
                           <button
                             key={button.text}
                             onClick={() => button.onClick(row)}
-                            className={`${button.className} group relative rounded-md p-[clamp(6px,0.6vw,8px)] hover:opacity-80`}
+                            className={`${button.className} group relative rounded-sm p-[clamp(6px,0.6vw,8px)] hover:opacity-80`}
                             title={button.text}
                           >
                             {button.icon}
