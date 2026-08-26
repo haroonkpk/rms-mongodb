@@ -24,7 +24,9 @@ interface MenuItemsTableProps {
   selectedCategoryFilter: string;
   onCategoryFilterChange: (catId: string) => void;
   stockStatusFilter: "ALL" | "AVAILABLE" | "OUT_OF_STOCK";
-  onStockStatusFilterChange: (status: "ALL" | "AVAILABLE" | "OUT_OF_STOCK") => void;
+  onStockStatusFilterChange: (
+    status: "ALL" | "AVAILABLE" | "OUT_OF_STOCK",
+  ) => void;
   currentPage: number;
   totalPages: number;
   totalEntries: number;
@@ -63,7 +65,7 @@ export function MenuItemsTable({
     return items.map((item) => ({
       ...item,
       imageDisplay: (
-        <div className="w-[clamp(2.5rem,4vw,3.5rem)] h-[clamp(2.5rem,4vw,3.5rem)] rounded-xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
+        <div className="w-[clamp(2.5rem,4vw,3.5rem)] h-[clamp(2.5rem,4vw,3.5rem)] overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0">
           {item.imageUrl ? (
             /* eslint-disable-next-line @next/next/no-img-element */
             <img
@@ -86,7 +88,9 @@ export function MenuItemsTable({
               {item.description}
             </p>
           ) : (
-            <span className="text-xs text-slate-400 italic">No description</span>
+            <span className="text-xs text-slate-400 italic">
+              No description
+            </span>
           )}
         </div>
       ),
@@ -161,7 +165,7 @@ export function MenuItemsTable({
               value={stockStatusFilter}
               onChange={(e) =>
                 onStockStatusFilterChange(
-                  e.target.value as "ALL" | "AVAILABLE" | "OUT_OF_STOCK"
+                  e.target.value as "ALL" | "AVAILABLE" | "OUT_OF_STOCK",
                 )
               }
             />
@@ -192,7 +196,7 @@ export function MenuItemsTable({
             onClick: (row) =>
               onDelete(
                 (row as unknown as MenuItemData).id,
-                (row as unknown as MenuItemData).name
+                (row as unknown as MenuItemData).name,
               ),
           },
         ]}
