@@ -2,9 +2,8 @@
 
 import React, { useMemo } from "react";
 import { DataTable, TableHeader } from "@/components/ui/data-table";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Select, SelectOption } from "@/components/ui/select";
+import { SelectOption } from "@/components/ui/select";
+import { ActivityFilters } from "@/components/shared/filters";
 import { Utensils, CheckCircle2, XCircle, Edit, Trash2 } from "lucide-react";
 import { MenuItemData, CategoryData } from "@/actions/menu";
 
@@ -122,47 +121,42 @@ export function MenuItemsTable({
     }));
   }, [items, onToggleAvailability]);
 
+  const handleClearFilters = () => {
+    onSearchChange("");
+    onCategoryFilterChange("ALL");
+    onStockStatusFilterChange("ALL");
+  };
+
   return (
     <div className="flex flex-col gap-4">
-      {/* Filter Bar */}
-      <Card variant="white" className="border border-slate-200 p-4 shadow-2xs">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
-          {/* Search Input */}
-          <div>
-            <Input
-              placeholder="Search menu items..."
-              value={searchQuery}
-              onChange={(e) => onSearchChange(e.target.value)}
-            />
-          </div>
-
-          {/* Category Filter */}
-          <div>
-            <Select
-              options={categoryFilterOptions}
-              value={selectedCategoryFilter}
-              onChange={(e) => onCategoryFilterChange(e.target.value)}
-            />
-          </div>
-
-          {/* Stock Status Filter */}
-          <div>
-            <Select
-              options={[
-                { value: "ALL", label: "All Stock Statuses" },
-                { value: "AVAILABLE", label: "Available (ON POS)" },
-                { value: "OUT_OF_STOCK", label: "Out of Stock (OFF POS)" },
-              ]}
-              value={stockStatusFilter}
-              onChange={(e) =>
-                onStockStatusFilterChange(
-                  e.target.value as "ALL" | "AVAILABLE" | "OUT_OF_STOCK",
-                )
-              }
-            />
-          </div>
-        </div>
-      </Card>
+      {/*  Filter Bar */}
+      <ActivityFilters
+        searchQuery={searchQuery}
+        onSearchChange={onSearchChange}
+        searchPlaceholder="Search menu items..."
+        onClearFilters={handleClearFilters}
+        selectFilters={[
+          {
+            id: "category-filter",
+            value: selectedCategoryFilter,
+            options: categoryFilterOptions,
+            onChange: onCategoryFilterChange,
+          },
+          {
+            id: "stock-status-filter",
+            value: stockStatusFilter,
+            options: [
+              { value: "ALL", label: "All Stock Statuses" },
+              { value: "AVAILABLE", label: "Available (ON POS)" },
+              { value: "OUT_OF_STOCK", label: "Out of Stock (OFF POS)" },
+            ],
+            onChange: (val) =>
+              onStockStatusFilterChange(
+                val as "ALL" | "AVAILABLE" | "OUT_OF_STOCK",
+              ),
+          },
+        ]}
+      />
 
       {/* Menu Items Table */}
       <DataTable
