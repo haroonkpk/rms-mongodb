@@ -8,7 +8,7 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
   const sessionCookie = request.cookies.get('session')?.value
 
-  let sessionPayload: any = null
+  let sessionPayload: Record<string, unknown> | null = null
   if (sessionCookie) {
     try {
       sessionPayload = await decrypt(sessionCookie)
@@ -47,19 +47,20 @@ export async function proxy(request: NextRequest) {
 
   // 3. For authenticated users accessing protected routes: extend session if threshold met
   if (sessionPayload && sessionPayload.expires) {
-    const currentExpiry = new Date(sessionPayload.expires).getTime()
+    const currentExpiry = new Date(sessionPayload.expires as string | number | Date).getTime()
     const timeLeft = currentExpiry - Date.now()
 
     if (timeLeft > 0 && timeLeft <= REFRESH_THRESHOLD_MS) {
       try {
-        sessionPayload.expires = new Date(Date.now() + SESSION_DURATION_MS)
+        const newExpires = new Date(Date.now() + SESSION_DURATION_MS)
+        sessionPayload.expires = newExpires
         const res = NextResponse.next()
         res.cookies.set({
           name: 'session',
           value: await encrypt(sessionPayload),
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
-          expires: sessionPayload.expires,
+          expires: newExpires,
           sameSite: 'lax',
           path: '/',
         })

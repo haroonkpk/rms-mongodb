@@ -54,6 +54,7 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
    const user = await getCurrentUser();
+
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar items={adminNavItems} brandName="RMS" brandTier="Admin" user={user}/>

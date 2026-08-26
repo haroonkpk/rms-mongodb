@@ -24,8 +24,8 @@ export async function uploadImageAction(formData: FormData) {
 
     const result = await uploadToCloudinary(file, 'restaurant_rms/avatars')
     return result
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Upload Action Exception:', error)
-    return { success: false, error: error?.message || 'An unexpected server error occurred during upload.' }
+    return { success: false, error: (error as Error)?.message || 'An unexpected server error occurred during upload.' }
   }
 }

@@ -190,7 +190,18 @@ export async function updateEmployee(id: string, formData: FormData) {
       return { success: false, error: 'Another user with this email or phone already exists' }
     }
 
-    const updateData: any = {
+    const updateData: {
+      email: string
+      fullName: string | null
+      phone: string | null
+      role: Role
+      status: EmployeeStatus
+      monthlyBaseSalary: number | null
+      shiftTiming: ShiftTiming | null
+      hiredAt: Date | null
+      avatarUrl: string | null
+      password?: string
+    } = {
       email,
       fullName,
       phone,

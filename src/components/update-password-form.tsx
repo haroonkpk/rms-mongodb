@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -13,18 +13,18 @@ import { updatePassword } from '@/actions/auth'
 
 export function UpdatePasswordForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const searchParams = useSearchParams()
-  const [email, setEmail] = useState('')
+  const urlEmail = searchParams.get('email') || ''
+  const [email, setEmail] = useState(urlEmail)
+  const [prevUrlEmail, setPrevUrlEmail] = useState(urlEmail)
   const [password, setPassword] = useState('')
   const [error, setError] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  useEffect(() => {
-    const urlEmail = searchParams.get('email')
-    if (urlEmail) {
-      setEmail(urlEmail)
-    }
-  }, [searchParams])
+  if (urlEmail && urlEmail !== prevUrlEmail) {
+    setPrevUrlEmail(urlEmail)
+    setEmail(urlEmail)
+  }
 
   const handleUpdatePassword = async (e: React.FormEvent) => {
     e.preventDefault()

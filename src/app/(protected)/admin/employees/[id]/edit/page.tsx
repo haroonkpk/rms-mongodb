@@ -244,7 +244,7 @@ export default function EditEmployeePage({
               </div>
               <p className="text-xs text-slate-600">
                 Leave password field empty if you do not wish to change the
-                user's password.
+                user&apos;s password.
               </p>
               <div className="max-w-md">
                 <Input

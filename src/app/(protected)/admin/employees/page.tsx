@@ -8,6 +8,7 @@ import { DataTable, TableHeader } from "@/components/ui/data-table";
 import { UserProfileModal } from "@/components/shared/user-profile-modal";
 import { Eye, Edit } from "lucide-react";
 import { getEmployees, EmployeeData } from "@/actions/employees";
+import { UserProfileData } from "@/components/shared/user-profile-modal";
 
 const tableHeaders: TableHeader[] = [
   { key: "fullName", label: "Full Name" },
@@ -21,30 +22,28 @@ const tableHeaders: TableHeader[] = [
 export default function AdminEmployeesPage() {
   const router = useRouter();
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
-  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalEntries, setTotalEntries] = useState(0);
 
   // Modal State for "View User"
-  const [selectedEmployee, setSelectedEmployee] = useState<EmployeeData | null>(
+  const [selectedEmployee, setSelectedEmployee] = useState<UserProfileData | null>(
     null,
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchEmployeesList = async (page: number) => {
-    setLoading(true);
-    const res = await getEmployees(page, 10);
-    if (res.success && res.employees) {
-      setEmployees(res.employees);
-      setTotalPages(res.totalPages || 1);
-      setTotalEntries(res.total || 0);
-    }
-    setLoading(false);
-  };
-
   useEffect(() => {
-    fetchEmployeesList(currentPage);
+    let isMounted = true;
+    getEmployees(currentPage, 10).then((res) => {
+      if (isMounted && res.success && res.employees) {
+        setEmployees(res.employees);
+        setTotalPages(res.totalPages || 1);
+        setTotalEntries(res.total || 0);
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
   }, [currentPage]);
 
   const formattedEmployees = React.useMemo(() => {
@@ -58,13 +57,15 @@ export default function AdminEmployeesPage() {
     }));
   }, [employees]);
 
-  const handleOpenViewModal = (employee: any) => {
+  const handleOpenViewModal = (employee: UserProfileData) => {
     setSelectedEmployee(employee);
     setIsModalOpen(true);
   };
 
-  const handleEditRedirect = (employee: any) => {
-    router.push(`/admin/employees/${employee.id}/edit`);
+  const handleEditRedirect = (employee: { id?: string }) => {
+    if (employee.id) {
+      router.push(`/admin/employees/${employee.id}/edit`);
+    }
   };
 
   return (
@@ -93,13 +94,13 @@ export default function AdminEmployeesPage() {
                 ),
                 text: "View Profile",
                 className: "bg-slate-100 hover:bg-slate-200 ",
-                onClick: (row) => handleOpenViewModal(row),
+                onClick: (row) => handleOpenViewModal(row as unknown as UserProfileData),
               },
               {
                 icon: <Edit size={16} className="text-white" />,
                 text: "Edit Employee",
                 className: "bg-[var(--color-primary)] hover:opacity-90 ",
-                onClick: (row) => handleEditRedirect(row),
+                onClick: (row) => handleEditRedirect(row as { id?: string }),
               },
             ]}
           />

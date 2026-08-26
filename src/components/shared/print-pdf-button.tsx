@@ -8,7 +8,7 @@ import { Button } from "../ui/button";
 
 export interface PrintPdfButtonProps {
   headers: { key: string; label: string }[];
-  data: any[];
+  data: Record<string, unknown>[];
   title: string;
   subtitle?: string;
   summary?: Record<string, string | number>;

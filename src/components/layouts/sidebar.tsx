@@ -63,7 +63,7 @@ function ProfileButton({
       onClick={onProfileClick}
       title="View Profile"
       className={cn(
-        "flex items-center rounded-xl p-2 gap-2 cursor-pointer hover:bg-slate-100 transition-colors group",
+        "flex items-center p-2 gap-2 cursor-pointer hover:bg-slate-100 transition-colors group",
         variant === "mobile" && "p-1",
       )}
     >
@@ -126,7 +126,7 @@ function NavLinks({
             href={href}
             onClick={onNavigate}
             className={cn(
-              "group flex items-center rounded-lg transition-all duration-200",
+              "group flex items-center transition-all duration-200",
               isDesktop
                 ? "flex-row justify-start w-full px-3 py-2.5 text-[clamp(0.875rem,1vw,0.95rem)] font-medium capitalize"
                 : "gap-2.5 w-full px-3 py-2.5 text-[0.9rem] font-medium",

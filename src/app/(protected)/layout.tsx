@@ -1,22 +1,6 @@
 import { getCurrentUser } from "@/actions/auth";
-import { NavItem, Sidebar } from "@/components/layouts";
+import { Sidebar } from "@/components/layouts";
 import { LayoutDashboard, UtensilsCrossed, ShieldAlert } from "lucide-react";
-
-const mainNavItems = [
-  {
-    label: "POS",
-    href: "/pos",
-    icon: <LayoutDashboard size={18} />,
-    exact: true,
-  },
-  {
-    label: "Kitchen",
-    href: "/kitchen",
-    icon: <UtensilsCrossed size={18} />,
-    exact: true,
-  },
-  
-];
 
 export default async function ProtectedLayout({
   children,
@@ -25,13 +9,28 @@ export default async function ProtectedLayout({
 }) {
   const user = await getCurrentUser();
 
-  if(user?.role==="ADMIN"){
+  const mainNavItems = [
+    {
+      label: "POS",
+      href: "/pos",
+      icon: <LayoutDashboard size={18} />,
+      exact: true,
+    },
+    {
+      label: "Kitchen",
+      href: "/kitchen",
+      icon: <UtensilsCrossed size={18} />,
+      exact: true,
+    },
+  ];
+
+  if (user?.role === "ADMIN") {
     mainNavItems.push({
-    label: "Admin",
-    href: "/admin/dashboard",
-    icon: <ShieldAlert size={18} />,
-    exact: true,
-  })
+      label: "Admin",
+      href: "/admin/dashboard",
+      icon: <ShieldAlert size={18} />,
+      exact: true,
+    });
   }
   return (
     <div className="flex h-screen overflow-hidden">

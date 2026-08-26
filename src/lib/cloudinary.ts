@@ -37,11 +37,11 @@ export async function uploadToCloudinary(
     });
 
     return { success: true, url: result.secure_url };
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Cloudinary Upload Error:", error);
     return {
       success: false,
-      error: error?.message || "Failed to upload image to Cloudinary",
+      error: (error as Error)?.message || "Failed to upload image to Cloudinary",
     };
   }
 }

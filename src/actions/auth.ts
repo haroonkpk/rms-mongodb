@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs'
 export async function getCurrentUser() {
   try {
     const session = await getSession()
-    if (!session || !session.userId) return null
+    if (!session || typeof session.userId !== 'string') return null
 
     const user = await prisma.user.findUnique({
       where: { id: session.userId },
@@ -31,7 +31,15 @@ export async function getCurrentUser() {
       ...user,
       monthlyBaseSalary: user.monthlyBaseSalary ? Number(user.monthlyBaseSalary) : null,
     } 
-  } catch (error) { 
+  } catch (error: unknown) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      (('digest' in error && error.digest === 'DYNAMIC_SERVER_USAGE') ||
+        ('message' in error && typeof error.message === 'string' && error.message.includes('DYNAMIC_SERVER_USAGE')))
+    ) {
+      throw error
+    }
     console.error('Get current user error:', error)
     return null
   }
@@ -60,7 +68,7 @@ export async function login(formData: FormData) {
 
     await createSession(user.id)
     return { success: true }
-  } catch (error) {
+  } catch {
     return { success: false, error: 'An error occurred during login' }
   }
 }

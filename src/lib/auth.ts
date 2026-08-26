@@ -14,7 +14,7 @@ const key = new TextEncoder().encode(secretKey)
 const SESSION_DURATION_MS = 24 * 60 * 60 * 1000
 const REFRESH_THRESHOLD_MS = 6 * 60 * 60 * 1000
 
-export async function encrypt(payload: any) {
+export async function encrypt(payload: Record<string, unknown>) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
@@ -22,7 +22,7 @@ export async function encrypt(payload: any) {
     .sign(key)
 }
 
-export async function decrypt(input: string): Promise<any> {
+export async function decrypt(input: string): Promise<Record<string, unknown>> {
   const { payload } = await jwtVerify(input, key, {
     algorithms: ['HS256'],
   })
@@ -60,7 +60,7 @@ export async function getSession() {
   if (!session) return null
   try {
     return await decrypt(session)
-  } catch (error) {
+  } catch {
     return null
   }
 }
@@ -71,9 +71,9 @@ export async function updateSession(request: NextRequest) {
 
   try {
     const parsed = await decrypt(session)
-    if (!parsed) return NextResponse.next()
+    if (!parsed || !parsed.expires) return NextResponse.next()
 
-    const currentExpiry = new Date(parsed.expires).getTime()
+    const currentExpiry = new Date(parsed.expires as string | number | Date).getTime()
     const timeLeft = currentExpiry - Date.now()
 
     if (timeLeft > REFRESH_THRESHOLD_MS) {
@@ -84,7 +84,8 @@ export async function updateSession(request: NextRequest) {
       return NextResponse.next()
     }
 
-    parsed.expires = new Date(Date.now() + SESSION_DURATION_MS)
+    const newExpires = new Date(Date.now() + SESSION_DURATION_MS)
+    parsed.expires = newExpires
 
     const res = NextResponse.next()
     res.cookies.set({
@@ -92,7 +93,7 @@ export async function updateSession(request: NextRequest) {
       value: await encrypt(parsed),
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
-      expires: parsed.expires,
+      expires: newExpires,
       sameSite: 'lax',
       path: '/',
     })

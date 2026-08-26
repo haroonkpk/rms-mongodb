@@ -20,17 +20,19 @@ export function ImageUploader({
   maxSizeMB = 5,
 }: ImageUploaderProps) {
   const [currentUrl, setCurrentUrl] = useState<string>(value);
+  const [prevValue, setPrevValue] = useState<string>(value);
   const [isUploading, startUploadTransition] = useTransition();
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
 
+  if (value !== prevValue) {
+    setPrevValue(value);
+    setCurrentUrl(value);
+  }
+
   const fileInputRef = useRef<HTMLInputElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    setCurrentUrl(value);
-  }, [value]);
 
   // Close popup on outside click / Escape
   useEffect(() => {
@@ -91,9 +93,9 @@ export function ImageUploader({
         } else {
           setUploadError(res.error || "Failed to upload image");
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error("Client Upload Exception:", err);
-        setUploadError(err?.message || "An unexpected network error occurred while uploading.");
+        setUploadError((err as Error)?.message || "An unexpected network error occurred while uploading.");
       }
     });
 
@@ -132,6 +134,7 @@ export function ImageUploader({
         {/* Avatar circle */}
         <div className="w-28 h-28 rounded-full bg-slate-100 overflow-hidden flex items-center justify-center">
           {currentUrl ? (
+            /* eslint-disable-next-line @next/next/no-img-element */
             <img
               src={currentUrl}
               alt="Profile avatar"
