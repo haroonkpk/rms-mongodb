@@ -60,3 +60,52 @@ model User {
   @@index([role])
   @@index([status])
 }
+
+// ------------------------------------------
+// MENU MANAGEMENT MODELS
+// ------------------------------------------
+
+model Category {
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @unique
+  description String?
+  menuItems   MenuItem[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+
+  @@map("categories")
+}
+
+model MenuItem {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  basePrice   Decimal  @map("base_price") @db.Decimal(10, 2)
+  imageUrl    String?  @map("image_url")
+  isAvailable Boolean  @default(true) @map("is_available")
+
+  categoryId String   @map("category_id") @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  addOns    AddOn[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("menu_items")
+  @@index([categoryId])
+  @@index([isAvailable])
+}
+
+model AddOn {
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  price       Decimal   @db.Decimal(10, 2)
+  isAvailable Boolean   @default(true) @map("is_available")
+  menuItemId  String?   @map("menu_item_id") @db.Uuid
+  menuItem    MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("add_ons")
+  @@index([menuItemId])
+}
