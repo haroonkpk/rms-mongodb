@@ -6,7 +6,6 @@ import { revalidatePath } from 'next/cache'
 export interface CategoryData {
   id: string
   name: string
-  description: string | null
   itemCount: number
   createdAt: string
   updatedAt: string
@@ -55,7 +54,6 @@ export async function getCategories() {
     const formatted: CategoryData[] = categories.map((cat) => ({
       id: cat.id,
       name: cat.name,
-      description: cat.description,
       itemCount: cat._count.menuItems,
       createdAt: cat.createdAt.toISOString(),
       updatedAt: cat.updatedAt.toISOString(),
@@ -68,7 +66,7 @@ export async function getCategories() {
   }
 }
 
-export async function createCategory(name: string, description?: string) {
+export async function createCategory(name: string) {
   try {
     const trimmedName = name.trim()
     if (!trimmedName) {
@@ -86,7 +84,6 @@ export async function createCategory(name: string, description?: string) {
     const category = await prisma.category.create({
       data: {
         name: trimmedName,
-        description: description?.trim() || null,
       },
     })
 
@@ -98,7 +95,7 @@ export async function createCategory(name: string, description?: string) {
   }
 }
 
-export async function updateCategory(id: string, name: string, description?: string) {
+export async function updateCategory(id: string, name: string) {
   try {
     const trimmedName = name.trim()
     if (!trimmedName) {
@@ -120,7 +117,6 @@ export async function updateCategory(id: string, name: string, description?: str
       where: { id },
       data: {
         name: trimmedName,
-        description: description?.trim() || null,
       },
     })
 

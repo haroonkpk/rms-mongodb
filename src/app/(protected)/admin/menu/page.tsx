@@ -125,6 +125,27 @@ export default function AdminMenuPage() {
     };
   }, [currentPage, searchQuery, selectedCategoryFilter, stockStatusFilter]);
 
+  // Initial data fetch for Categories and Add-Ons
+  useEffect(() => {
+    let isMounted = true;
+
+    getCategories().then((res) => {
+      if (isMounted && res.success && res.categories) {
+        setCategories(res.categories);
+      }
+    });
+
+    getAddOns().then((res) => {
+      if (isMounted && res.success && res.addOns) {
+        setAddOns(res.addOns);
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   // Total Summary Stats`
   const stats = useMemo(() => {
     const totalItems = totalEntries;
@@ -257,7 +278,6 @@ export default function AdminMenuPage() {
 
   const handleSaveCategory = async (data: {
     name: string;
-    description: string;
   }) => {
     startTransition(async () => {
       let res;
@@ -265,10 +285,9 @@ export default function AdminMenuPage() {
         res = await updateCategory(
           editingCategory.id,
           data.name,
-          data.description,
         );
       } else {
-        res = await createCategory(data.name, data.description);
+        res = await createCategory(data.name);
       }
 
       if (res.success) {

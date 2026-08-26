@@ -7,7 +7,6 @@ import { CategoryData } from "@/actions/menu";
 
 const categoryTableHeaders: TableHeader[] = [
   { key: "name", label: "Category Name" },
-  { key: "description", label: "Description" },
   { key: "itemCountBadge", label: "Total Items" },
 ];
 
@@ -25,7 +24,6 @@ export function CategoriesTable({
   const formattedCategories = useMemo(() => {
     return categories.map((cat) => ({
       ...cat,
-      description: cat.description || "—",
       itemCountBadge: (
         <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold bg-slate-100 text-slate-700">
           {cat.itemCount} Items
