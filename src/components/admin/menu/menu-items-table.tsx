@@ -83,15 +83,6 @@ export function MenuItemsTable({
           <span className="font-bold text-slate-900 text-[clamp(0.875rem,1.1vw,1rem)]">
             {item.name}
           </span>
-          {item.description ? (
-            <p className="text-xs text-slate-500 max-w-xs line-clamp-1">
-              {item.description}
-            </p>
-          ) : (
-            <span className="text-xs text-slate-400 italic">
-              No description
-            </span>
-          )}
         </div>
       ),
       categoryBadge: (
