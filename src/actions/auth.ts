@@ -17,11 +17,21 @@ export async function getCurrentUser() {
         fullName: true,
         role: true,
         avatarUrl: true,
+        phone: true,
+        status: true,
+        monthlyBaseSalary: true,
+        shiftTiming: true,
+        createdAt: true,
       },
     })
 
-    return user
-  } catch (error) {
+    if (!user) return null
+
+    return {
+      ...user,
+      monthlyBaseSalary: user.monthlyBaseSalary ? Number(user.monthlyBaseSalary) : null,
+    } 
+  } catch (error) { 
     console.error('Get current user error:', error)
     return null
   }

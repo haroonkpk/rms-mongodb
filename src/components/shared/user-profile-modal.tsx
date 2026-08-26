@@ -1,13 +1,25 @@
-import React from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { User, Mail, Phone, Clock, DollarSign, Calendar } from "lucide-react";
 import { EmployeeData } from "@/actions/employees";
 
+export interface UserProfileData {
+  id?: string;
+  email: string;
+  fullName?: string | null;
+  role: string;
+  status?: string | null;
+  avatarUrl?: string | null;
+  phone?: string | null;
+  shiftTiming?: string | null;
+  monthlyBaseSalary?: number | string | null;
+  createdAt?: Date | string | null;
+}
+
 interface UserProfileModalProps {
   isOpen: boolean;
   onClose: () => void;
-  employee: EmployeeData | null;
+  employee: UserProfileData | null;
   onEdit?: (employee: EmployeeData) => void;
 }
 
@@ -43,13 +55,15 @@ export function UserProfileModal({
       label: "Monthly Base Salary",
       value:
         employee.monthlyBaseSalary !== null
-          ? `Rs ${employee.monthlyBaseSalary.toLocaleString()}`
+          ? `Rs ${employee.monthlyBaseSalary?.toLocaleString()}`
           : "Not Specified",
     },
     {
       icon: Calendar,
       label: "Hired Date",
-      value: new Date(employee.createdAt).toLocaleDateString(),
+      value: employee.createdAt
+        ? new Date(employee.createdAt).toLocaleDateString()
+        : "N/A",
     },
   ];
 
@@ -89,17 +103,19 @@ export function UserProfileModal({
               <span className="px-[clamp(0.4rem,1.5vw,0.5rem)] py-0.5 rounded-full text-[clamp(0.55rem,2vw,0.75rem)] font-bold uppercase tracking-wide bg-slate-900 text-white whitespace-nowrap">
                 {employee.role}
               </span>
-              <span
-                className={`px-[clamp(0.4rem,1.5vw,0.5rem)] py-0.5 rounded-full text-[clamp(0.55rem,2vw,0.75rem)] font-bold uppercase tracking-wide whitespace-nowrap ${
-                  employee.status === "ACTIVE"
-                    ? "bg-emerald-100 text-emerald-800"
-                    : employee.status === "ON_LEAVE"
-                      ? "bg-amber-100 text-amber-800"
-                      : "bg-rose-100 text-rose-800"
-                }`}
-              >
-                {employee.status.replace("_", " ")}
-              </span>
+              {employee.status && (
+                <span
+                  className={`px-[clamp(0.4rem,1.5vw,0.5rem)] py-0.5 rounded-full text-[clamp(0.55rem,2vw,0.75rem)] font-bold uppercase tracking-wide whitespace-nowrap ${
+                    employee.status === "ACTIVE"
+                      ? "bg-emerald-100 text-emerald-800"
+                      : employee.status === "ON_LEAVE"
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-rose-100 text-rose-800"
+                  }`}
+                >
+                  {employee.status.replace("_", " ")}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -134,7 +150,7 @@ export function UserProfileModal({
               variant="primary"
               onClick={() => {
                 onClose();
-                onEdit(employee);
+                onEdit(employee as EmployeeData);
               }}
             >
               Edit Profile

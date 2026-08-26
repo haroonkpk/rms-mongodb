@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { Menu, X, LogOut } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { logout as serverLogout } from "@/actions/auth";
+import { UserProfileModal } from "@/components/shared/user-profile-modal";
 
 export interface NavItem {
   label: string;
@@ -20,6 +21,11 @@ interface UserData {
   fullName?: string | null;
   role: string;
   avatarUrl?: string | null;
+  phone?: string | null;
+  status?: string | null;
+  monthlyBaseSalary?: number | string | null;
+  shiftTiming?: string | null;
+  createdAt?: Date | string | null;
 }
 
 export interface SidebarProps {
@@ -33,9 +39,11 @@ export interface SidebarProps {
 function ProfileButton({
   user,
   variant,
+  onProfileClick,
 }: {
   user: UserData | null;
   variant: "collapsed" | "expanded" | "mobile";
+  onProfileClick?: () => void;
 }) {
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -43,7 +51,8 @@ function ProfileButton({
   const displayName = user?.fullName || user?.email?.split("@")[0] || "User";
   const initial = displayName.charAt(0).toUpperCase();
 
-  const handleLogout = async () => {
+  const handleLogout = async (e: React.MouseEvent) => {
+    e.stopPropagation();
     setLoggingOut(true);
     await serverLogout();
     router.push("/auth/login");
@@ -51,8 +60,10 @@ function ProfileButton({
 
   return (
     <div
+      onClick={onProfileClick}
+      title="View Profile"
       className={cn(
-        "flex items-center rounded-xl p-2 gap-2",
+        "flex items-center rounded-xl p-2 gap-2 cursor-pointer hover:bg-slate-100 transition-colors group",
         variant === "mobile" && "p-1",
       )}
     >
@@ -69,7 +80,7 @@ function ProfileButton({
       </div>
 
       {variant === "expanded" && (
-        <p className="flex-1 text-xs font-bold text-gray-900 min-w-0">
+        <p className="flex-1 text-xs font-bold text-gray-900 min-w-0 truncate group-hover:text-slate-900">
           {displayName}
         </p>
       )}
@@ -162,6 +173,7 @@ export function Sidebar({
   const pathname = usePathname();
   const [hovered, setHovered] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
 
   const isActive = (href: string, exact = false) =>
     exact ? pathname === href : pathname.startsWith(href);
@@ -232,7 +244,11 @@ export function Sidebar({
           />
         </nav>
         <div className="p-3 border-t border-gray-200/50 mt-auto shrink-0">
-          <ProfileButton user={user} variant="expanded" />
+          <ProfileButton
+            user={user}
+            variant="expanded"
+            onProfileClick={() => setIsProfileModalOpen(true)}
+          />
         </div>
       </aside>
 
@@ -277,9 +293,17 @@ export function Sidebar({
           <ProfileButton
             user={user}
             variant={hovered ? "expanded" : "collapsed"}
+            onProfileClick={() => setIsProfileModalOpen(true)}
           />
         </div>
       </aside>
+
+      {/* User Profile Details Modal */}
+      <UserProfileModal
+        isOpen={isProfileModalOpen}
+        onClose={() => setIsProfileModalOpen(false)}
+        employee={user}
+      />
     </>
   );
 }
