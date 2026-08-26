@@ -70,7 +70,7 @@ export async function login(formData: FormData) {
       return { success: false, error: "Invalid credentials" };
     }
 
-    await createSession(user.id);
+    await createSession(user.id, user.role);
     return { success: true };
   } catch {
     return { success: false, error: "An error occurred during login" };
@@ -105,7 +105,7 @@ export async function signUp(formData: FormData) {
       },
     });
 
-    await createSession(user.id);
+    await createSession(user.id, user.role);
     return { success: true };
   } catch (error) {
     console.error("Signup error:", error);

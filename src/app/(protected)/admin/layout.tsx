@@ -1,4 +1,4 @@
-import { getCurrentUser } from "@/actions/auth";
+import { requireAdmin } from "@/lib/authorization";
 import { Sidebar } from "@/components/layouts";
 import {
   LayoutDashboard,
@@ -53,7 +53,7 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-   const user = await getCurrentUser();
+  const user = await requireAdmin();
 
   return (
     <div className="flex h-screen overflow-hidden">

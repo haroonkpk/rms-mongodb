@@ -20,7 +20,6 @@ export async function proxy(request: NextRequest) {
   const isAuthenticated = !!(sessionPayload && sessionPayload.userId)
   const isAuthRoute = pathname.startsWith('/auth')
 
-  // If visiting exact /auth or /auth/ root path:
   if (pathname === '/auth' || pathname === '/auth/') {
     return NextResponse.redirect(new URL(isAuthenticated ? '/pos' : '/auth/login', request.url))
   }
@@ -42,6 +41,11 @@ export async function proxy(request: NextRequest) {
   // 2. If user IS authenticated:
   if (isAuthRoute || pathname === '/') {
     // Authenticated users shouldn't see auth forms or root page; redirect to /pos
+    return NextResponse.redirect(new URL('/pos', request.url))
+  }
+
+  // 3. Fast Edge Guard for Admin routes:
+  if (pathname.startsWith('/admin') && sessionPayload?.role !== 'ADMIN') {
     return NextResponse.redirect(new URL('/pos', request.url))
   }
 
