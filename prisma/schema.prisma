@@ -35,6 +35,10 @@ enum EmployeeStatus {
 // USER MODEL 
 // ------------------------------------------
 
+// ------------------------------------------
+// USER MODEL 
+// ------------------------------------------
+
 model User {
   id String @id @default(uuid()) @db.Uuid
 
@@ -53,6 +57,8 @@ model User {
 
   avatarUrl String? @map("avatar_url")
   
+  orders    Order[]
+
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -66,11 +72,12 @@ model User {
 // ------------------------------------------
 
 model Category {
-  id        String     @id @default(uuid()) @db.Uuid
-  name      String     @unique
-  menuItems MenuItem[]
-  createdAt DateTime   @default(now()) @map("created_at")
-  updatedAt DateTime   @updatedAt @map("updated_at")
+  id          String     @id @default(uuid()) @db.Uuid
+  name        String     @unique
+  description String?
+  menuItems   MenuItem[]
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
 
   @@map("categories")
 }
@@ -107,4 +114,63 @@ model AddOn {
 
   @@map("add_ons")
   @@index([menuItemId])
+}
+
+// ------------------------------------------
+// POS & ORDER MANAGEMENT MODELS
+// ------------------------------------------
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CASH
+  CARD
+  QR_CODE
+}
+
+model Order {
+  id            String        @id @default(uuid()) @db.Uuid
+  orderNumber   String        @unique @map("order_number")
+  cashierId     String?       @map("cashier_id") @db.Uuid
+  cashier       User?         @relation(fields: [cashierId], references: [id], onDelete: SetNull)
+  status        OrderStatus   @default(COMPLETED)
+  paymentMethod PaymentMethod @default(CASH)
+  subtotal      Decimal       @db.Decimal(10, 2)
+  tax           Decimal       @db.Decimal(10, 2)
+  discount      Decimal       @default(0) @db.Decimal(10, 2)
+  totalAmount   Decimal       @map("total_amount") @db.Decimal(10, 2)
+  cashReceived  Decimal?      @map("cash_received") @db.Decimal(10, 2)
+  changeGiven   Decimal?      @map("change_given") @db.Decimal(10, 2)
+  notes         String?
+  items         OrderItem[]
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  @@map("orders")
+  @@index([cashierId])
+  @@index([status])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id         String   @id @default(uuid()) @db.Uuid
+  orderId    String   @map("order_id") @db.Uuid
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String?  @map("menu_item_id") @db.Uuid
+  itemName   String   @map("item_name")
+  variant    String?
+  quantity   Int
+  unitPrice  Decimal  @map("unit_price") @db.Decimal(10, 2)
+  totalPrice Decimal  @map("total_price") @db.Decimal(10, 2)
+  addOns     String?  @map("add_ons")
+  notes      String?
+
+  @@map("order_items")
+  @@index([orderId])
 }

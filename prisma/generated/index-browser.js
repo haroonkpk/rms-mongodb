@@ -139,6 +139,7 @@ exports.Prisma.UserScalarFieldEnum = {
 exports.Prisma.CategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
+  description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -163,6 +164,36 @@ exports.Prisma.AddOnScalarFieldEnum = {
   menuItemId: 'menuItemId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderScalarFieldEnum = {
+  id: 'id',
+  orderNumber: 'orderNumber',
+  cashierId: 'cashierId',
+  status: 'status',
+  paymentMethod: 'paymentMethod',
+  subtotal: 'subtotal',
+  tax: 'tax',
+  discount: 'discount',
+  totalAmount: 'totalAmount',
+  cashReceived: 'cashReceived',
+  changeGiven: 'changeGiven',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.OrderItemScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  menuItemId: 'menuItemId',
+  itemName: 'itemName',
+  variant: 'variant',
+  quantity: 'quantity',
+  unitPrice: 'unitPrice',
+  totalPrice: 'totalPrice',
+  addOns: 'addOns',
+  notes: 'notes'
 };
 
 exports.Prisma.SortOrder = {
@@ -199,11 +230,27 @@ exports.ShiftTiming = exports.$Enums.ShiftTiming = {
   FULL_DAY: 'FULL_DAY'
 };
 
+exports.OrderStatus = exports.$Enums.OrderStatus = {
+  PENDING: 'PENDING',
+  PREPARING: 'PREPARING',
+  READY: 'READY',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
+};
+
+exports.PaymentMethod = exports.$Enums.PaymentMethod = {
+  CASH: 'CASH',
+  CARD: 'CARD',
+  QR_CODE: 'QR_CODE'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
   MenuItem: 'MenuItem',
-  AddOn: 'AddOn'
+  AddOn: 'AddOn',
+  Order: 'Order',
+  OrderItem: 'OrderItem'
 };
 
 /**

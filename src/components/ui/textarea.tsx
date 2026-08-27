@@ -26,7 +26,7 @@ export const Textarea = ({
         id={id}
         className={`
           w-full bg-[var(--color-page-bg)] text-[#1E293B] placeholder-[#94A3B8]
-          rounded-md outline-none transition-all duration-200 border border-transparent resize-y min-h-[100px]
+           outline-none transition-all duration-200 border border-transparent resize-y min-h-[100px]
           focus:border-[var(--color-primary)] focus:bg-white focus:shadow-sm
           p-[clamp(0.6rem,1.5vw,0.875rem)]
           text-[clamp(0.875rem,1vw+0.2rem,1rem)]
