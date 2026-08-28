@@ -175,8 +175,9 @@ export default function POSPage() {
               <span className="text-[0.65rem] opacity-80 uppercase block tracking-wider font-semibold">
                 Open Bill
               </span>
-              <span className="text-sm font-black">
-                ${billTotalAmount.toFixed(2)}
+             
+              <span className="text-bold font-black">
+                Rs. {billTotalAmount.toLocaleString()}
               </span>
             </div>
           </button>
