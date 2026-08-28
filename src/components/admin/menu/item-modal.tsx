@@ -7,9 +7,15 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectOption } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUploader } from "@/components/ui/image-uploader";
-import { Plus, Trash2, Layers, Sliders } from "lucide-react";
+import { Plus, Trash2, Layers, Sliders, Check } from "lucide-react";
 import toast from "react-hot-toast";
-import { MenuItemData, CategoryData, AddOnData, MenuItemSize } from "@/actions/menu";
+import {
+  MenuItemData,
+  CategoryData,
+  AddOnData,
+  MenuItemSize,
+} from "@/actions/menu";
+import { cn } from "@/lib/utils";
 
 interface ItemModalProps {
   isOpen: boolean;
@@ -40,7 +46,9 @@ export function ItemModal({
   onSave,
   isPending,
 }: ItemModalProps) {
-  const [prevEditingItem, setPrevEditingItem] = useState<MenuItemData | null>(editingItem);
+  const [prevEditingItem, setPrevEditingItem] = useState<MenuItemData | null>(
+    editingItem,
+  );
   const [prevIsOpen, setPrevIsOpen] = useState<boolean>(isOpen);
 
   const [formData, setFormData] = useState<{
@@ -79,13 +87,16 @@ export function ItemModal({
               imageUrl: editingItem.imageUrl || "",
               isAvailable: editingItem.isAvailable,
               hasSizes: editingItem.hasSizes || false,
-              sizes: editingItem.sizes && editingItem.sizes.length > 0
-                ? editingItem.sizes
-                : [
-                    { name: "Small", price: editingItem.basePrice },
-                    { name: "Large", price: editingItem.basePrice * 1.3 },
-                  ],
-              selectedAddOnIds: editingItem.addOns ? editingItem.addOns.map((a) => a.id) : [],
+              sizes:
+                editingItem.sizes && editingItem.sizes.length > 0
+                  ? editingItem.sizes
+                  : [
+                      { name: "Small", price: editingItem.basePrice },
+                      { name: "Large", price: editingItem.basePrice * 1.3 },
+                    ],
+              selectedAddOnIds: editingItem.addOns
+                ? editingItem.addOns.map((a) => a.id)
+                : [],
             }
           : {
               name: "",
@@ -100,7 +111,7 @@ export function ItemModal({
                 { name: "Large", price: 0 },
               ],
               selectedAddOnIds: [],
-            }
+            },
       );
     }
   }
@@ -128,7 +139,11 @@ export function ItemModal({
     }));
   };
 
-  const handleSizeChange = (index: number, field: "name" | "price", value: string) => {
+  const handleSizeChange = (
+    index: number,
+    field: "name" | "price",
+    value: string,
+  ) => {
     setFormData((prev) => {
       const updated = [...prev.sizes];
       if (field === "name") {
@@ -226,7 +241,9 @@ export function ItemModal({
             label="Category"
             options={categoryOptions}
             value={formData.categoryId}
-            onChange={(e) => setFormData({ ...formData, categoryId: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, categoryId: e.target.value })
+            }
             required
           />
         </div>
@@ -238,7 +255,9 @@ export function ItemModal({
             step="0.01"
             placeholder="e.g. 950"
             value={formData.basePrice}
-            onChange={(e) => setFormData({ ...formData, basePrice: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, basePrice: e.target.value })
+            }
             required={!formData.hasSizes}
           />
 
@@ -271,7 +290,9 @@ export function ItemModal({
           label="Description"
           placeholder="Describe ingredients, taste, or serving details..."
           value={formData.description}
-          onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+          onChange={(e) =>
+            setFormData({ ...formData, description: e.target.value })
+          }
           rows={2}
         />
 
@@ -281,9 +302,12 @@ export function ItemModal({
             <div className="flex items-center gap-2">
               <Layers size={18} className="text-[var(--color-primary)]" />
               <div>
-                <h4 className="text-sm font-bold text-slate-900">Item Sizing & Portions</h4>
+                <h4 className="text-sm font-bold text-slate-900">
+                  Item Sizing & Portions
+                </h4>
                 <p className="text-xs text-slate-500">
-                  Enable if this item has multiple sizes (e.g. Small, Medium, Large, Half, Full)
+                  Enable if this item has multiple sizes (e.g. Small, Medium,
+                  Large, Half, Full)
                 </p>
               </div>
             </div>
@@ -310,7 +334,9 @@ export function ItemModal({
           {formData.hasSizes && (
             <div className="flex flex-col gap-2 pt-2 border-t border-slate-200">
               <div className="grid grid-cols-12 gap-2 text-xs font-bold text-slate-600 px-1">
-                <span className="col-span-6">Size Name (e.g. Small / Large)</span>
+                <span className="col-span-6">
+                  Size Name (e.g. Small / Large)
+                </span>
                 <span className="col-span-5">Price (PKR)</span>
                 <span className="col-span-1 text-center">Action</span>
               </div>
@@ -321,7 +347,9 @@ export function ItemModal({
                     <Input
                       placeholder="e.g. Small, Medium, 500ml"
                       value={size.name}
-                      onChange={(e) => handleSizeChange(idx, "name", e.target.value)}
+                      onChange={(e) =>
+                        handleSizeChange(idx, "name", e.target.value)
+                      }
                     />
                   </div>
                   <div className="col-span-5">
@@ -330,7 +358,9 @@ export function ItemModal({
                       step="0.01"
                       placeholder="Price"
                       value={size.price.toString()}
-                      onChange={(e) => handleSizeChange(idx, "price", e.target.value)}
+                      onChange={(e) =>
+                        handleSizeChange(idx, "price", e.target.value)
+                      }
                     />
                   </div>
                   <div className="col-span-1 flex justify-center">
@@ -361,47 +391,60 @@ export function ItemModal({
         </div>
 
         {/* Linked Add-Ons / Modifiers Section */}
-        <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg flex flex-col gap-3">
+        <div className="flex flex-col gap-3">
           <div className="flex items-center gap-2">
-            <Sliders size={18} className="text-[var(--color-primary)]" />
             <div>
-              <h4 className="text-sm font-bold text-slate-900">Add-Ons & Extra Modifiers</h4>
-              <p className="text-xs text-slate-500">
-                Select which add-ons apply to this item when ordering on POS
-              </p>
+              <h4 className="text-sm font-bold text-slate-900">
+                Add-Ons & Extra Modifiers
+              </h4>
             </div>
           </div>
 
           {addOns.length === 0 ? (
             <p className="text-xs text-slate-400 italic">
-              No add-ons created yet. You can create add-ons in the &quot;Add-Ons & Modifiers&quot; tab.
+              No add-ons created yet. You can create add-ons in the
+              &quot;Add-Ons & Modifiers&quot; tab.
             </p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-slate-200 max-h-40 overflow-y-auto">
+            <div className="flex flex-col gap-2 pt-2">
               {addOns.map((addon) => {
                 const isSelected = formData.selectedAddOnIds.includes(addon.id);
                 return (
-                  <label
+                  <div
                     key={addon.id}
-                    className={`flex items-center justify-between p-2 rounded-md border text-xs cursor-pointer transition-all select-none ${
+                    onClick={() =>
+                      addon.isAvailable && handleToggleAddOn(addon.id)
+                    }
+                    className={cn(
+                      "flex items-center justify-between p-2.5  text-xs cursor-pointer transition-all",
+                      !addon.isAvailable &&
+                        "opacity-50 cursor-not-allowed bg-slate-50",
                       isSelected
-                        ? "border-[var(--color-primary)] bg-orange-50 font-bold text-slate-900"
-                        : "border-slate-200 bg-white text-slate-700 hover:border-slate-300"
-                    }`}
+                        ? "border-emerald-500 bg-emerald-500 text-white font-semibold"
+                        : "border-slate-200 hover:border-slate-300 bg-white text-slate-700",
+                    )}
                   >
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={() => handleToggleAddOn(addon.id)}
-                        className="rounded border-slate-300 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
-                      />
+                    <div className="flex items-center gap-2.5">
+                      <div
+                        className={cn(
+                          "w-4 h-4 border flex items-center justify-center transition-colors ",
+                          isSelected
+                            ? "bg-white border-white text-emerald-500"
+                            : "border-slate-300 bg-white",
+                        )}
+                      >
+                        {isSelected && <Check size={12} />}
+                      </div>
                       <span>{addon.name}</span>
                     </div>
-                    <span className="font-semibold text-slate-500">
+                    <span
+                      className={cn(
+                        isSelected ? "text-white" : "text-slate-900",
+                      )}
+                    >
                       +Rs {addon.price.toLocaleString()}
                     </span>
-                  </label>
+                  </div>
                 );
               })}
             </div>
