@@ -78,10 +78,26 @@ export function MenuItemsTable({
         </div>
       ),
       nameDisplay: (
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-1">
           <span className="font-bold text-slate-900 text-[clamp(0.875rem,1.1vw,1rem)]">
             {item.name}
           </span>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {item.hasSizes && item.sizes && item.sizes.length > 0 ? (
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-[0.7rem] font-medium bg-purple-50 text-purple-700 border border-purple-200">
+                {item.sizes.length} Sizes ({item.sizes.map((s) => s.name).join(", ")})
+              </span>
+            ) : (
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-[0.7rem] font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                Single Size
+              </span>
+            )}
+            {item.addOns && item.addOns.length > 0 && (
+              <span className="inline-flex items-center px-2 py-0.5 rounded text-[0.7rem] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                {item.addOns.length} Add-Ons
+              </span>
+            )}
+          </div>
         </div>
       ),
       categoryBadge: (
@@ -91,7 +107,9 @@ export function MenuItemsTable({
       ),
       formattedPrice: (
         <span className="font-extrabold text-slate-900 text-[clamp(0.9rem,1.2vw,1.05rem)]">
-          Rs {item.basePrice.toLocaleString()}
+          {item.hasSizes && item.sizes && item.sizes.length > 0
+            ? `Rs ${Math.min(...item.sizes.map((s) => s.price))} - ${Math.max(...item.sizes.map((s) => s.price))}`
+            : `Rs ${item.basePrice.toLocaleString()}`}
         </span>
       ),
       stockToggle: (

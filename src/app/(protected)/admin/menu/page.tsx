@@ -183,6 +183,9 @@ export default function AdminMenuPage() {
     categoryId: string;
     imageUrl: string;
     isAvailable: boolean;
+    hasSizes: boolean;
+    sizes: { name: string; price: number }[];
+    addOnIds: string[];
   }) => {
     startTransition(async () => {
       let res;
@@ -348,7 +351,6 @@ export default function AdminMenuPage() {
   const handleSaveAddOn = async (data: {
     name: string;
     price: number;
-    menuItemId: string | null;
     isAvailable: boolean;
   }) => {
     startTransition(async () => {
@@ -564,6 +566,7 @@ export default function AdminMenuPage() {
         onClose={() => setIsItemModalOpen(false)}
         editingItem={editingItem}
         categories={categories}
+        addOns={addOns}
         onSave={handleSaveItem}
         isPending={isPending}
       />
@@ -580,7 +583,6 @@ export default function AdminMenuPage() {
         isOpen={isAddOnModalOpen}
         onClose={() => setIsAddOnModalOpen(false)}
         editingAddOn={editingAddOn}
-        items={items}
         onSave={handleSaveAddOn}
         isPending={isPending}
       />

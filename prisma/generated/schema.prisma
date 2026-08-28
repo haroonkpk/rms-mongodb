@@ -89,11 +89,13 @@ model MenuItem {
   basePrice   Decimal @map("base_price") @db.Decimal(10, 2)
   imageUrl    String? @map("image_url")
   isAvailable Boolean @default(true) @map("is_available")
+  hasSizes    Boolean @default(false) @map("has_sizes")
+  sizes       Json?
 
   categoryId String   @map("category_id") @db.Uuid
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  addOns    AddOn[]
+  addOns    AddOn[]  @relation("MenuItemToAddOn")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
@@ -103,16 +105,14 @@ model MenuItem {
 }
 
 model AddOn {
-  id          String    @id @default(uuid()) @db.Uuid
+  id          String     @id @default(uuid()) @db.Uuid
   name        String
-  price       Decimal   @db.Decimal(10, 2)
-  isAvailable Boolean   @default(true) @map("is_available")
-  menuItemId  String?   @map("menu_item_id") @db.Uuid
-  menuItem    MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  price       Decimal    @db.Decimal(10, 2)
+  isAvailable Boolean    @default(true) @map("is_available")
+  menuItems   MenuItem[] @relation("MenuItemToAddOn")
+  createdAt   DateTime   @default(now()) @map("created_at")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
 
-  @@index([menuItemId])
   @@map("add_ons")
 }
 

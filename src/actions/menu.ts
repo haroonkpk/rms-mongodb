@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
+import { Prisma } from '../../prisma/generated'
 
 export interface CategoryData {
   id: string
@@ -16,10 +17,13 @@ export interface AddOnData {
   name: string
   price: number
   isAvailable: boolean
-  menuItemId: string | null
-  menuItemName?: string | null
   createdAt: string
   updatedAt: string
+}
+
+export interface MenuItemSize {
+  name: string
+  price: number
 }
 
 export interface MenuItemData {
@@ -29,6 +33,8 @@ export interface MenuItemData {
   basePrice: number
   imageUrl: string | null
   isAvailable: boolean
+  hasSizes: boolean
+  sizes: MenuItemSize[]
   categoryId: string
   categoryName: string
   addOns: AddOnData[]
@@ -153,7 +159,6 @@ export async function getMenuItems(
   try {
     const skip = (page - 1) * pageSize
 
-    // Build where clause
     const whereConditions: Array<Record<string, unknown>> = []
 
     if (search) {
@@ -196,6 +201,8 @@ export async function getMenuItems(
       basePrice: Number(item.basePrice),
       imageUrl: item.imageUrl,
       isAvailable: item.isAvailable,
+      hasSizes: item.hasSizes ?? false,
+      sizes: Array.isArray(item.sizes) ? (item.sizes as unknown as MenuItemSize[]) : [],
       categoryId: item.categoryId,
       categoryName: item.category.name,
       addOns: item.addOns.map((addon) => ({
@@ -203,7 +210,6 @@ export async function getMenuItems(
         name: addon.name,
         price: Number(addon.price),
         isAvailable: addon.isAvailable,
-        menuItemId: addon.menuItemId,
         createdAt: addon.createdAt.toISOString(),
         updatedAt: addon.updatedAt.toISOString(),
       })),
@@ -230,6 +236,9 @@ export async function createMenuItem(data: {
   categoryId: string
   imageUrl?: string
   isAvailable?: boolean
+  hasSizes?: boolean
+  sizes?: MenuItemSize[]
+  addOnIds?: string[]
 }) {
   try {
     if (!data.name?.trim()) {
@@ -250,10 +259,16 @@ export async function createMenuItem(data: {
         categoryId: data.categoryId,
         imageUrl: data.imageUrl || null,
         isAvailable: data.isAvailable ?? true,
+        hasSizes: data.hasSizes ?? false,
+        sizes: data.hasSizes && data.sizes ? (data.sizes as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
+        addOns: data.addOnIds && data.addOnIds.length > 0 ? {
+          connect: data.addOnIds.map((id) => ({ id })),
+        } : undefined,
       },
     })
 
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
     return { success: true, itemId: newItem.id }
   } catch (error) {
     console.error('Error creating menu item:', error)
@@ -270,6 +285,9 @@ export async function updateMenuItem(
     categoryId: string
     imageUrl?: string
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: MenuItemSize[]
+    addOnIds?: string[]
   }
 ) {
   try {
@@ -289,10 +307,16 @@ export async function updateMenuItem(
         categoryId: data.categoryId,
         imageUrl: data.imageUrl || null,
         isAvailable: data.isAvailable ?? true,
+        hasSizes: data.hasSizes ?? false,
+        sizes: data.hasSizes && data.sizes ? (data.sizes as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
+        addOns: {
+          set: data.addOnIds ? data.addOnIds.map((id) => ({ id })) : [],
+        },
       },
     })
 
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
     return { success: true }
   } catch (error) {
     console.error('Error updating menu item:', error)
@@ -318,6 +342,7 @@ export async function toggleMenuItemAvailability(id: string, isAvailable?: boole
     })
 
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
     return { success: true, isAvailable: targetState }
   } catch (error) {
     console.error('Error toggling menu item availability:', error)
@@ -329,6 +354,7 @@ export async function deleteMenuItem(id: string) {
   try {
     await prisma.menuItem.delete({ where: { id } })
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
     return { success: true }
   } catch (error) {
     console.error('Error deleting menu item:', error)
@@ -344,11 +370,6 @@ export async function getAddOns() {
   try {
     const addOns = await prisma.addOn.findMany({
       orderBy: { name: 'asc' },
-      include: {
-        menuItem: {
-          select: { name: true },
-        },
-      },
     })
 
     const formatted: AddOnData[] = addOns.map((addon) => ({
@@ -356,8 +377,6 @@ export async function getAddOns() {
       name: addon.name,
       price: Number(addon.price),
       isAvailable: addon.isAvailable,
-      menuItemId: addon.menuItemId,
-      menuItemName: addon.menuItem?.name || 'All Items (Global)',
       createdAt: addon.createdAt.toISOString(),
       updatedAt: addon.updatedAt.toISOString(),
     }))
@@ -372,7 +391,6 @@ export async function getAddOns() {
 export async function createAddOn(data: {
   name: string
   price: number
-  menuItemId?: string | null
   isAvailable?: boolean
 }) {
   try {
@@ -387,12 +405,12 @@ export async function createAddOn(data: {
       data: {
         name: data.name.trim(),
         price: data.price,
-        menuItemId: data.menuItemId || null,
         isAvailable: data.isAvailable ?? true,
       },
     })
 
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
     return { success: true, addOnId: addOn.id }
   } catch (error) {
     console.error('Error creating add-on:', error)
@@ -405,7 +423,6 @@ export async function updateAddOn(
   data: {
     name: string
     price: number
-    menuItemId?: string | null
     isAvailable?: boolean
   }
 ) {
@@ -419,12 +436,12 @@ export async function updateAddOn(
       data: {
         name: data.name.trim(),
         price: data.price,
-        menuItemId: data.menuItemId || null,
         isAvailable: data.isAvailable ?? true,
       },
     })
 
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
     return { success: true }
   } catch (error) {
     console.error('Error updating add-on:', error)
@@ -450,6 +467,7 @@ export async function toggleAddOnAvailability(id: string, isAvailable?: boolean)
     })
 
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
     return { success: true, isAvailable: targetState }
   } catch (error) {
     console.error('Error toggling add-on availability:', error)
@@ -461,6 +479,7 @@ export async function deleteAddOn(id: string) {
   try {
     await prisma.addOn.delete({ where: { id } })
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
     return { success: true }
   } catch (error) {
     console.error('Error deleting add-on:', error)

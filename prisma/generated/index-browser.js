@@ -151,6 +151,8 @@ exports.Prisma.MenuItemScalarFieldEnum = {
   basePrice: 'basePrice',
   imageUrl: 'imageUrl',
   isAvailable: 'isAvailable',
+  hasSizes: 'hasSizes',
+  sizes: 'sizes',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -161,7 +163,6 @@ exports.Prisma.AddOnScalarFieldEnum = {
   name: 'name',
   price: 'price',
   isAvailable: 'isAvailable',
-  menuItemId: 'menuItemId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -201,6 +202,11 @@ exports.Prisma.SortOrder = {
   desc: 'desc'
 };
 
+exports.Prisma.NullableJsonNullValueInput = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -209,6 +215,12 @@ exports.Prisma.QueryMode = {
 exports.Prisma.NullsOrder = {
   first: 'first',
   last: 'last'
+};
+
+exports.Prisma.JsonNullValueFilter = {
+  DbNull: Prisma.DbNull,
+  JsonNull: Prisma.JsonNull,
+  AnyNull: Prisma.AnyNull
 };
 exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN',

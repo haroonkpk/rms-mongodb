@@ -58,10 +58,8 @@ export async function getPOSInitData(): Promise<POSInitDataResponse> {
       isAvailable: item.isAvailable,
       categoryId: item.categoryId,
       categoryName: item.category.name,
-      variants: [
-        { name: 'Regular', priceOffset: 0 },
-        { name: 'Large', priceOffset: 2.00 },
-      ],
+      hasSizes: item.hasSizes ?? false,
+      sizes: Array.isArray(item.sizes) ? (item.sizes as unknown as { name: string; price: number }[]) : [],
       addOns: item.addOns.map((addon) => ({
         id: addon.id,
         name: addon.name,

@@ -5,6 +5,11 @@ export interface POSAddOn {
   isAvailable: boolean
 }
 
+export interface POSItemSize {
+  name: string
+  price: number
+}
+
 export interface POSVariant {
   name: string
   priceOffset: number
@@ -19,6 +24,8 @@ export interface POSMenuItem {
   isAvailable: boolean
   categoryId: string
   categoryName: string
+  hasSizes: boolean
+  sizes: POSItemSize[]
   variants?: POSVariant[]
   addOns: POSAddOn[]
 }

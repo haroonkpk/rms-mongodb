@@ -1,17 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { POSMenuItem, CartAddOnItem, CartItem, POSVariant } from "@/types/pos";
+import { POSMenuItem, CartAddOnItem, CartItem, POSItemSize } from "@/types/pos";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
-import {
-  Plus,
-  Minus,
-  Check,
-  MessageSquare,
-  Receipt,
-  Utensils,
-} from "lucide-react";
+import { Plus, Minus, Check, Receipt, Utensils } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Textarea } from "../ui/textarea";
 
@@ -28,18 +21,18 @@ export function CustomizationModal({
   item,
   onAddToBill,
 }: CustomizationModalProps) {
-  const [selectedVariant, setSelectedVariant] = useState<POSVariant | null>(
-    null,
-  );
+  const [selectedSize, setSelectedSize] = useState<POSItemSize | null>(null);
   const [selectedAddOns, setSelectedAddOns] = useState<CartAddOnItem[]>([]);
   const [quantity, setQuantity] = useState(1);
   const [notes, setNotes] = useState("");
 
   useEffect(() => {
     if (item) {
-      const defaultVariant =
-        item.variants && item.variants.length > 0 ? item.variants[0] : null;
-      setSelectedVariant(defaultVariant);
+      const defaultSize =
+        item.hasSizes && item.sizes && item.sizes.length > 0
+          ? item.sizes[0]
+          : null;
+      setSelectedSize(defaultSize);
       setSelectedAddOns([]);
       setQuantity(1);
       setNotes("");
@@ -48,9 +41,9 @@ export function CustomizationModal({
 
   if (!item) return null;
 
-  const variantOffset = selectedVariant ? selectedVariant.priceOffset : 0;
+  const itemBasePrice = selectedSize ? selectedSize.price : item.basePrice;
   const addOnsTotal = selectedAddOns.reduce((acc, curr) => acc + curr.price, 0);
-  const unitPrice = item.basePrice + variantOffset + addOnsTotal;
+  const unitPrice = itemBasePrice + addOnsTotal;
   const itemTotal = unitPrice * quantity;
 
   const toggleAddOn = (addon: { id: string; name: string; price: number }) => {
@@ -68,7 +61,7 @@ export function CustomizationModal({
   };
 
   const handleConfirmAddToBill = () => {
-    const cartItemId = `${item.id}-${selectedVariant?.name || "std"}-${selectedAddOns
+    const cartItemId = `${item.id}-${selectedSize?.name || "std"}-${selectedAddOns
       .map((a) => a.id)
       .sort()
       .join("-")}-${Date.now()}`;
@@ -77,8 +70,13 @@ export function CustomizationModal({
       cartItemId,
       itemId: item.id,
       name: item.name,
-      basePrice: item.basePrice,
-      variant: selectedVariant || undefined,
+      basePrice: itemBasePrice,
+      variant: selectedSize
+        ? {
+            name: selectedSize.name,
+            priceOffset: selectedSize.price - item.basePrice,
+          }
+        : undefined,
       addOns: selectedAddOns,
       quantity,
       unitPrice,
@@ -96,12 +94,12 @@ export function CustomizationModal({
       isOpen={isOpen}
       onClose={onClose}
       title="Customize Item for Bill"
-      className="max-w-xl"
+      className="max-w-2xl max-h-[90vh] overflow-y-auto"
     >
       <div className="space-y-[clamp(1rem,1.5vw,1.25rem)] pt-2 pb-4">
         {/* Item Banner */}
         <div className="flex gap-4 p-3 bg-slate-50 border border-slate-200">
-          <div className="w-16 h-16  bg-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400">
+          <div className="w-16 h-16 bg-slate-200 overflow-hidden shrink-0 flex items-center justify-center text-slate-400">
             {item.imageUrl ? (
               <img
                 src={item.imageUrl}
@@ -116,35 +114,43 @@ export function CustomizationModal({
             <h3 className="text-base font-bold text-slate-900 leading-snug">
               {item.name}
             </h3>
+            {item.description && (
+              <p className="text-xs text-slate-500 line-clamp-1 mt-0.5">
+                {item.description}
+              </p>
+            )}
           </div>
         </div>
 
-        {/* Section 1: Variants / Size */}
-        {item.variants && item.variants.length > 0 && (
+        {/* Section 1: Item Sizes */}
+        {item.hasSizes && item.sizes && item.sizes.length > 0 && (
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-2">
-              Select Size / Variant
+              Select Size Option
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              {item.variants.map((v) => {
-                const isSelected = selectedVariant?.name === v.name;
+              {item.sizes.map((size) => {
+                const isSelected = selectedSize?.name === size.name;
                 return (
                   <button
-                    key={v.name}
+                    key={size.name}
                     type="button"
-                    onClick={() => setSelectedVariant(v)}
+                    onClick={() => setSelectedSize(size)}
                     className={cn(
-                      "p-2.5  border text-left text-xs transition-all cursor-pointer flex flex-col justify-between",
+                      "p-2.5 border text-left text-xs transition-all cursor-pointer flex flex-col justify-between",
                       isSelected
-                        ? "border-green-400/30 bg-green-100/70 font-bold text-green-800 shadow-2xs"
+                        ? "bg-emerald-500 font-bold text-white "
                         : "border-slate-200 hover:border-slate-300 text-slate-700 bg-white",
                     )}
                   >
-                    <span>{v.name}</span>
-                    <span className="text-[0.7rem] opacity-80 mt-1">
-                      {v.priceOffset > 0
-                        ? `+ Rs${v.priceOffset.toFixed(2)}`
-                        : "Standard"}
+                    <span>{size.name}</span>
+                    <span
+                      className={cn(
+                        "mt-1 text-[0.75rem] font-extrabold",
+                        isSelected ? "text-white" : "text-slate-900",
+                      )}
+                    >
+                      Rs {size.price.toLocaleString()}
                     </span>
                   </button>
                 );
@@ -167,20 +173,20 @@ export function CustomizationModal({
                     key={addon.id}
                     onClick={() => addon.isAvailable && toggleAddOn(addon)}
                     className={cn(
-                      "flex items-center justify-between p-2.5 border-2 text-xs cursor-pointer transition-all",
+                      "flex items-center justify-between p-2.5  text-xs cursor-pointer transition-all",
                       !addon.isAvailable &&
                         "opacity-50 cursor-not-allowed bg-slate-50",
                       isChecked
-                        ? "border-green-400/20 bg-green-100/50 text-slate-900 font-semibold"
-                        : "border-slate-200 hover:border-slate-300 bg-slate-100/50 text-slate-700",
+                        ? "border-emerald-500 bg-emerald-500 text-white font-semibold"
+                        : "border-slate-200 hover:border-slate-300 bg-white text-slate-700",
                     )}
                   >
                     <div className="flex items-center gap-2.5">
                       <div
                         className={cn(
-                          "w-4 h-4 border flex items-center justify-center transition-colors",
+                          "w-4 h-4 border flex items-center justify-center transition-colors ",
                           isChecked
-                            ? "bg-green-600 border-green-600 text-white"
+                            ? "bg-white border-white text-emerald-500"
                             : "border-slate-300 bg-white",
                         )}
                       >
@@ -188,8 +194,12 @@ export function CustomizationModal({
                       </div>
                       <span>{addon.name}</span>
                     </div>
-                    <span className="font-bold text-slate-800">
-                      +Rs.{addon.price.toFixed(2)}
+                    <span
+                      className={cn(
+                        isChecked ? "text-white" : "text-slate-900",
+                      )}
+                    >
+                      +Rs {addon.price.toLocaleString()}
                     </span>
                   </div>
                 );
@@ -203,12 +213,12 @@ export function CustomizationModal({
           <label className="text-xs font-bold uppercase tracking-wider text-slate-600">
             Quantity
           </label>
-          <div className="flex items-center gap-3 bg-slate-100 p-1">
+          <div className="flex items-center gap-3 bg-slate-100 p-1 rounded-md">
             <button
               type="button"
               onClick={() => setQuantity((q) => Math.max(1, q - 1))}
               disabled={quantity <= 1}
-              className="w-7 h-7 rounded-[clamp(0.375rem,0.5vw,0.5rem)] bg-white text-slate-700 flex items-center justify-center hover:bg-slate-200 disabled:opacity-40 transition-colors shadow-2xs"
+              className="w-7 h-7 bg-white text-slate-700 flex items-center justify-center hover:bg-slate-200 disabled:opacity-40 transition-colors shadow-2xs rounded-md"
             >
               <Minus size={14} />
             </button>
@@ -218,7 +228,7 @@ export function CustomizationModal({
             <button
               type="button"
               onClick={() => setQuantity((q) => q + 1)}
-              className="w-7 h-7 rounded-[clamp(0.375rem,0.5vw,0.5rem)] bg-white text-slate-700 flex items-center justify-center hover:bg-slate-200 transition-colors shadow-2xs"
+              className="w-7 h-7 bg-white text-slate-700 flex items-center justify-center hover:bg-slate-200 transition-colors shadow-2xs rounded-md"
             >
               <Plus size={14} />
             </button>
@@ -241,17 +251,13 @@ export function CustomizationModal({
             <span className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 block">
               Total
             </span>
-            <span className="text-lg font-bold text-green-600">
-              {itemTotal.toFixed(2)}
+            <span className="text-lg font-extrabold text-emerald-600">
+              Rs {itemTotal.toLocaleString()}
             </span>
           </div>
 
           <div className="flex items-center gap-2">
-            <Button
-              variant="outline"
-              onClick={onClose}
-              className="text-xs py-2 px-4"
-            >
+            <Button variant="outline" onClick={onClose}>
               Cancel
             </Button>
             <Button

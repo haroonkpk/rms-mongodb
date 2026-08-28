@@ -35,7 +35,7 @@ export const Button = ({
     outline: "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50",
   };
 
-  return (
+  return ( 
     <button
       className={`${baseClasses} ${variants[variant]} ${className}`}
       disabled={disabled || isLoading}

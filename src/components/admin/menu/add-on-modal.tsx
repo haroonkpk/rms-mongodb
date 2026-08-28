@@ -4,19 +4,16 @@ import React, { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectOption } from "@/components/ui/select";
 import toast from "react-hot-toast";
-import { AddOnData, MenuItemData } from "@/actions/menu";
+import { AddOnData } from "@/actions/menu";
 
 interface AddOnModalProps {
   isOpen: boolean;
   onClose: () => void;
   editingAddOn: AddOnData | null;
-  items: MenuItemData[];
   onSave: (data: {
     name: string;
     price: number;
-    menuItemId: string | null;
     isAvailable: boolean;
   }) => Promise<void>;
   isPending: boolean;
@@ -26,7 +23,6 @@ export function AddOnModal({
   isOpen,
   onClose,
   editingAddOn,
-  items,
   onSave,
   isPending,
 }: AddOnModalProps) {
@@ -36,7 +32,6 @@ export function AddOnModal({
   const [formData, setFormData] = useState({
     name: "",
     price: "",
-    menuItemId: "GLOBAL",
     isAvailable: true,
   });
 
@@ -49,26 +44,16 @@ export function AddOnModal({
           ? {
               name: editingAddOn.name,
               price: editingAddOn.price.toString(),
-              menuItemId: editingAddOn.menuItemId || "GLOBAL",
               isAvailable: editingAddOn.isAvailable,
             }
           : {
               name: "",
               price: "",
-              menuItemId: "GLOBAL",
               isAvailable: true,
             }
       );
     }
   }
-
-  const menuItemSelectOptions: SelectOption[] = React.useMemo(() => {
-    const opts = items.map((item) => ({
-      value: item.id,
-      label: `${item.name} (${item.categoryName})`,
-    }));
-    return [{ value: "GLOBAL", label: "All Items (Global Add-On)" }, ...opts];
-  }, [items]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -82,12 +67,9 @@ export function AddOnModal({
       return;
     }
 
-    const targetItemId = formData.menuItemId === "GLOBAL" ? null : formData.menuItemId;
-
     await onSave({
       name: formData.name,
       price: priceNum,
-      menuItemId: targetItemId,
       isAvailable: formData.isAvailable,
     });
   };
@@ -102,7 +84,7 @@ export function AddOnModal({
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4">
         <Input
           label="Add-On Option Name"
-          placeholder="e.g. Cheese Slice, Garlic Dip, Double Patty"
+          placeholder="e.g. Cheese Slice, Garlic Dip, Cold Drink 250ml"
           value={formData.name}
           onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           required
@@ -116,13 +98,6 @@ export function AddOnModal({
           value={formData.price}
           onChange={(e) => setFormData({ ...formData, price: e.target.value })}
           required
-        />
-
-        <Select
-          label="Associated Food Item"
-          options={menuItemSelectOptions}
-          value={formData.menuItemId}
-          onChange={(e) => setFormData({ ...formData, menuItemId: e.target.value })}
         />
 
         <div className="flex flex-col gap-2 p-3 bg-slate-50 border border-slate-200 rounded-md">

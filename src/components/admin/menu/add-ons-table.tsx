@@ -8,7 +8,6 @@ import { AddOnData } from "@/actions/menu";
 const addOnTableHeaders: TableHeader[] = [
   { key: "name", label: "Add-On / Modifier Name" },
   { key: "formattedPrice", label: "Extra Price" },
-  { key: "linkedItemBadge", label: "Linked Food Item" },
   { key: "availabilityToggle", label: "Availability Status" },
 ];
 
@@ -31,11 +30,6 @@ export function AddOnsTable({
       formattedPrice: (
         <span className="font-bold text-slate-900 text-sm">
           + Rs {addon.price.toLocaleString()}
-        </span>
-      ),
-      linkedItemBadge: (
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-200">
-          {addon.menuItemName}
         </span>
       ),
       availabilityToggle: (

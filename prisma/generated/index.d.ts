@@ -1512,6 +1512,37 @@ export namespace Prisma {
 
 
   /**
+   * Count Type AddOnCountOutputType
+   */
+
+  export type AddOnCountOutputType = {
+    menuItems: number
+  }
+
+  export type AddOnCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    menuItems?: boolean | AddOnCountOutputTypeCountMenuItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AddOnCountOutputType without action
+   */
+  export type AddOnCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AddOnCountOutputType
+     */
+    select?: AddOnCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AddOnCountOutputType without action
+   */
+  export type AddOnCountOutputTypeCountMenuItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MenuItemWhereInput
+  }
+
+
+  /**
    * Count Type OrderCountOutputType
    */
 
@@ -3861,6 +3892,7 @@ export namespace Prisma {
     basePrice: Decimal | null
     imageUrl: string | null
     isAvailable: boolean | null
+    hasSizes: boolean | null
     categoryId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3873,6 +3905,7 @@ export namespace Prisma {
     basePrice: Decimal | null
     imageUrl: string | null
     isAvailable: boolean | null
+    hasSizes: boolean | null
     categoryId: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -3885,6 +3918,8 @@ export namespace Prisma {
     basePrice: number
     imageUrl: number
     isAvailable: number
+    hasSizes: number
+    sizes: number
     categoryId: number
     createdAt: number
     updatedAt: number
@@ -3907,6 +3942,7 @@ export namespace Prisma {
     basePrice?: true
     imageUrl?: true
     isAvailable?: true
+    hasSizes?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -3919,6 +3955,7 @@ export namespace Prisma {
     basePrice?: true
     imageUrl?: true
     isAvailable?: true
+    hasSizes?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -3931,6 +3968,8 @@ export namespace Prisma {
     basePrice?: true
     imageUrl?: true
     isAvailable?: true
+    hasSizes?: true
+    sizes?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -4030,6 +4069,8 @@ export namespace Prisma {
     basePrice: Decimal
     imageUrl: string | null
     isAvailable: boolean
+    hasSizes: boolean
+    sizes: JsonValue | null
     categoryId: string
     createdAt: Date
     updatedAt: Date
@@ -4061,6 +4102,8 @@ export namespace Prisma {
     basePrice?: boolean
     imageUrl?: boolean
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4076,6 +4119,8 @@ export namespace Prisma {
     basePrice?: boolean
     imageUrl?: boolean
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4089,6 +4134,8 @@ export namespace Prisma {
     basePrice?: boolean
     imageUrl?: boolean
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4102,12 +4149,14 @@ export namespace Prisma {
     basePrice?: boolean
     imageUrl?: boolean
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "basePrice" | "imageUrl" | "isAvailable" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
+  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "basePrice" | "imageUrl" | "isAvailable" | "hasSizes" | "sizes" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
   export type MenuItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     addOns?: boolean | MenuItem$addOnsArgs<ExtArgs>
@@ -4133,6 +4182,8 @@ export namespace Prisma {
       basePrice: Prisma.Decimal
       imageUrl: string | null
       isAvailable: boolean
+      hasSizes: boolean
+      sizes: Prisma.JsonValue | null
       categoryId: string
       createdAt: Date
       updatedAt: Date
@@ -4567,6 +4618,8 @@ export namespace Prisma {
     readonly basePrice: FieldRef<"MenuItem", 'Decimal'>
     readonly imageUrl: FieldRef<"MenuItem", 'String'>
     readonly isAvailable: FieldRef<"MenuItem", 'Boolean'>
+    readonly hasSizes: FieldRef<"MenuItem", 'Boolean'>
+    readonly sizes: FieldRef<"MenuItem", 'Json'>
     readonly categoryId: FieldRef<"MenuItem", 'String'>
     readonly createdAt: FieldRef<"MenuItem", 'DateTime'>
     readonly updatedAt: FieldRef<"MenuItem", 'DateTime'>
@@ -5038,7 +5091,6 @@ export namespace Prisma {
     name: string | null
     price: Decimal | null
     isAvailable: boolean | null
-    menuItemId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5048,7 +5100,6 @@ export namespace Prisma {
     name: string | null
     price: Decimal | null
     isAvailable: boolean | null
-    menuItemId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -5058,7 +5109,6 @@ export namespace Prisma {
     name: number
     price: number
     isAvailable: number
-    menuItemId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5078,7 +5128,6 @@ export namespace Prisma {
     name?: true
     price?: true
     isAvailable?: true
-    menuItemId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5088,7 +5137,6 @@ export namespace Prisma {
     name?: true
     price?: true
     isAvailable?: true
-    menuItemId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -5098,7 +5146,6 @@ export namespace Prisma {
     name?: true
     price?: true
     isAvailable?: true
-    menuItemId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5195,7 +5242,6 @@ export namespace Prisma {
     name: string
     price: Decimal
     isAvailable: boolean
-    menuItemId: string | null
     createdAt: Date
     updatedAt: Date
     _count: AddOnCountAggregateOutputType | null
@@ -5224,10 +5270,10 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     isAvailable?: boolean
-    menuItemId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    menuItem?: boolean | AddOn$menuItemArgs<ExtArgs>
+    menuItems?: boolean | AddOn$menuItemsArgs<ExtArgs>
+    _count?: boolean | AddOnCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["addOn"]>
 
   export type AddOnSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5235,10 +5281,8 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     isAvailable?: boolean
-    menuItemId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    menuItem?: boolean | AddOn$menuItemArgs<ExtArgs>
   }, ExtArgs["result"]["addOn"]>
 
   export type AddOnSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5246,10 +5290,8 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     isAvailable?: boolean
-    menuItemId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
-    menuItem?: boolean | AddOn$menuItemArgs<ExtArgs>
   }, ExtArgs["result"]["addOn"]>
 
   export type AddOnSelectScalar = {
@@ -5257,33 +5299,28 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     isAvailable?: boolean
-    menuItemId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AddOnOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "isAvailable" | "menuItemId" | "createdAt" | "updatedAt", ExtArgs["result"]["addOn"]>
+  export type AddOnOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["addOn"]>
   export type AddOnInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    menuItem?: boolean | AddOn$menuItemArgs<ExtArgs>
+    menuItems?: boolean | AddOn$menuItemsArgs<ExtArgs>
+    _count?: boolean | AddOnCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type AddOnIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    menuItem?: boolean | AddOn$menuItemArgs<ExtArgs>
-  }
-  export type AddOnIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    menuItem?: boolean | AddOn$menuItemArgs<ExtArgs>
-  }
+  export type AddOnIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type AddOnIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
 
   export type $AddOnPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "AddOn"
     objects: {
-      menuItem: Prisma.$MenuItemPayload<ExtArgs> | null
+      menuItems: Prisma.$MenuItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
       price: Prisma.Decimal
       isAvailable: boolean
-      menuItemId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["addOn"]>
@@ -5680,7 +5717,7 @@ export namespace Prisma {
    */
   export interface Prisma__AddOnClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    menuItem<T extends AddOn$menuItemArgs<ExtArgs> = {}>(args?: Subset<T, AddOn$menuItemArgs<ExtArgs>>): Prisma__MenuItemClient<$Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    menuItems<T extends AddOn$menuItemsArgs<ExtArgs> = {}>(args?: Subset<T, AddOn$menuItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5714,7 +5751,6 @@ export namespace Prisma {
     readonly name: FieldRef<"AddOn", 'String'>
     readonly price: FieldRef<"AddOn", 'Decimal'>
     readonly isAvailable: FieldRef<"AddOn", 'Boolean'>
-    readonly menuItemId: FieldRef<"AddOn", 'String'>
     readonly createdAt: FieldRef<"AddOn", 'DateTime'>
     readonly updatedAt: FieldRef<"AddOn", 'DateTime'>
   }
@@ -5971,10 +6007,6 @@ export namespace Prisma {
      */
     data: AddOnCreateManyInput | AddOnCreateManyInput[]
     skipDuplicates?: boolean
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AddOnIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6045,10 +6077,6 @@ export namespace Prisma {
      * Limit how many AddOns to update.
      */
     limit?: number
-    /**
-     * Choose, which related nodes to fetch as well
-     */
-    include?: AddOnIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -6118,9 +6146,9 @@ export namespace Prisma {
   }
 
   /**
-   * AddOn.menuItem
+   * AddOn.menuItems
    */
-  export type AddOn$menuItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+  export type AddOn$menuItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     /**
      * Select specific fields to fetch from the MenuItem
      */
@@ -6134,6 +6162,11 @@ export namespace Prisma {
      */
     include?: MenuItemInclude<ExtArgs> | null
     where?: MenuItemWhereInput
+    orderBy?: MenuItemOrderByWithRelationInput | MenuItemOrderByWithRelationInput[]
+    cursor?: MenuItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MenuItemScalarFieldEnum | MenuItemScalarFieldEnum[]
   }
 
   /**
@@ -8659,6 +8692,8 @@ export namespace Prisma {
     basePrice: 'basePrice',
     imageUrl: 'imageUrl',
     isAvailable: 'isAvailable',
+    hasSizes: 'hasSizes',
+    sizes: 'sizes',
     categoryId: 'categoryId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -8672,7 +8707,6 @@ export namespace Prisma {
     name: 'name',
     price: 'price',
     isAvailable: 'isAvailable',
-    menuItemId: 'menuItemId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -8724,6 +8758,14 @@ export namespace Prisma {
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+  export const NullableJsonNullValueInput: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull
+  };
+
+  export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
   export const QueryMode: {
     default: 'default',
     insensitive: 'insensitive'
@@ -8738,6 +8780,15 @@ export namespace Prisma {
   };
 
   export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+  export const JsonNullValueFilter: {
+    DbNull: typeof DbNull,
+    JsonNull: typeof JsonNull,
+    AnyNull: typeof AnyNull
+  };
+
+  export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
 
 
   /**
@@ -8833,6 +8884,20 @@ export namespace Prisma {
    * Reference to a field of type 'Boolean'
    */
   export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
 
 
@@ -9057,6 +9122,8 @@ export namespace Prisma {
     basePrice?: DecimalFilter<"MenuItem"> | Decimal | DecimalJsLike | number | string
     imageUrl?: StringNullableFilter<"MenuItem"> | string | null
     isAvailable?: BoolFilter<"MenuItem"> | boolean
+    hasSizes?: BoolFilter<"MenuItem"> | boolean
+    sizes?: JsonNullableFilter<"MenuItem">
     categoryId?: UuidFilter<"MenuItem"> | string
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
@@ -9071,6 +9138,8 @@ export namespace Prisma {
     basePrice?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     isAvailable?: SortOrder
+    hasSizes?: SortOrder
+    sizes?: SortOrderInput | SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9088,6 +9157,8 @@ export namespace Prisma {
     basePrice?: DecimalFilter<"MenuItem"> | Decimal | DecimalJsLike | number | string
     imageUrl?: StringNullableFilter<"MenuItem"> | string | null
     isAvailable?: BoolFilter<"MenuItem"> | boolean
+    hasSizes?: BoolFilter<"MenuItem"> | boolean
+    sizes?: JsonNullableFilter<"MenuItem">
     categoryId?: UuidFilter<"MenuItem"> | string
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
@@ -9102,6 +9173,8 @@ export namespace Prisma {
     basePrice?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
     isAvailable?: SortOrder
+    hasSizes?: SortOrder
+    sizes?: SortOrderInput | SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9122,6 +9195,8 @@ export namespace Prisma {
     basePrice?: DecimalWithAggregatesFilter<"MenuItem"> | Decimal | DecimalJsLike | number | string
     imageUrl?: StringNullableWithAggregatesFilter<"MenuItem"> | string | null
     isAvailable?: BoolWithAggregatesFilter<"MenuItem"> | boolean
+    hasSizes?: BoolWithAggregatesFilter<"MenuItem"> | boolean
+    sizes?: JsonNullableWithAggregatesFilter<"MenuItem">
     categoryId?: UuidWithAggregatesFilter<"MenuItem"> | string
     createdAt?: DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
@@ -9135,10 +9210,9 @@ export namespace Prisma {
     name?: StringFilter<"AddOn"> | string
     price?: DecimalFilter<"AddOn"> | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFilter<"AddOn"> | boolean
-    menuItemId?: UuidNullableFilter<"AddOn"> | string | null
     createdAt?: DateTimeFilter<"AddOn"> | Date | string
     updatedAt?: DateTimeFilter<"AddOn"> | Date | string
-    menuItem?: XOR<MenuItemNullableScalarRelationFilter, MenuItemWhereInput> | null
+    menuItems?: MenuItemListRelationFilter
   }
 
   export type AddOnOrderByWithRelationInput = {
@@ -9146,10 +9220,9 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     isAvailable?: SortOrder
-    menuItemId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
-    menuItem?: MenuItemOrderByWithRelationInput
+    menuItems?: MenuItemOrderByRelationAggregateInput
   }
 
   export type AddOnWhereUniqueInput = Prisma.AtLeast<{
@@ -9160,10 +9233,9 @@ export namespace Prisma {
     name?: StringFilter<"AddOn"> | string
     price?: DecimalFilter<"AddOn"> | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFilter<"AddOn"> | boolean
-    menuItemId?: UuidNullableFilter<"AddOn"> | string | null
     createdAt?: DateTimeFilter<"AddOn"> | Date | string
     updatedAt?: DateTimeFilter<"AddOn"> | Date | string
-    menuItem?: XOR<MenuItemNullableScalarRelationFilter, MenuItemWhereInput> | null
+    menuItems?: MenuItemListRelationFilter
   }, "id">
 
   export type AddOnOrderByWithAggregationInput = {
@@ -9171,7 +9243,6 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     isAvailable?: SortOrder
-    menuItemId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AddOnCountOrderByAggregateInput
@@ -9189,7 +9260,6 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"AddOn"> | string
     price?: DecimalWithAggregatesFilter<"AddOn"> | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolWithAggregatesFilter<"AddOn"> | boolean
-    menuItemId?: UuidNullableWithAggregatesFilter<"AddOn"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"AddOn"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AddOn"> | Date | string
   }
@@ -9564,10 +9634,12 @@ export namespace Prisma {
     basePrice: Decimal | DecimalJsLike | number | string
     imageUrl?: string | null
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutMenuItemsInput
-    addOns?: AddOnCreateNestedManyWithoutMenuItemInput
+    addOns?: AddOnCreateNestedManyWithoutMenuItemsInput
   }
 
   export type MenuItemUncheckedCreateInput = {
@@ -9577,10 +9649,12 @@ export namespace Prisma {
     basePrice: Decimal | DecimalJsLike | number | string
     imageUrl?: string | null
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
-    addOns?: AddOnUncheckedCreateNestedManyWithoutMenuItemInput
+    addOns?: AddOnUncheckedCreateNestedManyWithoutMenuItemsInput
   }
 
   export type MenuItemUpdateInput = {
@@ -9590,10 +9664,12 @@ export namespace Prisma {
     basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutMenuItemsNestedInput
-    addOns?: AddOnUpdateManyWithoutMenuItemNestedInput
+    addOns?: AddOnUpdateManyWithoutMenuItemsNestedInput
   }
 
   export type MenuItemUncheckedUpdateInput = {
@@ -9603,10 +9679,12 @@ export namespace Prisma {
     basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    addOns?: AddOnUncheckedUpdateManyWithoutMenuItemNestedInput
+    addOns?: AddOnUncheckedUpdateManyWithoutMenuItemsNestedInput
   }
 
   export type MenuItemCreateManyInput = {
@@ -9616,6 +9694,8 @@ export namespace Prisma {
     basePrice: Decimal | DecimalJsLike | number | string
     imageUrl?: string | null
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9628,6 +9708,8 @@ export namespace Prisma {
     basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -9639,6 +9721,8 @@ export namespace Prisma {
     basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9651,7 +9735,7 @@ export namespace Prisma {
     isAvailable?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
-    menuItem?: MenuItemCreateNestedOneWithoutAddOnsInput
+    menuItems?: MenuItemCreateNestedManyWithoutAddOnsInput
   }
 
   export type AddOnUncheckedCreateInput = {
@@ -9659,9 +9743,9 @@ export namespace Prisma {
     name: string
     price: Decimal | DecimalJsLike | number | string
     isAvailable?: boolean
-    menuItemId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    menuItems?: MenuItemUncheckedCreateNestedManyWithoutAddOnsInput
   }
 
   export type AddOnUpdateInput = {
@@ -9671,7 +9755,7 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    menuItem?: MenuItemUpdateOneWithoutAddOnsNestedInput
+    menuItems?: MenuItemUpdateManyWithoutAddOnsNestedInput
   }
 
   export type AddOnUncheckedUpdateInput = {
@@ -9679,9 +9763,9 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    menuItems?: MenuItemUncheckedUpdateManyWithoutAddOnsNestedInput
   }
 
   export type AddOnCreateManyInput = {
@@ -9689,7 +9773,6 @@ export namespace Prisma {
     name: string
     price: Decimal | DecimalJsLike | number | string
     isAvailable?: boolean
-    menuItemId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -9708,7 +9791,6 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -10266,6 +10348,29 @@ export namespace Prisma {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
+  export type JsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type CategoryScalarRelationFilter = {
     is?: CategoryWhereInput
@@ -10289,6 +10394,8 @@ export namespace Prisma {
     basePrice?: SortOrder
     imageUrl?: SortOrder
     isAvailable?: SortOrder
+    hasSizes?: SortOrder
+    sizes?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10305,6 +10412,7 @@ export namespace Prisma {
     basePrice?: SortOrder
     imageUrl?: SortOrder
     isAvailable?: SortOrder
+    hasSizes?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10317,6 +10425,7 @@ export namespace Prisma {
     basePrice?: SortOrder
     imageUrl?: SortOrder
     isAvailable?: SortOrder
+    hasSizes?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10349,22 +10458,31 @@ export namespace Prisma {
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
   }
+  export type JsonNullableWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonNullableWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
 
-  export type UuidNullableFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    mode?: QueryMode
-    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type MenuItemNullableScalarRelationFilter = {
-    is?: MenuItemWhereInput | null
-    isNot?: MenuItemWhereInput | null
+  export type JsonNullableWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedJsonNullableFilter<$PrismaModel>
+    _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
   export type AddOnCountOrderByAggregateInput = {
@@ -10372,7 +10490,6 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     isAvailable?: SortOrder
-    menuItemId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10386,7 +10503,6 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     isAvailable?: SortOrder
-    menuItemId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10396,7 +10512,6 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     isAvailable?: SortOrder
-    menuItemId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -10405,7 +10520,7 @@ export namespace Prisma {
     price?: SortOrder
   }
 
-  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+  export type UuidNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
     notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -10414,10 +10529,7 @@ export namespace Prisma {
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
     mode?: QueryMode
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
+    not?: NestedUuidNullableFilter<$PrismaModel> | string | null
   }
 
   export type EnumOrderStatusFilter<$PrismaModel = never> = {
@@ -10516,6 +10628,21 @@ export namespace Prisma {
     totalAmount?: SortOrder
     cashReceived?: SortOrder
     changeGiven?: SortOrder
+  }
+
+  export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    mode?: QueryMode
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type EnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -10747,17 +10874,15 @@ export namespace Prisma {
     connect?: CategoryWhereUniqueInput
   }
 
-  export type AddOnCreateNestedManyWithoutMenuItemInput = {
-    create?: XOR<AddOnCreateWithoutMenuItemInput, AddOnUncheckedCreateWithoutMenuItemInput> | AddOnCreateWithoutMenuItemInput[] | AddOnUncheckedCreateWithoutMenuItemInput[]
-    connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemInput | AddOnCreateOrConnectWithoutMenuItemInput[]
-    createMany?: AddOnCreateManyMenuItemInputEnvelope
+  export type AddOnCreateNestedManyWithoutMenuItemsInput = {
+    create?: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput> | AddOnCreateWithoutMenuItemsInput[] | AddOnUncheckedCreateWithoutMenuItemsInput[]
+    connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemsInput | AddOnCreateOrConnectWithoutMenuItemsInput[]
     connect?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
   }
 
-  export type AddOnUncheckedCreateNestedManyWithoutMenuItemInput = {
-    create?: XOR<AddOnCreateWithoutMenuItemInput, AddOnUncheckedCreateWithoutMenuItemInput> | AddOnCreateWithoutMenuItemInput[] | AddOnUncheckedCreateWithoutMenuItemInput[]
-    connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemInput | AddOnCreateOrConnectWithoutMenuItemInput[]
-    createMany?: AddOnCreateManyMenuItemInputEnvelope
+  export type AddOnUncheckedCreateNestedManyWithoutMenuItemsInput = {
+    create?: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput> | AddOnCreateWithoutMenuItemsInput[] | AddOnUncheckedCreateWithoutMenuItemsInput[]
+    connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemsInput | AddOnCreateOrConnectWithoutMenuItemsInput[]
     connect?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
   }
 
@@ -10781,48 +10906,68 @@ export namespace Prisma {
     update?: XOR<XOR<CategoryUpdateToOneWithWhereWithoutMenuItemsInput, CategoryUpdateWithoutMenuItemsInput>, CategoryUncheckedUpdateWithoutMenuItemsInput>
   }
 
-  export type AddOnUpdateManyWithoutMenuItemNestedInput = {
-    create?: XOR<AddOnCreateWithoutMenuItemInput, AddOnUncheckedCreateWithoutMenuItemInput> | AddOnCreateWithoutMenuItemInput[] | AddOnUncheckedCreateWithoutMenuItemInput[]
-    connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemInput | AddOnCreateOrConnectWithoutMenuItemInput[]
-    upsert?: AddOnUpsertWithWhereUniqueWithoutMenuItemInput | AddOnUpsertWithWhereUniqueWithoutMenuItemInput[]
-    createMany?: AddOnCreateManyMenuItemInputEnvelope
+  export type AddOnUpdateManyWithoutMenuItemsNestedInput = {
+    create?: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput> | AddOnCreateWithoutMenuItemsInput[] | AddOnUncheckedCreateWithoutMenuItemsInput[]
+    connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemsInput | AddOnCreateOrConnectWithoutMenuItemsInput[]
+    upsert?: AddOnUpsertWithWhereUniqueWithoutMenuItemsInput | AddOnUpsertWithWhereUniqueWithoutMenuItemsInput[]
     set?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
     disconnect?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
     delete?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
     connect?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
-    update?: AddOnUpdateWithWhereUniqueWithoutMenuItemInput | AddOnUpdateWithWhereUniqueWithoutMenuItemInput[]
-    updateMany?: AddOnUpdateManyWithWhereWithoutMenuItemInput | AddOnUpdateManyWithWhereWithoutMenuItemInput[]
+    update?: AddOnUpdateWithWhereUniqueWithoutMenuItemsInput | AddOnUpdateWithWhereUniqueWithoutMenuItemsInput[]
+    updateMany?: AddOnUpdateManyWithWhereWithoutMenuItemsInput | AddOnUpdateManyWithWhereWithoutMenuItemsInput[]
     deleteMany?: AddOnScalarWhereInput | AddOnScalarWhereInput[]
   }
 
-  export type AddOnUncheckedUpdateManyWithoutMenuItemNestedInput = {
-    create?: XOR<AddOnCreateWithoutMenuItemInput, AddOnUncheckedCreateWithoutMenuItemInput> | AddOnCreateWithoutMenuItemInput[] | AddOnUncheckedCreateWithoutMenuItemInput[]
-    connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemInput | AddOnCreateOrConnectWithoutMenuItemInput[]
-    upsert?: AddOnUpsertWithWhereUniqueWithoutMenuItemInput | AddOnUpsertWithWhereUniqueWithoutMenuItemInput[]
-    createMany?: AddOnCreateManyMenuItemInputEnvelope
+  export type AddOnUncheckedUpdateManyWithoutMenuItemsNestedInput = {
+    create?: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput> | AddOnCreateWithoutMenuItemsInput[] | AddOnUncheckedCreateWithoutMenuItemsInput[]
+    connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemsInput | AddOnCreateOrConnectWithoutMenuItemsInput[]
+    upsert?: AddOnUpsertWithWhereUniqueWithoutMenuItemsInput | AddOnUpsertWithWhereUniqueWithoutMenuItemsInput[]
     set?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
     disconnect?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
     delete?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
     connect?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
-    update?: AddOnUpdateWithWhereUniqueWithoutMenuItemInput | AddOnUpdateWithWhereUniqueWithoutMenuItemInput[]
-    updateMany?: AddOnUpdateManyWithWhereWithoutMenuItemInput | AddOnUpdateManyWithWhereWithoutMenuItemInput[]
+    update?: AddOnUpdateWithWhereUniqueWithoutMenuItemsInput | AddOnUpdateWithWhereUniqueWithoutMenuItemsInput[]
+    updateMany?: AddOnUpdateManyWithWhereWithoutMenuItemsInput | AddOnUpdateManyWithWhereWithoutMenuItemsInput[]
     deleteMany?: AddOnScalarWhereInput | AddOnScalarWhereInput[]
   }
 
-  export type MenuItemCreateNestedOneWithoutAddOnsInput = {
-    create?: XOR<MenuItemCreateWithoutAddOnsInput, MenuItemUncheckedCreateWithoutAddOnsInput>
-    connectOrCreate?: MenuItemCreateOrConnectWithoutAddOnsInput
-    connect?: MenuItemWhereUniqueInput
+  export type MenuItemCreateNestedManyWithoutAddOnsInput = {
+    create?: XOR<MenuItemCreateWithoutAddOnsInput, MenuItemUncheckedCreateWithoutAddOnsInput> | MenuItemCreateWithoutAddOnsInput[] | MenuItemUncheckedCreateWithoutAddOnsInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutAddOnsInput | MenuItemCreateOrConnectWithoutAddOnsInput[]
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
   }
 
-  export type MenuItemUpdateOneWithoutAddOnsNestedInput = {
-    create?: XOR<MenuItemCreateWithoutAddOnsInput, MenuItemUncheckedCreateWithoutAddOnsInput>
-    connectOrCreate?: MenuItemCreateOrConnectWithoutAddOnsInput
-    upsert?: MenuItemUpsertWithoutAddOnsInput
-    disconnect?: MenuItemWhereInput | boolean
-    delete?: MenuItemWhereInput | boolean
-    connect?: MenuItemWhereUniqueInput
-    update?: XOR<XOR<MenuItemUpdateToOneWithWhereWithoutAddOnsInput, MenuItemUpdateWithoutAddOnsInput>, MenuItemUncheckedUpdateWithoutAddOnsInput>
+  export type MenuItemUncheckedCreateNestedManyWithoutAddOnsInput = {
+    create?: XOR<MenuItemCreateWithoutAddOnsInput, MenuItemUncheckedCreateWithoutAddOnsInput> | MenuItemCreateWithoutAddOnsInput[] | MenuItemUncheckedCreateWithoutAddOnsInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutAddOnsInput | MenuItemCreateOrConnectWithoutAddOnsInput[]
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+  }
+
+  export type MenuItemUpdateManyWithoutAddOnsNestedInput = {
+    create?: XOR<MenuItemCreateWithoutAddOnsInput, MenuItemUncheckedCreateWithoutAddOnsInput> | MenuItemCreateWithoutAddOnsInput[] | MenuItemUncheckedCreateWithoutAddOnsInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutAddOnsInput | MenuItemCreateOrConnectWithoutAddOnsInput[]
+    upsert?: MenuItemUpsertWithWhereUniqueWithoutAddOnsInput | MenuItemUpsertWithWhereUniqueWithoutAddOnsInput[]
+    set?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    disconnect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    delete?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    update?: MenuItemUpdateWithWhereUniqueWithoutAddOnsInput | MenuItemUpdateWithWhereUniqueWithoutAddOnsInput[]
+    updateMany?: MenuItemUpdateManyWithWhereWithoutAddOnsInput | MenuItemUpdateManyWithWhereWithoutAddOnsInput[]
+    deleteMany?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
+  }
+
+  export type MenuItemUncheckedUpdateManyWithoutAddOnsNestedInput = {
+    create?: XOR<MenuItemCreateWithoutAddOnsInput, MenuItemUncheckedCreateWithoutAddOnsInput> | MenuItemCreateWithoutAddOnsInput[] | MenuItemUncheckedCreateWithoutAddOnsInput[]
+    connectOrCreate?: MenuItemCreateOrConnectWithoutAddOnsInput | MenuItemCreateOrConnectWithoutAddOnsInput[]
+    upsert?: MenuItemUpsertWithWhereUniqueWithoutAddOnsInput | MenuItemUpsertWithWhereUniqueWithoutAddOnsInput[]
+    set?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    disconnect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    delete?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    connect?: MenuItemWhereUniqueInput | MenuItemWhereUniqueInput[]
+    update?: MenuItemUpdateWithWhereUniqueWithoutAddOnsInput | MenuItemUpdateWithWhereUniqueWithoutAddOnsInput[]
+    updateMany?: MenuItemUpdateManyWithWhereWithoutAddOnsInput | MenuItemUpdateManyWithWhereWithoutAddOnsInput[]
+    deleteMany?: MenuItemScalarWhereInput | MenuItemScalarWhereInput[]
   }
 
   export type UserCreateNestedOneWithoutOrdersInput = {
@@ -11189,6 +11334,29 @@ export namespace Prisma {
     _min?: NestedBoolFilter<$PrismaModel>
     _max?: NestedBoolFilter<$PrismaModel>
   }
+  export type NestedJsonNullableFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonNullableFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
 
   export type NestedUuidNullableFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
@@ -11199,20 +11367,6 @@ export namespace Prisma {
     gt?: string | StringFieldRefInput<$PrismaModel>
     gte?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedUuidNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: string | StringFieldRefInput<$PrismaModel> | null
-    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
-    lt?: string | StringFieldRefInput<$PrismaModel>
-    lte?: string | StringFieldRefInput<$PrismaModel>
-    gt?: string | StringFieldRefInput<$PrismaModel>
-    gte?: string | StringFieldRefInput<$PrismaModel>
-    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedStringNullableFilter<$PrismaModel>
-    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusFilter<$PrismaModel = never> = {
@@ -11227,6 +11381,20 @@ export namespace Prisma {
     in?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
     notIn?: $Enums.PaymentMethod[] | ListEnumPaymentMethodFieldRefInput<$PrismaModel>
     not?: NestedEnumPaymentMethodFilter<$PrismaModel> | $Enums.PaymentMethod
+  }
+
+  export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: string | StringFieldRefInput<$PrismaModel> | null
+    in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    notIn?: string[] | ListStringFieldRefInput<$PrismaModel> | null
+    lt?: string | StringFieldRefInput<$PrismaModel>
+    lte?: string | StringFieldRefInput<$PrismaModel>
+    gt?: string | StringFieldRefInput<$PrismaModel>
+    gte?: string | StringFieldRefInput<$PrismaModel>
+    not?: NestedUuidNullableWithAggregatesFilter<$PrismaModel> | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedStringNullableFilter<$PrismaModel>
+    _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
   export type NestedEnumOrderStatusWithAggregatesFilter<$PrismaModel = never> = {
@@ -11363,9 +11531,11 @@ export namespace Prisma {
     basePrice: Decimal | DecimalJsLike | number | string
     imageUrl?: string | null
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
-    addOns?: AddOnCreateNestedManyWithoutMenuItemInput
+    addOns?: AddOnCreateNestedManyWithoutMenuItemsInput
   }
 
   export type MenuItemUncheckedCreateWithoutCategoryInput = {
@@ -11375,9 +11545,11 @@ export namespace Prisma {
     basePrice: Decimal | DecimalJsLike | number | string
     imageUrl?: string | null
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
-    addOns?: AddOnUncheckedCreateNestedManyWithoutMenuItemInput
+    addOns?: AddOnUncheckedCreateNestedManyWithoutMenuItemsInput
   }
 
   export type MenuItemCreateOrConnectWithoutCategoryInput = {
@@ -11416,6 +11588,8 @@ export namespace Prisma {
     basePrice?: DecimalFilter<"MenuItem"> | Decimal | DecimalJsLike | number | string
     imageUrl?: StringNullableFilter<"MenuItem"> | string | null
     isAvailable?: BoolFilter<"MenuItem"> | boolean
+    hasSizes?: BoolFilter<"MenuItem"> | boolean
+    sizes?: JsonNullableFilter<"MenuItem">
     categoryId?: UuidFilter<"MenuItem"> | string
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
@@ -11442,7 +11616,7 @@ export namespace Prisma {
     create: XOR<CategoryCreateWithoutMenuItemsInput, CategoryUncheckedCreateWithoutMenuItemsInput>
   }
 
-  export type AddOnCreateWithoutMenuItemInput = {
+  export type AddOnCreateWithoutMenuItemsInput = {
     id?: string
     name: string
     price: Decimal | DecimalJsLike | number | string
@@ -11451,7 +11625,7 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type AddOnUncheckedCreateWithoutMenuItemInput = {
+  export type AddOnUncheckedCreateWithoutMenuItemsInput = {
     id?: string
     name: string
     price: Decimal | DecimalJsLike | number | string
@@ -11460,14 +11634,9 @@ export namespace Prisma {
     updatedAt?: Date | string
   }
 
-  export type AddOnCreateOrConnectWithoutMenuItemInput = {
+  export type AddOnCreateOrConnectWithoutMenuItemsInput = {
     where: AddOnWhereUniqueInput
-    create: XOR<AddOnCreateWithoutMenuItemInput, AddOnUncheckedCreateWithoutMenuItemInput>
-  }
-
-  export type AddOnCreateManyMenuItemInputEnvelope = {
-    data: AddOnCreateManyMenuItemInput | AddOnCreateManyMenuItemInput[]
-    skipDuplicates?: boolean
+    create: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput>
   }
 
   export type CategoryUpsertWithoutMenuItemsInput = {
@@ -11497,20 +11666,20 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AddOnUpsertWithWhereUniqueWithoutMenuItemInput = {
+  export type AddOnUpsertWithWhereUniqueWithoutMenuItemsInput = {
     where: AddOnWhereUniqueInput
-    update: XOR<AddOnUpdateWithoutMenuItemInput, AddOnUncheckedUpdateWithoutMenuItemInput>
-    create: XOR<AddOnCreateWithoutMenuItemInput, AddOnUncheckedCreateWithoutMenuItemInput>
+    update: XOR<AddOnUpdateWithoutMenuItemsInput, AddOnUncheckedUpdateWithoutMenuItemsInput>
+    create: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput>
   }
 
-  export type AddOnUpdateWithWhereUniqueWithoutMenuItemInput = {
+  export type AddOnUpdateWithWhereUniqueWithoutMenuItemsInput = {
     where: AddOnWhereUniqueInput
-    data: XOR<AddOnUpdateWithoutMenuItemInput, AddOnUncheckedUpdateWithoutMenuItemInput>
+    data: XOR<AddOnUpdateWithoutMenuItemsInput, AddOnUncheckedUpdateWithoutMenuItemsInput>
   }
 
-  export type AddOnUpdateManyWithWhereWithoutMenuItemInput = {
+  export type AddOnUpdateManyWithWhereWithoutMenuItemsInput = {
     where: AddOnScalarWhereInput
-    data: XOR<AddOnUpdateManyMutationInput, AddOnUncheckedUpdateManyWithoutMenuItemInput>
+    data: XOR<AddOnUpdateManyMutationInput, AddOnUncheckedUpdateManyWithoutMenuItemsInput>
   }
 
   export type AddOnScalarWhereInput = {
@@ -11521,7 +11690,6 @@ export namespace Prisma {
     name?: StringFilter<"AddOn"> | string
     price?: DecimalFilter<"AddOn"> | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFilter<"AddOn"> | boolean
-    menuItemId?: UuidNullableFilter<"AddOn"> | string | null
     createdAt?: DateTimeFilter<"AddOn"> | Date | string
     updatedAt?: DateTimeFilter<"AddOn"> | Date | string
   }
@@ -11533,6 +11701,8 @@ export namespace Prisma {
     basePrice: Decimal | DecimalJsLike | number | string
     imageUrl?: string | null
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutMenuItemsInput
@@ -11545,6 +11715,8 @@ export namespace Prisma {
     basePrice: Decimal | DecimalJsLike | number | string
     imageUrl?: string | null
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11555,39 +11727,20 @@ export namespace Prisma {
     create: XOR<MenuItemCreateWithoutAddOnsInput, MenuItemUncheckedCreateWithoutAddOnsInput>
   }
 
-  export type MenuItemUpsertWithoutAddOnsInput = {
+  export type MenuItemUpsertWithWhereUniqueWithoutAddOnsInput = {
+    where: MenuItemWhereUniqueInput
     update: XOR<MenuItemUpdateWithoutAddOnsInput, MenuItemUncheckedUpdateWithoutAddOnsInput>
     create: XOR<MenuItemCreateWithoutAddOnsInput, MenuItemUncheckedCreateWithoutAddOnsInput>
-    where?: MenuItemWhereInput
   }
 
-  export type MenuItemUpdateToOneWithWhereWithoutAddOnsInput = {
-    where?: MenuItemWhereInput
+  export type MenuItemUpdateWithWhereUniqueWithoutAddOnsInput = {
+    where: MenuItemWhereUniqueInput
     data: XOR<MenuItemUpdateWithoutAddOnsInput, MenuItemUncheckedUpdateWithoutAddOnsInput>
   }
 
-  export type MenuItemUpdateWithoutAddOnsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    category?: CategoryUpdateOneRequiredWithoutMenuItemsNestedInput
-  }
-
-  export type MenuItemUncheckedUpdateWithoutAddOnsInput = {
-    id?: StringFieldUpdateOperationsInput | string
-    name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
-    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
-    isAvailable?: BoolFieldUpdateOperationsInput | boolean
-    categoryId?: StringFieldUpdateOperationsInput | string
-    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  export type MenuItemUpdateManyWithWhereWithoutAddOnsInput = {
+    where: MenuItemScalarWhereInput
+    data: XOR<MenuItemUpdateManyMutationInput, MenuItemUncheckedUpdateManyWithoutAddOnsInput>
   }
 
   export type UserCreateWithoutOrdersInput = {
@@ -11893,6 +12046,8 @@ export namespace Prisma {
     basePrice: Decimal | DecimalJsLike | number | string
     imageUrl?: string | null
     isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -11904,9 +12059,11 @@ export namespace Prisma {
     basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    addOns?: AddOnUpdateManyWithoutMenuItemNestedInput
+    addOns?: AddOnUpdateManyWithoutMenuItemsNestedInput
   }
 
   export type MenuItemUncheckedUpdateWithoutCategoryInput = {
@@ -11916,9 +12073,11 @@ export namespace Prisma {
     basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    addOns?: AddOnUncheckedUpdateManyWithoutMenuItemNestedInput
+    addOns?: AddOnUncheckedUpdateManyWithoutMenuItemsNestedInput
   }
 
   export type MenuItemUncheckedUpdateManyWithoutCategoryInput = {
@@ -11928,20 +12087,13 @@ export namespace Prisma {
     basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AddOnCreateManyMenuItemInput = {
-    id?: string
-    name: string
-    price: Decimal | DecimalJsLike | number | string
-    isAvailable?: boolean
-    createdAt?: Date | string
-    updatedAt?: Date | string
-  }
-
-  export type AddOnUpdateWithoutMenuItemInput = {
+  export type AddOnUpdateWithoutMenuItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -11950,7 +12102,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AddOnUncheckedUpdateWithoutMenuItemInput = {
+  export type AddOnUncheckedUpdateWithoutMenuItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -11959,11 +12111,53 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
-  export type AddOnUncheckedUpdateManyWithoutMenuItemInput = {
+  export type AddOnUncheckedUpdateManyWithoutMenuItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MenuItemUpdateWithoutAddOnsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: CategoryUpdateOneRequiredWithoutMenuItemsNestedInput
+  }
+
+  export type MenuItemUncheckedUpdateWithoutAddOnsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
+    categoryId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MenuItemUncheckedUpdateManyWithoutAddOnsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
+    categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
