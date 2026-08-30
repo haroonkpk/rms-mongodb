@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { CartItem, POSOrderPayload } from "@/types/pos";
 import { createPOSOrder } from "@/actions/pos";
 import { Button } from "@/components/ui/button";
@@ -194,21 +194,58 @@ export function BillDrawer({
         }),
   };
 
-  if (!isOpen) return null;
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setIsMounted(true);
+      const raf = requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsVisible(true);
+        });
+      });
+      return () => cancelAnimationFrame(raf);
+    } else {
+      setIsVisible(false);
+      const timer = setTimeout(() => {
+        setIsMounted(false);
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.body.style.overflow = "hidden";
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = "unset";
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isMounted, onClose]);
+
+  if (!isMounted) return null;
 
   return (
     <>
       {/* Dim Overlay Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-2xs transition-opacity"
+        className={cn(
+          "fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-300 ease-in-out cursor-pointer",
+          isVisible ? "opacity-100" : "opacity-0 pointer-events-none",
+        )}
       />
 
       {/* Side Slide-Out Bill Drawer */}
       <aside
         className={cn(
-          "fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[clamp(40rem,45vw,38rem)] bg-(--color-page-bg) border-l border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden transition-transform duration-300 ease-in-out",
-          isOpen ? "translate-x-0" : "translate-x-full",
+          "fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[clamp(40rem,45vw,38rem)] bg-(--color-page-bg) border-l border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu",
+          isVisible ? "translate-x-0" : "translate-x-full",
         )}
       >
         {/* Drawer Header */}
