@@ -236,7 +236,7 @@ export function BillDrawer({
       <div
         onClick={onClose}
         className={cn(
-          "fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-xs transition-opacity duration-300 ease-in-out cursor-pointer",
+          "fixed inset-0 z-50 bg-slate-900/70  transition-opacity duration-300 ease-in-out cursor-pointer",
           isVisible ? "opacity-100" : "opacity-0 pointer-events-none",
         )}
       />
