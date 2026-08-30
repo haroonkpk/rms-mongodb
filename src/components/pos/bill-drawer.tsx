@@ -1,23 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { CartItem, POSOrderPayload } from "@/types/pos";
 import { createPOSOrder } from "@/actions/pos";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { PrintPdfButton } from "@/components/shared/print-pdf-button";
 import {
   Receipt,
   X,
   Banknote,
   QrCode,
   Printer,
-  RotateCcw,
   AlertCircle,
   BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import toast from "react-hot-toast";
 import { BillItemCard } from "./bill-item-card";
 import { BillOrderReceipt, OrderCompletedResult } from "./bill-order-receipt";
 
@@ -49,9 +49,17 @@ export function BillDrawer({
   const [customerNotes, setCustomerNotes] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mountedPortal, setMountedPortal] = useState(false);
 
-  const [orderCompletedResult, setOrderCompletedResult] =
-    useState<OrderCompletedResult | null>(null);
+  const [lastOrderReceipt, setLastOrderReceipt] = useState<{
+    orderResult: OrderCompletedResult;
+    items: CartItem[];
+    totalAmount: number;
+  } | null>(null);
+
+  useEffect(() => {
+    setMountedPortal(true);
+  }, []);
 
   const totalAmount = billItems.reduce((acc, item) => acc + item.itemTotal, 0);
   const totalItemCount = billItems.reduce(
@@ -120,7 +128,7 @@ export function BillDrawer({
       const res = await createPOSOrder(payload);
 
       if (res.success && res.orderNumber) {
-        setOrderCompletedResult({
+        const orderResult: OrderCompletedResult = {
           orderNumber: res.orderNumber,
           createdAt: res.createdAt || new Date().toLocaleString(),
           cashierName: res.cashierName || cashierName,
@@ -136,62 +144,38 @@ export function BillDrawer({
           customerName: isLedger ? customerName.trim() : undefined,
           customerPhone: isLedger ? customerPhone.trim() : undefined,
           notes: customerNotes.trim() || undefined,
+        };
+
+        // 1. Mount receipt into document.body portal for thermal printer
+        setLastOrderReceipt({
+          orderResult,
+          items: [...billItems],
+          totalAmount,
         });
+
+        toast.success(`Order #${res.orderNumber} placed successfully!`);
+
+        // 2. Allow 200ms for React Portal DOM update, then trigger print & reset
+        setTimeout(() => {
+          window.print();
+
+          // 3. Reset form inputs, clear bill & close drawer
+          setCustomerName("");
+          setCustomerPhone("");
+          setCustomerNotes("");
+          setPaymentMethod("CASH");
+          onClearBill();
+          onClose();
+        }, 200);
       } else {
-        alert(res.error || "Failed to place order.");
+        toast.error(res.error || "Failed to place order.");
       }
     } catch (err) {
       console.error("Order placement error:", err);
-      alert("An error occurred while placing order.");
+      toast.error("An error occurred while placing order.");
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  const handleResetForNewOrder = () => {
-    setOrderCompletedResult(null);
-    setCustomerName("");
-    setCustomerPhone("");
-    setCustomerNotes("");
-    setValidationError(null);
-    onClearBill();
-  };
-
-  // PDF Data formatting for PrintPdfButton
-  const pdfHeaders = [
-    { key: "item", label: "Item Name" },
-    { key: "qty", label: "Qty" },
-    { key: "price", label: "Price" },
-    { key: "total", label: "Total" },
-  ];
-
-  const pdfData = billItems.map((c) => ({
-    item: `${c.name}${c.variant ? ` (${c.variant.name})` : ""}`,
-    qty: c.quantity,
-    price: `Rs. ${c.unitPrice.toLocaleString()}`,
-    total: `Rs. ${c.itemTotal.toLocaleString()}`,
-  }));
-
-  const pdfSummary = {
-    "Total Payable": `Rs. ${totalAmount.toLocaleString()}`,
-    "Payment Method":
-      paymentMethod === "CASH"
-        ? "Cash Payment"
-        : paymentMethod === "QR_CODE"
-          ? "QR Code Digital"
-          : "Customer Ledger (Credit)",
-    "Payment Status":
-      paymentMethod === "LEDGER" ? "UNPAID (Full Qarza)" : "PAID",
-    ...(paymentMethod === "LEDGER"
-      ? {
-          "Customer Name": customerName,
-          "Customer Phone": customerPhone,
-          "Due Balance (Qarza)": `Rs. ${totalAmount.toLocaleString()}`,
-          ...(customerNotes ? { "Ledger Note": customerNotes } : {}),
-        }
-      : {
-          "Payment Received": `Rs. ${totalAmount.toLocaleString()}`,
-        }),
   };
 
   const [isMounted, setIsMounted] = useState(false);
@@ -228,65 +212,78 @@ export function BillDrawer({
     };
   }, [isMounted, onClose]);
 
-  if (!isMounted) return null;
-
   return (
     <>
-      {/* Dim Overlay Backdrop */}
-      <div
-        onClick={onClose}
-        className={cn(
-          "fixed inset-0 z-50 bg-slate-900/70  transition-opacity duration-300 ease-in-out cursor-pointer",
-          isVisible ? "opacity-100" : "opacity-0 pointer-events-none",
+      {/* Thermal Receipt Portal attached directly to document.body */}
+      {mountedPortal &&
+        lastOrderReceipt &&
+        createPortal(
+          <div id="pos-thermal-receipt-container">
+            <BillOrderReceipt
+              orderCompletedResult={lastOrderReceipt.orderResult}
+              billItems={lastOrderReceipt.items}
+              totalAmount={lastOrderReceipt.totalAmount}
+              isPrintOnly
+            />
+          </div>,
+          document.body,
         )}
-      />
 
-      {/* Side Slide-Out Bill Drawer */}
-      <aside
-        className={cn(
-          "fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[clamp(40rem,45vw,38rem)] bg-(--color-page-bg) border-l border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu",
-          isVisible ? "translate-x-0" : "translate-x-full",
-        )}
-      >
-        {/* Drawer Header */}
-        <div className="flex items-center justify-between px-[clamp(1rem,1.5vw,1.25rem)] py-[clamp(0.875rem,1.2vw,1rem)] border-b border-slate-100 bg-slate-50/50 shrink-0">
-          <div className="flex items-center gap-2">
-            <div className="w-12 h-12 text-[var(--color-primary)] flex items-center justify-center font-bold">
-              <Receipt size={26} />
-            </div>
-            <div>
-              <h2 className="text-[1rem] font-bold text-slate-900 leading-tight">
-                Current Order Bill
-              </h2>
-              <p className="text-[0.7rem] text-slate-500 font-medium">
-                {totalItemCount} {totalItemCount === 1 ? "item" : "items"} in
-                bill
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            {billItems.length > 0 && !orderCompletedResult && (
-              <button
-                onClick={onClearBill}
-                className="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
-              >
-                Clear
-              </button>
+      {isMounted && (
+        <>
+          {/* Dim Overlay Backdrop */}
+          <div
+            onClick={onClose}
+            className={cn(
+              "fixed inset-0 z-50 bg-slate-900/70 transition-opacity duration-300 ease-in-out cursor-pointer",
+              isVisible ? "opacity-100" : "opacity-0 pointer-events-none",
             )}
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer"
-            >
-              <X size={20} />
-            </button>
-          </div>
-        </div>
+          />
 
-        {/* Drawer Body */}
-        <div className="flex-1 overflow-y-auto p-[clamp(1rem,1.5vw,1.25rem)] space-y-4">
-          {!orderCompletedResult ? (
-            <>
+          {/* Side Slide-Out Bill Drawer */}
+          <aside
+            className={cn(
+              "fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[clamp(40rem,45vw,38rem)] bg-(--color-page-bg) border-l border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu",
+              isVisible ? "translate-x-0" : "translate-x-full",
+            )}
+          >
+            {/* Drawer Header */}
+            <div className="flex items-center justify-between px-[clamp(1rem,1.5vw,1.25rem)] py-[clamp(0.875rem,1.2vw,1rem)] border-b border-slate-100 bg-slate-50/50 shrink-0">
+              <div className="flex items-center gap-2">
+                <div className="w-12 h-12 text-[var(--color-primary)] flex items-center justify-center font-bold">
+                  <Receipt size={26} />
+                </div>
+                <div>
+                  <h2 className="text-[1rem] font-bold text-slate-900 leading-tight">
+                    Current Order Bill
+                  </h2>
+                  <p className="text-[0.7rem] text-slate-500 font-medium">
+                    {totalItemCount} {totalItemCount === 1 ? "item" : "items"}{" "}
+                    in bill
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                {billItems.length > 0 && (
+                  <button
+                    onClick={onClearBill}
+                    className="text-xs font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                  >
+                    Clear
+                  </button>
+                )}
+                <button
+                  onClick={onClose}
+                  className="p-1.5 rounded-full text-slate-400 hover:bg-slate-100 hover:text-slate-700 transition-colors cursor-pointer"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+            </div>
+
+            {/* Drawer Body */}
+            <div className="flex-1 overflow-y-auto p-[clamp(1rem,1.5vw,1.25rem)] space-y-4">
               {/* Bill Items List */}
               {billItems.length === 0 ? (
                 <div className="py-16 text-center">
@@ -326,6 +323,7 @@ export function BillDrawer({
                       </span>
                     )}
                   </div>
+
                   {/* Payment Buttons Grid */}
                   <div className="grid grid-cols-3 gap-2">
                     {paymentMethods.map((method) => {
@@ -343,7 +341,6 @@ export function BillDrawer({
                           }}
                           className={cn(
                             "p-2.5 border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer text-[0.72rem] font-bold text-center",
-
                             isSelected
                               ? isLedger
                                 ? "border-rose-600 bg-rose-600 text-white shadow-2xs"
@@ -359,7 +356,8 @@ export function BillDrawer({
                       );
                     })}
                   </div>
-                  {/* LEDGER: Customer Details Input Form  */}
+
+                  {/* LEDGER: Customer Details Input Form */}
                   {paymentMethod === "LEDGER" && (
                     <div className="p-3.5 bg-white border border-slate-200 space-y-3 animate-in fade-in duration-200">
                       <div className="flex items-center justify-between border-b border-slate-200 pb-2">
@@ -407,7 +405,7 @@ export function BillDrawer({
                       />
 
                       {validationError && (
-                        <p className="text-[0.68rem] font-bold text-rose-600 flex items-center gap-1  p-2 ">
+                        <p className="text-[0.68rem] font-bold text-rose-600 flex items-center gap-1 p-2">
                           <AlertCircle
                             size={13}
                             className="shrink-0 text-rose-600"
@@ -419,21 +417,10 @@ export function BillDrawer({
                   )}
                 </div>
               )}
-            </>
-          ) : (
-            /* Order Placed Receipt Screen */
-            <BillOrderReceipt
-              orderCompletedResult={orderCompletedResult}
-              billItems={billItems}
-              totalAmount={totalAmount}
-            />
-          )}
-        </div>
+            </div>
 
-        {/* Drawer Footer */}
-        <div className="p-[clamp(1rem,1.5vw,1.25rem)] border-t border-slate-200 bg-white space-y-3 shrink-0">
-          {!orderCompletedResult ? (
-            <>
+            {/* Drawer Footer */}
+            <div className="p-[clamp(1rem,1.5vw,1.25rem)] border-t border-slate-200 bg-white space-y-3 shrink-0">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Total Bill
@@ -460,31 +447,10 @@ export function BillDrawer({
                   ? "Record Ledger Order & Print"
                   : "Place Order & Print"}
               </Button>
-            </>
-          ) : (
-            <div className="space-y-2">
-              <PrintPdfButton
-                title={`Receipt - ${orderCompletedResult.orderNumber}`}
-                subtitle={`Cashier: ${orderCompletedResult.cashierName} | Payment: ${orderCompletedResult.paymentMethod}`}
-                headers={pdfHeaders}
-                data={pdfData}
-                summary={pdfSummary}
-                fileName={`Receipt_${orderCompletedResult.orderNumber}`}
-                variant="primary"
-              />
-
-              <Button
-                variant="outline"
-                onClick={handleResetForNewOrder}
-                icon={<RotateCcw className="w-4 h-4" />}
-                className="w-full text-xs py-2.5 font-semibold cursor-pointer"
-              >
-                Start New Order
-              </Button>
             </div>
-          )}
-        </div>
-      </aside>
+          </aside>
+        </>
+      )}
     </>
   );
 }
