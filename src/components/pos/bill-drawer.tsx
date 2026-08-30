@@ -4,28 +4,29 @@ import React, { useState } from "react";
 import { CartItem, POSOrderPayload } from "@/types/pos";
 import { createPOSOrder } from "@/actions/pos";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { PrintPdfButton } from "@/components/shared/print-pdf-button";
 import {
   Receipt,
   X,
-  Trash2,
-  Plus,
-  Minus,
   Banknote,
-  CreditCard,
   QrCode,
   Printer,
-  CheckCircle2,
   RotateCcw,
+  AlertCircle,
+  BookOpen,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { BillItemCard } from "./bill-item-card";
+import { BillOrderReceipt, OrderCompletedResult } from "./bill-order-receipt";
 
 interface BillDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   billItems: CartItem[];
   onUpdateQuantity: (cartItemId: string, newQuantity: number) => void;
-  onRemoveItem: (cartItemId: string) => void;
+  onRemoveItem?: (cartItemId: string) => void;
   onClearBill: () => void;
   cashierName?: string;
 }
@@ -40,18 +41,17 @@ export function BillDrawer({
   cashierName = "Cashier",
 }: BillDrawerProps) {
   const [paymentMethod, setPaymentMethod] = useState<
-    "CASH" | "CARD" | "QR_CODE"
+    "CASH" | "QR_CODE" | "LEDGER"
   >("CASH");
 
-  const [cashReceivedInput, setCashReceivedInput] = useState("");
+  const [customerName, setCustomerName] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [customerNotes, setCustomerNotes] = useState("");
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [orderCompletedResult, setOrderCompletedResult] = useState<{
-    orderNumber: string;
-    createdAt: string;
-    cashierName: string;
-    cashReceived?: number;
-    changeGiven?: number;
-  } | null>(null);
+
+  const [orderCompletedResult, setOrderCompletedResult] =
+    useState<OrderCompletedResult | null>(null);
 
   const totalAmount = billItems.reduce((acc, item) => acc + item.itemTotal, 0);
   const totalItemCount = billItems.reduce(
@@ -59,24 +59,62 @@ export function BillDrawer({
     0,
   );
 
-  const cashReceived = parseFloat(cashReceivedInput) || 0;
-  const changeGiven = Math.max(0, cashReceived - totalAmount);
-  const isCashInsufficient =
-    paymentMethod === "CASH" && cashReceived < totalAmount;
+  const paymentMethods = [
+    {
+      value: "CASH",
+      label: "Cash",
+      icon: Banknote,
+    },
+    {
+      value: "QR_CODE",
+      label: "QR Code",
+      icon: QrCode,
+    },
+    {
+      value: "LEDGER",
+      label: "Ledger",
+      icon: BookOpen,
+    },
+  ] as const;
 
   const handlePlaceOrderAndPrint = async () => {
     if (billItems.length === 0) return;
 
+    // Validation for Full Ledger Orders
+    if (paymentMethod === "LEDGER") {
+      if (!customerName.trim()) {
+        setValidationError(
+          "Customer Full Name is required for Customer Ledger (Qarza) orders.",
+        );
+        return;
+      }
+      if (!customerPhone.trim()) {
+        setValidationError(
+          "Customer Phone Number is required for Customer Ledger (Qarza) orders.",
+        );
+        return;
+      }
+    }
+
+    setValidationError(null);
+
     try {
       setIsSubmitting(true);
+
+      const isLedger = paymentMethod === "LEDGER";
 
       const payload: POSOrderPayload = {
         items: billItems,
         subtotal: totalAmount,
         totalAmount: totalAmount,
-        paymentMethod,
-        cashReceived: paymentMethod === "CASH" ? cashReceived : undefined,
-        changeGiven: paymentMethod === "CASH" ? changeGiven : undefined,
+        paymentMethod: paymentMethod,
+        paymentStatus: isLedger ? "UNPAID" : "PAID",
+        cashReceived: isLedger ? 0 : totalAmount,
+        changeGiven: 0,
+        dueAmount: isLedger ? totalAmount : 0,
+        customerName: isLedger ? customerName.trim() : undefined,
+        customerPhone: isLedger ? customerPhone.trim() : undefined,
+        notes: customerNotes.trim() || undefined,
       };
 
       const res = await createPOSOrder(payload);
@@ -86,8 +124,18 @@ export function BillDrawer({
           orderNumber: res.orderNumber,
           createdAt: res.createdAt || new Date().toLocaleString(),
           cashierName: res.cashierName || cashierName,
-          cashReceived: paymentMethod === "CASH" ? cashReceived : undefined,
-          changeGiven: paymentMethod === "CASH" ? changeGiven : undefined,
+          paymentMethod:
+            paymentMethod === "CASH"
+              ? "Cash Payment"
+              : paymentMethod === "QR_CODE"
+                ? "QR Code Digital"
+                : "Customer Ledger (Credit)",
+          paymentStatus: isLedger ? "UNPAID" : "PAID",
+          cashReceived: isLedger ? 0 : totalAmount,
+          dueAmount: isLedger ? totalAmount : 0,
+          customerName: isLedger ? customerName.trim() : undefined,
+          customerPhone: isLedger ? customerPhone.trim() : undefined,
+          notes: customerNotes.trim() || undefined,
         });
       } else {
         alert(res.error || "Failed to place order.");
@@ -102,7 +150,10 @@ export function BillDrawer({
 
   const handleResetForNewOrder = () => {
     setOrderCompletedResult(null);
-    setCashReceivedInput("");
+    setCustomerName("");
+    setCustomerPhone("");
+    setCustomerNotes("");
+    setValidationError(null);
     onClearBill();
   };
 
@@ -123,13 +174,24 @@ export function BillDrawer({
 
   const pdfSummary = {
     "Total Payable": `Rs. ${totalAmount.toLocaleString()}`,
-    "Payment Method": paymentMethod,
-    ...(paymentMethod === "CASH"
+    "Payment Method":
+      paymentMethod === "CASH"
+        ? "Cash Payment"
+        : paymentMethod === "QR_CODE"
+          ? "QR Code Digital"
+          : "Customer Ledger (Credit)",
+    "Payment Status":
+      paymentMethod === "LEDGER" ? "UNPAID (Full Qarza)" : "PAID",
+    ...(paymentMethod === "LEDGER"
       ? {
-          "Cash Received": `Rs. ${cashReceived.toLocaleString()}`,
-          "Change Returned": `Rs. ${changeGiven.toLocaleString()}`,
+          "Customer Name": customerName,
+          "Customer Phone": customerPhone,
+          "Due Balance (Qarza)": `Rs. ${totalAmount.toLocaleString()}`,
+          ...(customerNotes ? { "Ledger Note": customerNotes } : {}),
         }
-      : {}),
+      : {
+          "Payment Received": `Rs. ${totalAmount.toLocaleString()}`,
+        }),
   };
 
   if (!isOpen) return null;
@@ -139,13 +201,13 @@ export function BillDrawer({
       {/* Dim Overlay Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-2xs transition-opacity"
+        className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-2xs transition-opacity"
       />
 
       {/* Side Slide-Out Bill Drawer */}
       <aside
         className={cn(
-          "fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[clamp(34rem,35vw,26rem)] bg-(--color-page-bg) border-l border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden transition-transform duration-300 ease-in-out",
+          "fixed right-0 top-0 bottom-0 z-50 w-full sm:w-[clamp(40rem,45vw,38rem)] bg-(--color-page-bg) border-l border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden transition-transform duration-300 ease-in-out",
           isOpen ? "translate-x-0" : "translate-x-full",
         )}
       >
@@ -184,7 +246,7 @@ export function BillDrawer({
           </div>
         </div>
 
-        {/* Drawer Body - Scrollable */}
+        {/* Drawer Body */}
         <div className="flex-1 overflow-y-auto p-[clamp(1rem,1.5vw,1.25rem)] space-y-4">
           {!orderCompletedResult ? (
             <>
@@ -204,202 +266,118 @@ export function BillDrawer({
               ) : (
                 <div className="space-y-3">
                   {billItems.map((item) => (
-                    <div
+                    <BillItemCard
                       key={item.cartItemId}
-                      className="p-3.5 bg-white border border-slate-200 shadow-xs space-y-2.5 transition-all hover:border-slate-300 hover:shadow-xs"
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="min-w-0 flex-1 space-y-1.5">
-                          {/* Item Title  */}
-                          <div
-                            className="inline-flex items-center px-3.5 pr-7 py-1.5 bg-(--color-primary)/90 max-w-full"
-                            style={{
-                              clipPath:
-                                "polygon(0 0, 100% 0, 90% 100%, 0 100%)",
-                            }}
-                          >
-                            <h4 className="text-(clamp(0.875rem,1.2vw,1rem))! font-bold text-white truncate">
-                              {item.name}
-                            </h4>
-                          </div>
-
-                          {/* Size / Variant Badge */}
-                          {item.variant && (
-                            <div className="flex items-center gap-1.5 pt-0.5">
-                              <span className="text-[0.65rem] font-semibold text-slate-400 uppercase tracking-wider">
-                                Size:
-                              </span>
-                              <span className="inline-flex items-center px-2 py-0.5 text-[0.7rem] font-bold bg-[var(--color-primary)]/10 text-[var(--color-primary)] border border-[var(--color-primary)]/25">
-                                {item.variant.name}
-                              </span>
-                            </div>
-                          )}
-
-                          {/* Bulleted Add-ons List */}
-                          {item.addOns.length > 0 && (
-                            <div className="pt-1 space-y-1">
-                              <span className="text-[0.65rem] font-bold uppercase tracking-wider text-slate-400 block">
-                                Add-ons:
-                              </span>
-                              <ul className="space-y-1 pl-1 text-[0.7rem] text-slate-600">
-                                {item.addOns.map((addon) => (
-                                  <li
-                                    key={addon.id}
-                                    className="flex items-center justify-between gap-2"
-                                  >
-                                    <div className="flex items-center gap-1.5 min-w-0">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] shrink-0" />
-                                      <span className="truncate font-medium">
-                                        {addon.name}
-                                      </span>
-                                    </div>
-                                    {addon.price > 0 && (
-                                      <span className="text-[0.65rem] font-semibold text-emerald-600 shrink-0">
-                                        +Rs. {addon.price.toLocaleString()}
-                                      </span>
-                                    )}
-                                  </li>
-                                ))}
-                              </ul>
-                            </div>
-                          )}
-
-                          {/* Notes */}
-                          {item.notes && (
-                            <div className="mt-1 flex items-start gap-1 text-[0.68rem] bg-amber-50/80  px-2 py-1 text-amber-800">
-                              <span className="font-semibold">Note:</span>{" "}
-                              {item.notes}
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Price Display */}
-                        <div className="text-right shrink-0">
-                          <span className="text-xs font-black text-slate-900 block">
-                            Rs. {item.itemTotal.toLocaleString()}
-                          </span>
-                          <span className="text-[0.65rem] font-medium text-slate-400 block mt-0.5">
-                            Rs. {item.unitPrice.toLocaleString()} ea
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Quantity Controls & Delete */}
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100">
-                        <div className="flex items-center gap-1.5 bg-slate-50 p-0.5 rounded-md border border-slate-200/70">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              onUpdateQuantity(
-                                item.cartItemId,
-                                item.quantity - 1,
-                              )
-                            }
-                            className="w-6 h-6 rounded bg-white text-slate-700 flex items-center justify-center border border-slate-200 shadow-2xs hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer"
-                            title="Decrease quantity"
-                          >
-                            <Minus size={12} />
-                          </button>
-                          <span className="text-xs font-bold text-slate-900 min-w-[1.5rem] text-center">
-                            {item.quantity}
-                          </span>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              onUpdateQuantity(
-                                item.cartItemId,
-                                item.quantity + 1,
-                              )
-                            }
-                            className="w-6 h-6 rounded bg-white text-slate-700 flex items-center justify-center border border-slate-200 shadow-2xs hover:bg-slate-100 active:bg-slate-200 transition-colors cursor-pointer"
-                            title="Increase quantity"
-                          >
-                            <Plus size={12} />
-                          </button>
-                        </div>
-
-                        <button
-                          type="button"
-                          onClick={() => onRemoveItem(item.cartItemId)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
-                          title="Remove item"
-                        >
-                          <Trash2 size={14} />
-                        </button>
-                      </div>
-                    </div>
+                      item={item}
+                      onUpdateQuantity={onUpdateQuantity}
+                      onRemoveItem={onRemoveItem}
+                    />
                   ))}
                 </div>
               )}
 
-              {/* Integrated Payment Method Section */}
+              {/* Integrated Payment Method & Ledger Section */}
               {billItems.length > 0 && (
-                <div className="pt-4 border-t border-slate-200 space-y-3">
-                  <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
-                    Payment Method
-                  </label>
-                  <div className="grid grid-cols-3 gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("CASH")}
-                      className={cn(
-                        "p-2.5 border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer text-xs font-bold",
-                        paymentMethod === "CASH"
-                          ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-2xs"
-                          : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
-                      )}
-                    >
-                      <Banknote size={16} />
-                      Cash
-                    </button>
-
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("QR_CODE")}
-                      className={cn(
-                        "p-2.5 border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer text-xs font-bold",
-                        paymentMethod === "QR_CODE"
-                          ? "border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-2xs"
-                          : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
-                      )}
-                    >
-                      <QrCode size={16} />
-                      QR Code
-                    </button>
+                <div className="pt-4 border-t border-slate-200 space-y-3.5">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                      Payment Method
+                    </label>
+                    {paymentMethod === "LEDGER" && (
+                      <span className="text-[0.65rem] font-bold uppercase tracking-wider px-2 py-0.5 bg-rose-100 text-rose-700 border border-rose-200">
+                        Pay Later
+                      </span>
+                    )}
                   </div>
+                  {/* Payment Buttons Grid */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {paymentMethods.map((method) => {
+                      const Icon = method.icon;
+                      const isLedger = method.value === "LEDGER";
+                      const isSelected = paymentMethod === method.value;
 
-                  {/* Cash Received Input */}
-                  {paymentMethod === "CASH" && (
-                    <div className="p-3 bg-slate-50 rounded-[clamp(0.5rem,0.75vw,0.625rem)] border border-slate-200 space-y-2">
-                      <div>
-                        <label className="block text-[0.7rem] font-bold text-slate-700 mb-1">
-                          Cash Received (Rs)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.01"
-                          value={cashReceivedInput}
-                          onChange={(e) => setCashReceivedInput(e.target.value)}
-                          placeholder={`Min Rs. ${totalAmount.toLocaleString()}`}
-                          className="w-full px-3 py-1.5 bg-white text-sm font-bold text-slate-900 rounded border border-slate-300 focus:outline-none focus:ring-1 focus:ring-[var(--color-primary)]"
-                        />
-                      </div>
-
-                      <div className="flex items-center justify-between pt-1 border-t border-slate-200 text-xs">
-                        <span className="font-semibold text-slate-600">
-                          Change Due:
-                        </span>
-                        <span
+                      return (
+                        <button
+                          key={method.value}
+                          type="button"
+                          onClick={() => {
+                            setPaymentMethod(method.value);
+                            setValidationError(null);
+                          }}
                           className={cn(
-                            "font-bold",
-                            isCashInsufficient
-                              ? "text-rose-600"
-                              : "text-emerald-700",
+                            "p-2.5 border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer text-[0.72rem] font-bold text-center",
+
+                            isSelected
+                              ? isLedger
+                                ? "border-rose-600 bg-rose-600 text-white shadow-2xs"
+                                : "border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-2xs"
+                              : isLedger
+                                ? "border-rose-200 bg-rose-50/50 text-rose-700 hover:bg-rose-100/60"
+                                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
                           )}
                         >
-                          Rs. {changeGiven.toLocaleString()}
+                          <Icon size={18} />
+                          {method.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {/* LEDGER: Customer Details Input Form  */}
+                  {paymentMethod === "LEDGER" && (
+                    <div className="p-3.5 bg-white border border-slate-200 space-y-3 animate-in fade-in duration-200">
+                      <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                        <span className="text-xs font-bold text-slate-900 flex items-center gap-1.5">
+                          Customer Details
+                        </span>
+                        <span className="text-[0.65rem] font-bold text-rose-700">
+                          Due: Rs. {totalAmount.toLocaleString()}
                         </span>
                       </div>
+
+                      {/* Customer Full Name */}
+                      <Input
+                        label="Customer Full Name"
+                        required
+                        type="text"
+                        value={customerName}
+                        onChange={(e) => {
+                          setCustomerName(e.target.value);
+                          if (validationError) setValidationError(null);
+                        }}
+                        placeholder="e.g. Muhammad Ali"
+                      />
+
+                      {/* Customer Phone Number */}
+                      <Input
+                        label="Customer Phone Number"
+                        required
+                        type="tel"
+                        value={customerPhone}
+                        onChange={(e) => {
+                          setCustomerPhone(e.target.value);
+                          if (validationError) setValidationError(null);
+                        }}
+                        placeholder="e.g. 0300-1234567"
+                      />
+
+                      {/* Ledger Note */}
+                      <Textarea
+                        label="Ledger / Credit Note (Optional)"
+                        rows={2}
+                        value={customerNotes}
+                        onChange={(e) => setCustomerNotes(e.target.value)}
+                        placeholder="Optional credit note or promise date..."
+                      />
+
+                      {validationError && (
+                        <p className="text-[0.68rem] font-bold text-rose-600 flex items-center gap-1  p-2 ">
+                          <AlertCircle
+                            size={13}
+                            className="shrink-0 text-rose-600"
+                          />
+                          {validationError}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
@@ -407,55 +385,11 @@ export function BillDrawer({
             </>
           ) : (
             /* Order Placed Receipt Screen */
-            <div className="space-y-4 py-4">
-              <div className="p-4 bg-emerald-50 rounded-[clamp(0.5rem,1vw,0.75rem)] border border-emerald-200 text-center">
-                <div className="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center mx-auto mb-2 shadow-xs">
-                  <CheckCircle2 size={24} />
-                </div>
-                <h3 className="text-base font-bold text-emerald-900">
-                  Order Placed & Completed!
-                </h3>
-                <p className="text-xs text-emerald-700 mt-0.5">
-                  Order Number:{" "}
-                  <span className="font-bold">
-                    {orderCompletedResult.orderNumber}
-                  </span>
-                </p>
-              </div>
-
-              {/* Receipt Box */}
-              <div className="p-4 bg-white border border-slate-200 rounded-[clamp(0.5rem,1vw,0.75rem)] text-xs text-slate-700 space-y-2 font-mono">
-                <div className="text-center border-b border-dashed border-slate-300 pb-2">
-                  <h4 className="font-bold text-sm text-slate-900">
-                    RESTAURANT MANAGEMENT
-                  </h4>
-                  <p className="text-[0.65rem] text-slate-400">
-                    {orderCompletedResult.createdAt}
-                  </p>
-                </div>
-
-                <div className="flex justify-between text-[0.7rem]">
-                  <span>Receipt #: {orderCompletedResult.orderNumber}</span>
-                  <span>Cashier: {orderCompletedResult.cashierName}</span>
-                </div>
-
-                <div className="border-t border-b border-dashed border-slate-300 py-2 space-y-1">
-                  {billItems.map((item, idx) => (
-                    <div key={idx} className="flex justify-between items-start">
-                      <span className="truncate max-w-[12rem]">
-                        {item.quantity}x {item.name}
-                      </span>
-                      <span>Rs. {item.itemTotal.toLocaleString()}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex justify-between font-bold text-sm text-slate-900 pt-1">
-                  <span>Total Amount:</span>
-                  <span>Rs. {totalAmount.toLocaleString()}</span>
-                </div>
-              </div>
-            </div>
+            <BillOrderReceipt
+              orderCompletedResult={orderCompletedResult}
+              billItems={billItems}
+              totalAmount={totalAmount}
+            />
           )}
         </div>
 
@@ -474,20 +408,27 @@ export function BillDrawer({
 
               <Button
                 variant="primary"
-                disabled={billItems.length === 0 || isCashInsufficient}
+                disabled={billItems.length === 0}
                 onClick={handlePlaceOrderAndPrint}
                 isLoading={isSubmitting}
                 icon={<Printer className="w-4 h-4" />}
-                className="w-full text-white py-3 font-bold! text-[1rem]! bg-emerald-600 rounded-[clamp(0.3rem,0.35vw,0.3rem)]"
+                className={cn(
+                  "w-full text-white py-3 font-bold! text-[1rem]! rounded-[clamp(0.3rem,0.35vw,0.3rem)] cursor-pointer transition-colors",
+                  paymentMethod === "LEDGER"
+                    ? "bg-rose-600 hover:bg-rose-700"
+                    : "bg-emerald-600 hover:bg-emerald-700",
+                )}
               >
-                Place Order & Print
+                {paymentMethod === "LEDGER"
+                  ? "Record Ledger Order & Print"
+                  : "Place Order & Print"}
               </Button>
             </>
           ) : (
             <div className="space-y-2">
               <PrintPdfButton
                 title={`Receipt - ${orderCompletedResult.orderNumber}`}
-                subtitle={`Cashier: ${orderCompletedResult.cashierName} | Payment: ${paymentMethod}`}
+                subtitle={`Cashier: ${orderCompletedResult.cashierName} | Payment: ${orderCompletedResult.paymentMethod}`}
                 headers={pdfHeaders}
                 data={pdfData}
                 summary={pdfSummary}
@@ -499,7 +440,7 @@ export function BillDrawer({
                 variant="outline"
                 onClick={handleResetForNewOrder}
                 icon={<RotateCcw className="w-4 h-4" />}
-                className="w-full text-xs py-2.5 font-semibold"
+                className="w-full text-xs py-2.5 font-semibold cursor-pointer"
               >
                 Start New Order
               </Button>

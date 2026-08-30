@@ -35,10 +35,6 @@ enum EmployeeStatus {
 // USER MODEL 
 // ------------------------------------------
 
-// ------------------------------------------
-// USER MODEL 
-// ------------------------------------------
-
 model User {
   id String @id @default(uuid()) @db.Uuid
 
@@ -130,8 +126,13 @@ enum OrderStatus {
 
 enum PaymentMethod {
   CASH
-  CARD
   QR_CODE
+  LEDGER
+}
+
+enum PaymentStatus {
+  PAID
+  UNPAID
 }
 
 model Order {
@@ -141,12 +142,14 @@ model Order {
   cashier       User?         @relation(fields: [cashierId], references: [id], onDelete: SetNull)
   status        OrderStatus   @default(COMPLETED)
   paymentMethod PaymentMethod @default(CASH)
+  paymentStatus PaymentStatus @default(PAID) @map("payment_status")
   subtotal      Decimal       @db.Decimal(10, 2)
-  tax           Decimal       @db.Decimal(10, 2)
-  discount      Decimal       @default(0) @db.Decimal(10, 2)
   totalAmount   Decimal       @map("total_amount") @db.Decimal(10, 2)
   cashReceived  Decimal?      @map("cash_received") @db.Decimal(10, 2)
   changeGiven   Decimal?      @map("change_given") @db.Decimal(10, 2)
+  dueAmount     Decimal?      @default(0) @map("due_amount") @db.Decimal(10, 2)
+  customerName  String?       @map("customer_name")
+  customerPhone String?       @map("customer_phone")
   notes         String?
   items         OrderItem[]
   createdAt     DateTime      @default(now()) @map("created_at")
@@ -155,6 +158,9 @@ model Order {
   @@map("orders")
   @@index([cashierId])
   @@index([status])
+  @@index([paymentMethod])
+  @@index([paymentStatus])
+  @@index([paymentStatus, createdAt])
   @@index([createdAt])
 }
 

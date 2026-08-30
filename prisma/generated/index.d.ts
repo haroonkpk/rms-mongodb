@@ -90,11 +90,19 @@ export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
 
 export const PaymentMethod: {
   CASH: 'CASH',
-  CARD: 'CARD',
-  QR_CODE: 'QR_CODE'
+  QR_CODE: 'QR_CODE',
+  LEDGER: 'LEDGER'
 };
 
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PaymentStatus: {
+  PAID: 'PAID',
+  UNPAID: 'UNPAID'
+};
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 }
 
@@ -117,6 +125,10 @@ export const OrderStatus: typeof $Enums.OrderStatus
 export type PaymentMethod = $Enums.PaymentMethod
 
 export const PaymentMethod: typeof $Enums.PaymentMethod
+
+export type PaymentStatus = $Enums.PaymentStatus
+
+export const PaymentStatus: typeof $Enums.PaymentStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -6202,20 +6214,18 @@ export namespace Prisma {
 
   export type OrderAvgAggregateOutputType = {
     subtotal: Decimal | null
-    tax: Decimal | null
-    discount: Decimal | null
     totalAmount: Decimal | null
     cashReceived: Decimal | null
     changeGiven: Decimal | null
+    dueAmount: Decimal | null
   }
 
   export type OrderSumAggregateOutputType = {
     subtotal: Decimal | null
-    tax: Decimal | null
-    discount: Decimal | null
     totalAmount: Decimal | null
     cashReceived: Decimal | null
     changeGiven: Decimal | null
+    dueAmount: Decimal | null
   }
 
   export type OrderMinAggregateOutputType = {
@@ -6224,12 +6234,14 @@ export namespace Prisma {
     cashierId: string | null
     status: $Enums.OrderStatus | null
     paymentMethod: $Enums.PaymentMethod | null
+    paymentStatus: $Enums.PaymentStatus | null
     subtotal: Decimal | null
-    tax: Decimal | null
-    discount: Decimal | null
     totalAmount: Decimal | null
     cashReceived: Decimal | null
     changeGiven: Decimal | null
+    dueAmount: Decimal | null
+    customerName: string | null
+    customerPhone: string | null
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6241,12 +6253,14 @@ export namespace Prisma {
     cashierId: string | null
     status: $Enums.OrderStatus | null
     paymentMethod: $Enums.PaymentMethod | null
+    paymentStatus: $Enums.PaymentStatus | null
     subtotal: Decimal | null
-    tax: Decimal | null
-    discount: Decimal | null
     totalAmount: Decimal | null
     cashReceived: Decimal | null
     changeGiven: Decimal | null
+    dueAmount: Decimal | null
+    customerName: string | null
+    customerPhone: string | null
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -6258,12 +6272,14 @@ export namespace Prisma {
     cashierId: number
     status: number
     paymentMethod: number
+    paymentStatus: number
     subtotal: number
-    tax: number
-    discount: number
     totalAmount: number
     cashReceived: number
     changeGiven: number
+    dueAmount: number
+    customerName: number
+    customerPhone: number
     notes: number
     createdAt: number
     updatedAt: number
@@ -6273,20 +6289,18 @@ export namespace Prisma {
 
   export type OrderAvgAggregateInputType = {
     subtotal?: true
-    tax?: true
-    discount?: true
     totalAmount?: true
     cashReceived?: true
     changeGiven?: true
+    dueAmount?: true
   }
 
   export type OrderSumAggregateInputType = {
     subtotal?: true
-    tax?: true
-    discount?: true
     totalAmount?: true
     cashReceived?: true
     changeGiven?: true
+    dueAmount?: true
   }
 
   export type OrderMinAggregateInputType = {
@@ -6295,12 +6309,14 @@ export namespace Prisma {
     cashierId?: true
     status?: true
     paymentMethod?: true
+    paymentStatus?: true
     subtotal?: true
-    tax?: true
-    discount?: true
     totalAmount?: true
     cashReceived?: true
     changeGiven?: true
+    dueAmount?: true
+    customerName?: true
+    customerPhone?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -6312,12 +6328,14 @@ export namespace Prisma {
     cashierId?: true
     status?: true
     paymentMethod?: true
+    paymentStatus?: true
     subtotal?: true
-    tax?: true
-    discount?: true
     totalAmount?: true
     cashReceived?: true
     changeGiven?: true
+    dueAmount?: true
+    customerName?: true
+    customerPhone?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -6329,12 +6347,14 @@ export namespace Prisma {
     cashierId?: true
     status?: true
     paymentMethod?: true
+    paymentStatus?: true
     subtotal?: true
-    tax?: true
-    discount?: true
     totalAmount?: true
     cashReceived?: true
     changeGiven?: true
+    dueAmount?: true
+    customerName?: true
+    customerPhone?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -6433,12 +6453,14 @@ export namespace Prisma {
     cashierId: string | null
     status: $Enums.OrderStatus
     paymentMethod: $Enums.PaymentMethod
+    paymentStatus: $Enums.PaymentStatus
     subtotal: Decimal
-    tax: Decimal
-    discount: Decimal
     totalAmount: Decimal
     cashReceived: Decimal | null
     changeGiven: Decimal | null
+    dueAmount: Decimal | null
+    customerName: string | null
+    customerPhone: string | null
     notes: string | null
     createdAt: Date
     updatedAt: Date
@@ -6469,12 +6491,14 @@ export namespace Prisma {
     cashierId?: boolean
     status?: boolean
     paymentMethod?: boolean
+    paymentStatus?: boolean
     subtotal?: boolean
-    tax?: boolean
-    discount?: boolean
     totalAmount?: boolean
     cashReceived?: boolean
     changeGiven?: boolean
+    dueAmount?: boolean
+    customerName?: boolean
+    customerPhone?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6489,12 +6513,14 @@ export namespace Prisma {
     cashierId?: boolean
     status?: boolean
     paymentMethod?: boolean
+    paymentStatus?: boolean
     subtotal?: boolean
-    tax?: boolean
-    discount?: boolean
     totalAmount?: boolean
     cashReceived?: boolean
     changeGiven?: boolean
+    dueAmount?: boolean
+    customerName?: boolean
+    customerPhone?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6507,12 +6533,14 @@ export namespace Prisma {
     cashierId?: boolean
     status?: boolean
     paymentMethod?: boolean
+    paymentStatus?: boolean
     subtotal?: boolean
-    tax?: boolean
-    discount?: boolean
     totalAmount?: boolean
     cashReceived?: boolean
     changeGiven?: boolean
+    dueAmount?: boolean
+    customerName?: boolean
+    customerPhone?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -6525,18 +6553,20 @@ export namespace Prisma {
     cashierId?: boolean
     status?: boolean
     paymentMethod?: boolean
+    paymentStatus?: boolean
     subtotal?: boolean
-    tax?: boolean
-    discount?: boolean
     totalAmount?: boolean
     cashReceived?: boolean
     changeGiven?: boolean
+    dueAmount?: boolean
+    customerName?: boolean
+    customerPhone?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "cashierId" | "status" | "paymentMethod" | "subtotal" | "tax" | "discount" | "totalAmount" | "cashReceived" | "changeGiven" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
+  export type OrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderNumber" | "cashierId" | "status" | "paymentMethod" | "paymentStatus" | "subtotal" | "totalAmount" | "cashReceived" | "changeGiven" | "dueAmount" | "customerName" | "customerPhone" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cashier?: boolean | Order$cashierArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
@@ -6561,12 +6591,14 @@ export namespace Prisma {
       cashierId: string | null
       status: $Enums.OrderStatus
       paymentMethod: $Enums.PaymentMethod
+      paymentStatus: $Enums.PaymentStatus
       subtotal: Prisma.Decimal
-      tax: Prisma.Decimal
-      discount: Prisma.Decimal
       totalAmount: Prisma.Decimal
       cashReceived: Prisma.Decimal | null
       changeGiven: Prisma.Decimal | null
+      dueAmount: Prisma.Decimal | null
+      customerName: string | null
+      customerPhone: string | null
       notes: string | null
       createdAt: Date
       updatedAt: Date
@@ -7000,12 +7032,14 @@ export namespace Prisma {
     readonly cashierId: FieldRef<"Order", 'String'>
     readonly status: FieldRef<"Order", 'OrderStatus'>
     readonly paymentMethod: FieldRef<"Order", 'PaymentMethod'>
+    readonly paymentStatus: FieldRef<"Order", 'PaymentStatus'>
     readonly subtotal: FieldRef<"Order", 'Decimal'>
-    readonly tax: FieldRef<"Order", 'Decimal'>
-    readonly discount: FieldRef<"Order", 'Decimal'>
     readonly totalAmount: FieldRef<"Order", 'Decimal'>
     readonly cashReceived: FieldRef<"Order", 'Decimal'>
     readonly changeGiven: FieldRef<"Order", 'Decimal'>
+    readonly dueAmount: FieldRef<"Order", 'Decimal'>
+    readonly customerName: FieldRef<"Order", 'String'>
+    readonly customerPhone: FieldRef<"Order", 'String'>
     readonly notes: FieldRef<"Order", 'String'>
     readonly createdAt: FieldRef<"Order", 'DateTime'>
     readonly updatedAt: FieldRef<"Order", 'DateTime'>
@@ -8720,12 +8754,14 @@ export namespace Prisma {
     cashierId: 'cashierId',
     status: 'status',
     paymentMethod: 'paymentMethod',
+    paymentStatus: 'paymentStatus',
     subtotal: 'subtotal',
-    tax: 'tax',
-    discount: 'discount',
     totalAmount: 'totalAmount',
     cashReceived: 'cashReceived',
     changeGiven: 'changeGiven',
+    dueAmount: 'dueAmount',
+    customerName: 'customerName',
+    customerPhone: 'customerPhone',
     notes: 'notes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -8926,6 +8962,20 @@ export namespace Prisma {
    * Reference to a field of type 'PaymentMethod[]'
    */
   export type ListEnumPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentMethod[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentStatus'
+   */
+  export type EnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PaymentStatus[]'
+   */
+  export type ListEnumPaymentStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PaymentStatus[]'>
     
 
 
@@ -9273,12 +9323,14 @@ export namespace Prisma {
     cashierId?: UuidNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFilter<"Order"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     subtotal?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     cashReceived?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     changeGiven?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    customerName?: StringNullableFilter<"Order"> | string | null
+    customerPhone?: StringNullableFilter<"Order"> | string | null
     notes?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -9292,12 +9344,14 @@ export namespace Prisma {
     cashierId?: SortOrderInput | SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
     subtotal?: SortOrder
-    tax?: SortOrder
-    discount?: SortOrder
     totalAmount?: SortOrder
     cashReceived?: SortOrderInput | SortOrder
     changeGiven?: SortOrderInput | SortOrder
+    dueAmount?: SortOrderInput | SortOrder
+    customerName?: SortOrderInput | SortOrder
+    customerPhone?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9314,12 +9368,14 @@ export namespace Prisma {
     cashierId?: UuidNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFilter<"Order"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     subtotal?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     cashReceived?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     changeGiven?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    customerName?: StringNullableFilter<"Order"> | string | null
+    customerPhone?: StringNullableFilter<"Order"> | string | null
     notes?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -9333,12 +9389,14 @@ export namespace Prisma {
     cashierId?: SortOrderInput | SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
     subtotal?: SortOrder
-    tax?: SortOrder
-    discount?: SortOrder
     totalAmount?: SortOrder
     cashReceived?: SortOrderInput | SortOrder
     changeGiven?: SortOrderInput | SortOrder
+    dueAmount?: SortOrderInput | SortOrder
+    customerName?: SortOrderInput | SortOrder
+    customerPhone?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -9358,12 +9416,14 @@ export namespace Prisma {
     cashierId?: UuidNullableWithAggregatesFilter<"Order"> | string | null
     status?: EnumOrderStatusWithAggregatesFilter<"Order"> | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodWithAggregatesFilter<"Order"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusWithAggregatesFilter<"Order"> | $Enums.PaymentStatus
     subtotal?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    tax?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    discount?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string
     cashReceived?: DecimalNullableWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     changeGiven?: DecimalNullableWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: DecimalNullableWithAggregatesFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    customerName?: StringNullableWithAggregatesFilter<"Order"> | string | null
+    customerPhone?: StringNullableWithAggregatesFilter<"Order"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Order"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Order"> | Date | string
@@ -9800,12 +9860,14 @@ export namespace Prisma {
     orderNumber: string
     status?: $Enums.OrderStatus
     paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
     subtotal: Decimal | DecimalJsLike | number | string
-    tax: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
     cashReceived?: Decimal | DecimalJsLike | number | string | null
     changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9819,12 +9881,14 @@ export namespace Prisma {
     cashierId?: string | null
     status?: $Enums.OrderStatus
     paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
     subtotal: Decimal | DecimalJsLike | number | string
-    tax: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
     cashReceived?: Decimal | DecimalJsLike | number | string | null
     changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9836,12 +9900,14 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9855,12 +9921,14 @@ export namespace Prisma {
     cashierId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9873,12 +9941,14 @@ export namespace Prisma {
     cashierId?: string | null
     status?: $Enums.OrderStatus
     paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
     subtotal: Decimal | DecimalJsLike | number | string
-    tax: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
     cashReceived?: Decimal | DecimalJsLike | number | string | null
     changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -9889,12 +9959,14 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9906,12 +9978,14 @@ export namespace Prisma {
     cashierId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -10546,6 +10620,13 @@ export namespace Prisma {
     not?: NestedEnumPaymentMethodFilter<$PrismaModel> | $Enums.PaymentMethod
   }
 
+  export type EnumPaymentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
+  }
+
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
@@ -10567,12 +10648,14 @@ export namespace Prisma {
     cashierId?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
     subtotal?: SortOrder
-    tax?: SortOrder
-    discount?: SortOrder
     totalAmount?: SortOrder
     cashReceived?: SortOrder
     changeGiven?: SortOrder
+    dueAmount?: SortOrder
+    customerName?: SortOrder
+    customerPhone?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10580,11 +10663,10 @@ export namespace Prisma {
 
   export type OrderAvgOrderByAggregateInput = {
     subtotal?: SortOrder
-    tax?: SortOrder
-    discount?: SortOrder
     totalAmount?: SortOrder
     cashReceived?: SortOrder
     changeGiven?: SortOrder
+    dueAmount?: SortOrder
   }
 
   export type OrderMaxOrderByAggregateInput = {
@@ -10593,12 +10675,14 @@ export namespace Prisma {
     cashierId?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
     subtotal?: SortOrder
-    tax?: SortOrder
-    discount?: SortOrder
     totalAmount?: SortOrder
     cashReceived?: SortOrder
     changeGiven?: SortOrder
+    dueAmount?: SortOrder
+    customerName?: SortOrder
+    customerPhone?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10610,12 +10694,14 @@ export namespace Prisma {
     cashierId?: SortOrder
     status?: SortOrder
     paymentMethod?: SortOrder
+    paymentStatus?: SortOrder
     subtotal?: SortOrder
-    tax?: SortOrder
-    discount?: SortOrder
     totalAmount?: SortOrder
     cashReceived?: SortOrder
     changeGiven?: SortOrder
+    dueAmount?: SortOrder
+    customerName?: SortOrder
+    customerPhone?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -10623,11 +10709,10 @@ export namespace Prisma {
 
   export type OrderSumOrderByAggregateInput = {
     subtotal?: SortOrder
-    tax?: SortOrder
-    discount?: SortOrder
     totalAmount?: SortOrder
     cashReceived?: SortOrder
     changeGiven?: SortOrder
+    dueAmount?: SortOrder
   }
 
   export type UuidNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -10663,6 +10748,16 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumPaymentMethodFilter<$PrismaModel>
     _max?: NestedEnumPaymentMethodFilter<$PrismaModel>
+  }
+
+  export type EnumPaymentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentStatusWithAggregatesFilter<$PrismaModel> | $Enums.PaymentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
+    _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
   }
 
   export type IntFilter<$PrismaModel = never> = {
@@ -10996,6 +11091,10 @@ export namespace Prisma {
 
   export type EnumPaymentMethodFieldUpdateOperationsInput = {
     set?: $Enums.PaymentMethod
+  }
+
+  export type EnumPaymentStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PaymentStatus
   }
 
   export type UserUpdateOneWithoutOrdersNestedInput = {
@@ -11383,6 +11482,13 @@ export namespace Prisma {
     not?: NestedEnumPaymentMethodFilter<$PrismaModel> | $Enums.PaymentMethod
   }
 
+  export type NestedEnumPaymentStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentStatusFilter<$PrismaModel> | $Enums.PaymentStatus
+  }
+
   export type NestedUuidNullableWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel> | null
     in?: string[] | ListStringFieldRefInput<$PrismaModel> | null
@@ -11417,6 +11523,16 @@ export namespace Prisma {
     _max?: NestedEnumPaymentMethodFilter<$PrismaModel>
   }
 
+  export type NestedEnumPaymentStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PaymentStatus | EnumPaymentStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PaymentStatus[] | ListEnumPaymentStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPaymentStatusWithAggregatesFilter<$PrismaModel> | $Enums.PaymentStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPaymentStatusFilter<$PrismaModel>
+    _max?: NestedEnumPaymentStatusFilter<$PrismaModel>
+  }
+
   export type NestedIntWithAggregatesFilter<$PrismaModel = never> = {
     equals?: number | IntFieldRefInput<$PrismaModel>
     in?: number[] | ListIntFieldRefInput<$PrismaModel>
@@ -11449,12 +11565,14 @@ export namespace Prisma {
     orderNumber: string
     status?: $Enums.OrderStatus
     paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
     subtotal: Decimal | DecimalJsLike | number | string
-    tax: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
     cashReceived?: Decimal | DecimalJsLike | number | string | null
     changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11466,12 +11584,14 @@ export namespace Prisma {
     orderNumber: string
     status?: $Enums.OrderStatus
     paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
     subtotal: Decimal | DecimalJsLike | number | string
-    tax: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
     cashReceived?: Decimal | DecimalJsLike | number | string | null
     changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11513,12 +11633,14 @@ export namespace Prisma {
     cashierId?: UuidNullableFilter<"Order"> | string | null
     status?: EnumOrderStatusFilter<"Order"> | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFilter<"Order"> | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFilter<"Order"> | $Enums.PaymentStatus
     subtotal?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFilter<"Order"> | Decimal | DecimalJsLike | number | string
     cashReceived?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
     changeGiven?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: DecimalNullableFilter<"Order"> | Decimal | DecimalJsLike | number | string | null
+    customerName?: StringNullableFilter<"Order"> | string | null
+    customerPhone?: StringNullableFilter<"Order"> | string | null
     notes?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
@@ -11894,12 +12016,14 @@ export namespace Prisma {
     orderNumber: string
     status?: $Enums.OrderStatus
     paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
     subtotal: Decimal | DecimalJsLike | number | string
-    tax: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
     cashReceived?: Decimal | DecimalJsLike | number | string | null
     changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11912,12 +12036,14 @@ export namespace Prisma {
     cashierId?: string | null
     status?: $Enums.OrderStatus
     paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
     subtotal: Decimal | DecimalJsLike | number | string
-    tax: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
     cashReceived?: Decimal | DecimalJsLike | number | string | null
     changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11944,12 +12070,14 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11962,12 +12090,14 @@ export namespace Prisma {
     cashierId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -11978,12 +12108,14 @@ export namespace Prisma {
     orderNumber: string
     status?: $Enums.OrderStatus
     paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
     subtotal: Decimal | DecimalJsLike | number | string
-    tax: Decimal | DecimalJsLike | number | string
-    discount?: Decimal | DecimalJsLike | number | string
     totalAmount: Decimal | DecimalJsLike | number | string
     cashReceived?: Decimal | DecimalJsLike | number | string | null
     changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -11994,12 +12126,14 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12011,12 +12145,14 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -12028,12 +12164,14 @@ export namespace Prisma {
     orderNumber?: StringFieldUpdateOperationsInput | string
     status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
     paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
     subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    tax?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
-    discount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

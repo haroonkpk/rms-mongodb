@@ -173,12 +173,14 @@ exports.Prisma.OrderScalarFieldEnum = {
   cashierId: 'cashierId',
   status: 'status',
   paymentMethod: 'paymentMethod',
+  paymentStatus: 'paymentStatus',
   subtotal: 'subtotal',
-  tax: 'tax',
-  discount: 'discount',
   totalAmount: 'totalAmount',
   cashReceived: 'cashReceived',
   changeGiven: 'changeGiven',
+  dueAmount: 'dueAmount',
+  customerName: 'customerName',
+  customerPhone: 'customerPhone',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -252,8 +254,13 @@ exports.OrderStatus = exports.$Enums.OrderStatus = {
 
 exports.PaymentMethod = exports.$Enums.PaymentMethod = {
   CASH: 'CASH',
-  CARD: 'CARD',
-  QR_CODE: 'QR_CODE'
+  QR_CODE: 'QR_CODE',
+  LEDGER: 'LEDGER'
+};
+
+exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  PAID: 'PAID',
+  UNPAID: 'UNPAID'
 };
 
 exports.Prisma.ModelName = {
