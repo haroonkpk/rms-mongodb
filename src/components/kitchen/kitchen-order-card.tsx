@@ -7,16 +7,7 @@ import { updateKitchenOrderStatus } from "@/actions/kitchen";
 import { KitchenOrder, KitchenOrderItem, OrderStatus } from "@/types";
 import { formatKotDisplay } from "@/lib/kot";
 import { cn } from "@/lib/utils";
-import {
-  Clock,
-  Flame,
-  CheckCircle2,
-  AlertTriangle,
-  User,
-  FileText,
-  Plus,
-  MessageSquareText,
-} from "lucide-react";
+import { Clock, Flame, CheckCircle2, AlertTriangle } from "lucide-react";
 
 interface KitchenOrderCardProps {
   order: KitchenOrder;
@@ -33,29 +24,41 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
 
   const kotDisplay = formatKotDisplay(order);
 
+  const isClosed = order.status === "COMPLETED" || order.status === "CANCELLED";
+
   useEffect(() => {
+    if (isClosed) return;
+
     const calculateElapsed = () => {
       const createdTime = new Date(order.createdAt).getTime();
       const now = Date.now();
       const diffMs = Math.max(0, now - createdTime);
 
-      const mins = Math.floor(diffMs / 60000);
+      const hours = Math.floor(diffMs / 3600000);
+      const mins = Math.floor((diffMs % 3600000) / 60000);
       const secs = Math.floor((diffMs % 60000) / 1000);
+      const totalMins = Math.floor(diffMs / 60000);
 
-      setElapsedMinutes(mins);
-      setFormattedTime(
-        `${mins.toString().padStart(2, "0")}:${secs
-          .toString()
-          .padStart(2, "0")}`,
-      );
+      setElapsedMinutes(totalMins);
+
+      const formatted =
+        hours > 0
+          ? `${hours.toString().padStart(2, "0")}:${mins
+              .toString()
+              .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
+          : `${mins.toString().padStart(2, "0")}:${secs
+              .toString()
+              .padStart(2, "0")}`;
+
+      setFormattedTime(formatted);
     };
 
     calculateElapsed();
 
-    const interval = setInterval(calculateElapsed, 10000);
+    const interval = setInterval(calculateElapsed, 1000);
 
     return () => clearInterval(interval);
-  }, [order.createdAt]);
+  }, [order.createdAt, isClosed]);
 
   const handleStatusTransition = async (nextStatus: OrderStatus) => {
     setIsUpdating(true);
@@ -73,8 +76,6 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
     }
   };
 
-  const isClosed = order.status === "COMPLETED" || order.status === "CANCELLED";
-
   const isDelayed = !isClosed && elapsedMinutes >= 15;
 
   const isSlow = !isClosed && elapsedMinutes >= 10 && elapsedMinutes < 15;
@@ -85,18 +86,13 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
 
   const renderTimer = () => {
     if (isClosed) {
-      return (
-        <span className="inline-flex items-center gap-1.5 text-xs text-slate-500 font-bold">
-          <Clock size={13} />
-          {formattedTime || "00:00"}
-        </span>
-      );
+      return null;
     }
 
     if (isDelayed) {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-extrabold bg-rose-50 text-rose-700 border border-rose-300 animate-pulse">
-          <AlertTriangle size={13} />
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-extrabold bg-rose-50 text-rose-700 animate-pulse">
+          <Clock size={13} />
           {formattedTime}
         </span>
       );
@@ -104,7 +100,7 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
 
     if (isSlow) {
       return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-extrabold bg-amber-50 text-[var(--color-pending)] border border-amber-200">
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-extrabold bg-amber-50 text-[var(--color-pending)]">
           <Clock size={13} />
           {formattedTime}
         </span>
@@ -224,18 +220,6 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
           {/* TIMER */}
           <div className="shrink-0">{renderTimer()}</div>
         </div>
-
-        {/* CUSTOMER */}
-
-        {order.customerName && (
-          <div className="flex items-center gap-1.5 mt-2.5 text-xs text-slate-600">
-            <User size={13} className="text-slate-500 shrink-0" />
-
-            <span className="truncate max-w-[200px] font-semibold">
-              {order.customerName}
-            </span>
-          </div>
-        )}
       </div>
 
       {/* =================================
@@ -243,26 +227,6 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
       ================================= */}
 
       <div className="px-4">
-        {/* ORDER NOTE */}
-
-        {order.notes && (
-          <div className="mt-3 px-3 py-2.5 bg-amber-50 border border-amber-200 rounded-lg">
-            <div className="flex items-start gap-2">
-              <FileText size={15} className="shrink-0 text-amber-700 mt-0.5" />
-
-              <div className="min-w-0">
-                <p className="text-[0.68rem] font-extrabold uppercase tracking-wide text-amber-800 mb-0.5">
-                  Order Note
-                </p>
-
-                <p className="text-[0.8rem] font-semibold text-amber-950 leading-snug">
-                  {order.notes}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* =================================
             ITEMS HEADER
         ================================= */}
