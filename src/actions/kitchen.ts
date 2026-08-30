@@ -55,6 +55,7 @@ export async function getKitchenOrders(): Promise<KitchenOrdersResponse> {
       select: {
         id: true,
         orderNumber: true,
+        kotNumber: true,
         cashierId: true,
         status: true,
         paymentMethod: true,
@@ -93,6 +94,7 @@ export async function getKitchenOrders(): Promise<KitchenOrdersResponse> {
     const orders: KitchenOrder[] = dbOrders.map((o) => ({
       id: o.id,
       orderNumber: o.orderNumber,
+      kotNumber: o.kotNumber,
       cashierId: o.cashierId,
       cashierName:
         o.cashier?.fullName || o.cashier?.email?.split("@")[0] || "Staff",

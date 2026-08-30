@@ -170,6 +170,7 @@ exports.Prisma.AddOnScalarFieldEnum = {
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   orderNumber: 'orderNumber',
+  kotNumber: 'kotNumber',
   cashierId: 'cashierId',
   status: 'status',
   paymentMethod: 'paymentMethod',

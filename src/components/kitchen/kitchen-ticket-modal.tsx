@@ -5,6 +5,7 @@ import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { updateKitchenOrderStatus } from "@/actions/kitchen";
 import { KitchenOrder, OrderStatus } from "@/types";
+import { formatKotDisplay } from "@/lib/kot";
 import {
   Clock,
   User,
@@ -53,7 +54,7 @@ export const KitchenTicketModal = memo(function KitchenTicketModal({
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={`Order Details #${order.orderNumber}`}
+      title={`Ticket Details (${formatKotDisplay(order)})`}
       className="max-w-xl"
     >
       <div className="space-y-4 py-2">

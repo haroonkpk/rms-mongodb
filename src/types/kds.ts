@@ -27,6 +27,7 @@ export interface KitchenOrderItem {
 export interface KitchenOrder {
   id: string;
   orderNumber: string;
+  kotNumber: number | null;
   cashierId: string | null;
   cashierName: string | null;
   status: OrderStatus;

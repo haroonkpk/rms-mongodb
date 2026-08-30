@@ -138,6 +138,7 @@ enum PaymentStatus {
 model Order {
   id            String        @id @default(uuid()) @db.Uuid
   orderNumber   String        @unique @map("order_number")
+  kotNumber     Int?          @map("kot_number")
   cashierId     String?       @map("cashier_id") @db.Uuid
   cashier       User?         @relation(fields: [cashierId], references: [id], onDelete: SetNull)
   status        OrderStatus   @default(COMPLETED)

@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { updateKitchenOrderStatus } from "@/actions/kitchen";
 import { KitchenOrder, KitchenOrderItem, OrderStatus } from "@/types";
+import { formatKotDisplay } from "@/lib/kot";
 import {
   Clock,
   Flame,
@@ -34,7 +35,9 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
   const [elapsedMinutes, setElapsedMinutes] = useState(0);
   const [formattedTime, setFormattedTime] = useState("");
 
-  // Live timer tick every 10s
+  const kotDisplay = formatKotDisplay(order);
+
+  // Live elapsed timer tick every 10s
   useEffect(() => {
     const calculateElapsed = () => {
       const createdTime = new Date(order.createdAt).getTime();
@@ -76,12 +79,12 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
     }
   };
 
-  // SLA Urgency Timer Styling
+  // Timer SLA Urgency Badge
   const getTimerBadge = () => {
     if (order.status === "COMPLETED" || order.status === "CANCELLED") {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-600">
-          <Clock size={13} />
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.75rem] font-medium bg-slate-100 text-slate-600">
+          <Clock size={12} />
           {formattedTime || "00:00"}
         </span>
       );
@@ -89,8 +92,8 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
 
     if (elapsedMinutes >= 15) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-700 border border-red-300 animate-pulse">
-          <AlertTriangle size={13} />
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.75rem] font-bold bg-red-100 text-red-700 border border-red-300 animate-pulse">
+          <AlertTriangle size={12} />
           {formattedTime || "15m+"} (DELAYED)
         </span>
       );
@@ -98,53 +101,54 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
 
     if (elapsedMinutes >= 10) {
       return (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-bold bg-amber-100 text-amber-800 border border-amber-300">
-          <Clock size={13} />
+        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.75rem] font-bold bg-amber-100 text-amber-800 border border-amber-300">
+          <Clock size={12} />
           {formattedTime} min
         </span>
       );
     }
 
     return (
-      <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
-        <Clock size={13} />
+      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-[0.75rem] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+        <Clock size={12} />
         {formattedTime} min
       </span>
     );
   };
 
+  // Status Badge
   const getStatusBadge = () => {
     switch (order.status) {
       case "PENDING":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[var(--color-pending-bg)] text-[var(--color-pending)] border border-amber-300">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.7rem] font-bold bg-[var(--color-pending-bg)] text-[var(--color-pending)] border border-amber-300">
+            <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-ping" />
             PENDING
           </span>
         );
       case "PREPARING":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-indigo-100 text-indigo-900 border border-indigo-300">
-            <Flame size={13} className="text-indigo-600 animate-bounce" />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.7rem] font-bold bg-indigo-100 text-indigo-900 border border-indigo-300">
+            <Flame size={12} className="text-indigo-600 animate-bounce" />
             PREPARING
           </span>
         );
       case "READY":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-[var(--color-success-bg)] text-[var(--color-success-text)] border border-emerald-300">
-            <CheckCircle2 size={13} />
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.7rem] font-bold bg-[var(--color-success-bg)] text-[var(--color-success-text)] border border-emerald-300">
+            <CheckCircle2 size={12} />
             READY
           </span>
         );
       case "COMPLETED":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-300">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.7rem] font-semibold bg-slate-100 text-slate-700 border border-slate-300">
             COMPLETED
           </span>
         );
       case "CANCELLED":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700 border border-red-300">
+          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[0.7rem] font-semibold bg-red-100 text-red-700 border border-red-300">
             CANCELLED
           </span>
         );
@@ -158,68 +162,72 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
   return (
     <Card
       variant="white"
-      className={`border flex flex-col justify-between rounded-[clamp(0.5rem,1vw,0.875rem)] transition-all duration-200 shadow-xs hover:shadow-md ${
+      className={`border flex flex-col justify-between rounded-[clamp(0.625rem,1vw,1rem)] transition-all duration-200 shadow-xs hover:shadow-md p-[clamp(0.875rem,1.2vw,1.125rem)] ${
         order.status === "PENDING"
-          ? "border-amber-300 bg-amber-50/20"
+          ? "border-amber-300/80 bg-amber-50/10 hover:border-amber-400"
           : order.status === "PREPARING"
-          ? "border-indigo-300 bg-indigo-50/20"
+          ? "border-indigo-300/80 bg-indigo-50/10 hover:border-indigo-400"
           : order.status === "READY"
-          ? "border-emerald-300 bg-emerald-50/20"
+          ? "border-emerald-300/80 bg-emerald-50/10 hover:border-emerald-400"
           : "border-slate-200 opacity-80"
       }`}
     >
       <div>
-        {/* Ticket Header */}
-        <div className="flex items-start justify-between gap-2 pb-3 border-b border-slate-100">
-          <div>
+        {/* Ticket Header: Top row displaying KOT # and status */}
+        <div className="pb-3 border-b border-slate-100 space-y-2">
+          <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[clamp(1rem,1.4vw,1.15rem)] font-extrabold text-slate-900 tracking-tight">
-                #{order.orderNumber}
+              <span className="text-[clamp(1.05rem,1.3vw,1.2rem)] font-black text-slate-900 tracking-tight bg-slate-900 text-white px-2.5 py-0.5 rounded-md shadow-2xs">
+                {kotDisplay}
               </span>
               {getStatusBadge()}
             </div>
-            <div className="flex items-center gap-3 text-xs text-slate-500 mt-1">
+
+            <div className="flex items-center gap-1.5 shrink-0">
+              {getTimerBadge()}
+              <button
+                type="button"
+                onClick={() => onViewDetails(order)}
+                className="text-slate-400 hover:text-slate-700 transition-colors p-1 rounded-md hover:bg-slate-100 cursor-pointer"
+                title="View ticket details"
+                aria-label={`View details for ${kotDisplay}`}
+              >
+                <Eye size={16} />
+              </button>
+            </div>
+          </div>
+
+          {/* Sub-header info: Customer & Cashier */}
+          {(order.customerName || order.cashierName) && (
+            <div className="flex items-center gap-3 text-xs text-slate-500 font-medium">
               {order.customerName && (
-                <span className="inline-flex items-center gap-1 font-medium text-slate-700">
-                  <User size={12} />
+                <span className="inline-flex items-center gap-1 text-slate-700 font-semibold truncate max-w-[140px]">
+                  <User size={12} className="text-slate-400 shrink-0" />
                   {order.customerName}
                 </span>
               )}
               {order.cashierName && (
-                <span className="inline-flex items-center gap-1 text-slate-500">
-                  <ChefHat size={12} />
+                <span className="inline-flex items-center gap-1 text-slate-500 truncate max-w-[140px]">
+                  <ChefHat size={12} className="text-slate-400 shrink-0" />
                   {order.cashierName}
                 </span>
               )}
             </div>
-          </div>
-
-          <div className="flex flex-col items-end gap-1 shrink-0">
-            {getTimerBadge()}
-            <button
-              type="button"
-              onClick={() => onViewDetails(order)}
-              className="text-slate-400 hover:text-[var(--color-primary)] transition-colors p-1 rounded-md hover:bg-slate-100"
-              title="View ticket details"
-              aria-label={`View details for order ${order.orderNumber}`}
-            >
-              <Eye size={16} />
-            </button>
-          </div>
+          )}
         </div>
 
-        {/* Notes Banner */}
+        {/* Order Notes Banner */}
         {order.notes && (
-          <div className="mt-2.5 p-2 bg-amber-100/70 border border-amber-300 rounded-md text-amber-900 text-xs flex items-start gap-1.5 font-medium">
+          <div className="mt-2.5 p-2 bg-amber-50 border border-amber-200 rounded-md text-amber-900 text-xs flex items-start gap-1.5 font-medium">
             <FileText size={14} className="shrink-0 text-amber-700 mt-0.5" />
             <span>
-              <strong>Order Note:</strong> {order.notes}
+              <strong className="font-bold">Note:</strong> {order.notes}
             </span>
           </div>
         )}
 
-        {/* Items List */}
-        <div className="py-3 space-y-2.5">
+        {/* Minimal Item List */}
+        <div className="py-2.5 space-y-2">
           {order.items.map((item: KitchenOrderItem) => {
             const isItemChecked = Boolean(completedItemIds[item.id]);
 
@@ -227,32 +235,32 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
               <div
                 key={item.id}
                 onClick={(e) => toggleItemCompletion(item.id, e)}
-                className={`p-2.5 rounded-lg border transition-all cursor-pointer flex items-start gap-2.5 ${
+                className={`p-2 rounded-md border transition-all cursor-pointer flex items-start gap-2.5 select-none ${
                   isItemChecked
-                    ? "bg-slate-100 border-slate-200 text-slate-400 line-through opacity-70"
-                    : "bg-white border-slate-200 hover:border-slate-300 text-slate-900"
+                    ? "bg-slate-100/70 border-slate-200 text-slate-400 line-through opacity-65"
+                    : "bg-white border-slate-200 hover:border-slate-300 text-slate-900 shadow-2xs"
                 }`}
               >
                 {/* Item Checkbox */}
                 <div className="shrink-0 text-slate-400 mt-0.5">
                   {isItemChecked ? (
-                    <CheckSquare size={18} className="text-emerald-600" />
+                    <CheckSquare size={16} className="text-emerald-600" />
                   ) : (
-                    <Square size={18} className="hover:text-slate-600" />
+                    <Square size={16} className="hover:text-slate-600" />
                   )}
                 </div>
 
                 {/* Item Info */}
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-baseline justify-between gap-2">
-                    <span className="font-bold text-[clamp(0.9rem,1.1vw,1rem)] leading-snug">
-                      <span className="inline-block bg-slate-900 text-white text-xs font-black px-1.5 py-0.5 rounded-md mr-1.5">
+                  <div className="flex items-baseline justify-between gap-1.5">
+                    <span className="font-bold text-[clamp(0.875rem,1vw,0.95rem)] leading-snug">
+                      <span className="inline-block bg-slate-900 text-white text-[0.7rem] font-black px-1.5 py-0.2 rounded mr-1.5">
                         {item.quantity}x
                       </span>
                       {item.itemName}
                     </span>
                     {item.variant && (
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 shrink-0">
+                      <span className="text-[0.7rem] font-semibold px-1.5 py-0.2 rounded bg-slate-100 text-slate-700 shrink-0">
                         {item.variant}
                       </span>
                     )}
@@ -264,7 +272,7 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
                       {item.addOns.map((addon, idx) => (
                         <span
                           key={idx}
-                          className="text-[0.75rem] font-medium text-slate-600 bg-slate-50 border border-slate-200 px-1.5 py-0.5 rounded"
+                          className="text-[0.7rem] font-medium text-slate-600 bg-slate-50 border border-slate-200 px-1.5 py-0.2 rounded"
                         >
                           + {addon.name}
                         </span>
@@ -272,9 +280,9 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
                     </div>
                   )}
 
-                  {/* Notes */}
+                  {/* Item Notes */}
                   {item.notes && (
-                    <p className="text-xs text-amber-800 font-semibold bg-amber-50 px-1.5 py-0.5 rounded mt-1 border border-amber-200 inline-block">
+                    <p className="text-[0.7rem] text-amber-800 font-semibold bg-amber-50 px-1.5 py-0.2 rounded mt-1 border border-amber-200 inline-block">
                       Note: {item.notes}
                     </p>
                   )}
@@ -285,16 +293,16 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
         </div>
       </div>
 
-      {/* Footer Action Buttons */}
-      <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+      {/* Footer Actions */}
+      <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
         {order.status === "PENDING" && (
           <Button
             type="button"
             variant="primary"
             isLoading={isUpdating}
-            icon={<Flame size={16} />}
+            icon={<Flame size={15} />}
             onClick={() => handleStatusTransition("PREPARING")}
-            className="w-full text-xs py-2 !rounded-md"
+            className="w-full text-xs py-2 !rounded-md font-bold"
           >
             Start Preparing
           </Button>
@@ -305,9 +313,9 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
             type="button"
             variant="success"
             isLoading={isUpdating}
-            icon={<CheckCircle2 size={16} />}
+            icon={<CheckCircle2 size={15} />}
             onClick={() => handleStatusTransition("READY")}
-            className="w-full text-xs py-2 !rounded-md"
+            className="w-full text-xs py-2 !rounded-md font-bold"
           >
             {allItemsChecked ? "Mark Ready (All Done)" : "Mark Ready"}
           </Button>
@@ -318,7 +326,7 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
             type="button"
             variant="outline"
             isLoading={isUpdating}
-            icon={<CheckCircle2 size={16} className="text-emerald-600" />}
+            icon={<CheckCircle2 size={15} className="text-emerald-600" />}
             onClick={() => handleStatusTransition("COMPLETED")}
             className="w-full text-xs py-2 border-emerald-600 text-emerald-800 hover:bg-emerald-50 !rounded-md font-bold"
           >

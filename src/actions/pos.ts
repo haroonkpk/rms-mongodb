@@ -31,7 +31,7 @@ export async function getPOSInitData(): Promise<POSInitDataResponse> {
       hour12: true,
     });
 
-    // Real DB Categories
+    //Categories
     const dbCategories = await prisma.category.findMany({
       orderBy: { name: "asc" },
       include: {
@@ -41,7 +41,7 @@ export async function getPOSInitData(): Promise<POSInitDataResponse> {
       },
     });
 
-    // Real DB Menu Items
+    //Menu Items
     const dbMenuItems = await prisma.menuItem.findMany({
       orderBy: { name: "asc" },
       include: {
@@ -112,9 +112,42 @@ export async function createPOSOrder(
     let savedOrderId = null;
     try {
       const isLedger = payload.paymentMethod === "LEDGER";
+
+      // Calculate daily resetting KOT number (resets every night at 12 AM midnight)
+      const now = new Date();
+      const startOfToday = new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        now.getDate(),
+        0,
+        0,
+        0,
+        0
+      );
+
+      const lastOrderToday = await prisma.order.findFirst({
+        where: {
+          createdAt: {
+            gte: startOfToday,
+          },
+          kotNumber: {
+            not: null,
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+        select: {
+          kotNumber: true,
+        },
+      });
+
+      const nextKotNumber = (lastOrderToday?.kotNumber ?? 0) + 1;
+
       const dbOrder = await prisma.order.create({
         data: {
           orderNumber,
+          kotNumber: nextKotNumber,
           cashierId: user?.id || null,
           status: payload.status || "PENDING",
           paymentMethod: payload.paymentMethod,
