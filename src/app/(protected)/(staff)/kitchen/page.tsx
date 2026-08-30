@@ -16,7 +16,6 @@ import {
 } from "@/lib/audio-alert";
 import { KitchenHeader } from "@/components/kitchen/kitchen-header";
 import { KitchenOrderCard } from "@/components/kitchen/kitchen-order-card";
-import { KitchenTicketModal } from "@/components/kitchen/kitchen-ticket-modal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { UtensilsCrossed, RefreshCw } from "lucide-react";
@@ -35,8 +34,6 @@ export default function KitchenPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [statusFilter, setStatusFilter] = useState("ALL_ACTIVE");
-  const [selectedOrder, setSelectedOrder] = useState<KitchenOrder | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSoundEnabled, setIsSoundEnabled] = useState(true);
   const [realtimeStatus, setRealtimeStatus] = useState<
     "connected" | "connecting" | "polling" | "disconnected"
@@ -188,7 +185,7 @@ export default function KitchenPage() {
 
     const interval = setInterval(() => {
       fetchOrders();
-    }, 10000);
+    }, 100000);
 
     return () => clearInterval(interval);
   }, [realtimeStatus, fetchOrders]);
@@ -207,16 +204,6 @@ export default function KitchenPage() {
     },
     [fetchOrders],
   );
-
-  const handleOpenDetails = useCallback((order: KitchenOrder) => {
-    setSelectedOrder(order);
-    setIsModalOpen(true);
-  }, []);
-
-  const handleCloseModal = useCallback(() => {
-    setIsModalOpen(false);
-    setSelectedOrder(null);
-  }, []);
 
   // Status-only filtered orders computation
   const filteredOrders = useMemo(() => {
@@ -271,7 +258,6 @@ export default function KitchenPage() {
                 key={order.id}
                 order={order}
                 onStatusChange={handleStatusChange}
-                onViewDetails={handleOpenDetails}
               />
             ))}
           </div>
@@ -312,14 +298,6 @@ export default function KitchenPage() {
           </Card>
         )}
       </main>
-
-      {/* Ticket Details Modal */}
-      <KitchenTicketModal
-        order={selectedOrder}
-        isOpen={isModalOpen}
-        onClose={handleCloseModal}
-        onStatusUpdated={handleStatusChange}
-      />
     </div>
   );
 }
