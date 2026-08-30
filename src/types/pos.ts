@@ -67,6 +67,7 @@ export interface POSOrderPayload {
   dueAmount?: number;
   customerName?: string;
   customerPhone?: string;
+  status?: "PENDING" | "PREPARING" | "READY" | "COMPLETED" | "CANCELLED";
   notes?: string;
 }
 

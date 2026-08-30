@@ -116,7 +116,7 @@ export async function createPOSOrder(
         data: {
           orderNumber,
           cashierId: user?.id || null,
-          status: "COMPLETED",
+          status: payload.status || "PENDING",
           paymentMethod: payload.paymentMethod,
           paymentStatus:
             payload.paymentStatus || (isLedger ? "UNPAID" : "PAID"),
