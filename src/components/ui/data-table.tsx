@@ -14,6 +14,7 @@ interface TableButton<T> {
   text: string;
   className: string;
   onClick: (row: T) => void;
+  show?: (row: T) => boolean;
 }
 
 interface DataTableProps<T extends { id: string }> {
@@ -139,16 +140,19 @@ export const DataTable = <T extends { id: string }>({
                       className={`border ${BorderColor} px-[clamp(12px,1.5vw,16px)] py-[clamp(10px,1vw,12px)]`}
                     >
                       <div className="flex justify-center gap-2">
-                        {TableButtons.map((button) => (
-                          <button
-                            key={button.text}
-                            onClick={() => button.onClick(row)}
-                            className={`${button.className} group relative rounded-sm p-[clamp(6px,0.6vw,8px)] hover:opacity-80`}
-                            title={button.text}
-                          >
-                            {button.icon}
-                          </button>
-                        ))}
+                        {TableButtons.map((button) => {
+                          if (button.show && !button.show(row)) return null;
+                          return (
+                            <button
+                              key={button.text}
+                              onClick={() => button.onClick(row)}
+                              className={`${button.className} group relative rounded-sm p-[clamp(6px,0.6vw,8px)] hover:opacity-80`}
+                              title={button.text}
+                            >
+                              {button.icon}
+                            </button>
+                          );
+                        })}
                       </div>
                     </td>
                   ) : null}

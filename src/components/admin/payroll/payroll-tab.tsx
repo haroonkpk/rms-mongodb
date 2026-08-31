@@ -38,6 +38,9 @@ export function PayrollTab() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [editPayrollModal, setEditPayrollModal] = useState<any | null>(null);
   const [isSavingPayroll, setIsSavingPayroll] = useState(false);
+  const [payPayrollModal, setPayPayrollModal] = useState<any | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState("CASH");
+  const [isProcessingPay, setIsProcessingPay] = useState(false);
 
   useEffect(() => {
     fetchPayrolls();
@@ -65,16 +68,6 @@ export function PayrollTab() {
     }
   };
 
-  const handleMarkPaid = async (payrollId: string) => {
-    const method = window.prompt(
-      "Enter payment method (CASH, BANK_TRANSFER, CHEQUE):",
-      "CASH"
-    );
-    if (!method) return;
-    await markPayrollPaid(payrollId, method);
-    fetchPayrolls();
-  };
-
   const generatePayslip = (payroll: any) => {
     const doc = new jsPDF();
     doc.setFontSize(20);
@@ -87,7 +80,7 @@ export function PayrollTab() {
     doc.text(
       `Working Days: ${payroll.workingDays} | Present: ${payroll.presentDays} | Absent: ${payroll.absentDays} | Leave: ${payroll.leaveDays}`,
       14,
-      64
+      64,
     );
 
     autoTable(doc, {
@@ -106,7 +99,7 @@ export function PayrollTab() {
     });
 
     doc.save(
-      `Payslip_${payroll.employeeName.replace(/\s+/g, "_")}_${month}_${year}.pdf`
+      `Payslip_${payroll.employeeName.replace(/\s+/g, "_")}_${month}_${year}.pdf`,
     );
   };
 
@@ -182,7 +175,7 @@ export function PayrollTab() {
         <PrintPdfButton
           title={`Payroll - ${new Date(year, month - 1).toLocaleString(
             "default",
-            { month: "long" }
+            { month: "long" },
           )} ${year}`}
           headers={payrollHeaders}
           data={filteredPayrolls}
@@ -193,7 +186,7 @@ export function PayrollTab() {
       <DataTable
         heading={`Payroll for ${new Date(year, month - 1).toLocaleString(
           "default",
-          { month: "long" }
+          { month: "long" },
         )} ${year}`}
         TableHeaders={payrollHeaders}
         TableData={filteredPayrolls}
@@ -207,17 +200,8 @@ export function PayrollTab() {
             icon: <Edit size={16} className="text-white" />,
             text: "Edit Deductions/Bonus",
             className: "bg-[var(--color-primary)] hover:opacity-90 ",
-            onClick: (row) => {
-              if ((row as any).status === "PAID") {
-                if (
-                  !window.confirm(
-                    "WARNING: This payroll is already PAID. Making corrections here will recalculate the Net Salary and alter history. Are you sure you want to edit it?"
-                  )
-                )
-                  return;
-              }
-              setEditPayrollModal(row);
-            },
+            show: (row: any) => row.status !== "PAID",
+            onClick: (row) => setEditPayrollModal(row),
           },
           {
             icon: <Printer size={16} className="text-white" />,
@@ -229,12 +213,10 @@ export function PayrollTab() {
             icon: <CheckCircle size={16} className="text-white" />,
             text: "Mark as Paid",
             className: "bg-green-600 hover:bg-green-700 ",
+            show: (row: any) => row.status !== "PAID",
             onClick: (row) => {
-              if ((row as any).status !== "PAID") {
-                handleMarkPaid((row as any).id);
-              } else {
-                alert("Already marked as paid");
-              }
+              setPaymentMethod("CASH");
+              setPayPayrollModal(row);
             },
           },
         ]}
@@ -245,6 +227,7 @@ export function PayrollTab() {
         isOpen={!!editPayrollModal}
         onClose={() => setEditPayrollModal(null)}
         title={`Update Payroll - ${editPayrollModal?.employeeName || ""}`}
+        className="max-w-2xl"
       >
         {editPayrollModal && (
           <form
@@ -268,7 +251,7 @@ export function PayrollTab() {
             }}
             className="p-4 space-y-4"
           >
-            <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm bg-slate-50 p-4 rounded-xl border border-slate-200/80 mb-2">
+            <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm bg-slate-50 p-4  border border-slate-200/80 mb-2">
               <div>
                 <span className="text-slate-500">Working Days:</span>{" "}
                 <span className="font-semibold text-slate-900">
@@ -301,60 +284,64 @@ export function PayrollTab() {
               </div>
             </div>
 
-            <Select
-              label="Status"
-              name="status"
-              defaultValue={editPayrollModal.status}
-              options={[
-                { value: "DRAFT", label: "Draft" },
-                { value: "APPROVED", label: "Approved" },
-                { value: "PAID", label: "Paid" },
-              ]}
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="sm:col-span-2">
+                <Select
+                  label="Status"
+                  name="status"
+                  defaultValue={editPayrollModal.status}
+                  options={[
+                    { value: "DRAFT", label: "Draft" },
+                    { value: "APPROVED", label: "Approved" },
+                    { value: "PAID", label: "Paid" },
+                  ]}
+                />
+              </div>
 
-            <Input
-              label="Overtime Pay"
-              name="overtimePay"
-              type="number"
-              defaultValue={
-                editPayrollModal.overtimePay
-                  ? editPayrollModal.overtimePay.replace("Rs ", "")
-                  : "0"
-              }
-            />
+              <Input
+                label="Overtime Pay"
+                name="overtimePay"
+                type="number"
+                defaultValue={
+                  editPayrollModal.overtimePay
+                    ? editPayrollModal.overtimePay.replace("Rs ", "")
+                    : "0"
+                }
+              />
 
-            <Input
-              label="Bonus"
-              name="bonus"
-              type="number"
-              defaultValue={
-                editPayrollModal.bonus
-                  ? editPayrollModal.bonus.replace("Rs ", "")
-                  : "0"
-              }
-            />
+              <Input
+                label="Bonus"
+                name="bonus"
+                type="number"
+                defaultValue={
+                  editPayrollModal.bonus
+                    ? editPayrollModal.bonus.replace("Rs ", "")
+                    : "0"
+                }
+              />
 
-            <Input
-              label="Deductions"
-              name="deductions"
-              type="number"
-              defaultValue={
-                editPayrollModal.deductions
-                  ? editPayrollModal.deductions.replace("Rs ", "")
-                  : "0"
-              }
-            />
+              <Input
+                label="Deductions"
+                name="deductions"
+                type="number"
+                defaultValue={
+                  editPayrollModal.deductions
+                    ? editPayrollModal.deductions.replace("Rs ", "")
+                    : "0"
+                }
+              />
 
-            <Input
-              label="Salary Advance"
-              name="advance"
-              type="number"
-              defaultValue={
-                editPayrollModal.advance
-                  ? editPayrollModal.advance.replace("Rs ", "")
-                  : "0"
-              }
-            />
+              <Input
+                label="Salary Advance"
+                name="advance"
+                type="number"
+                defaultValue={
+                  editPayrollModal.advance
+                    ? editPayrollModal.advance.replace("Rs ", "")
+                    : "0"
+                }
+              />
+            </div>
 
             <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
               <Button
@@ -364,8 +351,96 @@ export function PayrollTab() {
               >
                 Cancel
               </Button>
-              <Button type="submit" variant="primary" isLoading={isSavingPayroll}>
+              <Button
+                type="submit"
+                variant="primary"
+                isLoading={isSavingPayroll}
+              >
                 Save Changes
+              </Button>
+            </div>
+          </form>
+        )}
+      </Modal>
+
+      {/* Payment Confirmation Modal */}
+      <Modal
+        isOpen={!!payPayrollModal}
+        onClose={() => setPayPayrollModal(null)}
+        title="Process Salary Payment"
+        className="max-w-lg"
+      >
+        {payPayrollModal && (
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setIsProcessingPay(true);
+              try {
+                await markPayrollPaid(payPayrollModal.id, paymentMethod);
+                setPayPayrollModal(null);
+                fetchPayrolls();
+              } finally {
+                setIsProcessingPay(false);
+              }
+            }}
+            className="space-y-4"
+          >
+            <div className="bg-slate-50 p-4  border border-slate-200/80 space-y-3 text-xs sm:text-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 font-medium">
+                  Employee Name:
+                </span>
+                <span className="font-bold text-slate-900">
+                  {payPayrollModal.employeeName}
+                </span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-slate-500 font-medium">
+                  Month / Year:
+                </span>
+                <span className="font-semibold text-slate-800">
+                  {new Date(year, month - 1).toLocaleString("default", {
+                    month: "long",
+                  })}{" "}
+                  {year}
+                </span>
+              </div>
+              <div className="flex items-center justify-between border-t border-slate-200 pt-2">
+                <span className="text-slate-600 font-bold">
+                  Net Salary Payable:
+                </span>
+                <span className="font-extrabold text-emerald-700 text-lg">
+                  {payPayrollModal.netSalary}
+                </span>
+              </div>
+            </div>
+
+            <Select
+              label="Select Payment Method"
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              options={[
+                { value: "CASH", label: "Cash Payment" },
+                { value: "BANK_TRANSFER", label: "Online / Bank Transfer" },
+                { value: "CHEQUE", label: "Cheque" },
+              ]}
+            />
+
+            <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setPayPayrollModal(null)}
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                variant="primary"
+                isLoading={isProcessingPay}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+              >
+                Confirm & Mark Paid
               </Button>
             </div>
           </form>

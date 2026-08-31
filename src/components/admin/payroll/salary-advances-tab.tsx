@@ -135,6 +135,7 @@ export function SalaryAdvancesTab() {
         isOpen={newAdvanceModal}
         onClose={() => setNewAdvanceModal(false)}
         title="Issue Salary Advance"
+        className="max-w-2xl"
       >
         <form
           onSubmit={async (e) => {
@@ -155,31 +156,35 @@ export function SalaryAdvancesTab() {
           }}
           className="p-4 space-y-4"
         >
-          <Select
-            label="Employee"
-            name="userId"
-            required
-            options={[
-              { value: "", label: "Select Employee" },
-              ...employees.map((emp) => ({
-                value: emp.id,
-                label: emp.fullName || emp.email || "Employee",
-              })),
-            ]}
-          />
-          <Input
-            label="Amount (Rs)"
-            name="amount"
-            type="number"
-            required
-            placeholder="e.g. 5000"
-          />
-          <Input
-            label="Reason"
-            name="reason"
-            type="text"
-            placeholder="e.g. Emergency medical advance"
-          />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <Select
+                label="Employee"
+                name="userId"
+                required
+                options={[
+                  { value: "", label: "Select Employee" },
+                  ...employees.map((emp) => ({
+                    value: emp.id,
+                    label: emp.fullName || emp.email || "Employee",
+                  })),
+                ]}
+              />
+            </div>
+            <Input
+              label="Amount (Rs)"
+              name="amount"
+              type="number"
+              required
+              placeholder="e.g. 5000"
+            />
+            <Input
+              label="Reason"
+              name="reason"
+              type="text"
+              placeholder="e.g. Emergency medical advance"
+            />
+          </div>
 
           <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
             <Button

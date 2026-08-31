@@ -163,6 +163,7 @@ export function LeavesTab() {
         isOpen={!!editLeaveModal}
         onClose={() => setEditLeaveModal(null)}
         title="Edit / Approve Leave"
+        className="max-w-2xl"
       >
         {editLeaveModal && (
           <form
@@ -183,26 +184,28 @@ export function LeavesTab() {
             }}
             className="p-4 space-y-4"
           >
-            <Select
-              label="Status"
-              name="status"
-              defaultValue={editLeaveModal.status}
-              options={[
-                { value: "PENDING", label: "Pending" },
-                { value: "APPROVED", label: "Approved" },
-                { value: "REJECTED", label: "Rejected" },
-              ]}
-            />
-            <Select
-              label="Leave Type"
-              name="type"
-              defaultValue={editLeaveModal.type}
-              options={[
-                { value: "CASUAL", label: "Casual" },
-                { value: "SICK", label: "Sick" },
-                { value: "UNPAID", label: "Unpaid" },
-              ]}
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Select
+                label="Status"
+                name="status"
+                defaultValue={editLeaveModal.status}
+                options={[
+                  { value: "PENDING", label: "Pending" },
+                  { value: "APPROVED", label: "Approved" },
+                  { value: "REJECTED", label: "Rejected" },
+                ]}
+              />
+              <Select
+                label="Leave Type"
+                name="type"
+                defaultValue={editLeaveModal.type}
+                options={[
+                  { value: "CASUAL", label: "Casual" },
+                  { value: "SICK", label: "Sick" },
+                  { value: "UNPAID", label: "Unpaid" },
+                ]}
+              />
+            </div>
 
             <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
               <Button
@@ -225,6 +228,7 @@ export function LeavesTab() {
         isOpen={newLeaveModal}
         onClose={() => setNewLeaveModal(false)}
         title="Add Leave Record"
+        className="max-w-2xl"
       >
         <form
           onSubmit={async (e) => {
@@ -248,19 +252,21 @@ export function LeavesTab() {
           }}
           className="p-4 space-y-4"
         >
-          <Select
-            label="Employee"
-            name="userId"
-            required
-            options={[
-              { value: "", label: "Select Employee" },
-              ...employees.map((emp) => ({
-                value: emp.id,
-                label: emp.fullName || emp.email || "Employee",
-              })),
-            ]}
-          />
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <Select
+                label="Employee"
+                name="userId"
+                required
+                options={[
+                  { value: "", label: "Select Employee" },
+                  ...employees.map((emp) => ({
+                    value: emp.id,
+                    label: emp.fullName || emp.email || "Employee",
+                  })),
+                ]}
+              />
+            </div>
             <Input
               label="Start Date"
               name="startDate"
@@ -273,24 +279,24 @@ export function LeavesTab() {
               type="date"
               required
             />
+            <Select
+              label="Leave Type"
+              name="type"
+              required
+              options={[
+                { value: "CASUAL", label: "Casual" },
+                { value: "SICK", label: "Sick" },
+                { value: "UNPAID", label: "Unpaid" },
+              ]}
+            />
+            <Input
+              label="Reason"
+              name="reason"
+              type="text"
+              required
+              placeholder="e.g. Family emergency"
+            />
           </div>
-          <Select
-            label="Leave Type"
-            name="type"
-            required
-            options={[
-              { value: "CASUAL", label: "Casual" },
-              { value: "SICK", label: "Sick" },
-              { value: "UNPAID", label: "Unpaid" },
-            ]}
-          />
-          <Input
-            label="Reason"
-            name="reason"
-            type="text"
-            required
-            placeholder="e.g. Family emergency"
-          />
 
           <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
             <Button

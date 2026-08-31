@@ -42,29 +42,31 @@ function EditAttendanceFormModal({
   };
 
   const [status, setStatus] = useState(
-    modalData?.status === "NOT MARKED" ? "PRESENT" : modalData?.status || "PRESENT"
+    modalData?.status === "NOT MARKED"
+      ? "PRESENT"
+      : modalData?.status || "PRESENT",
   );
   const [checkIn, setCheckIn] = useState(
-    getInitTime(modalData?.originalAttendance?.checkIn)
+    getInitTime(modalData?.originalAttendance?.checkIn),
   );
   const [checkOut, setCheckOut] = useState(
-    getInitTime(modalData?.originalAttendance?.checkOut)
+    getInitTime(modalData?.originalAttendance?.checkOut),
   );
   const [overtimeHours, setOvertimeHours] = useState<string | number>(
     modalData?.originalAttendance?.overtimeHours ??
       (modalData?.overtimeHours
         ? modalData.overtimeHours.toString().replace(" hrs", "")
-        : "0")
+        : "0"),
   );
-  const [isOvertimeManuallyEdited, setIsOvertimeManuallyEdited] = useState(false);
+  const [isOvertimeManuallyEdited, setIsOvertimeManuallyEdited] =
+    useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
   const calculateOt = (cIn: string, cOut: string) => {
     if (cIn && cOut) {
       const inDate = new Date(`1970-01-01T${cIn}:00Z`);
       const outDate = new Date(`1970-01-01T${cOut}:00Z`);
-      let diffHours =
-        (outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60);
+      let diffHours = (outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60);
       if (diffHours < 0) diffHours += 24; // overnight shift
       if (diffHours > 9) {
         return parseFloat((diffHours - 9).toFixed(1));
@@ -104,7 +106,7 @@ function EditAttendanceFormModal({
         status as any,
         overtimeHours !== "" ? Number(overtimeHours) : undefined,
         checkIn || undefined,
-        checkOut || undefined
+        checkOut || undefined,
       );
       onSave();
     } finally {
@@ -117,59 +119,61 @@ function EditAttendanceFormModal({
       isOpen={!!modalData}
       onClose={onClose}
       title={`Mark Attendance - ${modalData?.employeeName || ""}`}
+      className="max-w-2xl"
     >
       <form onSubmit={handleSubmit} className="p-4 space-y-4">
-        <Select
-          label="Attendance Status"
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-          options={[
-            { value: "PRESENT", label: "Present" },
-            { value: "ABSENT", label: "Absent" },
-            { value: "LATE", label: "Late" },
-            { value: "HALF_DAY", label: "Half Day" },
-          ]}
-        />
-
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <Input
             label="Check In"
             type="time"
             value={checkIn}
             onChange={handleCheckInChange}
           />
+
           <Input
             label="Check Out"
             type="time"
             value={checkOut}
             onChange={handleCheckOutChange}
           />
-        </div>
 
-        <div>
-          <div className="flex justify-between items-center mb-1">
-            <label className="text-[clamp(0.7rem,1vw,0.8rem)] font-bold text-[#475569] uppercase tracking-wide">
-              Overtime Hours
-            </label>
-            {isOvertimeManuallyEdited && (
-              <button
-                type="button"
-                onClick={() => {
-                  setIsOvertimeManuallyEdited(false);
-                  setOvertimeHours(calculateOt(checkIn, checkOut));
-                }}
-                className="text-xs text-blue-600 hover:underline cursor-pointer"
-              >
-                Reset to auto-calc
-              </button>
-            )}
-          </div>
-          <Input
-            type="number"
-            step="0.5"
-            value={overtimeHours}
-            onChange={handleOvertimeChange}
+          <Select
+            label="Attendance Status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            options={[
+              { value: "PRESENT", label: "Present" },
+              { value: "ABSENT", label: "Absent" },
+              { value: "LATE", label: "Late" },
+              { value: "HALF_DAY", label: "Half Day" },
+            ]}
           />
+
+          <div>
+            <div className="flex justify-between items-center mb-1">
+              <label className="text-[clamp(0.7rem,1vw,0.8rem)] font-bold text-[#475569] uppercase tracking-wide">
+                Overtime Hours
+              </label>
+              {isOvertimeManuallyEdited && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsOvertimeManuallyEdited(false);
+                    setOvertimeHours(calculateOt(checkIn, checkOut));
+                  }}
+                  className="text-xs text-blue-600 hover:underline cursor-pointer"
+                >
+                  Reset to auto-calc
+                </button>
+              )}
+            </div>
+            <Input
+              type="number"
+              step="0.5"
+              value={overtimeHours}
+              onChange={handleOvertimeChange}
+            />
+          </div>
         </div>
 
         <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
@@ -188,12 +192,14 @@ function EditAttendanceFormModal({
 export function AttendanceTab() {
   const [attendances, setAttendances] = useState<any[]>([]);
   const [attendanceDate, setAttendanceDate] = useState(
-    new Date().toISOString().split("T")[0]
+    new Date().toISOString().split("T")[0],
   );
   const [employees, setEmployees] = useState<EmployeeData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [attendanceStatusFilter, setAttendanceStatusFilter] = useState("ALL");
-  const [editAttendanceModal, setEditAttendanceModal] = useState<any | null>(null);
+  const [editAttendanceModal, setEditAttendanceModal] = useState<any | null>(
+    null,
+  );
 
   useEffect(() => {
     fetchAttendancesAndEmployees();
