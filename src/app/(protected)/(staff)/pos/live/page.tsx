@@ -107,13 +107,10 @@ export default function PosLivePage() {
             if (isSoundEnabledRef.current) {
               playPOSReadyNotification(displayOrderNum);
             }
-            toast.success(
-              `KOT #${displayOrderNum} is READY to serve!`,
-              {
-                duration: 6000,
-                icon: null,
-              },
-            );
+            toast.success(`KOT #${displayOrderNum} is READY to serve!`, {
+              duration: 6000,
+              icon: null,
+            });
           }
         }
 
