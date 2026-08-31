@@ -8,6 +8,7 @@ import {
   Receipt,
   BarChart3,
   ShoppingCart,
+  Banknote,
 } from "lucide-react";
 
 const adminNavItems = [
@@ -35,6 +36,11 @@ const adminNavItems = [
     label: "Expenses",
     href: "/admin/expenses",
     icon: <Receipt size={18} />,
+  },
+  {
+    label: "Payroll & Attendance",
+    href: "/admin/payroll",
+    icon: <Banknote size={18} />,
   },
   {
     label: "Reports & Analytics",

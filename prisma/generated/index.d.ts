@@ -43,6 +43,26 @@ export type Order = $Result.DefaultSelection<Prisma.$OrderPayload>
  * 
  */
 export type OrderItem = $Result.DefaultSelection<Prisma.$OrderItemPayload>
+/**
+ * Model Attendance
+ * 
+ */
+export type Attendance = $Result.DefaultSelection<Prisma.$AttendancePayload>
+/**
+ * Model Leave
+ * 
+ */
+export type Leave = $Result.DefaultSelection<Prisma.$LeavePayload>
+/**
+ * Model Payroll
+ * 
+ */
+export type Payroll = $Result.DefaultSelection<Prisma.$PayrollPayload>
+/**
+ * Model SalaryAdvance
+ * 
+ */
+export type SalaryAdvance = $Result.DefaultSelection<Prisma.$SalaryAdvancePayload>
 
 /**
  * Enums
@@ -104,6 +124,62 @@ export const PaymentStatus: {
 
 export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
+
+export const AttendanceStatus: {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  LATE: 'LATE',
+  HALF_DAY: 'HALF_DAY'
+};
+
+export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof AttendanceStatus]
+
+
+export const LeaveStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+export type LeaveStatus = (typeof LeaveStatus)[keyof typeof LeaveStatus]
+
+
+export const LeaveType: {
+  CASUAL: 'CASUAL',
+  SICK: 'SICK',
+  UNPAID: 'UNPAID'
+};
+
+export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType]
+
+
+export const PayrollStatus: {
+  DRAFT: 'DRAFT',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID'
+};
+
+export type PayrollStatus = (typeof PayrollStatus)[keyof typeof PayrollStatus]
+
+
+export const SalaryPaymentMethod: {
+  CASH: 'CASH',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  CHEQUE: 'CHEQUE'
+};
+
+export type SalaryPaymentMethod = (typeof SalaryPaymentMethod)[keyof typeof SalaryPaymentMethod]
+
+
+export const AdvanceStatus: {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID',
+  DEDUCTED: 'DEDUCTED'
+};
+
+export type AdvanceStatus = (typeof AdvanceStatus)[keyof typeof AdvanceStatus]
+
 }
 
 export type Role = $Enums.Role
@@ -129,6 +205,30 @@ export const PaymentMethod: typeof $Enums.PaymentMethod
 export type PaymentStatus = $Enums.PaymentStatus
 
 export const PaymentStatus: typeof $Enums.PaymentStatus
+
+export type AttendanceStatus = $Enums.AttendanceStatus
+
+export const AttendanceStatus: typeof $Enums.AttendanceStatus
+
+export type LeaveStatus = $Enums.LeaveStatus
+
+export const LeaveStatus: typeof $Enums.LeaveStatus
+
+export type LeaveType = $Enums.LeaveType
+
+export const LeaveType: typeof $Enums.LeaveType
+
+export type PayrollStatus = $Enums.PayrollStatus
+
+export const PayrollStatus: typeof $Enums.PayrollStatus
+
+export type SalaryPaymentMethod = $Enums.SalaryPaymentMethod
+
+export const SalaryPaymentMethod: typeof $Enums.SalaryPaymentMethod
+
+export type AdvanceStatus = $Enums.AdvanceStatus
+
+export const AdvanceStatus: typeof $Enums.AdvanceStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -310,6 +410,46 @@ export class PrismaClient<
     * ```
     */
   get orderItem(): Prisma.OrderItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.attendance`: Exposes CRUD operations for the **Attendance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Attendances
+    * const attendances = await prisma.attendance.findMany()
+    * ```
+    */
+  get attendance(): Prisma.AttendanceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.leave`: Exposes CRUD operations for the **Leave** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Leaves
+    * const leaves = await prisma.leave.findMany()
+    * ```
+    */
+  get leave(): Prisma.LeaveDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.payroll`: Exposes CRUD operations for the **Payroll** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Payrolls
+    * const payrolls = await prisma.payroll.findMany()
+    * ```
+    */
+  get payroll(): Prisma.PayrollDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.salaryAdvance`: Exposes CRUD operations for the **SalaryAdvance** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more SalaryAdvances
+    * const salaryAdvances = await prisma.salaryAdvance.findMany()
+    * ```
+    */
+  get salaryAdvance(): Prisma.SalaryAdvanceDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -762,7 +902,11 @@ export namespace Prisma {
     MenuItem: 'MenuItem',
     AddOn: 'AddOn',
     Order: 'Order',
-    OrderItem: 'OrderItem'
+    OrderItem: 'OrderItem',
+    Attendance: 'Attendance',
+    Leave: 'Leave',
+    Payroll: 'Payroll',
+    SalaryAdvance: 'SalaryAdvance'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -778,7 +922,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "category" | "menuItem" | "addOn" | "order" | "orderItem"
+      modelProps: "user" | "category" | "menuItem" | "addOn" | "order" | "orderItem" | "attendance" | "leave" | "payroll" | "salaryAdvance"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1226,6 +1370,302 @@ export namespace Prisma {
           }
         }
       }
+      Attendance: {
+        payload: Prisma.$AttendancePayload<ExtArgs>
+        fields: Prisma.AttendanceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AttendanceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttendanceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          findFirst: {
+            args: Prisma.AttendanceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttendanceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          findMany: {
+            args: Prisma.AttendanceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>[]
+          }
+          create: {
+            args: Prisma.AttendanceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          createMany: {
+            args: Prisma.AttendanceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AttendanceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>[]
+          }
+          delete: {
+            args: Prisma.AttendanceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          update: {
+            args: Prisma.AttendanceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          deleteMany: {
+            args: Prisma.AttendanceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AttendanceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AttendanceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>[]
+          }
+          upsert: {
+            args: Prisma.AttendanceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttendancePayload>
+          }
+          aggregate: {
+            args: Prisma.AttendanceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAttendance>
+          }
+          groupBy: {
+            args: Prisma.AttendanceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AttendanceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AttendanceCountArgs<ExtArgs>
+            result: $Utils.Optional<AttendanceCountAggregateOutputType> | number
+          }
+        }
+      }
+      Leave: {
+        payload: Prisma.$LeavePayload<ExtArgs>
+        fields: Prisma.LeaveFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LeaveFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LeaveFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>
+          }
+          findFirst: {
+            args: Prisma.LeaveFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LeaveFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>
+          }
+          findMany: {
+            args: Prisma.LeaveFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>[]
+          }
+          create: {
+            args: Prisma.LeaveCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>
+          }
+          createMany: {
+            args: Prisma.LeaveCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LeaveCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>[]
+          }
+          delete: {
+            args: Prisma.LeaveDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>
+          }
+          update: {
+            args: Prisma.LeaveUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>
+          }
+          deleteMany: {
+            args: Prisma.LeaveDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LeaveUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LeaveUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>[]
+          }
+          upsert: {
+            args: Prisma.LeaveUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeavePayload>
+          }
+          aggregate: {
+            args: Prisma.LeaveAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLeave>
+          }
+          groupBy: {
+            args: Prisma.LeaveGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LeaveGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LeaveCountArgs<ExtArgs>
+            result: $Utils.Optional<LeaveCountAggregateOutputType> | number
+          }
+        }
+      }
+      Payroll: {
+        payload: Prisma.$PayrollPayload<ExtArgs>
+        fields: Prisma.PayrollFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PayrollFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PayrollFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>
+          }
+          findFirst: {
+            args: Prisma.PayrollFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PayrollFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>
+          }
+          findMany: {
+            args: Prisma.PayrollFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>[]
+          }
+          create: {
+            args: Prisma.PayrollCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>
+          }
+          createMany: {
+            args: Prisma.PayrollCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PayrollCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>[]
+          }
+          delete: {
+            args: Prisma.PayrollDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>
+          }
+          update: {
+            args: Prisma.PayrollUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>
+          }
+          deleteMany: {
+            args: Prisma.PayrollDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PayrollUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PayrollUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>[]
+          }
+          upsert: {
+            args: Prisma.PayrollUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PayrollPayload>
+          }
+          aggregate: {
+            args: Prisma.PayrollAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePayroll>
+          }
+          groupBy: {
+            args: Prisma.PayrollGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PayrollGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PayrollCountArgs<ExtArgs>
+            result: $Utils.Optional<PayrollCountAggregateOutputType> | number
+          }
+        }
+      }
+      SalaryAdvance: {
+        payload: Prisma.$SalaryAdvancePayload<ExtArgs>
+        fields: Prisma.SalaryAdvanceFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.SalaryAdvanceFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.SalaryAdvanceFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>
+          }
+          findFirst: {
+            args: Prisma.SalaryAdvanceFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.SalaryAdvanceFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>
+          }
+          findMany: {
+            args: Prisma.SalaryAdvanceFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>[]
+          }
+          create: {
+            args: Prisma.SalaryAdvanceCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>
+          }
+          createMany: {
+            args: Prisma.SalaryAdvanceCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.SalaryAdvanceCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>[]
+          }
+          delete: {
+            args: Prisma.SalaryAdvanceDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>
+          }
+          update: {
+            args: Prisma.SalaryAdvanceUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>
+          }
+          deleteMany: {
+            args: Prisma.SalaryAdvanceDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.SalaryAdvanceUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.SalaryAdvanceUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>[]
+          }
+          upsert: {
+            args: Prisma.SalaryAdvanceUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$SalaryAdvancePayload>
+          }
+          aggregate: {
+            args: Prisma.SalaryAdvanceAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateSalaryAdvance>
+          }
+          groupBy: {
+            args: Prisma.SalaryAdvanceGroupByArgs<ExtArgs>
+            result: $Utils.Optional<SalaryAdvanceGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.SalaryAdvanceCountArgs<ExtArgs>
+            result: $Utils.Optional<SalaryAdvanceCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1355,6 +1795,10 @@ export namespace Prisma {
     addOn?: AddOnOmit
     order?: OrderOmit
     orderItem?: OrderItemOmit
+    attendance?: AttendanceOmit
+    leave?: LeaveOmit
+    payroll?: PayrollOmit
+    salaryAdvance?: SalaryAdvanceOmit
   }
 
   /* Types for Logging */
@@ -1436,10 +1880,18 @@ export namespace Prisma {
 
   export type UserCountOutputType = {
     orders: number
+    attendances: number
+    leaves: number
+    payrolls: number
+    salaryAdvances: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | UserCountOutputTypeCountOrdersArgs
+    attendances?: boolean | UserCountOutputTypeCountAttendancesArgs
+    leaves?: boolean | UserCountOutputTypeCountLeavesArgs
+    payrolls?: boolean | UserCountOutputTypeCountPayrollsArgs
+    salaryAdvances?: boolean | UserCountOutputTypeCountSalaryAdvancesArgs
   }
 
   // Custom InputTypes
@@ -1458,6 +1910,34 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountAttendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountLeavesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeaveWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountPayrollsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PayrollWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountSalaryAdvancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SalaryAdvanceWhereInput
   }
 
 
@@ -1852,6 +2332,10 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     orders?: boolean | User$ordersArgs<ExtArgs>
+    attendances?: boolean | User$attendancesArgs<ExtArgs>
+    leaves?: boolean | User$leavesArgs<ExtArgs>
+    payrolls?: boolean | User$payrollsArgs<ExtArgs>
+    salaryAdvances?: boolean | User$salaryAdvancesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -1906,6 +2390,10 @@ export namespace Prisma {
   export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "password" | "fullName" | "role" | "status" | "monthlyBaseSalary" | "shiftTiming" | "hiredAt" | "avatarUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | User$ordersArgs<ExtArgs>
+    attendances?: boolean | User$attendancesArgs<ExtArgs>
+    leaves?: boolean | User$leavesArgs<ExtArgs>
+    payrolls?: boolean | User$payrollsArgs<ExtArgs>
+    salaryAdvances?: boolean | User$salaryAdvancesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -1915,6 +2403,10 @@ export namespace Prisma {
     name: "User"
     objects: {
       orders: Prisma.$OrderPayload<ExtArgs>[]
+      attendances: Prisma.$AttendancePayload<ExtArgs>[]
+      leaves: Prisma.$LeavePayload<ExtArgs>[]
+      payrolls: Prisma.$PayrollPayload<ExtArgs>[]
+      salaryAdvances: Prisma.$SalaryAdvancePayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -2325,6 +2817,10 @@ export namespace Prisma {
   export interface Prisma__UserClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     orders<T extends User$ordersArgs<ExtArgs> = {}>(args?: Subset<T, User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attendances<T extends User$attendancesArgs<ExtArgs> = {}>(args?: Subset<T, User$attendancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    leaves<T extends User$leavesArgs<ExtArgs> = {}>(args?: Subset<T, User$leavesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    payrolls<T extends User$payrollsArgs<ExtArgs> = {}>(args?: Subset<T, User$payrollsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    salaryAdvances<T extends User$salaryAdvancesArgs<ExtArgs> = {}>(args?: Subset<T, User$salaryAdvancesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2781,6 +3277,102 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderScalarFieldEnum | OrderScalarFieldEnum[]
+  }
+
+  /**
+   * User.attendances
+   */
+  export type User$attendancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    where?: AttendanceWhereInput
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    cursor?: AttendanceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
+   * User.leaves
+   */
+  export type User$leavesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    where?: LeaveWhereInput
+    orderBy?: LeaveOrderByWithRelationInput | LeaveOrderByWithRelationInput[]
+    cursor?: LeaveWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeaveScalarFieldEnum | LeaveScalarFieldEnum[]
+  }
+
+  /**
+   * User.payrolls
+   */
+  export type User$payrollsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    where?: PayrollWhereInput
+    orderBy?: PayrollOrderByWithRelationInput | PayrollOrderByWithRelationInput[]
+    cursor?: PayrollWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PayrollScalarFieldEnum | PayrollScalarFieldEnum[]
+  }
+
+  /**
+   * User.salaryAdvances
+   */
+  export type User$salaryAdvancesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    where?: SalaryAdvanceWhereInput
+    orderBy?: SalaryAdvanceOrderByWithRelationInput | SalaryAdvanceOrderByWithRelationInput[]
+    cursor?: SalaryAdvanceWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: SalaryAdvanceScalarFieldEnum | SalaryAdvanceScalarFieldEnum[]
   }
 
   /**
@@ -8693,6 +9285,4763 @@ export namespace Prisma {
 
 
   /**
+   * Model Attendance
+   */
+
+  export type AggregateAttendance = {
+    _count: AttendanceCountAggregateOutputType | null
+    _avg: AttendanceAvgAggregateOutputType | null
+    _sum: AttendanceSumAggregateOutputType | null
+    _min: AttendanceMinAggregateOutputType | null
+    _max: AttendanceMaxAggregateOutputType | null
+  }
+
+  export type AttendanceAvgAggregateOutputType = {
+    overtimeHours: Decimal | null
+  }
+
+  export type AttendanceSumAggregateOutputType = {
+    overtimeHours: Decimal | null
+  }
+
+  export type AttendanceMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    date: Date | null
+    status: $Enums.AttendanceStatus | null
+    checkIn: Date | null
+    checkOut: Date | null
+    overtimeHours: Decimal | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttendanceMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    date: Date | null
+    status: $Enums.AttendanceStatus | null
+    checkIn: Date | null
+    checkOut: Date | null
+    overtimeHours: Decimal | null
+    notes: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttendanceCountAggregateOutputType = {
+    id: number
+    userId: number
+    date: number
+    status: number
+    checkIn: number
+    checkOut: number
+    overtimeHours: number
+    notes: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AttendanceAvgAggregateInputType = {
+    overtimeHours?: true
+  }
+
+  export type AttendanceSumAggregateInputType = {
+    overtimeHours?: true
+  }
+
+  export type AttendanceMinAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    status?: true
+    checkIn?: true
+    checkOut?: true
+    overtimeHours?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttendanceMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    status?: true
+    checkIn?: true
+    checkOut?: true
+    overtimeHours?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttendanceCountAggregateInputType = {
+    id?: true
+    userId?: true
+    date?: true
+    status?: true
+    checkIn?: true
+    checkOut?: true
+    overtimeHours?: true
+    notes?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AttendanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attendance to aggregate.
+     */
+    where?: AttendanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attendances to fetch.
+     */
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttendanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attendances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attendances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Attendances
+    **/
+    _count?: true | AttendanceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AttendanceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AttendanceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttendanceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttendanceMaxAggregateInputType
+  }
+
+  export type GetAttendanceAggregateType<T extends AttendanceAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttendance]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttendance[P]>
+      : GetScalarType<T[P], AggregateAttendance[P]>
+  }
+
+
+
+
+  export type AttendanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttendanceWhereInput
+    orderBy?: AttendanceOrderByWithAggregationInput | AttendanceOrderByWithAggregationInput[]
+    by: AttendanceScalarFieldEnum[] | AttendanceScalarFieldEnum
+    having?: AttendanceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttendanceCountAggregateInputType | true
+    _avg?: AttendanceAvgAggregateInputType
+    _sum?: AttendanceSumAggregateInputType
+    _min?: AttendanceMinAggregateInputType
+    _max?: AttendanceMaxAggregateInputType
+  }
+
+  export type AttendanceGroupByOutputType = {
+    id: string
+    userId: string
+    date: Date
+    status: $Enums.AttendanceStatus
+    checkIn: Date | null
+    checkOut: Date | null
+    overtimeHours: Decimal | null
+    notes: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: AttendanceCountAggregateOutputType | null
+    _avg: AttendanceAvgAggregateOutputType | null
+    _sum: AttendanceSumAggregateOutputType | null
+    _min: AttendanceMinAggregateOutputType | null
+    _max: AttendanceMaxAggregateOutputType | null
+  }
+
+  type GetAttendanceGroupByPayload<T extends AttendanceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AttendanceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttendanceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttendanceGroupByOutputType[P]>
+            : GetScalarType<T[P], AttendanceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttendanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    status?: boolean
+    checkIn?: boolean
+    checkOut?: boolean
+    overtimeHours?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attendance"]>
+
+  export type AttendanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    status?: boolean
+    checkIn?: boolean
+    checkOut?: boolean
+    overtimeHours?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attendance"]>
+
+  export type AttendanceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    status?: boolean
+    checkIn?: boolean
+    checkOut?: boolean
+    overtimeHours?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attendance"]>
+
+  export type AttendanceSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    date?: boolean
+    status?: boolean
+    checkIn?: boolean
+    checkOut?: boolean
+    overtimeHours?: boolean
+    notes?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AttendanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "date" | "status" | "checkIn" | "checkOut" | "overtimeHours" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["attendance"]>
+  export type AttendanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AttendanceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type AttendanceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $AttendancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Attendance"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      date: Date
+      status: $Enums.AttendanceStatus
+      checkIn: Date | null
+      checkOut: Date | null
+      overtimeHours: Prisma.Decimal | null
+      notes: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["attendance"]>
+    composites: {}
+  }
+
+  type AttendanceGetPayload<S extends boolean | null | undefined | AttendanceDefaultArgs> = $Result.GetResult<Prisma.$AttendancePayload, S>
+
+  type AttendanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AttendanceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AttendanceCountAggregateInputType | true
+    }
+
+  export interface AttendanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Attendance'], meta: { name: 'Attendance' } }
+    /**
+     * Find zero or one Attendance that matches the filter.
+     * @param {AttendanceFindUniqueArgs} args - Arguments to find a Attendance
+     * @example
+     * // Get one Attendance
+     * const attendance = await prisma.attendance.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AttendanceFindUniqueArgs>(args: SelectSubset<T, AttendanceFindUniqueArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Attendance that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AttendanceFindUniqueOrThrowArgs} args - Arguments to find a Attendance
+     * @example
+     * // Get one Attendance
+     * const attendance = await prisma.attendance.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AttendanceFindUniqueOrThrowArgs>(args: SelectSubset<T, AttendanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Attendance that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceFindFirstArgs} args - Arguments to find a Attendance
+     * @example
+     * // Get one Attendance
+     * const attendance = await prisma.attendance.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AttendanceFindFirstArgs>(args?: SelectSubset<T, AttendanceFindFirstArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Attendance that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceFindFirstOrThrowArgs} args - Arguments to find a Attendance
+     * @example
+     * // Get one Attendance
+     * const attendance = await prisma.attendance.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AttendanceFindFirstOrThrowArgs>(args?: SelectSubset<T, AttendanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Attendances that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Attendances
+     * const attendances = await prisma.attendance.findMany()
+     * 
+     * // Get first 10 Attendances
+     * const attendances = await prisma.attendance.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attendanceWithIdOnly = await prisma.attendance.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AttendanceFindManyArgs>(args?: SelectSubset<T, AttendanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Attendance.
+     * @param {AttendanceCreateArgs} args - Arguments to create a Attendance.
+     * @example
+     * // Create one Attendance
+     * const Attendance = await prisma.attendance.create({
+     *   data: {
+     *     // ... data to create a Attendance
+     *   }
+     * })
+     * 
+     */
+    create<T extends AttendanceCreateArgs>(args: SelectSubset<T, AttendanceCreateArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Attendances.
+     * @param {AttendanceCreateManyArgs} args - Arguments to create many Attendances.
+     * @example
+     * // Create many Attendances
+     * const attendance = await prisma.attendance.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AttendanceCreateManyArgs>(args?: SelectSubset<T, AttendanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Attendances and returns the data saved in the database.
+     * @param {AttendanceCreateManyAndReturnArgs} args - Arguments to create many Attendances.
+     * @example
+     * // Create many Attendances
+     * const attendance = await prisma.attendance.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Attendances and only return the `id`
+     * const attendanceWithIdOnly = await prisma.attendance.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AttendanceCreateManyAndReturnArgs>(args?: SelectSubset<T, AttendanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Attendance.
+     * @param {AttendanceDeleteArgs} args - Arguments to delete one Attendance.
+     * @example
+     * // Delete one Attendance
+     * const Attendance = await prisma.attendance.delete({
+     *   where: {
+     *     // ... filter to delete one Attendance
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AttendanceDeleteArgs>(args: SelectSubset<T, AttendanceDeleteArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Attendance.
+     * @param {AttendanceUpdateArgs} args - Arguments to update one Attendance.
+     * @example
+     * // Update one Attendance
+     * const attendance = await prisma.attendance.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AttendanceUpdateArgs>(args: SelectSubset<T, AttendanceUpdateArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Attendances.
+     * @param {AttendanceDeleteManyArgs} args - Arguments to filter Attendances to delete.
+     * @example
+     * // Delete a few Attendances
+     * const { count } = await prisma.attendance.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AttendanceDeleteManyArgs>(args?: SelectSubset<T, AttendanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Attendances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Attendances
+     * const attendance = await prisma.attendance.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AttendanceUpdateManyArgs>(args: SelectSubset<T, AttendanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Attendances and returns the data updated in the database.
+     * @param {AttendanceUpdateManyAndReturnArgs} args - Arguments to update many Attendances.
+     * @example
+     * // Update many Attendances
+     * const attendance = await prisma.attendance.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Attendances and only return the `id`
+     * const attendanceWithIdOnly = await prisma.attendance.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AttendanceUpdateManyAndReturnArgs>(args: SelectSubset<T, AttendanceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Attendance.
+     * @param {AttendanceUpsertArgs} args - Arguments to update or create a Attendance.
+     * @example
+     * // Update or create a Attendance
+     * const attendance = await prisma.attendance.upsert({
+     *   create: {
+     *     // ... data to create a Attendance
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Attendance we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AttendanceUpsertArgs>(args: SelectSubset<T, AttendanceUpsertArgs<ExtArgs>>): Prisma__AttendanceClient<$Result.GetResult<Prisma.$AttendancePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Attendances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceCountArgs} args - Arguments to filter Attendances to count.
+     * @example
+     * // Count the number of Attendances
+     * const count = await prisma.attendance.count({
+     *   where: {
+     *     // ... the filter for the Attendances we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttendanceCountArgs>(
+      args?: Subset<T, AttendanceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttendanceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Attendance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttendanceAggregateArgs>(args: Subset<T, AttendanceAggregateArgs>): Prisma.PrismaPromise<GetAttendanceAggregateType<T>>
+
+    /**
+     * Group by Attendance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttendanceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttendanceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttendanceGroupByArgs['orderBy'] }
+        : { orderBy?: AttendanceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttendanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttendanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Attendance model
+   */
+  readonly fields: AttendanceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Attendance.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AttendanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Attendance model
+   */
+  interface AttendanceFieldRefs {
+    readonly id: FieldRef<"Attendance", 'String'>
+    readonly userId: FieldRef<"Attendance", 'String'>
+    readonly date: FieldRef<"Attendance", 'DateTime'>
+    readonly status: FieldRef<"Attendance", 'AttendanceStatus'>
+    readonly checkIn: FieldRef<"Attendance", 'DateTime'>
+    readonly checkOut: FieldRef<"Attendance", 'DateTime'>
+    readonly overtimeHours: FieldRef<"Attendance", 'Decimal'>
+    readonly notes: FieldRef<"Attendance", 'String'>
+    readonly createdAt: FieldRef<"Attendance", 'DateTime'>
+    readonly updatedAt: FieldRef<"Attendance", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Attendance findUnique
+   */
+  export type AttendanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendance to fetch.
+     */
+    where: AttendanceWhereUniqueInput
+  }
+
+  /**
+   * Attendance findUniqueOrThrow
+   */
+  export type AttendanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendance to fetch.
+     */
+    where: AttendanceWhereUniqueInput
+  }
+
+  /**
+   * Attendance findFirst
+   */
+  export type AttendanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendance to fetch.
+     */
+    where?: AttendanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attendances to fetch.
+     */
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attendances.
+     */
+    cursor?: AttendanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attendances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attendances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attendances.
+     */
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
+   * Attendance findFirstOrThrow
+   */
+  export type AttendanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendance to fetch.
+     */
+    where?: AttendanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attendances to fetch.
+     */
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Attendances.
+     */
+    cursor?: AttendanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attendances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attendances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attendances.
+     */
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
+   * Attendance findMany
+   */
+  export type AttendanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter, which Attendances to fetch.
+     */
+    where?: AttendanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Attendances to fetch.
+     */
+    orderBy?: AttendanceOrderByWithRelationInput | AttendanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Attendances.
+     */
+    cursor?: AttendanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Attendances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Attendances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Attendances.
+     */
+    distinct?: AttendanceScalarFieldEnum | AttendanceScalarFieldEnum[]
+  }
+
+  /**
+   * Attendance create
+   */
+  export type AttendanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Attendance.
+     */
+    data: XOR<AttendanceCreateInput, AttendanceUncheckedCreateInput>
+  }
+
+  /**
+   * Attendance createMany
+   */
+  export type AttendanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Attendances.
+     */
+    data: AttendanceCreateManyInput | AttendanceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Attendance createManyAndReturn
+   */
+  export type AttendanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * The data used to create many Attendances.
+     */
+    data: AttendanceCreateManyInput | AttendanceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Attendance update
+   */
+  export type AttendanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Attendance.
+     */
+    data: XOR<AttendanceUpdateInput, AttendanceUncheckedUpdateInput>
+    /**
+     * Choose, which Attendance to update.
+     */
+    where: AttendanceWhereUniqueInput
+  }
+
+  /**
+   * Attendance updateMany
+   */
+  export type AttendanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Attendances.
+     */
+    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyInput>
+    /**
+     * Filter which Attendances to update
+     */
+    where?: AttendanceWhereInput
+    /**
+     * Limit how many Attendances to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Attendance updateManyAndReturn
+   */
+  export type AttendanceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * The data used to update Attendances.
+     */
+    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyInput>
+    /**
+     * Filter which Attendances to update
+     */
+    where?: AttendanceWhereInput
+    /**
+     * Limit how many Attendances to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Attendance upsert
+   */
+  export type AttendanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Attendance to update in case it exists.
+     */
+    where: AttendanceWhereUniqueInput
+    /**
+     * In case the Attendance found by the `where` argument doesn't exist, create a new Attendance with this data.
+     */
+    create: XOR<AttendanceCreateInput, AttendanceUncheckedCreateInput>
+    /**
+     * In case the Attendance was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttendanceUpdateInput, AttendanceUncheckedUpdateInput>
+  }
+
+  /**
+   * Attendance delete
+   */
+  export type AttendanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+    /**
+     * Filter which Attendance to delete.
+     */
+    where: AttendanceWhereUniqueInput
+  }
+
+  /**
+   * Attendance deleteMany
+   */
+  export type AttendanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Attendances to delete
+     */
+    where?: AttendanceWhereInput
+    /**
+     * Limit how many Attendances to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Attendance without action
+   */
+  export type AttendanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Attendance
+     */
+    select?: AttendanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Attendance
+     */
+    omit?: AttendanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttendanceInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Leave
+   */
+
+  export type AggregateLeave = {
+    _count: LeaveCountAggregateOutputType | null
+    _min: LeaveMinAggregateOutputType | null
+    _max: LeaveMaxAggregateOutputType | null
+  }
+
+  export type LeaveMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    reason: string | null
+    type: $Enums.LeaveType | null
+    status: $Enums.LeaveStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LeaveMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    startDate: Date | null
+    endDate: Date | null
+    reason: string | null
+    type: $Enums.LeaveType | null
+    status: $Enums.LeaveStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LeaveCountAggregateOutputType = {
+    id: number
+    userId: number
+    startDate: number
+    endDate: number
+    reason: number
+    type: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type LeaveMinAggregateInputType = {
+    id?: true
+    userId?: true
+    startDate?: true
+    endDate?: true
+    reason?: true
+    type?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LeaveMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    startDate?: true
+    endDate?: true
+    reason?: true
+    type?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LeaveCountAggregateInputType = {
+    id?: true
+    userId?: true
+    startDate?: true
+    endDate?: true
+    reason?: true
+    type?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type LeaveAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Leave to aggregate.
+     */
+    where?: LeaveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Leaves to fetch.
+     */
+    orderBy?: LeaveOrderByWithRelationInput | LeaveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LeaveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Leaves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Leaves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Leaves
+    **/
+    _count?: true | LeaveCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LeaveMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LeaveMaxAggregateInputType
+  }
+
+  export type GetLeaveAggregateType<T extends LeaveAggregateArgs> = {
+        [P in keyof T & keyof AggregateLeave]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLeave[P]>
+      : GetScalarType<T[P], AggregateLeave[P]>
+  }
+
+
+
+
+  export type LeaveGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeaveWhereInput
+    orderBy?: LeaveOrderByWithAggregationInput | LeaveOrderByWithAggregationInput[]
+    by: LeaveScalarFieldEnum[] | LeaveScalarFieldEnum
+    having?: LeaveScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LeaveCountAggregateInputType | true
+    _min?: LeaveMinAggregateInputType
+    _max?: LeaveMaxAggregateInputType
+  }
+
+  export type LeaveGroupByOutputType = {
+    id: string
+    userId: string
+    startDate: Date
+    endDate: Date
+    reason: string
+    type: $Enums.LeaveType
+    status: $Enums.LeaveStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: LeaveCountAggregateOutputType | null
+    _min: LeaveMinAggregateOutputType | null
+    _max: LeaveMaxAggregateOutputType | null
+  }
+
+  type GetLeaveGroupByPayload<T extends LeaveGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LeaveGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LeaveGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LeaveGroupByOutputType[P]>
+            : GetScalarType<T[P], LeaveGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LeaveSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    reason?: boolean
+    type?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leave"]>
+
+  export type LeaveSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    reason?: boolean
+    type?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leave"]>
+
+  export type LeaveSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    reason?: boolean
+    type?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leave"]>
+
+  export type LeaveSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    startDate?: boolean
+    endDate?: boolean
+    reason?: boolean
+    type?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type LeaveOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "startDate" | "endDate" | "reason" | "type" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["leave"]>
+  export type LeaveInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type LeaveIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type LeaveIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $LeavePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Leave"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      startDate: Date
+      endDate: Date
+      reason: string
+      type: $Enums.LeaveType
+      status: $Enums.LeaveStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["leave"]>
+    composites: {}
+  }
+
+  type LeaveGetPayload<S extends boolean | null | undefined | LeaveDefaultArgs> = $Result.GetResult<Prisma.$LeavePayload, S>
+
+  type LeaveCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LeaveFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LeaveCountAggregateInputType | true
+    }
+
+  export interface LeaveDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Leave'], meta: { name: 'Leave' } }
+    /**
+     * Find zero or one Leave that matches the filter.
+     * @param {LeaveFindUniqueArgs} args - Arguments to find a Leave
+     * @example
+     * // Get one Leave
+     * const leave = await prisma.leave.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LeaveFindUniqueArgs>(args: SelectSubset<T, LeaveFindUniqueArgs<ExtArgs>>): Prisma__LeaveClient<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Leave that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LeaveFindUniqueOrThrowArgs} args - Arguments to find a Leave
+     * @example
+     * // Get one Leave
+     * const leave = await prisma.leave.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LeaveFindUniqueOrThrowArgs>(args: SelectSubset<T, LeaveFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LeaveClient<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Leave that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeaveFindFirstArgs} args - Arguments to find a Leave
+     * @example
+     * // Get one Leave
+     * const leave = await prisma.leave.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LeaveFindFirstArgs>(args?: SelectSubset<T, LeaveFindFirstArgs<ExtArgs>>): Prisma__LeaveClient<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Leave that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeaveFindFirstOrThrowArgs} args - Arguments to find a Leave
+     * @example
+     * // Get one Leave
+     * const leave = await prisma.leave.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LeaveFindFirstOrThrowArgs>(args?: SelectSubset<T, LeaveFindFirstOrThrowArgs<ExtArgs>>): Prisma__LeaveClient<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Leaves that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeaveFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Leaves
+     * const leaves = await prisma.leave.findMany()
+     * 
+     * // Get first 10 Leaves
+     * const leaves = await prisma.leave.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const leaveWithIdOnly = await prisma.leave.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LeaveFindManyArgs>(args?: SelectSubset<T, LeaveFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Leave.
+     * @param {LeaveCreateArgs} args - Arguments to create a Leave.
+     * @example
+     * // Create one Leave
+     * const Leave = await prisma.leave.create({
+     *   data: {
+     *     // ... data to create a Leave
+     *   }
+     * })
+     * 
+     */
+    create<T extends LeaveCreateArgs>(args: SelectSubset<T, LeaveCreateArgs<ExtArgs>>): Prisma__LeaveClient<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Leaves.
+     * @param {LeaveCreateManyArgs} args - Arguments to create many Leaves.
+     * @example
+     * // Create many Leaves
+     * const leave = await prisma.leave.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LeaveCreateManyArgs>(args?: SelectSubset<T, LeaveCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Leaves and returns the data saved in the database.
+     * @param {LeaveCreateManyAndReturnArgs} args - Arguments to create many Leaves.
+     * @example
+     * // Create many Leaves
+     * const leave = await prisma.leave.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Leaves and only return the `id`
+     * const leaveWithIdOnly = await prisma.leave.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LeaveCreateManyAndReturnArgs>(args?: SelectSubset<T, LeaveCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Leave.
+     * @param {LeaveDeleteArgs} args - Arguments to delete one Leave.
+     * @example
+     * // Delete one Leave
+     * const Leave = await prisma.leave.delete({
+     *   where: {
+     *     // ... filter to delete one Leave
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LeaveDeleteArgs>(args: SelectSubset<T, LeaveDeleteArgs<ExtArgs>>): Prisma__LeaveClient<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Leave.
+     * @param {LeaveUpdateArgs} args - Arguments to update one Leave.
+     * @example
+     * // Update one Leave
+     * const leave = await prisma.leave.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LeaveUpdateArgs>(args: SelectSubset<T, LeaveUpdateArgs<ExtArgs>>): Prisma__LeaveClient<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Leaves.
+     * @param {LeaveDeleteManyArgs} args - Arguments to filter Leaves to delete.
+     * @example
+     * // Delete a few Leaves
+     * const { count } = await prisma.leave.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LeaveDeleteManyArgs>(args?: SelectSubset<T, LeaveDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Leaves.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeaveUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Leaves
+     * const leave = await prisma.leave.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LeaveUpdateManyArgs>(args: SelectSubset<T, LeaveUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Leaves and returns the data updated in the database.
+     * @param {LeaveUpdateManyAndReturnArgs} args - Arguments to update many Leaves.
+     * @example
+     * // Update many Leaves
+     * const leave = await prisma.leave.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Leaves and only return the `id`
+     * const leaveWithIdOnly = await prisma.leave.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LeaveUpdateManyAndReturnArgs>(args: SelectSubset<T, LeaveUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Leave.
+     * @param {LeaveUpsertArgs} args - Arguments to update or create a Leave.
+     * @example
+     * // Update or create a Leave
+     * const leave = await prisma.leave.upsert({
+     *   create: {
+     *     // ... data to create a Leave
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Leave we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LeaveUpsertArgs>(args: SelectSubset<T, LeaveUpsertArgs<ExtArgs>>): Prisma__LeaveClient<$Result.GetResult<Prisma.$LeavePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Leaves.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeaveCountArgs} args - Arguments to filter Leaves to count.
+     * @example
+     * // Count the number of Leaves
+     * const count = await prisma.leave.count({
+     *   where: {
+     *     // ... the filter for the Leaves we want to count
+     *   }
+     * })
+    **/
+    count<T extends LeaveCountArgs>(
+      args?: Subset<T, LeaveCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LeaveCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Leave.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeaveAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LeaveAggregateArgs>(args: Subset<T, LeaveAggregateArgs>): Prisma.PrismaPromise<GetLeaveAggregateType<T>>
+
+    /**
+     * Group by Leave.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeaveGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LeaveGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LeaveGroupByArgs['orderBy'] }
+        : { orderBy?: LeaveGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LeaveGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLeaveGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Leave model
+   */
+  readonly fields: LeaveFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Leave.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LeaveClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Leave model
+   */
+  interface LeaveFieldRefs {
+    readonly id: FieldRef<"Leave", 'String'>
+    readonly userId: FieldRef<"Leave", 'String'>
+    readonly startDate: FieldRef<"Leave", 'DateTime'>
+    readonly endDate: FieldRef<"Leave", 'DateTime'>
+    readonly reason: FieldRef<"Leave", 'String'>
+    readonly type: FieldRef<"Leave", 'LeaveType'>
+    readonly status: FieldRef<"Leave", 'LeaveStatus'>
+    readonly createdAt: FieldRef<"Leave", 'DateTime'>
+    readonly updatedAt: FieldRef<"Leave", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Leave findUnique
+   */
+  export type LeaveFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which Leave to fetch.
+     */
+    where: LeaveWhereUniqueInput
+  }
+
+  /**
+   * Leave findUniqueOrThrow
+   */
+  export type LeaveFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which Leave to fetch.
+     */
+    where: LeaveWhereUniqueInput
+  }
+
+  /**
+   * Leave findFirst
+   */
+  export type LeaveFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which Leave to fetch.
+     */
+    where?: LeaveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Leaves to fetch.
+     */
+    orderBy?: LeaveOrderByWithRelationInput | LeaveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Leaves.
+     */
+    cursor?: LeaveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Leaves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Leaves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Leaves.
+     */
+    distinct?: LeaveScalarFieldEnum | LeaveScalarFieldEnum[]
+  }
+
+  /**
+   * Leave findFirstOrThrow
+   */
+  export type LeaveFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which Leave to fetch.
+     */
+    where?: LeaveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Leaves to fetch.
+     */
+    orderBy?: LeaveOrderByWithRelationInput | LeaveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Leaves.
+     */
+    cursor?: LeaveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Leaves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Leaves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Leaves.
+     */
+    distinct?: LeaveScalarFieldEnum | LeaveScalarFieldEnum[]
+  }
+
+  /**
+   * Leave findMany
+   */
+  export type LeaveFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * Filter, which Leaves to fetch.
+     */
+    where?: LeaveWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Leaves to fetch.
+     */
+    orderBy?: LeaveOrderByWithRelationInput | LeaveOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Leaves.
+     */
+    cursor?: LeaveWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Leaves from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Leaves.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Leaves.
+     */
+    distinct?: LeaveScalarFieldEnum | LeaveScalarFieldEnum[]
+  }
+
+  /**
+   * Leave create
+   */
+  export type LeaveCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Leave.
+     */
+    data: XOR<LeaveCreateInput, LeaveUncheckedCreateInput>
+  }
+
+  /**
+   * Leave createMany
+   */
+  export type LeaveCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Leaves.
+     */
+    data: LeaveCreateManyInput | LeaveCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Leave createManyAndReturn
+   */
+  export type LeaveCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * The data used to create many Leaves.
+     */
+    data: LeaveCreateManyInput | LeaveCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Leave update
+   */
+  export type LeaveUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Leave.
+     */
+    data: XOR<LeaveUpdateInput, LeaveUncheckedUpdateInput>
+    /**
+     * Choose, which Leave to update.
+     */
+    where: LeaveWhereUniqueInput
+  }
+
+  /**
+   * Leave updateMany
+   */
+  export type LeaveUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Leaves.
+     */
+    data: XOR<LeaveUpdateManyMutationInput, LeaveUncheckedUpdateManyInput>
+    /**
+     * Filter which Leaves to update
+     */
+    where?: LeaveWhereInput
+    /**
+     * Limit how many Leaves to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Leave updateManyAndReturn
+   */
+  export type LeaveUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * The data used to update Leaves.
+     */
+    data: XOR<LeaveUpdateManyMutationInput, LeaveUncheckedUpdateManyInput>
+    /**
+     * Filter which Leaves to update
+     */
+    where?: LeaveWhereInput
+    /**
+     * Limit how many Leaves to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Leave upsert
+   */
+  export type LeaveUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Leave to update in case it exists.
+     */
+    where: LeaveWhereUniqueInput
+    /**
+     * In case the Leave found by the `where` argument doesn't exist, create a new Leave with this data.
+     */
+    create: XOR<LeaveCreateInput, LeaveUncheckedCreateInput>
+    /**
+     * In case the Leave was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LeaveUpdateInput, LeaveUncheckedUpdateInput>
+  }
+
+  /**
+   * Leave delete
+   */
+  export type LeaveDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+    /**
+     * Filter which Leave to delete.
+     */
+    where: LeaveWhereUniqueInput
+  }
+
+  /**
+   * Leave deleteMany
+   */
+  export type LeaveDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Leaves to delete
+     */
+    where?: LeaveWhereInput
+    /**
+     * Limit how many Leaves to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Leave without action
+   */
+  export type LeaveDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Leave
+     */
+    select?: LeaveSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Leave
+     */
+    omit?: LeaveOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeaveInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model Payroll
+   */
+
+  export type AggregatePayroll = {
+    _count: PayrollCountAggregateOutputType | null
+    _avg: PayrollAvgAggregateOutputType | null
+    _sum: PayrollSumAggregateOutputType | null
+    _min: PayrollMinAggregateOutputType | null
+    _max: PayrollMaxAggregateOutputType | null
+  }
+
+  export type PayrollAvgAggregateOutputType = {
+    month: number | null
+    year: number | null
+    workingDays: number | null
+    presentDays: number | null
+    absentDays: number | null
+    leaveDays: number | null
+    totalOvertimeHours: Decimal | null
+    basicSalary: Decimal | null
+    overtimePay: Decimal | null
+    bonus: Decimal | null
+    deductions: Decimal | null
+    advance: Decimal | null
+    netSalary: Decimal | null
+  }
+
+  export type PayrollSumAggregateOutputType = {
+    month: number | null
+    year: number | null
+    workingDays: number | null
+    presentDays: number | null
+    absentDays: number | null
+    leaveDays: number | null
+    totalOvertimeHours: Decimal | null
+    basicSalary: Decimal | null
+    overtimePay: Decimal | null
+    bonus: Decimal | null
+    deductions: Decimal | null
+    advance: Decimal | null
+    netSalary: Decimal | null
+  }
+
+  export type PayrollMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    month: number | null
+    year: number | null
+    workingDays: number | null
+    presentDays: number | null
+    absentDays: number | null
+    leaveDays: number | null
+    totalOvertimeHours: Decimal | null
+    basicSalary: Decimal | null
+    overtimePay: Decimal | null
+    bonus: Decimal | null
+    deductions: Decimal | null
+    advance: Decimal | null
+    netSalary: Decimal | null
+    status: $Enums.PayrollStatus | null
+    paymentDate: Date | null
+    paymentMethod: $Enums.SalaryPaymentMethod | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PayrollMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    month: number | null
+    year: number | null
+    workingDays: number | null
+    presentDays: number | null
+    absentDays: number | null
+    leaveDays: number | null
+    totalOvertimeHours: Decimal | null
+    basicSalary: Decimal | null
+    overtimePay: Decimal | null
+    bonus: Decimal | null
+    deductions: Decimal | null
+    advance: Decimal | null
+    netSalary: Decimal | null
+    status: $Enums.PayrollStatus | null
+    paymentDate: Date | null
+    paymentMethod: $Enums.SalaryPaymentMethod | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PayrollCountAggregateOutputType = {
+    id: number
+    userId: number
+    month: number
+    year: number
+    workingDays: number
+    presentDays: number
+    absentDays: number
+    leaveDays: number
+    totalOvertimeHours: number
+    basicSalary: number
+    overtimePay: number
+    bonus: number
+    deductions: number
+    advance: number
+    netSalary: number
+    status: number
+    paymentDate: number
+    paymentMethod: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PayrollAvgAggregateInputType = {
+    month?: true
+    year?: true
+    workingDays?: true
+    presentDays?: true
+    absentDays?: true
+    leaveDays?: true
+    totalOvertimeHours?: true
+    basicSalary?: true
+    overtimePay?: true
+    bonus?: true
+    deductions?: true
+    advance?: true
+    netSalary?: true
+  }
+
+  export type PayrollSumAggregateInputType = {
+    month?: true
+    year?: true
+    workingDays?: true
+    presentDays?: true
+    absentDays?: true
+    leaveDays?: true
+    totalOvertimeHours?: true
+    basicSalary?: true
+    overtimePay?: true
+    bonus?: true
+    deductions?: true
+    advance?: true
+    netSalary?: true
+  }
+
+  export type PayrollMinAggregateInputType = {
+    id?: true
+    userId?: true
+    month?: true
+    year?: true
+    workingDays?: true
+    presentDays?: true
+    absentDays?: true
+    leaveDays?: true
+    totalOvertimeHours?: true
+    basicSalary?: true
+    overtimePay?: true
+    bonus?: true
+    deductions?: true
+    advance?: true
+    netSalary?: true
+    status?: true
+    paymentDate?: true
+    paymentMethod?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PayrollMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    month?: true
+    year?: true
+    workingDays?: true
+    presentDays?: true
+    absentDays?: true
+    leaveDays?: true
+    totalOvertimeHours?: true
+    basicSalary?: true
+    overtimePay?: true
+    bonus?: true
+    deductions?: true
+    advance?: true
+    netSalary?: true
+    status?: true
+    paymentDate?: true
+    paymentMethod?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PayrollCountAggregateInputType = {
+    id?: true
+    userId?: true
+    month?: true
+    year?: true
+    workingDays?: true
+    presentDays?: true
+    absentDays?: true
+    leaveDays?: true
+    totalOvertimeHours?: true
+    basicSalary?: true
+    overtimePay?: true
+    bonus?: true
+    deductions?: true
+    advance?: true
+    netSalary?: true
+    status?: true
+    paymentDate?: true
+    paymentMethod?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PayrollAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Payroll to aggregate.
+     */
+    where?: PayrollWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payrolls to fetch.
+     */
+    orderBy?: PayrollOrderByWithRelationInput | PayrollOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PayrollWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payrolls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payrolls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned Payrolls
+    **/
+    _count?: true | PayrollCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PayrollAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PayrollSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PayrollMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PayrollMaxAggregateInputType
+  }
+
+  export type GetPayrollAggregateType<T extends PayrollAggregateArgs> = {
+        [P in keyof T & keyof AggregatePayroll]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePayroll[P]>
+      : GetScalarType<T[P], AggregatePayroll[P]>
+  }
+
+
+
+
+  export type PayrollGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PayrollWhereInput
+    orderBy?: PayrollOrderByWithAggregationInput | PayrollOrderByWithAggregationInput[]
+    by: PayrollScalarFieldEnum[] | PayrollScalarFieldEnum
+    having?: PayrollScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PayrollCountAggregateInputType | true
+    _avg?: PayrollAvgAggregateInputType
+    _sum?: PayrollSumAggregateInputType
+    _min?: PayrollMinAggregateInputType
+    _max?: PayrollMaxAggregateInputType
+  }
+
+  export type PayrollGroupByOutputType = {
+    id: string
+    userId: string
+    month: number
+    year: number
+    workingDays: number | null
+    presentDays: number | null
+    absentDays: number | null
+    leaveDays: number | null
+    totalOvertimeHours: Decimal | null
+    basicSalary: Decimal
+    overtimePay: Decimal | null
+    bonus: Decimal | null
+    deductions: Decimal | null
+    advance: Decimal | null
+    netSalary: Decimal
+    status: $Enums.PayrollStatus
+    paymentDate: Date | null
+    paymentMethod: $Enums.SalaryPaymentMethod | null
+    createdAt: Date
+    updatedAt: Date
+    _count: PayrollCountAggregateOutputType | null
+    _avg: PayrollAvgAggregateOutputType | null
+    _sum: PayrollSumAggregateOutputType | null
+    _min: PayrollMinAggregateOutputType | null
+    _max: PayrollMaxAggregateOutputType | null
+  }
+
+  type GetPayrollGroupByPayload<T extends PayrollGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PayrollGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PayrollGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PayrollGroupByOutputType[P]>
+            : GetScalarType<T[P], PayrollGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PayrollSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    month?: boolean
+    year?: boolean
+    workingDays?: boolean
+    presentDays?: boolean
+    absentDays?: boolean
+    leaveDays?: boolean
+    totalOvertimeHours?: boolean
+    basicSalary?: boolean
+    overtimePay?: boolean
+    bonus?: boolean
+    deductions?: boolean
+    advance?: boolean
+    netSalary?: boolean
+    status?: boolean
+    paymentDate?: boolean
+    paymentMethod?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payroll"]>
+
+  export type PayrollSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    month?: boolean
+    year?: boolean
+    workingDays?: boolean
+    presentDays?: boolean
+    absentDays?: boolean
+    leaveDays?: boolean
+    totalOvertimeHours?: boolean
+    basicSalary?: boolean
+    overtimePay?: boolean
+    bonus?: boolean
+    deductions?: boolean
+    advance?: boolean
+    netSalary?: boolean
+    status?: boolean
+    paymentDate?: boolean
+    paymentMethod?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payroll"]>
+
+  export type PayrollSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    month?: boolean
+    year?: boolean
+    workingDays?: boolean
+    presentDays?: boolean
+    absentDays?: boolean
+    leaveDays?: boolean
+    totalOvertimeHours?: boolean
+    basicSalary?: boolean
+    overtimePay?: boolean
+    bonus?: boolean
+    deductions?: boolean
+    advance?: boolean
+    netSalary?: boolean
+    status?: boolean
+    paymentDate?: boolean
+    paymentMethod?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["payroll"]>
+
+  export type PayrollSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    month?: boolean
+    year?: boolean
+    workingDays?: boolean
+    presentDays?: boolean
+    absentDays?: boolean
+    leaveDays?: boolean
+    totalOvertimeHours?: boolean
+    basicSalary?: boolean
+    overtimePay?: boolean
+    bonus?: boolean
+    deductions?: boolean
+    advance?: boolean
+    netSalary?: boolean
+    status?: boolean
+    paymentDate?: boolean
+    paymentMethod?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PayrollOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "month" | "year" | "workingDays" | "presentDays" | "absentDays" | "leaveDays" | "totalOvertimeHours" | "basicSalary" | "overtimePay" | "bonus" | "deductions" | "advance" | "netSalary" | "status" | "paymentDate" | "paymentMethod" | "createdAt" | "updatedAt", ExtArgs["result"]["payroll"]>
+  export type PayrollInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PayrollIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type PayrollIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $PayrollPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "Payroll"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      month: number
+      year: number
+      workingDays: number | null
+      presentDays: number | null
+      absentDays: number | null
+      leaveDays: number | null
+      totalOvertimeHours: Prisma.Decimal | null
+      basicSalary: Prisma.Decimal
+      overtimePay: Prisma.Decimal | null
+      bonus: Prisma.Decimal | null
+      deductions: Prisma.Decimal | null
+      advance: Prisma.Decimal | null
+      netSalary: Prisma.Decimal
+      status: $Enums.PayrollStatus
+      paymentDate: Date | null
+      paymentMethod: $Enums.SalaryPaymentMethod | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["payroll"]>
+    composites: {}
+  }
+
+  type PayrollGetPayload<S extends boolean | null | undefined | PayrollDefaultArgs> = $Result.GetResult<Prisma.$PayrollPayload, S>
+
+  type PayrollCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PayrollFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PayrollCountAggregateInputType | true
+    }
+
+  export interface PayrollDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['Payroll'], meta: { name: 'Payroll' } }
+    /**
+     * Find zero or one Payroll that matches the filter.
+     * @param {PayrollFindUniqueArgs} args - Arguments to find a Payroll
+     * @example
+     * // Get one Payroll
+     * const payroll = await prisma.payroll.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PayrollFindUniqueArgs>(args: SelectSubset<T, PayrollFindUniqueArgs<ExtArgs>>): Prisma__PayrollClient<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one Payroll that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PayrollFindUniqueOrThrowArgs} args - Arguments to find a Payroll
+     * @example
+     * // Get one Payroll
+     * const payroll = await prisma.payroll.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PayrollFindUniqueOrThrowArgs>(args: SelectSubset<T, PayrollFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PayrollClient<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Payroll that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayrollFindFirstArgs} args - Arguments to find a Payroll
+     * @example
+     * // Get one Payroll
+     * const payroll = await prisma.payroll.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PayrollFindFirstArgs>(args?: SelectSubset<T, PayrollFindFirstArgs<ExtArgs>>): Prisma__PayrollClient<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first Payroll that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayrollFindFirstOrThrowArgs} args - Arguments to find a Payroll
+     * @example
+     * // Get one Payroll
+     * const payroll = await prisma.payroll.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PayrollFindFirstOrThrowArgs>(args?: SelectSubset<T, PayrollFindFirstOrThrowArgs<ExtArgs>>): Prisma__PayrollClient<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more Payrolls that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayrollFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all Payrolls
+     * const payrolls = await prisma.payroll.findMany()
+     * 
+     * // Get first 10 Payrolls
+     * const payrolls = await prisma.payroll.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const payrollWithIdOnly = await prisma.payroll.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PayrollFindManyArgs>(args?: SelectSubset<T, PayrollFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a Payroll.
+     * @param {PayrollCreateArgs} args - Arguments to create a Payroll.
+     * @example
+     * // Create one Payroll
+     * const Payroll = await prisma.payroll.create({
+     *   data: {
+     *     // ... data to create a Payroll
+     *   }
+     * })
+     * 
+     */
+    create<T extends PayrollCreateArgs>(args: SelectSubset<T, PayrollCreateArgs<ExtArgs>>): Prisma__PayrollClient<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many Payrolls.
+     * @param {PayrollCreateManyArgs} args - Arguments to create many Payrolls.
+     * @example
+     * // Create many Payrolls
+     * const payroll = await prisma.payroll.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PayrollCreateManyArgs>(args?: SelectSubset<T, PayrollCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many Payrolls and returns the data saved in the database.
+     * @param {PayrollCreateManyAndReturnArgs} args - Arguments to create many Payrolls.
+     * @example
+     * // Create many Payrolls
+     * const payroll = await prisma.payroll.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many Payrolls and only return the `id`
+     * const payrollWithIdOnly = await prisma.payroll.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PayrollCreateManyAndReturnArgs>(args?: SelectSubset<T, PayrollCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a Payroll.
+     * @param {PayrollDeleteArgs} args - Arguments to delete one Payroll.
+     * @example
+     * // Delete one Payroll
+     * const Payroll = await prisma.payroll.delete({
+     *   where: {
+     *     // ... filter to delete one Payroll
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PayrollDeleteArgs>(args: SelectSubset<T, PayrollDeleteArgs<ExtArgs>>): Prisma__PayrollClient<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one Payroll.
+     * @param {PayrollUpdateArgs} args - Arguments to update one Payroll.
+     * @example
+     * // Update one Payroll
+     * const payroll = await prisma.payroll.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PayrollUpdateArgs>(args: SelectSubset<T, PayrollUpdateArgs<ExtArgs>>): Prisma__PayrollClient<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more Payrolls.
+     * @param {PayrollDeleteManyArgs} args - Arguments to filter Payrolls to delete.
+     * @example
+     * // Delete a few Payrolls
+     * const { count } = await prisma.payroll.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PayrollDeleteManyArgs>(args?: SelectSubset<T, PayrollDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Payrolls.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayrollUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many Payrolls
+     * const payroll = await prisma.payroll.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PayrollUpdateManyArgs>(args: SelectSubset<T, PayrollUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more Payrolls and returns the data updated in the database.
+     * @param {PayrollUpdateManyAndReturnArgs} args - Arguments to update many Payrolls.
+     * @example
+     * // Update many Payrolls
+     * const payroll = await prisma.payroll.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more Payrolls and only return the `id`
+     * const payrollWithIdOnly = await prisma.payroll.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PayrollUpdateManyAndReturnArgs>(args: SelectSubset<T, PayrollUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one Payroll.
+     * @param {PayrollUpsertArgs} args - Arguments to update or create a Payroll.
+     * @example
+     * // Update or create a Payroll
+     * const payroll = await prisma.payroll.upsert({
+     *   create: {
+     *     // ... data to create a Payroll
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the Payroll we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PayrollUpsertArgs>(args: SelectSubset<T, PayrollUpsertArgs<ExtArgs>>): Prisma__PayrollClient<$Result.GetResult<Prisma.$PayrollPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of Payrolls.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayrollCountArgs} args - Arguments to filter Payrolls to count.
+     * @example
+     * // Count the number of Payrolls
+     * const count = await prisma.payroll.count({
+     *   where: {
+     *     // ... the filter for the Payrolls we want to count
+     *   }
+     * })
+    **/
+    count<T extends PayrollCountArgs>(
+      args?: Subset<T, PayrollCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PayrollCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a Payroll.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayrollAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PayrollAggregateArgs>(args: Subset<T, PayrollAggregateArgs>): Prisma.PrismaPromise<GetPayrollAggregateType<T>>
+
+    /**
+     * Group by Payroll.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PayrollGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PayrollGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PayrollGroupByArgs['orderBy'] }
+        : { orderBy?: PayrollGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PayrollGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPayrollGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the Payroll model
+   */
+  readonly fields: PayrollFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for Payroll.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PayrollClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the Payroll model
+   */
+  interface PayrollFieldRefs {
+    readonly id: FieldRef<"Payroll", 'String'>
+    readonly userId: FieldRef<"Payroll", 'String'>
+    readonly month: FieldRef<"Payroll", 'Int'>
+    readonly year: FieldRef<"Payroll", 'Int'>
+    readonly workingDays: FieldRef<"Payroll", 'Int'>
+    readonly presentDays: FieldRef<"Payroll", 'Int'>
+    readonly absentDays: FieldRef<"Payroll", 'Int'>
+    readonly leaveDays: FieldRef<"Payroll", 'Int'>
+    readonly totalOvertimeHours: FieldRef<"Payroll", 'Decimal'>
+    readonly basicSalary: FieldRef<"Payroll", 'Decimal'>
+    readonly overtimePay: FieldRef<"Payroll", 'Decimal'>
+    readonly bonus: FieldRef<"Payroll", 'Decimal'>
+    readonly deductions: FieldRef<"Payroll", 'Decimal'>
+    readonly advance: FieldRef<"Payroll", 'Decimal'>
+    readonly netSalary: FieldRef<"Payroll", 'Decimal'>
+    readonly status: FieldRef<"Payroll", 'PayrollStatus'>
+    readonly paymentDate: FieldRef<"Payroll", 'DateTime'>
+    readonly paymentMethod: FieldRef<"Payroll", 'SalaryPaymentMethod'>
+    readonly createdAt: FieldRef<"Payroll", 'DateTime'>
+    readonly updatedAt: FieldRef<"Payroll", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * Payroll findUnique
+   */
+  export type PayrollFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * Filter, which Payroll to fetch.
+     */
+    where: PayrollWhereUniqueInput
+  }
+
+  /**
+   * Payroll findUniqueOrThrow
+   */
+  export type PayrollFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * Filter, which Payroll to fetch.
+     */
+    where: PayrollWhereUniqueInput
+  }
+
+  /**
+   * Payroll findFirst
+   */
+  export type PayrollFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * Filter, which Payroll to fetch.
+     */
+    where?: PayrollWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payrolls to fetch.
+     */
+    orderBy?: PayrollOrderByWithRelationInput | PayrollOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Payrolls.
+     */
+    cursor?: PayrollWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payrolls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payrolls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payrolls.
+     */
+    distinct?: PayrollScalarFieldEnum | PayrollScalarFieldEnum[]
+  }
+
+  /**
+   * Payroll findFirstOrThrow
+   */
+  export type PayrollFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * Filter, which Payroll to fetch.
+     */
+    where?: PayrollWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payrolls to fetch.
+     */
+    orderBy?: PayrollOrderByWithRelationInput | PayrollOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for Payrolls.
+     */
+    cursor?: PayrollWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payrolls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payrolls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payrolls.
+     */
+    distinct?: PayrollScalarFieldEnum | PayrollScalarFieldEnum[]
+  }
+
+  /**
+   * Payroll findMany
+   */
+  export type PayrollFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * Filter, which Payrolls to fetch.
+     */
+    where?: PayrollWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of Payrolls to fetch.
+     */
+    orderBy?: PayrollOrderByWithRelationInput | PayrollOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing Payrolls.
+     */
+    cursor?: PayrollWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` Payrolls from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` Payrolls.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of Payrolls.
+     */
+    distinct?: PayrollScalarFieldEnum | PayrollScalarFieldEnum[]
+  }
+
+  /**
+   * Payroll create
+   */
+  export type PayrollCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * The data needed to create a Payroll.
+     */
+    data: XOR<PayrollCreateInput, PayrollUncheckedCreateInput>
+  }
+
+  /**
+   * Payroll createMany
+   */
+  export type PayrollCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many Payrolls.
+     */
+    data: PayrollCreateManyInput | PayrollCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * Payroll createManyAndReturn
+   */
+  export type PayrollCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * The data used to create many Payrolls.
+     */
+    data: PayrollCreateManyInput | PayrollCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Payroll update
+   */
+  export type PayrollUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * The data needed to update a Payroll.
+     */
+    data: XOR<PayrollUpdateInput, PayrollUncheckedUpdateInput>
+    /**
+     * Choose, which Payroll to update.
+     */
+    where: PayrollWhereUniqueInput
+  }
+
+  /**
+   * Payroll updateMany
+   */
+  export type PayrollUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update Payrolls.
+     */
+    data: XOR<PayrollUpdateManyMutationInput, PayrollUncheckedUpdateManyInput>
+    /**
+     * Filter which Payrolls to update
+     */
+    where?: PayrollWhereInput
+    /**
+     * Limit how many Payrolls to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * Payroll updateManyAndReturn
+   */
+  export type PayrollUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * The data used to update Payrolls.
+     */
+    data: XOR<PayrollUpdateManyMutationInput, PayrollUncheckedUpdateManyInput>
+    /**
+     * Filter which Payrolls to update
+     */
+    where?: PayrollWhereInput
+    /**
+     * Limit how many Payrolls to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * Payroll upsert
+   */
+  export type PayrollUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * The filter to search for the Payroll to update in case it exists.
+     */
+    where: PayrollWhereUniqueInput
+    /**
+     * In case the Payroll found by the `where` argument doesn't exist, create a new Payroll with this data.
+     */
+    create: XOR<PayrollCreateInput, PayrollUncheckedCreateInput>
+    /**
+     * In case the Payroll was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PayrollUpdateInput, PayrollUncheckedUpdateInput>
+  }
+
+  /**
+   * Payroll delete
+   */
+  export type PayrollDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+    /**
+     * Filter which Payroll to delete.
+     */
+    where: PayrollWhereUniqueInput
+  }
+
+  /**
+   * Payroll deleteMany
+   */
+  export type PayrollDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which Payrolls to delete
+     */
+    where?: PayrollWhereInput
+    /**
+     * Limit how many Payrolls to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * Payroll without action
+   */
+  export type PayrollDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Payroll
+     */
+    select?: PayrollSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Payroll
+     */
+    omit?: PayrollOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PayrollInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model SalaryAdvance
+   */
+
+  export type AggregateSalaryAdvance = {
+    _count: SalaryAdvanceCountAggregateOutputType | null
+    _avg: SalaryAdvanceAvgAggregateOutputType | null
+    _sum: SalaryAdvanceSumAggregateOutputType | null
+    _min: SalaryAdvanceMinAggregateOutputType | null
+    _max: SalaryAdvanceMaxAggregateOutputType | null
+  }
+
+  export type SalaryAdvanceAvgAggregateOutputType = {
+    amount: Decimal | null
+    deductedAmount: Decimal | null
+  }
+
+  export type SalaryAdvanceSumAggregateOutputType = {
+    amount: Decimal | null
+    deductedAmount: Decimal | null
+  }
+
+  export type SalaryAdvanceMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    amount: Decimal | null
+    reason: string | null
+    status: $Enums.AdvanceStatus | null
+    deductedAmount: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SalaryAdvanceMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    amount: Decimal | null
+    reason: string | null
+    status: $Enums.AdvanceStatus | null
+    deductedAmount: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type SalaryAdvanceCountAggregateOutputType = {
+    id: number
+    userId: number
+    amount: number
+    reason: number
+    status: number
+    deductedAmount: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type SalaryAdvanceAvgAggregateInputType = {
+    amount?: true
+    deductedAmount?: true
+  }
+
+  export type SalaryAdvanceSumAggregateInputType = {
+    amount?: true
+    deductedAmount?: true
+  }
+
+  export type SalaryAdvanceMinAggregateInputType = {
+    id?: true
+    userId?: true
+    amount?: true
+    reason?: true
+    status?: true
+    deductedAmount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SalaryAdvanceMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    amount?: true
+    reason?: true
+    status?: true
+    deductedAmount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type SalaryAdvanceCountAggregateInputType = {
+    id?: true
+    userId?: true
+    amount?: true
+    reason?: true
+    status?: true
+    deductedAmount?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type SalaryAdvanceAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SalaryAdvance to aggregate.
+     */
+    where?: SalaryAdvanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SalaryAdvances to fetch.
+     */
+    orderBy?: SalaryAdvanceOrderByWithRelationInput | SalaryAdvanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: SalaryAdvanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SalaryAdvances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SalaryAdvances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned SalaryAdvances
+    **/
+    _count?: true | SalaryAdvanceCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: SalaryAdvanceAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: SalaryAdvanceSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: SalaryAdvanceMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: SalaryAdvanceMaxAggregateInputType
+  }
+
+  export type GetSalaryAdvanceAggregateType<T extends SalaryAdvanceAggregateArgs> = {
+        [P in keyof T & keyof AggregateSalaryAdvance]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateSalaryAdvance[P]>
+      : GetScalarType<T[P], AggregateSalaryAdvance[P]>
+  }
+
+
+
+
+  export type SalaryAdvanceGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: SalaryAdvanceWhereInput
+    orderBy?: SalaryAdvanceOrderByWithAggregationInput | SalaryAdvanceOrderByWithAggregationInput[]
+    by: SalaryAdvanceScalarFieldEnum[] | SalaryAdvanceScalarFieldEnum
+    having?: SalaryAdvanceScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: SalaryAdvanceCountAggregateInputType | true
+    _avg?: SalaryAdvanceAvgAggregateInputType
+    _sum?: SalaryAdvanceSumAggregateInputType
+    _min?: SalaryAdvanceMinAggregateInputType
+    _max?: SalaryAdvanceMaxAggregateInputType
+  }
+
+  export type SalaryAdvanceGroupByOutputType = {
+    id: string
+    userId: string
+    amount: Decimal
+    reason: string | null
+    status: $Enums.AdvanceStatus
+    deductedAmount: Decimal
+    createdAt: Date
+    updatedAt: Date
+    _count: SalaryAdvanceCountAggregateOutputType | null
+    _avg: SalaryAdvanceAvgAggregateOutputType | null
+    _sum: SalaryAdvanceSumAggregateOutputType | null
+    _min: SalaryAdvanceMinAggregateOutputType | null
+    _max: SalaryAdvanceMaxAggregateOutputType | null
+  }
+
+  type GetSalaryAdvanceGroupByPayload<T extends SalaryAdvanceGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<SalaryAdvanceGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof SalaryAdvanceGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], SalaryAdvanceGroupByOutputType[P]>
+            : GetScalarType<T[P], SalaryAdvanceGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type SalaryAdvanceSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    amount?: boolean
+    reason?: boolean
+    status?: boolean
+    deductedAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["salaryAdvance"]>
+
+  export type SalaryAdvanceSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    amount?: boolean
+    reason?: boolean
+    status?: boolean
+    deductedAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["salaryAdvance"]>
+
+  export type SalaryAdvanceSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    amount?: boolean
+    reason?: boolean
+    status?: boolean
+    deductedAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["salaryAdvance"]>
+
+  export type SalaryAdvanceSelectScalar = {
+    id?: boolean
+    userId?: boolean
+    amount?: boolean
+    reason?: boolean
+    status?: boolean
+    deductedAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type SalaryAdvanceOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "amount" | "reason" | "status" | "deductedAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["salaryAdvance"]>
+  export type SalaryAdvanceInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SalaryAdvanceIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type SalaryAdvanceIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $SalaryAdvancePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "SalaryAdvance"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      amount: Prisma.Decimal
+      reason: string | null
+      status: $Enums.AdvanceStatus
+      deductedAmount: Prisma.Decimal
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["salaryAdvance"]>
+    composites: {}
+  }
+
+  type SalaryAdvanceGetPayload<S extends boolean | null | undefined | SalaryAdvanceDefaultArgs> = $Result.GetResult<Prisma.$SalaryAdvancePayload, S>
+
+  type SalaryAdvanceCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<SalaryAdvanceFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: SalaryAdvanceCountAggregateInputType | true
+    }
+
+  export interface SalaryAdvanceDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['SalaryAdvance'], meta: { name: 'SalaryAdvance' } }
+    /**
+     * Find zero or one SalaryAdvance that matches the filter.
+     * @param {SalaryAdvanceFindUniqueArgs} args - Arguments to find a SalaryAdvance
+     * @example
+     * // Get one SalaryAdvance
+     * const salaryAdvance = await prisma.salaryAdvance.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends SalaryAdvanceFindUniqueArgs>(args: SelectSubset<T, SalaryAdvanceFindUniqueArgs<ExtArgs>>): Prisma__SalaryAdvanceClient<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one SalaryAdvance that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {SalaryAdvanceFindUniqueOrThrowArgs} args - Arguments to find a SalaryAdvance
+     * @example
+     * // Get one SalaryAdvance
+     * const salaryAdvance = await prisma.salaryAdvance.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends SalaryAdvanceFindUniqueOrThrowArgs>(args: SelectSubset<T, SalaryAdvanceFindUniqueOrThrowArgs<ExtArgs>>): Prisma__SalaryAdvanceClient<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SalaryAdvance that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SalaryAdvanceFindFirstArgs} args - Arguments to find a SalaryAdvance
+     * @example
+     * // Get one SalaryAdvance
+     * const salaryAdvance = await prisma.salaryAdvance.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends SalaryAdvanceFindFirstArgs>(args?: SelectSubset<T, SalaryAdvanceFindFirstArgs<ExtArgs>>): Prisma__SalaryAdvanceClient<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first SalaryAdvance that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SalaryAdvanceFindFirstOrThrowArgs} args - Arguments to find a SalaryAdvance
+     * @example
+     * // Get one SalaryAdvance
+     * const salaryAdvance = await prisma.salaryAdvance.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends SalaryAdvanceFindFirstOrThrowArgs>(args?: SelectSubset<T, SalaryAdvanceFindFirstOrThrowArgs<ExtArgs>>): Prisma__SalaryAdvanceClient<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more SalaryAdvances that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SalaryAdvanceFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all SalaryAdvances
+     * const salaryAdvances = await prisma.salaryAdvance.findMany()
+     * 
+     * // Get first 10 SalaryAdvances
+     * const salaryAdvances = await prisma.salaryAdvance.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const salaryAdvanceWithIdOnly = await prisma.salaryAdvance.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends SalaryAdvanceFindManyArgs>(args?: SelectSubset<T, SalaryAdvanceFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a SalaryAdvance.
+     * @param {SalaryAdvanceCreateArgs} args - Arguments to create a SalaryAdvance.
+     * @example
+     * // Create one SalaryAdvance
+     * const SalaryAdvance = await prisma.salaryAdvance.create({
+     *   data: {
+     *     // ... data to create a SalaryAdvance
+     *   }
+     * })
+     * 
+     */
+    create<T extends SalaryAdvanceCreateArgs>(args: SelectSubset<T, SalaryAdvanceCreateArgs<ExtArgs>>): Prisma__SalaryAdvanceClient<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many SalaryAdvances.
+     * @param {SalaryAdvanceCreateManyArgs} args - Arguments to create many SalaryAdvances.
+     * @example
+     * // Create many SalaryAdvances
+     * const salaryAdvance = await prisma.salaryAdvance.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends SalaryAdvanceCreateManyArgs>(args?: SelectSubset<T, SalaryAdvanceCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many SalaryAdvances and returns the data saved in the database.
+     * @param {SalaryAdvanceCreateManyAndReturnArgs} args - Arguments to create many SalaryAdvances.
+     * @example
+     * // Create many SalaryAdvances
+     * const salaryAdvance = await prisma.salaryAdvance.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many SalaryAdvances and only return the `id`
+     * const salaryAdvanceWithIdOnly = await prisma.salaryAdvance.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends SalaryAdvanceCreateManyAndReturnArgs>(args?: SelectSubset<T, SalaryAdvanceCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a SalaryAdvance.
+     * @param {SalaryAdvanceDeleteArgs} args - Arguments to delete one SalaryAdvance.
+     * @example
+     * // Delete one SalaryAdvance
+     * const SalaryAdvance = await prisma.salaryAdvance.delete({
+     *   where: {
+     *     // ... filter to delete one SalaryAdvance
+     *   }
+     * })
+     * 
+     */
+    delete<T extends SalaryAdvanceDeleteArgs>(args: SelectSubset<T, SalaryAdvanceDeleteArgs<ExtArgs>>): Prisma__SalaryAdvanceClient<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one SalaryAdvance.
+     * @param {SalaryAdvanceUpdateArgs} args - Arguments to update one SalaryAdvance.
+     * @example
+     * // Update one SalaryAdvance
+     * const salaryAdvance = await prisma.salaryAdvance.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends SalaryAdvanceUpdateArgs>(args: SelectSubset<T, SalaryAdvanceUpdateArgs<ExtArgs>>): Prisma__SalaryAdvanceClient<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more SalaryAdvances.
+     * @param {SalaryAdvanceDeleteManyArgs} args - Arguments to filter SalaryAdvances to delete.
+     * @example
+     * // Delete a few SalaryAdvances
+     * const { count } = await prisma.salaryAdvance.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends SalaryAdvanceDeleteManyArgs>(args?: SelectSubset<T, SalaryAdvanceDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SalaryAdvances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SalaryAdvanceUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many SalaryAdvances
+     * const salaryAdvance = await prisma.salaryAdvance.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends SalaryAdvanceUpdateManyArgs>(args: SelectSubset<T, SalaryAdvanceUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more SalaryAdvances and returns the data updated in the database.
+     * @param {SalaryAdvanceUpdateManyAndReturnArgs} args - Arguments to update many SalaryAdvances.
+     * @example
+     * // Update many SalaryAdvances
+     * const salaryAdvance = await prisma.salaryAdvance.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more SalaryAdvances and only return the `id`
+     * const salaryAdvanceWithIdOnly = await prisma.salaryAdvance.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends SalaryAdvanceUpdateManyAndReturnArgs>(args: SelectSubset<T, SalaryAdvanceUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one SalaryAdvance.
+     * @param {SalaryAdvanceUpsertArgs} args - Arguments to update or create a SalaryAdvance.
+     * @example
+     * // Update or create a SalaryAdvance
+     * const salaryAdvance = await prisma.salaryAdvance.upsert({
+     *   create: {
+     *     // ... data to create a SalaryAdvance
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the SalaryAdvance we want to update
+     *   }
+     * })
+     */
+    upsert<T extends SalaryAdvanceUpsertArgs>(args: SelectSubset<T, SalaryAdvanceUpsertArgs<ExtArgs>>): Prisma__SalaryAdvanceClient<$Result.GetResult<Prisma.$SalaryAdvancePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of SalaryAdvances.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SalaryAdvanceCountArgs} args - Arguments to filter SalaryAdvances to count.
+     * @example
+     * // Count the number of SalaryAdvances
+     * const count = await prisma.salaryAdvance.count({
+     *   where: {
+     *     // ... the filter for the SalaryAdvances we want to count
+     *   }
+     * })
+    **/
+    count<T extends SalaryAdvanceCountArgs>(
+      args?: Subset<T, SalaryAdvanceCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], SalaryAdvanceCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a SalaryAdvance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SalaryAdvanceAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends SalaryAdvanceAggregateArgs>(args: Subset<T, SalaryAdvanceAggregateArgs>): Prisma.PrismaPromise<GetSalaryAdvanceAggregateType<T>>
+
+    /**
+     * Group by SalaryAdvance.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {SalaryAdvanceGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends SalaryAdvanceGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: SalaryAdvanceGroupByArgs['orderBy'] }
+        : { orderBy?: SalaryAdvanceGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, SalaryAdvanceGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetSalaryAdvanceGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the SalaryAdvance model
+   */
+  readonly fields: SalaryAdvanceFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for SalaryAdvance.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__SalaryAdvanceClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the SalaryAdvance model
+   */
+  interface SalaryAdvanceFieldRefs {
+    readonly id: FieldRef<"SalaryAdvance", 'String'>
+    readonly userId: FieldRef<"SalaryAdvance", 'String'>
+    readonly amount: FieldRef<"SalaryAdvance", 'Decimal'>
+    readonly reason: FieldRef<"SalaryAdvance", 'String'>
+    readonly status: FieldRef<"SalaryAdvance", 'AdvanceStatus'>
+    readonly deductedAmount: FieldRef<"SalaryAdvance", 'Decimal'>
+    readonly createdAt: FieldRef<"SalaryAdvance", 'DateTime'>
+    readonly updatedAt: FieldRef<"SalaryAdvance", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * SalaryAdvance findUnique
+   */
+  export type SalaryAdvanceFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * Filter, which SalaryAdvance to fetch.
+     */
+    where: SalaryAdvanceWhereUniqueInput
+  }
+
+  /**
+   * SalaryAdvance findUniqueOrThrow
+   */
+  export type SalaryAdvanceFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * Filter, which SalaryAdvance to fetch.
+     */
+    where: SalaryAdvanceWhereUniqueInput
+  }
+
+  /**
+   * SalaryAdvance findFirst
+   */
+  export type SalaryAdvanceFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * Filter, which SalaryAdvance to fetch.
+     */
+    where?: SalaryAdvanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SalaryAdvances to fetch.
+     */
+    orderBy?: SalaryAdvanceOrderByWithRelationInput | SalaryAdvanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SalaryAdvances.
+     */
+    cursor?: SalaryAdvanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SalaryAdvances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SalaryAdvances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SalaryAdvances.
+     */
+    distinct?: SalaryAdvanceScalarFieldEnum | SalaryAdvanceScalarFieldEnum[]
+  }
+
+  /**
+   * SalaryAdvance findFirstOrThrow
+   */
+  export type SalaryAdvanceFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * Filter, which SalaryAdvance to fetch.
+     */
+    where?: SalaryAdvanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SalaryAdvances to fetch.
+     */
+    orderBy?: SalaryAdvanceOrderByWithRelationInput | SalaryAdvanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for SalaryAdvances.
+     */
+    cursor?: SalaryAdvanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SalaryAdvances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SalaryAdvances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SalaryAdvances.
+     */
+    distinct?: SalaryAdvanceScalarFieldEnum | SalaryAdvanceScalarFieldEnum[]
+  }
+
+  /**
+   * SalaryAdvance findMany
+   */
+  export type SalaryAdvanceFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * Filter, which SalaryAdvances to fetch.
+     */
+    where?: SalaryAdvanceWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of SalaryAdvances to fetch.
+     */
+    orderBy?: SalaryAdvanceOrderByWithRelationInput | SalaryAdvanceOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing SalaryAdvances.
+     */
+    cursor?: SalaryAdvanceWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` SalaryAdvances from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` SalaryAdvances.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of SalaryAdvances.
+     */
+    distinct?: SalaryAdvanceScalarFieldEnum | SalaryAdvanceScalarFieldEnum[]
+  }
+
+  /**
+   * SalaryAdvance create
+   */
+  export type SalaryAdvanceCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * The data needed to create a SalaryAdvance.
+     */
+    data: XOR<SalaryAdvanceCreateInput, SalaryAdvanceUncheckedCreateInput>
+  }
+
+  /**
+   * SalaryAdvance createMany
+   */
+  export type SalaryAdvanceCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many SalaryAdvances.
+     */
+    data: SalaryAdvanceCreateManyInput | SalaryAdvanceCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * SalaryAdvance createManyAndReturn
+   */
+  export type SalaryAdvanceCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * The data used to create many SalaryAdvances.
+     */
+    data: SalaryAdvanceCreateManyInput | SalaryAdvanceCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SalaryAdvance update
+   */
+  export type SalaryAdvanceUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * The data needed to update a SalaryAdvance.
+     */
+    data: XOR<SalaryAdvanceUpdateInput, SalaryAdvanceUncheckedUpdateInput>
+    /**
+     * Choose, which SalaryAdvance to update.
+     */
+    where: SalaryAdvanceWhereUniqueInput
+  }
+
+  /**
+   * SalaryAdvance updateMany
+   */
+  export type SalaryAdvanceUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update SalaryAdvances.
+     */
+    data: XOR<SalaryAdvanceUpdateManyMutationInput, SalaryAdvanceUncheckedUpdateManyInput>
+    /**
+     * Filter which SalaryAdvances to update
+     */
+    where?: SalaryAdvanceWhereInput
+    /**
+     * Limit how many SalaryAdvances to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * SalaryAdvance updateManyAndReturn
+   */
+  export type SalaryAdvanceUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * The data used to update SalaryAdvances.
+     */
+    data: XOR<SalaryAdvanceUpdateManyMutationInput, SalaryAdvanceUncheckedUpdateManyInput>
+    /**
+     * Filter which SalaryAdvances to update
+     */
+    where?: SalaryAdvanceWhereInput
+    /**
+     * Limit how many SalaryAdvances to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * SalaryAdvance upsert
+   */
+  export type SalaryAdvanceUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * The filter to search for the SalaryAdvance to update in case it exists.
+     */
+    where: SalaryAdvanceWhereUniqueInput
+    /**
+     * In case the SalaryAdvance found by the `where` argument doesn't exist, create a new SalaryAdvance with this data.
+     */
+    create: XOR<SalaryAdvanceCreateInput, SalaryAdvanceUncheckedCreateInput>
+    /**
+     * In case the SalaryAdvance was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<SalaryAdvanceUpdateInput, SalaryAdvanceUncheckedUpdateInput>
+  }
+
+  /**
+   * SalaryAdvance delete
+   */
+  export type SalaryAdvanceDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+    /**
+     * Filter which SalaryAdvance to delete.
+     */
+    where: SalaryAdvanceWhereUniqueInput
+  }
+
+  /**
+   * SalaryAdvance deleteMany
+   */
+  export type SalaryAdvanceDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which SalaryAdvances to delete
+     */
+    where?: SalaryAdvanceWhereInput
+    /**
+     * Limit how many SalaryAdvances to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * SalaryAdvance without action
+   */
+  export type SalaryAdvanceDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the SalaryAdvance
+     */
+    select?: SalaryAdvanceSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the SalaryAdvance
+     */
+    omit?: SalaryAdvanceOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: SalaryAdvanceInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -8802,6 +14151,77 @@ export namespace Prisma {
   };
 
   export type OrderItemScalarFieldEnum = (typeof OrderItemScalarFieldEnum)[keyof typeof OrderItemScalarFieldEnum]
+
+
+  export const AttendanceScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    date: 'date',
+    status: 'status',
+    checkIn: 'checkIn',
+    checkOut: 'checkOut',
+    overtimeHours: 'overtimeHours',
+    notes: 'notes',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AttendanceScalarFieldEnum = (typeof AttendanceScalarFieldEnum)[keyof typeof AttendanceScalarFieldEnum]
+
+
+  export const LeaveScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    startDate: 'startDate',
+    endDate: 'endDate',
+    reason: 'reason',
+    type: 'type',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type LeaveScalarFieldEnum = (typeof LeaveScalarFieldEnum)[keyof typeof LeaveScalarFieldEnum]
+
+
+  export const PayrollScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    month: 'month',
+    year: 'year',
+    workingDays: 'workingDays',
+    presentDays: 'presentDays',
+    absentDays: 'absentDays',
+    leaveDays: 'leaveDays',
+    totalOvertimeHours: 'totalOvertimeHours',
+    basicSalary: 'basicSalary',
+    overtimePay: 'overtimePay',
+    bonus: 'bonus',
+    deductions: 'deductions',
+    advance: 'advance',
+    netSalary: 'netSalary',
+    status: 'status',
+    paymentDate: 'paymentDate',
+    paymentMethod: 'paymentMethod',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PayrollScalarFieldEnum = (typeof PayrollScalarFieldEnum)[keyof typeof PayrollScalarFieldEnum]
+
+
+  export const SalaryAdvanceScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    amount: 'amount',
+    reason: 'reason',
+    status: 'status',
+    deductedAmount: 'deductedAmount',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type SalaryAdvanceScalarFieldEnum = (typeof SalaryAdvanceScalarFieldEnum)[keyof typeof SalaryAdvanceScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -9012,6 +14432,90 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'AttendanceStatus'
+   */
+  export type EnumAttendanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttendanceStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AttendanceStatus[]'
+   */
+  export type ListEnumAttendanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AttendanceStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'LeaveType'
+   */
+  export type EnumLeaveTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveType'>
+    
+
+
+  /**
+   * Reference to a field of type 'LeaveType[]'
+   */
+  export type ListEnumLeaveTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'LeaveStatus'
+   */
+  export type EnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'LeaveStatus[]'
+   */
+  export type ListEnumLeaveStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'LeaveStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PayrollStatus'
+   */
+  export type EnumPayrollStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayrollStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PayrollStatus[]'
+   */
+  export type ListEnumPayrollStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PayrollStatus[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'SalaryPaymentMethod'
+   */
+  export type EnumSalaryPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SalaryPaymentMethod'>
+    
+
+
+  /**
+   * Reference to a field of type 'SalaryPaymentMethod[]'
+   */
+  export type ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SalaryPaymentMethod[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'AdvanceStatus'
+   */
+  export type EnumAdvanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvanceStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'AdvanceStatus[]'
+   */
+  export type ListEnumAdvanceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AdvanceStatus[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -9046,6 +14550,10 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     orders?: OrderListRelationFilter
+    attendances?: AttendanceListRelationFilter
+    leaves?: LeaveListRelationFilter
+    payrolls?: PayrollListRelationFilter
+    salaryAdvances?: SalaryAdvanceListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -9063,6 +14571,10 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     orders?: OrderOrderByRelationAggregateInput
+    attendances?: AttendanceOrderByRelationAggregateInput
+    leaves?: LeaveOrderByRelationAggregateInput
+    payrolls?: PayrollOrderByRelationAggregateInput
+    salaryAdvances?: SalaryAdvanceOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -9083,6 +14595,10 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
     orders?: OrderListRelationFilter
+    attendances?: AttendanceListRelationFilter
+    leaves?: LeaveListRelationFilter
+    payrolls?: PayrollListRelationFilter
+    salaryAdvances?: SalaryAdvanceListRelationFilter
   }, "id" | "email" | "phone">
 
   export type UserOrderByWithAggregationInput = {
@@ -9534,6 +15050,369 @@ export namespace Prisma {
     notes?: StringNullableWithAggregatesFilter<"OrderItem"> | string | null
   }
 
+  export type AttendanceWhereInput = {
+    AND?: AttendanceWhereInput | AttendanceWhereInput[]
+    OR?: AttendanceWhereInput[]
+    NOT?: AttendanceWhereInput | AttendanceWhereInput[]
+    id?: UuidFilter<"Attendance"> | string
+    userId?: UuidFilter<"Attendance"> | string
+    date?: DateTimeFilter<"Attendance"> | Date | string
+    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    checkIn?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    checkOut?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    overtimeHours?: DecimalNullableFilter<"Attendance"> | Decimal | DecimalJsLike | number | string | null
+    notes?: StringNullableFilter<"Attendance"> | string | null
+    createdAt?: DateTimeFilter<"Attendance"> | Date | string
+    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type AttendanceOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    checkIn?: SortOrderInput | SortOrder
+    checkOut?: SortOrderInput | SortOrder
+    overtimeHours?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_date?: AttendanceUserIdDateCompoundUniqueInput
+    AND?: AttendanceWhereInput | AttendanceWhereInput[]
+    OR?: AttendanceWhereInput[]
+    NOT?: AttendanceWhereInput | AttendanceWhereInput[]
+    userId?: UuidFilter<"Attendance"> | string
+    date?: DateTimeFilter<"Attendance"> | Date | string
+    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    checkIn?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    checkOut?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    overtimeHours?: DecimalNullableFilter<"Attendance"> | Decimal | DecimalJsLike | number | string | null
+    notes?: StringNullableFilter<"Attendance"> | string | null
+    createdAt?: DateTimeFilter<"Attendance"> | Date | string
+    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_date">
+
+  export type AttendanceOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    checkIn?: SortOrderInput | SortOrder
+    checkOut?: SortOrderInput | SortOrder
+    overtimeHours?: SortOrderInput | SortOrder
+    notes?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AttendanceCountOrderByAggregateInput
+    _avg?: AttendanceAvgOrderByAggregateInput
+    _max?: AttendanceMaxOrderByAggregateInput
+    _min?: AttendanceMinOrderByAggregateInput
+    _sum?: AttendanceSumOrderByAggregateInput
+  }
+
+  export type AttendanceScalarWhereWithAggregatesInput = {
+    AND?: AttendanceScalarWhereWithAggregatesInput | AttendanceScalarWhereWithAggregatesInput[]
+    OR?: AttendanceScalarWhereWithAggregatesInput[]
+    NOT?: AttendanceScalarWhereWithAggregatesInput | AttendanceScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Attendance"> | string
+    userId?: UuidWithAggregatesFilter<"Attendance"> | string
+    date?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
+    status?: EnumAttendanceStatusWithAggregatesFilter<"Attendance"> | $Enums.AttendanceStatus
+    checkIn?: DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
+    checkOut?: DateTimeNullableWithAggregatesFilter<"Attendance"> | Date | string | null
+    overtimeHours?: DecimalNullableWithAggregatesFilter<"Attendance"> | Decimal | DecimalJsLike | number | string | null
+    notes?: StringNullableWithAggregatesFilter<"Attendance"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Attendance"> | Date | string
+  }
+
+  export type LeaveWhereInput = {
+    AND?: LeaveWhereInput | LeaveWhereInput[]
+    OR?: LeaveWhereInput[]
+    NOT?: LeaveWhereInput | LeaveWhereInput[]
+    id?: UuidFilter<"Leave"> | string
+    userId?: UuidFilter<"Leave"> | string
+    startDate?: DateTimeFilter<"Leave"> | Date | string
+    endDate?: DateTimeFilter<"Leave"> | Date | string
+    reason?: StringFilter<"Leave"> | string
+    type?: EnumLeaveTypeFilter<"Leave"> | $Enums.LeaveType
+    status?: EnumLeaveStatusFilter<"Leave"> | $Enums.LeaveStatus
+    createdAt?: DateTimeFilter<"Leave"> | Date | string
+    updatedAt?: DateTimeFilter<"Leave"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type LeaveOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type LeaveWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: LeaveWhereInput | LeaveWhereInput[]
+    OR?: LeaveWhereInput[]
+    NOT?: LeaveWhereInput | LeaveWhereInput[]
+    userId?: UuidFilter<"Leave"> | string
+    startDate?: DateTimeFilter<"Leave"> | Date | string
+    endDate?: DateTimeFilter<"Leave"> | Date | string
+    reason?: StringFilter<"Leave"> | string
+    type?: EnumLeaveTypeFilter<"Leave"> | $Enums.LeaveType
+    status?: EnumLeaveStatusFilter<"Leave"> | $Enums.LeaveStatus
+    createdAt?: DateTimeFilter<"Leave"> | Date | string
+    updatedAt?: DateTimeFilter<"Leave"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type LeaveOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: LeaveCountOrderByAggregateInput
+    _max?: LeaveMaxOrderByAggregateInput
+    _min?: LeaveMinOrderByAggregateInput
+  }
+
+  export type LeaveScalarWhereWithAggregatesInput = {
+    AND?: LeaveScalarWhereWithAggregatesInput | LeaveScalarWhereWithAggregatesInput[]
+    OR?: LeaveScalarWhereWithAggregatesInput[]
+    NOT?: LeaveScalarWhereWithAggregatesInput | LeaveScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Leave"> | string
+    userId?: UuidWithAggregatesFilter<"Leave"> | string
+    startDate?: DateTimeWithAggregatesFilter<"Leave"> | Date | string
+    endDate?: DateTimeWithAggregatesFilter<"Leave"> | Date | string
+    reason?: StringWithAggregatesFilter<"Leave"> | string
+    type?: EnumLeaveTypeWithAggregatesFilter<"Leave"> | $Enums.LeaveType
+    status?: EnumLeaveStatusWithAggregatesFilter<"Leave"> | $Enums.LeaveStatus
+    createdAt?: DateTimeWithAggregatesFilter<"Leave"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Leave"> | Date | string
+  }
+
+  export type PayrollWhereInput = {
+    AND?: PayrollWhereInput | PayrollWhereInput[]
+    OR?: PayrollWhereInput[]
+    NOT?: PayrollWhereInput | PayrollWhereInput[]
+    id?: UuidFilter<"Payroll"> | string
+    userId?: UuidFilter<"Payroll"> | string
+    month?: IntFilter<"Payroll"> | number
+    year?: IntFilter<"Payroll"> | number
+    workingDays?: IntNullableFilter<"Payroll"> | number | null
+    presentDays?: IntNullableFilter<"Payroll"> | number | null
+    absentDays?: IntNullableFilter<"Payroll"> | number | null
+    leaveDays?: IntNullableFilter<"Payroll"> | number | null
+    totalOvertimeHours?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
+    overtimePay?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    bonus?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    deductions?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    advance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFilter<"Payroll"> | $Enums.PayrollStatus
+    paymentDate?: DateTimeNullableFilter<"Payroll"> | Date | string | null
+    paymentMethod?: EnumSalaryPaymentMethodNullableFilter<"Payroll"> | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFilter<"Payroll"> | Date | string
+    updatedAt?: DateTimeFilter<"Payroll"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type PayrollOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
+    workingDays?: SortOrderInput | SortOrder
+    presentDays?: SortOrderInput | SortOrder
+    absentDays?: SortOrderInput | SortOrder
+    leaveDays?: SortOrderInput | SortOrder
+    totalOvertimeHours?: SortOrderInput | SortOrder
+    basicSalary?: SortOrder
+    overtimePay?: SortOrderInput | SortOrder
+    bonus?: SortOrderInput | SortOrder
+    deductions?: SortOrderInput | SortOrder
+    advance?: SortOrderInput | SortOrder
+    netSalary?: SortOrder
+    status?: SortOrder
+    paymentDate?: SortOrderInput | SortOrder
+    paymentMethod?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type PayrollWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_month_year?: PayrollUserIdMonthYearCompoundUniqueInput
+    AND?: PayrollWhereInput | PayrollWhereInput[]
+    OR?: PayrollWhereInput[]
+    NOT?: PayrollWhereInput | PayrollWhereInput[]
+    userId?: UuidFilter<"Payroll"> | string
+    month?: IntFilter<"Payroll"> | number
+    year?: IntFilter<"Payroll"> | number
+    workingDays?: IntNullableFilter<"Payroll"> | number | null
+    presentDays?: IntNullableFilter<"Payroll"> | number | null
+    absentDays?: IntNullableFilter<"Payroll"> | number | null
+    leaveDays?: IntNullableFilter<"Payroll"> | number | null
+    totalOvertimeHours?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
+    overtimePay?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    bonus?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    deductions?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    advance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFilter<"Payroll"> | $Enums.PayrollStatus
+    paymentDate?: DateTimeNullableFilter<"Payroll"> | Date | string | null
+    paymentMethod?: EnumSalaryPaymentMethodNullableFilter<"Payroll"> | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFilter<"Payroll"> | Date | string
+    updatedAt?: DateTimeFilter<"Payroll"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_month_year">
+
+  export type PayrollOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
+    workingDays?: SortOrderInput | SortOrder
+    presentDays?: SortOrderInput | SortOrder
+    absentDays?: SortOrderInput | SortOrder
+    leaveDays?: SortOrderInput | SortOrder
+    totalOvertimeHours?: SortOrderInput | SortOrder
+    basicSalary?: SortOrder
+    overtimePay?: SortOrderInput | SortOrder
+    bonus?: SortOrderInput | SortOrder
+    deductions?: SortOrderInput | SortOrder
+    advance?: SortOrderInput | SortOrder
+    netSalary?: SortOrder
+    status?: SortOrder
+    paymentDate?: SortOrderInput | SortOrder
+    paymentMethod?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PayrollCountOrderByAggregateInput
+    _avg?: PayrollAvgOrderByAggregateInput
+    _max?: PayrollMaxOrderByAggregateInput
+    _min?: PayrollMinOrderByAggregateInput
+    _sum?: PayrollSumOrderByAggregateInput
+  }
+
+  export type PayrollScalarWhereWithAggregatesInput = {
+    AND?: PayrollScalarWhereWithAggregatesInput | PayrollScalarWhereWithAggregatesInput[]
+    OR?: PayrollScalarWhereWithAggregatesInput[]
+    NOT?: PayrollScalarWhereWithAggregatesInput | PayrollScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"Payroll"> | string
+    userId?: UuidWithAggregatesFilter<"Payroll"> | string
+    month?: IntWithAggregatesFilter<"Payroll"> | number
+    year?: IntWithAggregatesFilter<"Payroll"> | number
+    workingDays?: IntNullableWithAggregatesFilter<"Payroll"> | number | null
+    presentDays?: IntNullableWithAggregatesFilter<"Payroll"> | number | null
+    absentDays?: IntNullableWithAggregatesFilter<"Payroll"> | number | null
+    leaveDays?: IntNullableWithAggregatesFilter<"Payroll"> | number | null
+    totalOvertimeHours?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
+    overtimePay?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    bonus?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    deductions?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    advance?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusWithAggregatesFilter<"Payroll"> | $Enums.PayrollStatus
+    paymentDate?: DateTimeNullableWithAggregatesFilter<"Payroll"> | Date | string | null
+    paymentMethod?: EnumSalaryPaymentMethodNullableWithAggregatesFilter<"Payroll"> | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeWithAggregatesFilter<"Payroll"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"Payroll"> | Date | string
+  }
+
+  export type SalaryAdvanceWhereInput = {
+    AND?: SalaryAdvanceWhereInput | SalaryAdvanceWhereInput[]
+    OR?: SalaryAdvanceWhereInput[]
+    NOT?: SalaryAdvanceWhereInput | SalaryAdvanceWhereInput[]
+    id?: UuidFilter<"SalaryAdvance"> | string
+    userId?: UuidFilter<"SalaryAdvance"> | string
+    amount?: DecimalFilter<"SalaryAdvance"> | Decimal | DecimalJsLike | number | string
+    reason?: StringNullableFilter<"SalaryAdvance"> | string | null
+    status?: EnumAdvanceStatusFilter<"SalaryAdvance"> | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFilter<"SalaryAdvance"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"SalaryAdvance"> | Date | string
+    updatedAt?: DateTimeFilter<"SalaryAdvance"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type SalaryAdvanceOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    status?: SortOrder
+    deductedAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type SalaryAdvanceWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: SalaryAdvanceWhereInput | SalaryAdvanceWhereInput[]
+    OR?: SalaryAdvanceWhereInput[]
+    NOT?: SalaryAdvanceWhereInput | SalaryAdvanceWhereInput[]
+    userId?: UuidFilter<"SalaryAdvance"> | string
+    amount?: DecimalFilter<"SalaryAdvance"> | Decimal | DecimalJsLike | number | string
+    reason?: StringNullableFilter<"SalaryAdvance"> | string | null
+    status?: EnumAdvanceStatusFilter<"SalaryAdvance"> | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFilter<"SalaryAdvance"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"SalaryAdvance"> | Date | string
+    updatedAt?: DateTimeFilter<"SalaryAdvance"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id">
+
+  export type SalaryAdvanceOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    status?: SortOrder
+    deductedAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: SalaryAdvanceCountOrderByAggregateInput
+    _avg?: SalaryAdvanceAvgOrderByAggregateInput
+    _max?: SalaryAdvanceMaxOrderByAggregateInput
+    _min?: SalaryAdvanceMinOrderByAggregateInput
+    _sum?: SalaryAdvanceSumOrderByAggregateInput
+  }
+
+  export type SalaryAdvanceScalarWhereWithAggregatesInput = {
+    AND?: SalaryAdvanceScalarWhereWithAggregatesInput | SalaryAdvanceScalarWhereWithAggregatesInput[]
+    OR?: SalaryAdvanceScalarWhereWithAggregatesInput[]
+    NOT?: SalaryAdvanceScalarWhereWithAggregatesInput | SalaryAdvanceScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"SalaryAdvance"> | string
+    userId?: UuidWithAggregatesFilter<"SalaryAdvance"> | string
+    amount?: DecimalWithAggregatesFilter<"SalaryAdvance"> | Decimal | DecimalJsLike | number | string
+    reason?: StringNullableWithAggregatesFilter<"SalaryAdvance"> | string | null
+    status?: EnumAdvanceStatusWithAggregatesFilter<"SalaryAdvance"> | $Enums.AdvanceStatus
+    deductedAmount?: DecimalWithAggregatesFilter<"SalaryAdvance"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"SalaryAdvance"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"SalaryAdvance"> | Date | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -9549,6 +15428,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderCreateNestedManyWithoutCashierInput
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    leaves?: LeaveCreateNestedManyWithoutUserInput
+    payrolls?: PayrollCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -9566,6 +15449,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     orders?: OrderUncheckedCreateNestedManyWithoutCashierInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    leaves?: LeaveUncheckedCreateNestedManyWithoutUserInput
+    payrolls?: PayrollUncheckedCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -9583,6 +15470,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUpdateManyWithoutCashierNestedInput
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    leaves?: LeaveUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -9600,6 +15491,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     orders?: OrderUncheckedUpdateManyWithoutCashierNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    leaves?: LeaveUncheckedUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -10111,6 +16006,415 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
+  export type AttendanceCreateInput = {
+    id?: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    checkIn?: Date | string | null
+    checkOut?: Date | string | null
+    overtimeHours?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutAttendancesInput
+  }
+
+  export type AttendanceUncheckedCreateInput = {
+    id?: string
+    userId: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    checkIn?: Date | string | null
+    checkOut?: Date | string | null
+    overtimeHours?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    checkIn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOut?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overtimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutAttendancesNestedInput
+  }
+
+  export type AttendanceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    checkIn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOut?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overtimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceCreateManyInput = {
+    id?: string
+    userId: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    checkIn?: Date | string | null
+    checkOut?: Date | string | null
+    overtimeHours?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    checkIn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOut?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overtimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    checkIn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOut?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overtimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeaveCreateInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    reason: string
+    type?: $Enums.LeaveType
+    status?: $Enums.LeaveStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutLeavesInput
+  }
+
+  export type LeaveUncheckedCreateInput = {
+    id?: string
+    userId: string
+    startDate: Date | string
+    endDate: Date | string
+    reason: string
+    type?: $Enums.LeaveType
+    status?: $Enums.LeaveStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeaveUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: StringFieldUpdateOperationsInput | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    status?: EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutLeavesNestedInput
+  }
+
+  export type LeaveUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: StringFieldUpdateOperationsInput | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    status?: EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeaveCreateManyInput = {
+    id?: string
+    userId: string
+    startDate: Date | string
+    endDate: Date | string
+    reason: string
+    type?: $Enums.LeaveType
+    status?: $Enums.LeaveStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeaveUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: StringFieldUpdateOperationsInput | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    status?: EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeaveUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: StringFieldUpdateOperationsInput | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    status?: EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayrollCreateInput = {
+    id?: string
+    month: number
+    year: number
+    workingDays?: number | null
+    presentDays?: number | null
+    absentDays?: number | null
+    leaveDays?: number | null
+    totalOvertimeHours?: Decimal | DecimalJsLike | number | string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    overtimePay?: Decimal | DecimalJsLike | number | string | null
+    bonus?: Decimal | DecimalJsLike | number | string | null
+    deductions?: Decimal | DecimalJsLike | number | string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    netSalary: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PayrollStatus
+    paymentDate?: Date | string | null
+    paymentMethod?: $Enums.SalaryPaymentMethod | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutPayrollsInput
+  }
+
+  export type PayrollUncheckedCreateInput = {
+    id?: string
+    userId: string
+    month: number
+    year: number
+    workingDays?: number | null
+    presentDays?: number | null
+    absentDays?: number | null
+    leaveDays?: number | null
+    totalOvertimeHours?: Decimal | DecimalJsLike | number | string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    overtimePay?: Decimal | DecimalJsLike | number | string | null
+    bonus?: Decimal | DecimalJsLike | number | string | null
+    deductions?: Decimal | DecimalJsLike | number | string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    netSalary: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PayrollStatus
+    paymentDate?: Date | string | null
+    paymentMethod?: $Enums.SalaryPaymentMethod | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PayrollUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
+    workingDays?: NullableIntFieldUpdateOperationsInput | number | null
+    presentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    absentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    leaveDays?: NullableIntFieldUpdateOperationsInput | number | null
+    totalOvertimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    overtimePay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableEnumSalaryPaymentMethodFieldUpdateOperationsInput | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutPayrollsNestedInput
+  }
+
+  export type PayrollUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
+    workingDays?: NullableIntFieldUpdateOperationsInput | number | null
+    presentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    absentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    leaveDays?: NullableIntFieldUpdateOperationsInput | number | null
+    totalOvertimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    overtimePay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableEnumSalaryPaymentMethodFieldUpdateOperationsInput | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayrollCreateManyInput = {
+    id?: string
+    userId: string
+    month: number
+    year: number
+    workingDays?: number | null
+    presentDays?: number | null
+    absentDays?: number | null
+    leaveDays?: number | null
+    totalOvertimeHours?: Decimal | DecimalJsLike | number | string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    overtimePay?: Decimal | DecimalJsLike | number | string | null
+    bonus?: Decimal | DecimalJsLike | number | string | null
+    deductions?: Decimal | DecimalJsLike | number | string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    netSalary: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PayrollStatus
+    paymentDate?: Date | string | null
+    paymentMethod?: $Enums.SalaryPaymentMethod | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PayrollUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
+    workingDays?: NullableIntFieldUpdateOperationsInput | number | null
+    presentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    absentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    leaveDays?: NullableIntFieldUpdateOperationsInput | number | null
+    totalOvertimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    overtimePay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableEnumSalaryPaymentMethodFieldUpdateOperationsInput | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayrollUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
+    workingDays?: NullableIntFieldUpdateOperationsInput | number | null
+    presentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    absentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    leaveDays?: NullableIntFieldUpdateOperationsInput | number | null
+    totalOvertimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    overtimePay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableEnumSalaryPaymentMethodFieldUpdateOperationsInput | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SalaryAdvanceCreateInput = {
+    id?: string
+    amount: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    status?: $Enums.AdvanceStatus
+    deductedAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user: UserCreateNestedOneWithoutSalaryAdvancesInput
+  }
+
+  export type SalaryAdvanceUncheckedCreateInput = {
+    id?: string
+    userId: string
+    amount: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    status?: $Enums.AdvanceStatus
+    deductedAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SalaryAdvanceUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAdvanceStatusFieldUpdateOperationsInput | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutSalaryAdvancesNestedInput
+  }
+
+  export type SalaryAdvanceUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAdvanceStatusFieldUpdateOperationsInput | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SalaryAdvanceCreateManyInput = {
+    id?: string
+    userId: string
+    amount: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    status?: $Enums.AdvanceStatus
+    deductedAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SalaryAdvanceUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAdvanceStatusFieldUpdateOperationsInput | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SalaryAdvanceUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAdvanceStatusFieldUpdateOperationsInput | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type UuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -10213,12 +16517,52 @@ export namespace Prisma {
     none?: OrderWhereInput
   }
 
+  export type AttendanceListRelationFilter = {
+    every?: AttendanceWhereInput
+    some?: AttendanceWhereInput
+    none?: AttendanceWhereInput
+  }
+
+  export type LeaveListRelationFilter = {
+    every?: LeaveWhereInput
+    some?: LeaveWhereInput
+    none?: LeaveWhereInput
+  }
+
+  export type PayrollListRelationFilter = {
+    every?: PayrollWhereInput
+    some?: PayrollWhereInput
+    none?: PayrollWhereInput
+  }
+
+  export type SalaryAdvanceListRelationFilter = {
+    every?: SalaryAdvanceWhereInput
+    some?: SalaryAdvanceWhereInput
+    none?: SalaryAdvanceWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
   }
 
   export type OrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttendanceOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LeaveOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PayrollOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type SalaryAdvanceOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -10905,6 +17249,351 @@ export namespace Prisma {
     _max?: NestedIntFilter<$PrismaModel>
   }
 
+  export type EnumAttendanceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAttendanceStatusFilter<$PrismaModel> | $Enums.AttendanceStatus
+  }
+
+  export type UserScalarRelationFilter = {
+    is?: UserWhereInput
+    isNot?: UserWhereInput
+  }
+
+  export type AttendanceUserIdDateCompoundUniqueInput = {
+    userId: string
+    date: Date | string
+  }
+
+  export type AttendanceCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    checkIn?: SortOrder
+    checkOut?: SortOrder
+    overtimeHours?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttendanceAvgOrderByAggregateInput = {
+    overtimeHours?: SortOrder
+  }
+
+  export type AttendanceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    checkIn?: SortOrder
+    checkOut?: SortOrder
+    overtimeHours?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttendanceMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    date?: SortOrder
+    status?: SortOrder
+    checkIn?: SortOrder
+    checkOut?: SortOrder
+    overtimeHours?: SortOrder
+    notes?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttendanceSumOrderByAggregateInput = {
+    overtimeHours?: SortOrder
+  }
+
+  export type EnumAttendanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAttendanceStatusFilter<$PrismaModel>
+    _max?: NestedEnumAttendanceStatusFilter<$PrismaModel>
+  }
+
+  export type EnumLeaveTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveType | EnumLeaveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveTypeFilter<$PrismaModel> | $Enums.LeaveType
+  }
+
+  export type EnumLeaveStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveStatus | EnumLeaveStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveStatus[] | ListEnumLeaveStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveStatus[] | ListEnumLeaveStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveStatusFilter<$PrismaModel> | $Enums.LeaveStatus
+  }
+
+  export type LeaveCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LeaveMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LeaveMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    startDate?: SortOrder
+    endDate?: SortOrder
+    reason?: SortOrder
+    type?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumLeaveTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveType | EnumLeaveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveTypeWithAggregatesFilter<$PrismaModel> | $Enums.LeaveType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeaveTypeFilter<$PrismaModel>
+    _max?: NestedEnumLeaveTypeFilter<$PrismaModel>
+  }
+
+  export type EnumLeaveStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveStatus | EnumLeaveStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveStatus[] | ListEnumLeaveStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveStatus[] | ListEnumLeaveStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeaveStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeaveStatusFilter<$PrismaModel>
+    _max?: NestedEnumLeaveStatusFilter<$PrismaModel>
+  }
+
+  export type EnumPayrollStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PayrollStatus | EnumPayrollStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PayrollStatus[] | ListEnumPayrollStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PayrollStatus[] | ListEnumPayrollStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPayrollStatusFilter<$PrismaModel> | $Enums.PayrollStatus
+  }
+
+  export type EnumSalaryPaymentMethodNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.SalaryPaymentMethod | EnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SalaryPaymentMethod[] | ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SalaryPaymentMethod[] | ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSalaryPaymentMethodNullableFilter<$PrismaModel> | $Enums.SalaryPaymentMethod | null
+  }
+
+  export type PayrollUserIdMonthYearCompoundUniqueInput = {
+    userId: string
+    month: number
+    year: number
+  }
+
+  export type PayrollCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
+    workingDays?: SortOrder
+    presentDays?: SortOrder
+    absentDays?: SortOrder
+    leaveDays?: SortOrder
+    totalOvertimeHours?: SortOrder
+    basicSalary?: SortOrder
+    overtimePay?: SortOrder
+    bonus?: SortOrder
+    deductions?: SortOrder
+    advance?: SortOrder
+    netSalary?: SortOrder
+    status?: SortOrder
+    paymentDate?: SortOrder
+    paymentMethod?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PayrollAvgOrderByAggregateInput = {
+    month?: SortOrder
+    year?: SortOrder
+    workingDays?: SortOrder
+    presentDays?: SortOrder
+    absentDays?: SortOrder
+    leaveDays?: SortOrder
+    totalOvertimeHours?: SortOrder
+    basicSalary?: SortOrder
+    overtimePay?: SortOrder
+    bonus?: SortOrder
+    deductions?: SortOrder
+    advance?: SortOrder
+    netSalary?: SortOrder
+  }
+
+  export type PayrollMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
+    workingDays?: SortOrder
+    presentDays?: SortOrder
+    absentDays?: SortOrder
+    leaveDays?: SortOrder
+    totalOvertimeHours?: SortOrder
+    basicSalary?: SortOrder
+    overtimePay?: SortOrder
+    bonus?: SortOrder
+    deductions?: SortOrder
+    advance?: SortOrder
+    netSalary?: SortOrder
+    status?: SortOrder
+    paymentDate?: SortOrder
+    paymentMethod?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PayrollMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    month?: SortOrder
+    year?: SortOrder
+    workingDays?: SortOrder
+    presentDays?: SortOrder
+    absentDays?: SortOrder
+    leaveDays?: SortOrder
+    totalOvertimeHours?: SortOrder
+    basicSalary?: SortOrder
+    overtimePay?: SortOrder
+    bonus?: SortOrder
+    deductions?: SortOrder
+    advance?: SortOrder
+    netSalary?: SortOrder
+    status?: SortOrder
+    paymentDate?: SortOrder
+    paymentMethod?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PayrollSumOrderByAggregateInput = {
+    month?: SortOrder
+    year?: SortOrder
+    workingDays?: SortOrder
+    presentDays?: SortOrder
+    absentDays?: SortOrder
+    leaveDays?: SortOrder
+    totalOvertimeHours?: SortOrder
+    basicSalary?: SortOrder
+    overtimePay?: SortOrder
+    bonus?: SortOrder
+    deductions?: SortOrder
+    advance?: SortOrder
+    netSalary?: SortOrder
+  }
+
+  export type EnumPayrollStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PayrollStatus | EnumPayrollStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PayrollStatus[] | ListEnumPayrollStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PayrollStatus[] | ListEnumPayrollStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPayrollStatusWithAggregatesFilter<$PrismaModel> | $Enums.PayrollStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPayrollStatusFilter<$PrismaModel>
+    _max?: NestedEnumPayrollStatusFilter<$PrismaModel>
+  }
+
+  export type EnumSalaryPaymentMethodNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SalaryPaymentMethod | EnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SalaryPaymentMethod[] | ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SalaryPaymentMethod[] | ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSalaryPaymentMethodNullableWithAggregatesFilter<$PrismaModel> | $Enums.SalaryPaymentMethod | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSalaryPaymentMethodNullableFilter<$PrismaModel>
+    _max?: NestedEnumSalaryPaymentMethodNullableFilter<$PrismaModel>
+  }
+
+  export type EnumAdvanceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdvanceStatus | EnumAdvanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdvanceStatus[] | ListEnumAdvanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdvanceStatus[] | ListEnumAdvanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdvanceStatusFilter<$PrismaModel> | $Enums.AdvanceStatus
+  }
+
+  export type SalaryAdvanceCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    deductedAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SalaryAdvanceAvgOrderByAggregateInput = {
+    amount?: SortOrder
+    deductedAmount?: SortOrder
+  }
+
+  export type SalaryAdvanceMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    deductedAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SalaryAdvanceMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    amount?: SortOrder
+    reason?: SortOrder
+    status?: SortOrder
+    deductedAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type SalaryAdvanceSumOrderByAggregateInput = {
+    amount?: SortOrder
+    deductedAmount?: SortOrder
+  }
+
+  export type EnumAdvanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdvanceStatus | EnumAdvanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdvanceStatus[] | ListEnumAdvanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdvanceStatus[] | ListEnumAdvanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdvanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AdvanceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAdvanceStatusFilter<$PrismaModel>
+    _max?: NestedEnumAdvanceStatusFilter<$PrismaModel>
+  }
+
   export type OrderCreateNestedManyWithoutCashierInput = {
     create?: XOR<OrderCreateWithoutCashierInput, OrderUncheckedCreateWithoutCashierInput> | OrderCreateWithoutCashierInput[] | OrderUncheckedCreateWithoutCashierInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCashierInput | OrderCreateOrConnectWithoutCashierInput[]
@@ -10912,11 +17601,67 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
   }
 
+  export type AttendanceCreateNestedManyWithoutUserInput = {
+    create?: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput> | AttendanceCreateWithoutUserInput[] | AttendanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutUserInput | AttendanceCreateOrConnectWithoutUserInput[]
+    createMany?: AttendanceCreateManyUserInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+  }
+
+  export type LeaveCreateNestedManyWithoutUserInput = {
+    create?: XOR<LeaveCreateWithoutUserInput, LeaveUncheckedCreateWithoutUserInput> | LeaveCreateWithoutUserInput[] | LeaveUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LeaveCreateOrConnectWithoutUserInput | LeaveCreateOrConnectWithoutUserInput[]
+    createMany?: LeaveCreateManyUserInputEnvelope
+    connect?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+  }
+
+  export type PayrollCreateNestedManyWithoutUserInput = {
+    create?: XOR<PayrollCreateWithoutUserInput, PayrollUncheckedCreateWithoutUserInput> | PayrollCreateWithoutUserInput[] | PayrollUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PayrollCreateOrConnectWithoutUserInput | PayrollCreateOrConnectWithoutUserInput[]
+    createMany?: PayrollCreateManyUserInputEnvelope
+    connect?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+  }
+
+  export type SalaryAdvanceCreateNestedManyWithoutUserInput = {
+    create?: XOR<SalaryAdvanceCreateWithoutUserInput, SalaryAdvanceUncheckedCreateWithoutUserInput> | SalaryAdvanceCreateWithoutUserInput[] | SalaryAdvanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SalaryAdvanceCreateOrConnectWithoutUserInput | SalaryAdvanceCreateOrConnectWithoutUserInput[]
+    createMany?: SalaryAdvanceCreateManyUserInputEnvelope
+    connect?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+  }
+
   export type OrderUncheckedCreateNestedManyWithoutCashierInput = {
     create?: XOR<OrderCreateWithoutCashierInput, OrderUncheckedCreateWithoutCashierInput> | OrderCreateWithoutCashierInput[] | OrderUncheckedCreateWithoutCashierInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCashierInput | OrderCreateOrConnectWithoutCashierInput[]
     createMany?: OrderCreateManyCashierInputEnvelope
     connect?: OrderWhereUniqueInput | OrderWhereUniqueInput[]
+  }
+
+  export type AttendanceUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput> | AttendanceCreateWithoutUserInput[] | AttendanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutUserInput | AttendanceCreateOrConnectWithoutUserInput[]
+    createMany?: AttendanceCreateManyUserInputEnvelope
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+  }
+
+  export type LeaveUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<LeaveCreateWithoutUserInput, LeaveUncheckedCreateWithoutUserInput> | LeaveCreateWithoutUserInput[] | LeaveUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LeaveCreateOrConnectWithoutUserInput | LeaveCreateOrConnectWithoutUserInput[]
+    createMany?: LeaveCreateManyUserInputEnvelope
+    connect?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+  }
+
+  export type PayrollUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<PayrollCreateWithoutUserInput, PayrollUncheckedCreateWithoutUserInput> | PayrollCreateWithoutUserInput[] | PayrollUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PayrollCreateOrConnectWithoutUserInput | PayrollCreateOrConnectWithoutUserInput[]
+    createMany?: PayrollCreateManyUserInputEnvelope
+    connect?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+  }
+
+  export type SalaryAdvanceUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<SalaryAdvanceCreateWithoutUserInput, SalaryAdvanceUncheckedCreateWithoutUserInput> | SalaryAdvanceCreateWithoutUserInput[] | SalaryAdvanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SalaryAdvanceCreateOrConnectWithoutUserInput | SalaryAdvanceCreateOrConnectWithoutUserInput[]
+    createMany?: SalaryAdvanceCreateManyUserInputEnvelope
+    connect?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -10969,6 +17714,62 @@ export namespace Prisma {
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
   }
 
+  export type AttendanceUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput> | AttendanceCreateWithoutUserInput[] | AttendanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutUserInput | AttendanceCreateOrConnectWithoutUserInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutUserInput | AttendanceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AttendanceCreateManyUserInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutUserInput | AttendanceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutUserInput | AttendanceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+  }
+
+  export type LeaveUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LeaveCreateWithoutUserInput, LeaveUncheckedCreateWithoutUserInput> | LeaveCreateWithoutUserInput[] | LeaveUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LeaveCreateOrConnectWithoutUserInput | LeaveCreateOrConnectWithoutUserInput[]
+    upsert?: LeaveUpsertWithWhereUniqueWithoutUserInput | LeaveUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LeaveCreateManyUserInputEnvelope
+    set?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+    disconnect?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+    delete?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+    connect?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+    update?: LeaveUpdateWithWhereUniqueWithoutUserInput | LeaveUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LeaveUpdateManyWithWhereWithoutUserInput | LeaveUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LeaveScalarWhereInput | LeaveScalarWhereInput[]
+  }
+
+  export type PayrollUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PayrollCreateWithoutUserInput, PayrollUncheckedCreateWithoutUserInput> | PayrollCreateWithoutUserInput[] | PayrollUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PayrollCreateOrConnectWithoutUserInput | PayrollCreateOrConnectWithoutUserInput[]
+    upsert?: PayrollUpsertWithWhereUniqueWithoutUserInput | PayrollUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PayrollCreateManyUserInputEnvelope
+    set?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+    disconnect?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+    delete?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+    connect?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+    update?: PayrollUpdateWithWhereUniqueWithoutUserInput | PayrollUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PayrollUpdateManyWithWhereWithoutUserInput | PayrollUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PayrollScalarWhereInput | PayrollScalarWhereInput[]
+  }
+
+  export type SalaryAdvanceUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SalaryAdvanceCreateWithoutUserInput, SalaryAdvanceUncheckedCreateWithoutUserInput> | SalaryAdvanceCreateWithoutUserInput[] | SalaryAdvanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SalaryAdvanceCreateOrConnectWithoutUserInput | SalaryAdvanceCreateOrConnectWithoutUserInput[]
+    upsert?: SalaryAdvanceUpsertWithWhereUniqueWithoutUserInput | SalaryAdvanceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SalaryAdvanceCreateManyUserInputEnvelope
+    set?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+    disconnect?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+    delete?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+    connect?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+    update?: SalaryAdvanceUpdateWithWhereUniqueWithoutUserInput | SalaryAdvanceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SalaryAdvanceUpdateManyWithWhereWithoutUserInput | SalaryAdvanceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SalaryAdvanceScalarWhereInput | SalaryAdvanceScalarWhereInput[]
+  }
+
   export type OrderUncheckedUpdateManyWithoutCashierNestedInput = {
     create?: XOR<OrderCreateWithoutCashierInput, OrderUncheckedCreateWithoutCashierInput> | OrderCreateWithoutCashierInput[] | OrderUncheckedCreateWithoutCashierInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCashierInput | OrderCreateOrConnectWithoutCashierInput[]
@@ -10981,6 +17782,62 @@ export namespace Prisma {
     update?: OrderUpdateWithWhereUniqueWithoutCashierInput | OrderUpdateWithWhereUniqueWithoutCashierInput[]
     updateMany?: OrderUpdateManyWithWhereWithoutCashierInput | OrderUpdateManyWithWhereWithoutCashierInput[]
     deleteMany?: OrderScalarWhereInput | OrderScalarWhereInput[]
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput> | AttendanceCreateWithoutUserInput[] | AttendanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: AttendanceCreateOrConnectWithoutUserInput | AttendanceCreateOrConnectWithoutUserInput[]
+    upsert?: AttendanceUpsertWithWhereUniqueWithoutUserInput | AttendanceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: AttendanceCreateManyUserInputEnvelope
+    set?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    disconnect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    delete?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    connect?: AttendanceWhereUniqueInput | AttendanceWhereUniqueInput[]
+    update?: AttendanceUpdateWithWhereUniqueWithoutUserInput | AttendanceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: AttendanceUpdateManyWithWhereWithoutUserInput | AttendanceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+  }
+
+  export type LeaveUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<LeaveCreateWithoutUserInput, LeaveUncheckedCreateWithoutUserInput> | LeaveCreateWithoutUserInput[] | LeaveUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: LeaveCreateOrConnectWithoutUserInput | LeaveCreateOrConnectWithoutUserInput[]
+    upsert?: LeaveUpsertWithWhereUniqueWithoutUserInput | LeaveUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: LeaveCreateManyUserInputEnvelope
+    set?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+    disconnect?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+    delete?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+    connect?: LeaveWhereUniqueInput | LeaveWhereUniqueInput[]
+    update?: LeaveUpdateWithWhereUniqueWithoutUserInput | LeaveUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: LeaveUpdateManyWithWhereWithoutUserInput | LeaveUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: LeaveScalarWhereInput | LeaveScalarWhereInput[]
+  }
+
+  export type PayrollUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<PayrollCreateWithoutUserInput, PayrollUncheckedCreateWithoutUserInput> | PayrollCreateWithoutUserInput[] | PayrollUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: PayrollCreateOrConnectWithoutUserInput | PayrollCreateOrConnectWithoutUserInput[]
+    upsert?: PayrollUpsertWithWhereUniqueWithoutUserInput | PayrollUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: PayrollCreateManyUserInputEnvelope
+    set?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+    disconnect?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+    delete?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+    connect?: PayrollWhereUniqueInput | PayrollWhereUniqueInput[]
+    update?: PayrollUpdateWithWhereUniqueWithoutUserInput | PayrollUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: PayrollUpdateManyWithWhereWithoutUserInput | PayrollUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: PayrollScalarWhereInput | PayrollScalarWhereInput[]
+  }
+
+  export type SalaryAdvanceUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<SalaryAdvanceCreateWithoutUserInput, SalaryAdvanceUncheckedCreateWithoutUserInput> | SalaryAdvanceCreateWithoutUserInput[] | SalaryAdvanceUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: SalaryAdvanceCreateOrConnectWithoutUserInput | SalaryAdvanceCreateOrConnectWithoutUserInput[]
+    upsert?: SalaryAdvanceUpsertWithWhereUniqueWithoutUserInput | SalaryAdvanceUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: SalaryAdvanceCreateManyUserInputEnvelope
+    set?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+    disconnect?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+    delete?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+    connect?: SalaryAdvanceWhereUniqueInput | SalaryAdvanceWhereUniqueInput[]
+    update?: SalaryAdvanceUpdateWithWhereUniqueWithoutUserInput | SalaryAdvanceUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: SalaryAdvanceUpdateManyWithWhereWithoutUserInput | SalaryAdvanceUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: SalaryAdvanceScalarWhereInput | SalaryAdvanceScalarWhereInput[]
   }
 
   export type MenuItemCreateNestedManyWithoutCategoryInput = {
@@ -11225,6 +18082,86 @@ export namespace Prisma {
     upsert?: OrderUpsertWithoutItemsInput
     connect?: OrderWhereUniqueInput
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutItemsInput, OrderUpdateWithoutItemsInput>, OrderUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type UserCreateNestedOneWithoutAttendancesInput = {
+    create?: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAttendancesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumAttendanceStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AttendanceStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutAttendancesNestedInput = {
+    create?: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutAttendancesInput
+    upsert?: UserUpsertWithoutAttendancesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutAttendancesInput, UserUpdateWithoutAttendancesInput>, UserUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type UserCreateNestedOneWithoutLeavesInput = {
+    create?: XOR<UserCreateWithoutLeavesInput, UserUncheckedCreateWithoutLeavesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLeavesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumLeaveTypeFieldUpdateOperationsInput = {
+    set?: $Enums.LeaveType
+  }
+
+  export type EnumLeaveStatusFieldUpdateOperationsInput = {
+    set?: $Enums.LeaveStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutLeavesNestedInput = {
+    create?: XOR<UserCreateWithoutLeavesInput, UserUncheckedCreateWithoutLeavesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutLeavesInput
+    upsert?: UserUpsertWithoutLeavesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLeavesInput, UserUpdateWithoutLeavesInput>, UserUncheckedUpdateWithoutLeavesInput>
+  }
+
+  export type UserCreateNestedOneWithoutPayrollsInput = {
+    create?: XOR<UserCreateWithoutPayrollsInput, UserUncheckedCreateWithoutPayrollsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPayrollsInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumPayrollStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PayrollStatus
+  }
+
+  export type NullableEnumSalaryPaymentMethodFieldUpdateOperationsInput = {
+    set?: $Enums.SalaryPaymentMethod | null
+  }
+
+  export type UserUpdateOneRequiredWithoutPayrollsNestedInput = {
+    create?: XOR<UserCreateWithoutPayrollsInput, UserUncheckedCreateWithoutPayrollsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutPayrollsInput
+    upsert?: UserUpsertWithoutPayrollsInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutPayrollsInput, UserUpdateWithoutPayrollsInput>, UserUncheckedUpdateWithoutPayrollsInput>
+  }
+
+  export type UserCreateNestedOneWithoutSalaryAdvancesInput = {
+    create?: XOR<UserCreateWithoutSalaryAdvancesInput, UserUncheckedCreateWithoutSalaryAdvancesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSalaryAdvancesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type EnumAdvanceStatusFieldUpdateOperationsInput = {
+    set?: $Enums.AdvanceStatus
+  }
+
+  export type UserUpdateOneRequiredWithoutSalaryAdvancesNestedInput = {
+    create?: XOR<UserCreateWithoutSalaryAdvancesInput, UserUncheckedCreateWithoutSalaryAdvancesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutSalaryAdvancesInput
+    upsert?: UserUpsertWithoutSalaryAdvancesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSalaryAdvancesInput, UserUpdateWithoutSalaryAdvancesInput>, UserUncheckedUpdateWithoutSalaryAdvancesInput>
   }
 
   export type NestedUuidFilter<$PrismaModel = never> = {
@@ -11657,6 +18594,108 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedEnumAttendanceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAttendanceStatusFilter<$PrismaModel> | $Enums.AttendanceStatus
+  }
+
+  export type NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AttendanceStatus | EnumAttendanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AttendanceStatus[] | ListEnumAttendanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAttendanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AttendanceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAttendanceStatusFilter<$PrismaModel>
+    _max?: NestedEnumAttendanceStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLeaveTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveType | EnumLeaveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveTypeFilter<$PrismaModel> | $Enums.LeaveType
+  }
+
+  export type NestedEnumLeaveStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveStatus | EnumLeaveStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveStatus[] | ListEnumLeaveStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveStatus[] | ListEnumLeaveStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveStatusFilter<$PrismaModel> | $Enums.LeaveStatus
+  }
+
+  export type NestedEnumLeaveTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveType | EnumLeaveTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveType[] | ListEnumLeaveTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveTypeWithAggregatesFilter<$PrismaModel> | $Enums.LeaveType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeaveTypeFilter<$PrismaModel>
+    _max?: NestedEnumLeaveTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumLeaveStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.LeaveStatus | EnumLeaveStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.LeaveStatus[] | ListEnumLeaveStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.LeaveStatus[] | ListEnumLeaveStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumLeaveStatusWithAggregatesFilter<$PrismaModel> | $Enums.LeaveStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumLeaveStatusFilter<$PrismaModel>
+    _max?: NestedEnumLeaveStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumPayrollStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PayrollStatus | EnumPayrollStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PayrollStatus[] | ListEnumPayrollStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PayrollStatus[] | ListEnumPayrollStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPayrollStatusFilter<$PrismaModel> | $Enums.PayrollStatus
+  }
+
+  export type NestedEnumSalaryPaymentMethodNullableFilter<$PrismaModel = never> = {
+    equals?: $Enums.SalaryPaymentMethod | EnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SalaryPaymentMethod[] | ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SalaryPaymentMethod[] | ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSalaryPaymentMethodNullableFilter<$PrismaModel> | $Enums.SalaryPaymentMethod | null
+  }
+
+  export type NestedEnumPayrollStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PayrollStatus | EnumPayrollStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PayrollStatus[] | ListEnumPayrollStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PayrollStatus[] | ListEnumPayrollStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPayrollStatusWithAggregatesFilter<$PrismaModel> | $Enums.PayrollStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPayrollStatusFilter<$PrismaModel>
+    _max?: NestedEnumPayrollStatusFilter<$PrismaModel>
+  }
+
+  export type NestedEnumSalaryPaymentMethodNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.SalaryPaymentMethod | EnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    in?: $Enums.SalaryPaymentMethod[] | ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    notIn?: $Enums.SalaryPaymentMethod[] | ListEnumSalaryPaymentMethodFieldRefInput<$PrismaModel> | null
+    not?: NestedEnumSalaryPaymentMethodNullableWithAggregatesFilter<$PrismaModel> | $Enums.SalaryPaymentMethod | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedEnumSalaryPaymentMethodNullableFilter<$PrismaModel>
+    _max?: NestedEnumSalaryPaymentMethodNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumAdvanceStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdvanceStatus | EnumAdvanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdvanceStatus[] | ListEnumAdvanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdvanceStatus[] | ListEnumAdvanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdvanceStatusFilter<$PrismaModel> | $Enums.AdvanceStatus
+  }
+
+  export type NestedEnumAdvanceStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.AdvanceStatus | EnumAdvanceStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.AdvanceStatus[] | ListEnumAdvanceStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.AdvanceStatus[] | ListEnumAdvanceStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumAdvanceStatusWithAggregatesFilter<$PrismaModel> | $Enums.AdvanceStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumAdvanceStatusFilter<$PrismaModel>
+    _max?: NestedEnumAdvanceStatusFilter<$PrismaModel>
+  }
+
   export type OrderCreateWithoutCashierInput = {
     id?: string
     orderNumber: string
@@ -11707,6 +18746,156 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type AttendanceCreateWithoutUserInput = {
+    id?: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    checkIn?: Date | string | null
+    checkOut?: Date | string | null
+    overtimeHours?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceUncheckedCreateWithoutUserInput = {
+    id?: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    checkIn?: Date | string | null
+    checkOut?: Date | string | null
+    overtimeHours?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceCreateOrConnectWithoutUserInput = {
+    where: AttendanceWhereUniqueInput
+    create: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput>
+  }
+
+  export type AttendanceCreateManyUserInputEnvelope = {
+    data: AttendanceCreateManyUserInput | AttendanceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type LeaveCreateWithoutUserInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    reason: string
+    type?: $Enums.LeaveType
+    status?: $Enums.LeaveStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeaveUncheckedCreateWithoutUserInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    reason: string
+    type?: $Enums.LeaveType
+    status?: $Enums.LeaveStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeaveCreateOrConnectWithoutUserInput = {
+    where: LeaveWhereUniqueInput
+    create: XOR<LeaveCreateWithoutUserInput, LeaveUncheckedCreateWithoutUserInput>
+  }
+
+  export type LeaveCreateManyUserInputEnvelope = {
+    data: LeaveCreateManyUserInput | LeaveCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PayrollCreateWithoutUserInput = {
+    id?: string
+    month: number
+    year: number
+    workingDays?: number | null
+    presentDays?: number | null
+    absentDays?: number | null
+    leaveDays?: number | null
+    totalOvertimeHours?: Decimal | DecimalJsLike | number | string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    overtimePay?: Decimal | DecimalJsLike | number | string | null
+    bonus?: Decimal | DecimalJsLike | number | string | null
+    deductions?: Decimal | DecimalJsLike | number | string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    netSalary: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PayrollStatus
+    paymentDate?: Date | string | null
+    paymentMethod?: $Enums.SalaryPaymentMethod | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PayrollUncheckedCreateWithoutUserInput = {
+    id?: string
+    month: number
+    year: number
+    workingDays?: number | null
+    presentDays?: number | null
+    absentDays?: number | null
+    leaveDays?: number | null
+    totalOvertimeHours?: Decimal | DecimalJsLike | number | string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    overtimePay?: Decimal | DecimalJsLike | number | string | null
+    bonus?: Decimal | DecimalJsLike | number | string | null
+    deductions?: Decimal | DecimalJsLike | number | string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    netSalary: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PayrollStatus
+    paymentDate?: Date | string | null
+    paymentMethod?: $Enums.SalaryPaymentMethod | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PayrollCreateOrConnectWithoutUserInput = {
+    where: PayrollWhereUniqueInput
+    create: XOR<PayrollCreateWithoutUserInput, PayrollUncheckedCreateWithoutUserInput>
+  }
+
+  export type PayrollCreateManyUserInputEnvelope = {
+    data: PayrollCreateManyUserInput | PayrollCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type SalaryAdvanceCreateWithoutUserInput = {
+    id?: string
+    amount: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    status?: $Enums.AdvanceStatus
+    deductedAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SalaryAdvanceUncheckedCreateWithoutUserInput = {
+    id?: string
+    amount: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    status?: $Enums.AdvanceStatus
+    deductedAmount?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SalaryAdvanceCreateOrConnectWithoutUserInput = {
+    where: SalaryAdvanceWhereUniqueInput
+    create: XOR<SalaryAdvanceCreateWithoutUserInput, SalaryAdvanceUncheckedCreateWithoutUserInput>
+  }
+
+  export type SalaryAdvanceCreateManyUserInputEnvelope = {
+    data: SalaryAdvanceCreateManyUserInput | SalaryAdvanceCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrderUpsertWithWhereUniqueWithoutCashierInput = {
     where: OrderWhereUniqueInput
     update: XOR<OrderUpdateWithoutCashierInput, OrderUncheckedUpdateWithoutCashierInput>
@@ -11744,6 +18933,141 @@ export namespace Prisma {
     notes?: StringNullableFilter<"Order"> | string | null
     createdAt?: DateTimeFilter<"Order"> | Date | string
     updatedAt?: DateTimeFilter<"Order"> | Date | string
+  }
+
+  export type AttendanceUpsertWithWhereUniqueWithoutUserInput = {
+    where: AttendanceWhereUniqueInput
+    update: XOR<AttendanceUpdateWithoutUserInput, AttendanceUncheckedUpdateWithoutUserInput>
+    create: XOR<AttendanceCreateWithoutUserInput, AttendanceUncheckedCreateWithoutUserInput>
+  }
+
+  export type AttendanceUpdateWithWhereUniqueWithoutUserInput = {
+    where: AttendanceWhereUniqueInput
+    data: XOR<AttendanceUpdateWithoutUserInput, AttendanceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type AttendanceUpdateManyWithWhereWithoutUserInput = {
+    where: AttendanceScalarWhereInput
+    data: XOR<AttendanceUpdateManyMutationInput, AttendanceUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type AttendanceScalarWhereInput = {
+    AND?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+    OR?: AttendanceScalarWhereInput[]
+    NOT?: AttendanceScalarWhereInput | AttendanceScalarWhereInput[]
+    id?: UuidFilter<"Attendance"> | string
+    userId?: UuidFilter<"Attendance"> | string
+    date?: DateTimeFilter<"Attendance"> | Date | string
+    status?: EnumAttendanceStatusFilter<"Attendance"> | $Enums.AttendanceStatus
+    checkIn?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    checkOut?: DateTimeNullableFilter<"Attendance"> | Date | string | null
+    overtimeHours?: DecimalNullableFilter<"Attendance"> | Decimal | DecimalJsLike | number | string | null
+    notes?: StringNullableFilter<"Attendance"> | string | null
+    createdAt?: DateTimeFilter<"Attendance"> | Date | string
+    updatedAt?: DateTimeFilter<"Attendance"> | Date | string
+  }
+
+  export type LeaveUpsertWithWhereUniqueWithoutUserInput = {
+    where: LeaveWhereUniqueInput
+    update: XOR<LeaveUpdateWithoutUserInput, LeaveUncheckedUpdateWithoutUserInput>
+    create: XOR<LeaveCreateWithoutUserInput, LeaveUncheckedCreateWithoutUserInput>
+  }
+
+  export type LeaveUpdateWithWhereUniqueWithoutUserInput = {
+    where: LeaveWhereUniqueInput
+    data: XOR<LeaveUpdateWithoutUserInput, LeaveUncheckedUpdateWithoutUserInput>
+  }
+
+  export type LeaveUpdateManyWithWhereWithoutUserInput = {
+    where: LeaveScalarWhereInput
+    data: XOR<LeaveUpdateManyMutationInput, LeaveUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type LeaveScalarWhereInput = {
+    AND?: LeaveScalarWhereInput | LeaveScalarWhereInput[]
+    OR?: LeaveScalarWhereInput[]
+    NOT?: LeaveScalarWhereInput | LeaveScalarWhereInput[]
+    id?: UuidFilter<"Leave"> | string
+    userId?: UuidFilter<"Leave"> | string
+    startDate?: DateTimeFilter<"Leave"> | Date | string
+    endDate?: DateTimeFilter<"Leave"> | Date | string
+    reason?: StringFilter<"Leave"> | string
+    type?: EnumLeaveTypeFilter<"Leave"> | $Enums.LeaveType
+    status?: EnumLeaveStatusFilter<"Leave"> | $Enums.LeaveStatus
+    createdAt?: DateTimeFilter<"Leave"> | Date | string
+    updatedAt?: DateTimeFilter<"Leave"> | Date | string
+  }
+
+  export type PayrollUpsertWithWhereUniqueWithoutUserInput = {
+    where: PayrollWhereUniqueInput
+    update: XOR<PayrollUpdateWithoutUserInput, PayrollUncheckedUpdateWithoutUserInput>
+    create: XOR<PayrollCreateWithoutUserInput, PayrollUncheckedCreateWithoutUserInput>
+  }
+
+  export type PayrollUpdateWithWhereUniqueWithoutUserInput = {
+    where: PayrollWhereUniqueInput
+    data: XOR<PayrollUpdateWithoutUserInput, PayrollUncheckedUpdateWithoutUserInput>
+  }
+
+  export type PayrollUpdateManyWithWhereWithoutUserInput = {
+    where: PayrollScalarWhereInput
+    data: XOR<PayrollUpdateManyMutationInput, PayrollUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type PayrollScalarWhereInput = {
+    AND?: PayrollScalarWhereInput | PayrollScalarWhereInput[]
+    OR?: PayrollScalarWhereInput[]
+    NOT?: PayrollScalarWhereInput | PayrollScalarWhereInput[]
+    id?: UuidFilter<"Payroll"> | string
+    userId?: UuidFilter<"Payroll"> | string
+    month?: IntFilter<"Payroll"> | number
+    year?: IntFilter<"Payroll"> | number
+    workingDays?: IntNullableFilter<"Payroll"> | number | null
+    presentDays?: IntNullableFilter<"Payroll"> | number | null
+    absentDays?: IntNullableFilter<"Payroll"> | number | null
+    leaveDays?: IntNullableFilter<"Payroll"> | number | null
+    totalOvertimeHours?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
+    overtimePay?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    bonus?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    deductions?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    advance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFilter<"Payroll"> | $Enums.PayrollStatus
+    paymentDate?: DateTimeNullableFilter<"Payroll"> | Date | string | null
+    paymentMethod?: EnumSalaryPaymentMethodNullableFilter<"Payroll"> | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFilter<"Payroll"> | Date | string
+    updatedAt?: DateTimeFilter<"Payroll"> | Date | string
+  }
+
+  export type SalaryAdvanceUpsertWithWhereUniqueWithoutUserInput = {
+    where: SalaryAdvanceWhereUniqueInput
+    update: XOR<SalaryAdvanceUpdateWithoutUserInput, SalaryAdvanceUncheckedUpdateWithoutUserInput>
+    create: XOR<SalaryAdvanceCreateWithoutUserInput, SalaryAdvanceUncheckedCreateWithoutUserInput>
+  }
+
+  export type SalaryAdvanceUpdateWithWhereUniqueWithoutUserInput = {
+    where: SalaryAdvanceWhereUniqueInput
+    data: XOR<SalaryAdvanceUpdateWithoutUserInput, SalaryAdvanceUncheckedUpdateWithoutUserInput>
+  }
+
+  export type SalaryAdvanceUpdateManyWithWhereWithoutUserInput = {
+    where: SalaryAdvanceScalarWhereInput
+    data: XOR<SalaryAdvanceUpdateManyMutationInput, SalaryAdvanceUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type SalaryAdvanceScalarWhereInput = {
+    AND?: SalaryAdvanceScalarWhereInput | SalaryAdvanceScalarWhereInput[]
+    OR?: SalaryAdvanceScalarWhereInput[]
+    NOT?: SalaryAdvanceScalarWhereInput | SalaryAdvanceScalarWhereInput[]
+    id?: UuidFilter<"SalaryAdvance"> | string
+    userId?: UuidFilter<"SalaryAdvance"> | string
+    amount?: DecimalFilter<"SalaryAdvance"> | Decimal | DecimalJsLike | number | string
+    reason?: StringNullableFilter<"SalaryAdvance"> | string | null
+    status?: EnumAdvanceStatusFilter<"SalaryAdvance"> | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFilter<"SalaryAdvance"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"SalaryAdvance"> | Date | string
+    updatedAt?: DateTimeFilter<"SalaryAdvance"> | Date | string
   }
 
   export type MenuItemCreateWithoutCategoryInput = {
@@ -11979,6 +19303,10 @@ export namespace Prisma {
     avatarUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    leaves?: LeaveCreateNestedManyWithoutUserInput
+    payrolls?: PayrollCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutOrdersInput = {
@@ -11995,6 +19323,10 @@ export namespace Prisma {
     avatarUrl?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    leaves?: LeaveUncheckedCreateNestedManyWithoutUserInput
+    payrolls?: PayrollUncheckedCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutOrdersInput = {
@@ -12061,6 +19393,10 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    leaves?: LeaveUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -12077,6 +19413,10 @@ export namespace Prisma {
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    leaves?: LeaveUncheckedUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type OrderItemUpsertWithWhereUniqueWithoutOrderInput = {
@@ -12207,6 +19547,390 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserCreateWithoutAttendancesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    password: string
+    fullName?: string | null
+    role?: $Enums.Role
+    status?: $Enums.EmployeeStatus
+    monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: $Enums.ShiftTiming | null
+    hiredAt?: Date | string | null
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutCashierInput
+    leaves?: LeaveCreateNestedManyWithoutUserInput
+    payrolls?: PayrollCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutAttendancesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    password: string
+    fullName?: string | null
+    role?: $Enums.Role
+    status?: $Enums.EmployeeStatus
+    monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: $Enums.ShiftTiming | null
+    hiredAt?: Date | string | null
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutCashierInput
+    leaves?: LeaveUncheckedCreateNestedManyWithoutUserInput
+    payrolls?: PayrollUncheckedCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutAttendancesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
+  }
+
+  export type UserUpsertWithoutAttendancesInput = {
+    update: XOR<UserUpdateWithoutAttendancesInput, UserUncheckedUpdateWithoutAttendancesInput>
+    create: XOR<UserCreateWithoutAttendancesInput, UserUncheckedCreateWithoutAttendancesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutAttendancesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutAttendancesInput, UserUncheckedUpdateWithoutAttendancesInput>
+  }
+
+  export type UserUpdateWithoutAttendancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutCashierNestedInput
+    leaves?: LeaveUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutAttendancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutCashierNestedInput
+    leaves?: LeaveUncheckedUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutLeavesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    password: string
+    fullName?: string | null
+    role?: $Enums.Role
+    status?: $Enums.EmployeeStatus
+    monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: $Enums.ShiftTiming | null
+    hiredAt?: Date | string | null
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutCashierInput
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    payrolls?: PayrollCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutLeavesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    password: string
+    fullName?: string | null
+    role?: $Enums.Role
+    status?: $Enums.EmployeeStatus
+    monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: $Enums.ShiftTiming | null
+    hiredAt?: Date | string | null
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutCashierInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    payrolls?: PayrollUncheckedCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutLeavesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutLeavesInput, UserUncheckedCreateWithoutLeavesInput>
+  }
+
+  export type UserUpsertWithoutLeavesInput = {
+    update: XOR<UserUpdateWithoutLeavesInput, UserUncheckedUpdateWithoutLeavesInput>
+    create: XOR<UserCreateWithoutLeavesInput, UserUncheckedCreateWithoutLeavesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutLeavesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutLeavesInput, UserUncheckedUpdateWithoutLeavesInput>
+  }
+
+  export type UserUpdateWithoutLeavesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutCashierNestedInput
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutLeavesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutCashierNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutPayrollsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    password: string
+    fullName?: string | null
+    role?: $Enums.Role
+    status?: $Enums.EmployeeStatus
+    monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: $Enums.ShiftTiming | null
+    hiredAt?: Date | string | null
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutCashierInput
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    leaves?: LeaveCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutPayrollsInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    password: string
+    fullName?: string | null
+    role?: $Enums.Role
+    status?: $Enums.EmployeeStatus
+    monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: $Enums.ShiftTiming | null
+    hiredAt?: Date | string | null
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutCashierInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    leaves?: LeaveUncheckedCreateNestedManyWithoutUserInput
+    salaryAdvances?: SalaryAdvanceUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutPayrollsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutPayrollsInput, UserUncheckedCreateWithoutPayrollsInput>
+  }
+
+  export type UserUpsertWithoutPayrollsInput = {
+    update: XOR<UserUpdateWithoutPayrollsInput, UserUncheckedUpdateWithoutPayrollsInput>
+    create: XOR<UserCreateWithoutPayrollsInput, UserUncheckedCreateWithoutPayrollsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutPayrollsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutPayrollsInput, UserUncheckedUpdateWithoutPayrollsInput>
+  }
+
+  export type UserUpdateWithoutPayrollsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutCashierNestedInput
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    leaves?: LeaveUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutPayrollsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutCashierNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    leaves?: LeaveUncheckedUpdateManyWithoutUserNestedInput
+    salaryAdvances?: SalaryAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutSalaryAdvancesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    password: string
+    fullName?: string | null
+    role?: $Enums.Role
+    status?: $Enums.EmployeeStatus
+    monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: $Enums.ShiftTiming | null
+    hiredAt?: Date | string | null
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderCreateNestedManyWithoutCashierInput
+    attendances?: AttendanceCreateNestedManyWithoutUserInput
+    leaves?: LeaveCreateNestedManyWithoutUserInput
+    payrolls?: PayrollCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutSalaryAdvancesInput = {
+    id?: string
+    email: string
+    phone?: string | null
+    password: string
+    fullName?: string | null
+    role?: $Enums.Role
+    status?: $Enums.EmployeeStatus
+    monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: $Enums.ShiftTiming | null
+    hiredAt?: Date | string | null
+    avatarUrl?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    orders?: OrderUncheckedCreateNestedManyWithoutCashierInput
+    attendances?: AttendanceUncheckedCreateNestedManyWithoutUserInput
+    leaves?: LeaveUncheckedCreateNestedManyWithoutUserInput
+    payrolls?: PayrollUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutSalaryAdvancesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutSalaryAdvancesInput, UserUncheckedCreateWithoutSalaryAdvancesInput>
+  }
+
+  export type UserUpsertWithoutSalaryAdvancesInput = {
+    update: XOR<UserUpdateWithoutSalaryAdvancesInput, UserUncheckedUpdateWithoutSalaryAdvancesInput>
+    create: XOR<UserCreateWithoutSalaryAdvancesInput, UserUncheckedCreateWithoutSalaryAdvancesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutSalaryAdvancesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutSalaryAdvancesInput, UserUncheckedUpdateWithoutSalaryAdvancesInput>
+  }
+
+  export type UserUpdateWithoutSalaryAdvancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUpdateManyWithoutCashierNestedInput
+    attendances?: AttendanceUpdateManyWithoutUserNestedInput
+    leaves?: LeaveUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutSalaryAdvancesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    email?: StringFieldUpdateOperationsInput | string
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    password?: StringFieldUpdateOperationsInput | string
+    fullName?: NullableStringFieldUpdateOperationsInput | string | null
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
+    monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orders?: OrderUncheckedUpdateManyWithoutCashierNestedInput
+    attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
+    leaves?: LeaveUncheckedUpdateManyWithoutUserNestedInput
+    payrolls?: PayrollUncheckedUpdateManyWithoutUserNestedInput
+  }
+
   export type OrderCreateManyCashierInput = {
     id?: string
     orderNumber: string
@@ -12222,6 +19946,61 @@ export namespace Prisma {
     customerName?: string | null
     customerPhone?: string | null
     notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttendanceCreateManyUserInput = {
+    id?: string
+    date: Date | string
+    status: $Enums.AttendanceStatus
+    checkIn?: Date | string | null
+    checkOut?: Date | string | null
+    overtimeHours?: Decimal | DecimalJsLike | number | string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeaveCreateManyUserInput = {
+    id?: string
+    startDate: Date | string
+    endDate: Date | string
+    reason: string
+    type?: $Enums.LeaveType
+    status?: $Enums.LeaveStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PayrollCreateManyUserInput = {
+    id?: string
+    month: number
+    year: number
+    workingDays?: number | null
+    presentDays?: number | null
+    absentDays?: number | null
+    leaveDays?: number | null
+    totalOvertimeHours?: Decimal | DecimalJsLike | number | string | null
+    basicSalary: Decimal | DecimalJsLike | number | string
+    overtimePay?: Decimal | DecimalJsLike | number | string | null
+    bonus?: Decimal | DecimalJsLike | number | string | null
+    deductions?: Decimal | DecimalJsLike | number | string | null
+    advance?: Decimal | DecimalJsLike | number | string | null
+    netSalary: Decimal | DecimalJsLike | number | string
+    status?: $Enums.PayrollStatus
+    paymentDate?: Date | string | null
+    paymentMethod?: $Enums.SalaryPaymentMethod | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type SalaryAdvanceCreateManyUserInput = {
+    id?: string
+    amount: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    status?: $Enums.AdvanceStatus
+    deductedAmount?: Decimal | DecimalJsLike | number | string
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -12281,6 +20060,171 @@ export namespace Prisma {
     customerName?: NullableStringFieldUpdateOperationsInput | string | null
     customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    checkIn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOut?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overtimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    checkIn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOut?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overtimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttendanceUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    status?: EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+    checkIn?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    checkOut?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    overtimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeaveUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: StringFieldUpdateOperationsInput | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    status?: EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeaveUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: StringFieldUpdateOperationsInput | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    status?: EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeaveUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    startDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    endDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    reason?: StringFieldUpdateOperationsInput | string
+    type?: EnumLeaveTypeFieldUpdateOperationsInput | $Enums.LeaveType
+    status?: EnumLeaveStatusFieldUpdateOperationsInput | $Enums.LeaveStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayrollUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
+    workingDays?: NullableIntFieldUpdateOperationsInput | number | null
+    presentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    absentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    leaveDays?: NullableIntFieldUpdateOperationsInput | number | null
+    totalOvertimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    overtimePay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableEnumSalaryPaymentMethodFieldUpdateOperationsInput | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayrollUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
+    workingDays?: NullableIntFieldUpdateOperationsInput | number | null
+    presentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    absentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    leaveDays?: NullableIntFieldUpdateOperationsInput | number | null
+    totalOvertimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    overtimePay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableEnumSalaryPaymentMethodFieldUpdateOperationsInput | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PayrollUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    month?: IntFieldUpdateOperationsInput | number
+    year?: IntFieldUpdateOperationsInput | number
+    workingDays?: NullableIntFieldUpdateOperationsInput | number | null
+    presentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    absentDays?: NullableIntFieldUpdateOperationsInput | number | null
+    leaveDays?: NullableIntFieldUpdateOperationsInput | number | null
+    totalOvertimeHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    basicSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    overtimePay?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
+    paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    paymentMethod?: NullableEnumSalaryPaymentMethodFieldUpdateOperationsInput | $Enums.SalaryPaymentMethod | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SalaryAdvanceUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAdvanceStatusFieldUpdateOperationsInput | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SalaryAdvanceUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAdvanceStatusFieldUpdateOperationsInput | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type SalaryAdvanceUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumAdvanceStatusFieldUpdateOperationsInput | $Enums.AdvanceStatus
+    deductedAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

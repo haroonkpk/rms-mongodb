@@ -30,6 +30,7 @@ interface DataTableProps<T extends { id: string }> {
   pageSize?: number;
   totalEntries?: number;
   headerActions?: React.ReactNode;
+  isLoading?: boolean;
 }
 
 export const DataTable = <T extends { id: string }>({
@@ -46,6 +47,7 @@ export const DataTable = <T extends { id: string }>({
   pageSize = 10,
   totalEntries,
   headerActions,
+  isLoading = false,
 }: DataTableProps<T>) => {
   return (
     <Card variant={variant} className={cn("p-4", BorderColor)}>
@@ -91,7 +93,28 @@ export const DataTable = <T extends { id: string }>({
           </thead>
 
           <tbody>
-            {TableData.length > 0 ? (
+            {isLoading ? (
+              Array.from({ length: 5 }).map((_, index) => (
+                <tr key={index} className={`border ${BorderColor} animate-pulse`}>
+                  <td className={`border ${BorderColor} px-[clamp(12px,1.5vw,16px)] py-[clamp(10px,1vw,12px)]`}>
+                    <div className="h-4 bg-slate-200 rounded-sm w-4" />
+                  </td>
+                  {TableHeaders.map((header) => (
+                    <td
+                      key={header.key}
+                      className={`border ${BorderColor} px-[clamp(12px,1.5vw,16px)] py-[clamp(10px,1vw,12px)]`}
+                    >
+                      <div className="h-4 bg-slate-200 rounded-sm w-3/4" />
+                    </td>
+                  ))}
+                  {TableButtons?.length ? (
+                    <td className={`border ${BorderColor} px-[clamp(12px,1.5vw,16px)] py-[clamp(10px,1vw,12px)]`}>
+                      <div className="h-6 bg-slate-200 rounded-sm w-16 mx-auto" />
+                    </td>
+                  ) : null}
+                </tr>
+              ))
+            ) : TableData.length > 0 ? (
               TableData.map((row, index) => (
                 <tr
                   key={row.id}

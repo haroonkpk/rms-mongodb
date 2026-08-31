@@ -200,6 +200,65 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   notes: 'notes'
 };
 
+exports.Prisma.AttendanceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  date: 'date',
+  status: 'status',
+  checkIn: 'checkIn',
+  checkOut: 'checkOut',
+  overtimeHours: 'overtimeHours',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.LeaveScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  reason: 'reason',
+  type: 'type',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PayrollScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  month: 'month',
+  year: 'year',
+  workingDays: 'workingDays',
+  presentDays: 'presentDays',
+  absentDays: 'absentDays',
+  leaveDays: 'leaveDays',
+  totalOvertimeHours: 'totalOvertimeHours',
+  basicSalary: 'basicSalary',
+  overtimePay: 'overtimePay',
+  bonus: 'bonus',
+  deductions: 'deductions',
+  advance: 'advance',
+  netSalary: 'netSalary',
+  status: 'status',
+  paymentDate: 'paymentDate',
+  paymentMethod: 'paymentMethod',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SalaryAdvanceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  reason: 'reason',
+  status: 'status',
+  deductedAmount: 'deductedAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -264,13 +323,55 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
   UNPAID: 'UNPAID'
 };
 
+exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
+  PRESENT: 'PRESENT',
+  ABSENT: 'ABSENT',
+  LATE: 'LATE',
+  HALF_DAY: 'HALF_DAY'
+};
+
+exports.LeaveType = exports.$Enums.LeaveType = {
+  CASUAL: 'CASUAL',
+  SICK: 'SICK',
+  UNPAID: 'UNPAID'
+};
+
+exports.LeaveStatus = exports.$Enums.LeaveStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED'
+};
+
+exports.PayrollStatus = exports.$Enums.PayrollStatus = {
+  DRAFT: 'DRAFT',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID'
+};
+
+exports.SalaryPaymentMethod = exports.$Enums.SalaryPaymentMethod = {
+  CASH: 'CASH',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  CHEQUE: 'CHEQUE'
+};
+
+exports.AdvanceStatus = exports.$Enums.AdvanceStatus = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  PAID: 'PAID',
+  DEDUCTED: 'DEDUCTED'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
   MenuItem: 'MenuItem',
   AddOn: 'AddOn',
   Order: 'Order',
-  OrderItem: 'OrderItem'
+  OrderItem: 'OrderItem',
+  Attendance: 'Attendance',
+  Leave: 'Leave',
+  Payroll: 'Payroll',
+  SalaryAdvance: 'SalaryAdvance'
 };
 
 /**
