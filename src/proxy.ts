@@ -40,12 +40,22 @@ export async function proxy(request: NextRequest) {
 
   // 2. If user IS authenticated:
   if (isAuthRoute || pathname === '/') {
-    // Authenticated users shouldn't see auth forms or root page; redirect to /pos
-    return NextResponse.redirect(new URL('/pos', request.url))
+    // Redirect CHEF to /kitchen, others to /pos
+    const defaultRoute = sessionPayload?.role === 'CHEF' ? '/kitchen' : '/pos'
+    return NextResponse.redirect(new URL(defaultRoute, request.url))
   }
 
-  // 3. Fast Edge Guard for Admin routes:
+  // 3. Fast Edge Guard for role-restricted routes:
   if (pathname.startsWith('/admin') && sessionPayload?.role !== 'ADMIN') {
+    const fallbackRoute = sessionPayload?.role === 'CHEF' ? '/kitchen' : '/pos'
+    return NextResponse.redirect(new URL(fallbackRoute, request.url))
+  }
+
+  if (sessionPayload?.role === 'CHEF' && pathname.startsWith('/pos')) {
+    return NextResponse.redirect(new URL('/kitchen', request.url))
+  }
+
+  if (sessionPayload?.role === 'CASHIER' && pathname.startsWith('/kitchen')) {
     return NextResponse.redirect(new URL('/pos', request.url))
   }
 

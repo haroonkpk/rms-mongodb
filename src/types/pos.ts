@@ -92,6 +92,7 @@ export interface POSOrderResult {
   success: boolean;
   error?: string;
   orderNumber?: string;
+  kotNumber?: number | null;
   orderId?: string | null;
   createdAt?: string;
   cashierName?: string;

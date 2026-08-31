@@ -55,10 +55,7 @@ function playToneSequence(ctx: AudioContext) {
   }
 }
 
-/**
- * Plays pleasant Kitchen Chime Sound & optionally triggers Native Chrome Notification
- */
-export function playKitchenChime(orderNumber?: string) {
+export function playAudioChime() {
   const ctx = getAudioContext();
   if (ctx) {
     if (ctx.state === "suspended") {
@@ -67,21 +64,53 @@ export function playKitchenChime(orderNumber?: string) {
       playToneSequence(ctx);
     }
   }
+}
 
-  // Native Chrome Desktop Notification if granted
+/**
+ * Triggers notification when a NEW order arrives in the Kitchen (POS -> Kitchen)
+ */
+export function playKitchenNotification(kotNumber?: string | number) {
+  playAudioChime();
+
   if (
-    orderNumber &&
+    kotNumber &&
     typeof window !== "undefined" &&
     "Notification" in window &&
     Notification.permission === "granted"
   ) {
     try {
-      new Notification(`🔔 Kitchen Order #${orderNumber}`, {
-        body: "New order received in Kitchen Display System!",
-        tag: `order-${orderNumber}`,
+      new Notification(`Kitchen KOT #${kotNumber}`, {
+        body: `New order KOT #${kotNumber} received for preparation!`,
+        tag: `kitchen-kot-${kotNumber}`,
       });
     } catch {
       // Ignore notification errors
     }
   }
 }
+
+/**
+ * Triggers notification when Kitchen marks an order READY for POS/Serving staff (Kitchen -> POS)
+ */
+export function playPOSReadyNotification(kotNumber?: string | number) {
+  playAudioChime();
+
+  if (
+    kotNumber &&
+    typeof window !== "undefined" &&
+    "Notification" in window &&
+    Notification.permission === "granted"
+  ) {
+    try {
+      new Notification(`POS KOT #${kotNumber} Ready`, {
+        body: `KOT #${kotNumber} is prepared and ready to serve!`,
+        tag: `pos-kot-${kotNumber}`,
+      });
+    } catch {
+      // Ignore notification errors
+    }
+  }
+}
+
+// Alias for backwards compatibility
+export const playKitchenChime = playKitchenNotification;

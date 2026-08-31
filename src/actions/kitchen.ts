@@ -190,6 +190,7 @@ export async function updateKitchenOrderStatus(
 
     revalidatePath("/kitchen");
     revalidatePath("/pos");
+    revalidatePath("/pos/live");
 
     return { success: true };
   } catch (error) {

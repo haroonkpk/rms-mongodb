@@ -153,7 +153,8 @@ export function BillDrawer({
           totalAmount,
         });
 
-        toast.success(`Order #${res.orderNumber} placed successfully!`);
+        const displayKot = res.kotNumber ? String(res.kotNumber) : res.orderNumber;
+        toast.success(`Order KOT #${displayKot} sent to Kitchen!`, { icon: null });
 
         // 2. Allow 200ms for React Portal DOM update, then trigger print & reset
         setTimeout(() => {

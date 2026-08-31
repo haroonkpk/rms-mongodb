@@ -110,6 +110,7 @@ export async function createPOSOrder(
     }
 
     let savedOrderId = null;
+    let savedKotNumber: number | null = null;
     try {
       const isLedger = payload.paymentMethod === "LEDGER";
 
@@ -178,6 +179,7 @@ export async function createPOSOrder(
         },
       });
       savedOrderId = dbOrder.id;
+      savedKotNumber = dbOrder.kotNumber;
     } catch (err) {
       console.warn("DB order insertion warning:", err);
     }
@@ -187,6 +189,7 @@ export async function createPOSOrder(
     return {
       success: true,
       orderNumber,
+      kotNumber: savedKotNumber,
       orderId: savedOrderId,
       createdAt: new Date().toLocaleString(),
       cashierName:
