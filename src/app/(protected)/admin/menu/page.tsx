@@ -411,7 +411,7 @@ export default function AdminMenuPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-page-bg)] sm:p-[clamp(1rem,3vw,2.5rem)] pb-24">
+    <div className="min-h-screen bg-[var(--color-page-bg)] p-[clamp(1rem,3vw,2.5rem)] pb-24">
       <Toaster position="top-right" />
 
       {/* Header */}

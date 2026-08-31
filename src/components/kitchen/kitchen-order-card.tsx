@@ -194,7 +194,7 @@ export const KitchenOrderCard = memo(function KitchenOrderCard({
   return (
     <Card
       variant="white"
-      className="p-0 border border-slate-300/90 shadow-2xs mt-16 transition-all duration-200 hover:border-[var(--color-primary)]/50 hover:shadow-md h-fit relative overflow-visible!"
+      className="p-0 border border-slate-300/90 shadow-2xs mt-10 sm:mt-12 transition-all duration-200 hover:border-[var(--color-primary)]/50 hover:shadow-md h-fit relative overflow-visible!"
     >
       {/* =================================
           HEADER

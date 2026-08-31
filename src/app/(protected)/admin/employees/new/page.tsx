@@ -47,7 +47,7 @@ export default function CreateEmployeePage() {
   };
 
   return (
-    <div className="min-h-screen bg-(--color-page-bg) sm:p-[clamp(1rem,3vw,2.5rem)] pb-24">
+    <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
       {/* Top Header & Navigation */}
       <div className="flex items-center gap-4 mb-4">
         <Link

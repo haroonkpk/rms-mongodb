@@ -92,7 +92,7 @@ export default function EditEmployeePage({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-(--color-page-bg) sm:p-[clamp(1rem,3vw,2.5rem)] pb-24 flex items-center justify-center">
+      <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24 flex items-center justify-center">
         <p className="text-slate-600 font-medium">
           Loading employee profile...
         </p>
@@ -102,7 +102,7 @@ export default function EditEmployeePage({
 
   if (!employee) {
     return (
-      <div className="min-h-screen bg-(--color-page-bg) sm:p-[clamp(1rem,3vw,2.5rem)] pb-24 flex flex-col items-center justify-center gap-4">
+      <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24 flex flex-col items-center justify-center gap-4">
         <p className="text-rose-600 font-semibold">
           {error || "Employee record not found"}
         </p>
@@ -114,7 +114,7 @@ export default function EditEmployeePage({
   }
 
   return (
-    <div className="min-h-screen bg-(--color-page-bg) sm:p-[clamp(1rem,3vw,2.5rem)] pb-24">
+    <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
       {/* Top Header & Navigation */}
       <div className="flex items-center gap-4 mb-4">
         <Link

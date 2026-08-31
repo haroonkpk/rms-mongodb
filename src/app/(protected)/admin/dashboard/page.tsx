@@ -3,7 +3,7 @@ import { Header } from '@/components/layouts'
 
 export default function AdminDashboardPage() {
   return (
-    <div className="min-h-screen bg-(--color-page-bg) sm:p-[clamp(1rem,3vw,2.5rem)] pb-24">
+    <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
       <Header title="Admin Overview Dashboard" />
       <main>
         <p className="text-slate-600">Admin Dashboard Content goes here...</p>
