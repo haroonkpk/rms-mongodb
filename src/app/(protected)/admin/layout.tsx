@@ -7,7 +7,7 @@ import {
   Users,
   Receipt,
   BarChart3,
-  ArrowLeft,
+  ShoppingCart,
 } from "lucide-react";
 
 const adminNavItems = [
@@ -17,7 +17,7 @@ const adminNavItems = [
     icon: <LayoutDashboard size={18} />,
   },
   {
-    label: "Menu",
+    label: "Menu Management",
     href: "/admin/menu",
     icon: <Utensils size={18} />,
   },
@@ -37,14 +37,14 @@ const adminNavItems = [
     icon: <Receipt size={18} />,
   },
   {
-    label: "Reports",
+    label: "Reports & Analytics",
     href: "/admin/reports",
     icon: <BarChart3 size={18} />,
   },
   {
-    label: "Back to POS",
+    label: "POS Terminal",
     href: "/pos",
-    icon: <ArrowLeft size={18} />,
+    icon: <ShoppingCart size={18} />,
   },
 ];
 

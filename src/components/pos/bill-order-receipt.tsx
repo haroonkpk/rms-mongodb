@@ -41,15 +41,15 @@ export function BillOrderReceipt({
     }
   };
 
+  const restaurantName =
+    process.env.NEXT_PUBLIC_RESTAURANT_NAME || "Development Mode";
+
   const receiptContent = (
     <div className="p-5 bg-white text-slate-900 text-[0.72rem] leading-relaxed font-mono space-y-3 select-text w-full max-w-[80mm] mx-auto">
       {/* Header */}
-      <div className="text-center space-y-1 pb-3 border-b border-dashed border-slate-300">
-        <div className="inline-flex p-2 rounded-full bg-slate-100 text-slate-800 mb-1">
-          Logo
-        </div>
-        <h2 className="font-black text-sm uppercase tracking-wider text-slate-900">
-          GOURMET BISTRO
+      <div className="text-center pb-2 border-b border-dashed border-slate-300">
+        <h2 className="font-black text-base uppercase tracking-wider text-slate-900">
+          {restaurantName}
         </h2>
       </div>
 
@@ -64,10 +64,6 @@ export function BillOrderReceipt({
         <div className="flex justify-between">
           <span className="text-slate-500">Date/Time:</span>
           <span>{orderCompletedResult.createdAt}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-slate-500">Cashier:</span>
-          <span>{orderCompletedResult.cashierName}</span>
         </div>
         <div className="flex justify-between">
           <span className="text-slate-500">Pay Mode:</span>

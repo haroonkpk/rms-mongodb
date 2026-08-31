@@ -1,6 +1,13 @@
 import { getCurrentUser } from "@/actions/auth";
 import { Sidebar } from "@/components/layouts";
-import { LayoutDashboard, UtensilsCrossed, ShieldAlert, Clock } from "lucide-react";
+import {
+  ShoppingCart,
+  Clock,
+  ChefHat,
+  ShieldCheck,
+  ShieldCheckIcon,
+  Shield,
+} from "lucide-react";
 
 export default async function StaffLayout({
   children,
@@ -18,7 +25,7 @@ export default async function StaffLayout({
       {
         label: "Kitchen Display",
         href: "/kitchen",
-        icon: <UtensilsCrossed size={18} />,
+        icon: <ChefHat size={18} />,
         exact: true,
       },
     ];
@@ -28,7 +35,7 @@ export default async function StaffLayout({
       {
         label: "POS Terminal",
         href: "/pos",
-        icon: <LayoutDashboard size={18} />,
+        icon: <ShoppingCart size={18} />,
         exact: true,
       },
       {
@@ -45,7 +52,7 @@ export default async function StaffLayout({
       {
         label: "POS Terminal",
         href: "/pos",
-        icon: <LayoutDashboard size={18} />,
+        icon: <ShoppingCart size={18} />,
         exact: true,
       },
       {
@@ -57,7 +64,7 @@ export default async function StaffLayout({
       {
         label: "Kitchen Display",
         href: "/kitchen",
-        icon: <UtensilsCrossed size={18} />,
+        icon: <ChefHat size={18} />,
         exact: true,
       },
     ];
@@ -65,9 +72,9 @@ export default async function StaffLayout({
 
   if (user?.role === "ADMIN") {
     mainNavItems.push({
-      label: "Admin",
+      label: "Admin Portal",
       href: "/admin/dashboard",
-      icon: <ShieldAlert size={18} />,
+      icon: <Shield size={18} />,
       exact: true,
     });
   }
