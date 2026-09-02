@@ -31,13 +31,19 @@ export async function markAttendance(
     let finalOvertimeHours = overtimeHours !== undefined && overtimeHours !== null ? Number(overtimeHours) : null;
     
     if (checkIn && checkOut && finalOvertimeHours === null) {
+      const user = await prisma.user.findUnique({
+        where: { id: userId },
+        select: { dailyShiftHours: true }
+      });
+      const shiftHours = user?.dailyShiftHours ? Number(user.dailyShiftHours) : 8;
+
       const inDate = new Date(`1970-01-01T${checkIn}:00Z`);
       const outDate = new Date(`1970-01-01T${checkOut}:00Z`);
       let diffHours = (outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60);
       
       if (diffHours < 0) diffHours += 24; // Cross-midnight shift
-      if (diffHours > 9) { // 9 hours standard shift (e.g. 8 + 1hr break)
-        finalOvertimeHours = parseFloat((diffHours - 9).toFixed(1));
+      if (diffHours > shiftHours) {
+        finalOvertimeHours = parseFloat((diffHours - shiftHours).toFixed(1));
       } else {
         finalOvertimeHours = 0;
       }
@@ -132,9 +138,10 @@ export async function generateMonthlyPayroll(month: number, year: number) {
 
       const basicSalary = Number(emp.monthlyBaseSalary);
       const perDaySalary = basicSalary / workingDays;
+      const empShiftHours = emp.dailyShiftHours ? Number(emp.dailyShiftHours) : 8;
       
       const calculatedDeductions = absentDays * perDaySalary;
-      const calculatedOvertimePay = totalOvertimeHours * (perDaySalary / 8);
+      const calculatedOvertimePay = totalOvertimeHours * (perDaySalary / empShiftHours);
 
       let preliminaryNet = basicSalary + calculatedOvertimePay - calculatedDeductions;
       

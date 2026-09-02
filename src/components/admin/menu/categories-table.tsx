@@ -14,12 +14,14 @@ interface CategoriesTableProps {
   categories: CategoryData[];
   onEdit: (cat: CategoryData) => void;
   onDelete: (id: string, name: string) => void;
+  isLoading?: boolean;
 }
 
 export function CategoriesTable({
   categories,
   onEdit,
   onDelete,
+  isLoading = false,
 }: CategoriesTableProps) {
   const formattedCategories = useMemo(() => {
     return categories.map((cat) => ({
@@ -41,6 +43,7 @@ export function CategoriesTable({
         currentPage={1}
         totalPages={1}
         totalEntries={categories.length}
+        isLoading={isLoading}
         onPageChange={() => {}}
         TableButtons={[
           {

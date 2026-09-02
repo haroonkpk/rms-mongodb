@@ -14,7 +14,7 @@ import {
 export default function AdminPayrollPage() {
   const [activeTab, setActiveTab] = useState<
     "PAYROLL" | "ATTENDANCE" | "LEAVES" | "ADVANCE"
-  >("PAYROLL");
+  >("ATTENDANCE");
 
   const mainTabs = [
     {

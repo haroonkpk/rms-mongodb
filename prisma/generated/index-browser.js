@@ -130,6 +130,7 @@ exports.Prisma.UserScalarFieldEnum = {
   status: 'status',
   monthlyBaseSalary: 'monthlyBaseSalary',
   shiftTiming: 'shiftTiming',
+  dailyShiftHours: 'dailyShiftHours',
   hiredAt: 'hiredAt',
   avatarUrl: 'avatarUrl',
   createdAt: 'createdAt',

@@ -16,6 +16,7 @@ interface AddOnsTableProps {
   onEdit: (addon: AddOnData) => void;
   onDelete: (id: string, name: string) => void;
   onToggleAvailability: (id: string, currentStatus: boolean) => void;
+  isLoading?: boolean;
 }
 
 export function AddOnsTable({
@@ -23,6 +24,7 @@ export function AddOnsTable({
   onEdit,
   onDelete,
   onToggleAvailability,
+  isLoading = false,
 }: AddOnsTableProps) {
   const formattedAddOns = useMemo(() => {
     return addOns.map((addon) => ({
@@ -67,6 +69,7 @@ export function AddOnsTable({
         currentPage={1}
         totalPages={1}
         totalEntries={addOns.length}
+        isLoading={isLoading}
         onPageChange={() => {}}
         TableButtons={[
           {

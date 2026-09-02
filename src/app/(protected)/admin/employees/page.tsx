@@ -25,6 +25,7 @@ export default function AdminEmployeesPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalEntries, setTotalEntries] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Modal State for "View User"
   const [selectedEmployee, setSelectedEmployee] = useState<UserProfileData | null>(
@@ -34,13 +35,20 @@ export default function AdminEmployeesPage() {
 
   useEffect(() => {
     let isMounted = true;
-    getEmployees(currentPage, 10).then((res) => {
-      if (isMounted && res.success && res.employees) {
-        setEmployees(res.employees);
-        setTotalPages(res.totalPages || 1);
-        setTotalEntries(res.total || 0);
-      }
-    });
+    setIsLoading(true);
+    getEmployees(currentPage, 10)
+      .then((res) => {
+        if (isMounted && res.success && res.employees) {
+          setEmployees(res.employees);
+          setTotalPages(res.totalPages || 1);
+          setTotalEntries(res.total || 0);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      });
     return () => {
       isMounted = false;
     };
@@ -83,6 +91,7 @@ export default function AdminEmployeesPage() {
             currentPage={currentPage}
             totalPages={totalPages}
             totalEntries={totalEntries}
+            isLoading={isLoading}
             onPageChange={(page) => setCurrentPage(page)}
             TableButtons={[
               {

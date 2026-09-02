@@ -44,6 +44,11 @@ export default function AdminMenuPage() {
   const [categories, setCategories] = useState<CategoryData[]>([]);
   const [addOns, setAddOns] = useState<AddOnData[]>([]);
 
+  // Loading States
+  const [isItemsLoading, setIsItemsLoading] = useState(true);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [isAddOnsLoading, setIsAddOnsLoading] = useState(true);
+
   // Filtering & Pagination States for Food Items
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategoryFilter, setSelectedCategoryFilter] = useState("ALL");
@@ -68,16 +73,26 @@ export default function AdminMenuPage() {
 
   // Data fetchers
   const fetchCategories = async () => {
-    const res = await getCategories();
-    if (res.success && res.categories) {
-      setCategories(res.categories);
+    setIsCategoriesLoading(true);
+    try {
+      const res = await getCategories();
+      if (res.success && res.categories) {
+        setCategories(res.categories);
+      }
+    } finally {
+      setIsCategoriesLoading(false);
     }
   };
 
   const fetchAddOns = async () => {
-    const res = await getAddOns();
-    if (res.success && res.addOns) {
-      setAddOns(res.addOns);
+    setIsAddOnsLoading(true);
+    try {
+      const res = await getAddOns();
+      if (res.success && res.addOns) {
+        setAddOns(res.addOns);
+      }
+    } finally {
+      setIsAddOnsLoading(false);
     }
   };
 
@@ -87,21 +102,27 @@ export default function AdminMenuPage() {
     catId: string,
     stockFilter: "ALL" | "AVAILABLE" | "OUT_OF_STOCK",
   ) => {
-    let availFilter: boolean | undefined = undefined;
-    if (stockFilter === "AVAILABLE") availFilter = true;
-    if (stockFilter === "OUT_OF_STOCK") availFilter = false;
+    setIsItemsLoading(true);
+    try {
+      let availFilter: boolean | undefined = undefined;
+      if (stockFilter === "AVAILABLE") availFilter = true;
+      if (stockFilter === "OUT_OF_STOCK") availFilter = false;
 
-    const res = await getMenuItems(page, 10, query, catId, availFilter);
-    if (res.success && res.items) {
-      setItems(res.items);
-      setTotalPages(res.totalPages || 1);
-      setTotalEntries(res.total || 0);
+      const res = await getMenuItems(page, 10, query, catId, availFilter);
+      if (res.success && res.items) {
+        setItems(res.items);
+        setTotalPages(res.totalPages || 1);
+        setTotalEntries(res.total || 0);
+      }
+    } finally {
+      setIsItemsLoading(false);
     }
   };
 
   // Reload items on filter changes asynchronously
   useEffect(() => {
     let isMounted = true;
+    setIsItemsLoading(true);
     let availFilter: boolean | undefined = undefined;
     if (stockStatusFilter === "AVAILABLE") availFilter = true;
     if (stockStatusFilter === "OUT_OF_STOCK") availFilter = false;
@@ -112,13 +133,19 @@ export default function AdminMenuPage() {
       searchQuery,
       selectedCategoryFilter,
       availFilter,
-    ).then((res) => {
-      if (isMounted && res.success && res.items) {
-        setItems(res.items);
-        setTotalPages(res.totalPages || 1);
-        setTotalEntries(res.total || 0);
-      }
-    });
+    )
+      .then((res) => {
+        if (isMounted && res.success && res.items) {
+          setItems(res.items);
+          setTotalPages(res.totalPages || 1);
+          setTotalEntries(res.total || 0);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsItemsLoading(false);
+        }
+      });
 
     return () => {
       isMounted = false;
@@ -129,17 +156,31 @@ export default function AdminMenuPage() {
   useEffect(() => {
     let isMounted = true;
 
-    getCategories().then((res) => {
-      if (isMounted && res.success && res.categories) {
-        setCategories(res.categories);
-      }
-    });
+    setIsCategoriesLoading(true);
+    getCategories()
+      .then((res) => {
+        if (isMounted && res.success && res.categories) {
+          setCategories(res.categories);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsCategoriesLoading(false);
+        }
+      });
 
-    getAddOns().then((res) => {
-      if (isMounted && res.success && res.addOns) {
-        setAddOns(res.addOns);
-      }
-    });
+    setIsAddOnsLoading(true);
+    getAddOns()
+      .then((res) => {
+        if (isMounted && res.success && res.addOns) {
+          setAddOns(res.addOns);
+        }
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsAddOnsLoading(false);
+        }
+      });
 
     return () => {
       isMounted = false;
@@ -535,6 +576,7 @@ export default function AdminMenuPage() {
             currentPage={currentPage}
             totalPages={totalPages}
             totalEntries={totalEntries}
+            isLoading={isItemsLoading}
             onPageChange={(page) => setCurrentPage(page)}
             onEdit={handleOpenEditItem}
             onDelete={handleDeleteItem}
@@ -545,6 +587,7 @@ export default function AdminMenuPage() {
         {activeTab === "addons" && (
           <AddOnsTable
             addOns={addOns}
+            isLoading={isAddOnsLoading}
             onEdit={handleOpenEditAddOn}
             onDelete={handleDeleteAddOn}
             onToggleAvailability={handleToggleAddOnAvailability}
@@ -554,6 +597,7 @@ export default function AdminMenuPage() {
         {activeTab === "categories" && (
           <CategoriesTable
             categories={categories}
+            isLoading={isCategoriesLoading}
             onEdit={handleOpenEditCategory}
             onDelete={handleDeleteCategory}
           />

@@ -49,6 +49,7 @@ model User {
   // Employee & Staff Management Page fields
   monthlyBaseSalary Decimal?     @map("monthly_base_salary") @db.Decimal(10, 2)
   shiftTiming       ShiftTiming? @map("shift_timing")
+  dailyShiftHours   Decimal?     @default(8.00) @map("daily_shift_hours") @db.Decimal(4, 2)
   hiredAt           DateTime?    @map("hired_at")
 
   avatarUrl String? @map("avatar_url")

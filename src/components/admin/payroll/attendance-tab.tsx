@@ -34,11 +34,10 @@ function EditAttendanceFormModal({
   const getInitTime = (timeStr?: string) => {
     if (!timeStr) return "";
     const d = new Date(timeStr);
-    return d.toLocaleTimeString([], {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+    if (isNaN(d.getTime())) return "";
+    const hours = String(d.getUTCHours()).padStart(2, "0");
+    const minutes = String(d.getUTCMinutes()).padStart(2, "0");
+    return `${hours}:${minutes}`;
   };
 
   const [status, setStatus] = useState(
@@ -63,13 +62,19 @@ function EditAttendanceFormModal({
   const [isSaving, setIsSaving] = useState(false);
 
   const calculateOt = (cIn: string, cOut: string) => {
-    if (cIn && cOut) {
-      const inDate = new Date(`1970-01-01T${cIn}:00Z`);
-      const outDate = new Date(`1970-01-01T${cOut}:00Z`);
-      let diffHours = (outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60);
-      if (diffHours < 0) diffHours += 24; // overnight shift
-      if (diffHours > 9) {
-        return parseFloat((diffHours - 9).toFixed(1));
+    if (cIn && cOut && cIn.length === 5 && cOut.length === 5) {
+      const shiftHours = Number(modalData?.dailyShiftHours) || 8;
+      const [inH, inM] = cIn.split(":").map(Number);
+      const [outH, outM] = cOut.split(":").map(Number);
+      if (!isNaN(inH) && !isNaN(inM) && !isNaN(outH) && !isNaN(outM)) {
+        let inMin = inH * 60 + inM;
+        let outMin = outH * 60 + outM;
+        let diffMinutes = outMin - inMin;
+        if (diffMinutes < 0) diffMinutes += 24 * 60; // overnight shift
+        const diffHours = diffMinutes / 60;
+        if (diffHours > shiftHours) {
+          return parseFloat((diffHours - shiftHours).toFixed(1));
+        }
       }
     }
     return 0;
@@ -152,7 +157,7 @@ function EditAttendanceFormModal({
           <div>
             <div className="flex justify-between items-center mb-1">
               <label className="text-[clamp(0.7rem,1vw,0.8rem)] font-bold text-[#475569] uppercase tracking-wide">
-                Overtime Hours
+                Overtime Hours <span className="text-xs font-normal text-slate-500 lowercase">(shift: {modalData?.dailyShiftHours || 8}h)</span>
               </label>
               {isOvertimeManuallyEdited && (
                 <button
@@ -230,10 +235,12 @@ export function AttendanceTab() {
       const formatTime = (timeStr?: string) => {
         if (!timeStr) return "-";
         const d = new Date(timeStr);
-        return d.toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        });
+        if (isNaN(d.getTime())) return "-";
+        const h = d.getUTCHours();
+        const m = String(d.getUTCMinutes()).padStart(2, "0");
+        const ampm = h >= 12 ? "PM" : "AM";
+        const h12 = h % 12 || 12;
+        return `${String(h12).padStart(2, "0")}:${m} ${ampm}`;
       };
 
       return {
@@ -243,6 +250,7 @@ export function AttendanceTab() {
         status: att ? att.status : "NOT MARKED",
         checkIn: att?.checkIn ? formatTime(att.checkIn) : "-",
         checkOut: att?.checkOut ? formatTime(att.checkOut) : "-",
+        dailyShiftHours: emp.dailyShiftHours ?? 8,
         overtimeHours:
           att && att.overtimeHours !== null && att.overtimeHours !== undefined
             ? `${att.overtimeHours} hrs`

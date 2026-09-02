@@ -2083,10 +2083,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateOutputType = {
     monthlyBaseSalary: Decimal | null
+    dailyShiftHours: Decimal | null
   }
 
   export type UserSumAggregateOutputType = {
     monthlyBaseSalary: Decimal | null
+    dailyShiftHours: Decimal | null
   }
 
   export type UserMinAggregateOutputType = {
@@ -2099,6 +2101,7 @@ export namespace Prisma {
     status: $Enums.EmployeeStatus | null
     monthlyBaseSalary: Decimal | null
     shiftTiming: $Enums.ShiftTiming | null
+    dailyShiftHours: Decimal | null
     hiredAt: Date | null
     avatarUrl: string | null
     createdAt: Date | null
@@ -2115,6 +2118,7 @@ export namespace Prisma {
     status: $Enums.EmployeeStatus | null
     monthlyBaseSalary: Decimal | null
     shiftTiming: $Enums.ShiftTiming | null
+    dailyShiftHours: Decimal | null
     hiredAt: Date | null
     avatarUrl: string | null
     createdAt: Date | null
@@ -2131,6 +2135,7 @@ export namespace Prisma {
     status: number
     monthlyBaseSalary: number
     shiftTiming: number
+    dailyShiftHours: number
     hiredAt: number
     avatarUrl: number
     createdAt: number
@@ -2141,10 +2146,12 @@ export namespace Prisma {
 
   export type UserAvgAggregateInputType = {
     monthlyBaseSalary?: true
+    dailyShiftHours?: true
   }
 
   export type UserSumAggregateInputType = {
     monthlyBaseSalary?: true
+    dailyShiftHours?: true
   }
 
   export type UserMinAggregateInputType = {
@@ -2157,6 +2164,7 @@ export namespace Prisma {
     status?: true
     monthlyBaseSalary?: true
     shiftTiming?: true
+    dailyShiftHours?: true
     hiredAt?: true
     avatarUrl?: true
     createdAt?: true
@@ -2173,6 +2181,7 @@ export namespace Prisma {
     status?: true
     monthlyBaseSalary?: true
     shiftTiming?: true
+    dailyShiftHours?: true
     hiredAt?: true
     avatarUrl?: true
     createdAt?: true
@@ -2189,6 +2198,7 @@ export namespace Prisma {
     status?: true
     monthlyBaseSalary?: true
     shiftTiming?: true
+    dailyShiftHours?: true
     hiredAt?: true
     avatarUrl?: true
     createdAt?: true
@@ -2292,6 +2302,7 @@ export namespace Prisma {
     status: $Enums.EmployeeStatus
     monthlyBaseSalary: Decimal | null
     shiftTiming: $Enums.ShiftTiming | null
+    dailyShiftHours: Decimal | null
     hiredAt: Date | null
     avatarUrl: string | null
     createdAt: Date
@@ -2327,6 +2338,7 @@ export namespace Prisma {
     status?: boolean
     monthlyBaseSalary?: boolean
     shiftTiming?: boolean
+    dailyShiftHours?: boolean
     hiredAt?: boolean
     avatarUrl?: boolean
     createdAt?: boolean
@@ -2349,6 +2361,7 @@ export namespace Prisma {
     status?: boolean
     monthlyBaseSalary?: boolean
     shiftTiming?: boolean
+    dailyShiftHours?: boolean
     hiredAt?: boolean
     avatarUrl?: boolean
     createdAt?: boolean
@@ -2365,6 +2378,7 @@ export namespace Prisma {
     status?: boolean
     monthlyBaseSalary?: boolean
     shiftTiming?: boolean
+    dailyShiftHours?: boolean
     hiredAt?: boolean
     avatarUrl?: boolean
     createdAt?: boolean
@@ -2381,13 +2395,14 @@ export namespace Prisma {
     status?: boolean
     monthlyBaseSalary?: boolean
     shiftTiming?: boolean
+    dailyShiftHours?: boolean
     hiredAt?: boolean
     avatarUrl?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "password" | "fullName" | "role" | "status" | "monthlyBaseSalary" | "shiftTiming" | "hiredAt" | "avatarUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "email" | "phone" | "password" | "fullName" | "role" | "status" | "monthlyBaseSalary" | "shiftTiming" | "dailyShiftHours" | "hiredAt" | "avatarUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     orders?: boolean | User$ordersArgs<ExtArgs>
     attendances?: boolean | User$attendancesArgs<ExtArgs>
@@ -2418,6 +2433,7 @@ export namespace Prisma {
       status: $Enums.EmployeeStatus
       monthlyBaseSalary: Prisma.Decimal | null
       shiftTiming: $Enums.ShiftTiming | null
+      dailyShiftHours: Prisma.Decimal | null
       hiredAt: Date | null
       avatarUrl: string | null
       createdAt: Date
@@ -2859,6 +2875,7 @@ export namespace Prisma {
     readonly status: FieldRef<"User", 'EmployeeStatus'>
     readonly monthlyBaseSalary: FieldRef<"User", 'Decimal'>
     readonly shiftTiming: FieldRef<"User", 'ShiftTiming'>
+    readonly dailyShiftHours: FieldRef<"User", 'Decimal'>
     readonly hiredAt: FieldRef<"User", 'DateTime'>
     readonly avatarUrl: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
@@ -14065,6 +14082,7 @@ export namespace Prisma {
     status: 'status',
     monthlyBaseSalary: 'monthlyBaseSalary',
     shiftTiming: 'shiftTiming',
+    dailyShiftHours: 'dailyShiftHours',
     hiredAt: 'hiredAt',
     avatarUrl: 'avatarUrl',
     createdAt: 'createdAt',
@@ -14545,6 +14563,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFilter<"User"> | $Enums.EmployeeStatus
     monthlyBaseSalary?: DecimalNullableFilter<"User"> | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: EnumShiftTimingNullableFilter<"User"> | $Enums.ShiftTiming | null
+    dailyShiftHours?: DecimalNullableFilter<"User"> | Decimal | DecimalJsLike | number | string | null
     hiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
     avatarUrl?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -14566,6 +14585,7 @@ export namespace Prisma {
     status?: SortOrder
     monthlyBaseSalary?: SortOrderInput | SortOrder
     shiftTiming?: SortOrderInput | SortOrder
+    dailyShiftHours?: SortOrderInput | SortOrder
     hiredAt?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -14590,6 +14610,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFilter<"User"> | $Enums.EmployeeStatus
     monthlyBaseSalary?: DecimalNullableFilter<"User"> | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: EnumShiftTimingNullableFilter<"User"> | $Enums.ShiftTiming | null
+    dailyShiftHours?: DecimalNullableFilter<"User"> | Decimal | DecimalJsLike | number | string | null
     hiredAt?: DateTimeNullableFilter<"User"> | Date | string | null
     avatarUrl?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
@@ -14611,6 +14632,7 @@ export namespace Prisma {
     status?: SortOrder
     monthlyBaseSalary?: SortOrderInput | SortOrder
     shiftTiming?: SortOrderInput | SortOrder
+    dailyShiftHours?: SortOrderInput | SortOrder
     hiredAt?: SortOrderInput | SortOrder
     avatarUrl?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -14635,6 +14657,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusWithAggregatesFilter<"User"> | $Enums.EmployeeStatus
     monthlyBaseSalary?: DecimalNullableWithAggregatesFilter<"User"> | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: EnumShiftTimingNullableWithAggregatesFilter<"User"> | $Enums.ShiftTiming | null
+    dailyShiftHours?: DecimalNullableWithAggregatesFilter<"User"> | Decimal | DecimalJsLike | number | string | null
     hiredAt?: DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
     avatarUrl?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -15423,6 +15446,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -15444,6 +15468,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -15465,6 +15490,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15486,6 +15512,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15507,6 +15534,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -15523,6 +15551,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15539,6 +15568,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -16576,6 +16606,7 @@ export namespace Prisma {
     status?: SortOrder
     monthlyBaseSalary?: SortOrder
     shiftTiming?: SortOrder
+    dailyShiftHours?: SortOrder
     hiredAt?: SortOrder
     avatarUrl?: SortOrder
     createdAt?: SortOrder
@@ -16584,6 +16615,7 @@ export namespace Prisma {
 
   export type UserAvgOrderByAggregateInput = {
     monthlyBaseSalary?: SortOrder
+    dailyShiftHours?: SortOrder
   }
 
   export type UserMaxOrderByAggregateInput = {
@@ -16596,6 +16628,7 @@ export namespace Prisma {
     status?: SortOrder
     monthlyBaseSalary?: SortOrder
     shiftTiming?: SortOrder
+    dailyShiftHours?: SortOrder
     hiredAt?: SortOrder
     avatarUrl?: SortOrder
     createdAt?: SortOrder
@@ -16612,6 +16645,7 @@ export namespace Prisma {
     status?: SortOrder
     monthlyBaseSalary?: SortOrder
     shiftTiming?: SortOrder
+    dailyShiftHours?: SortOrder
     hiredAt?: SortOrder
     avatarUrl?: SortOrder
     createdAt?: SortOrder
@@ -16620,6 +16654,7 @@ export namespace Prisma {
 
   export type UserSumOrderByAggregateInput = {
     monthlyBaseSalary?: SortOrder
+    dailyShiftHours?: SortOrder
   }
 
   export type UuidWithAggregatesFilter<$PrismaModel = never> = {
@@ -19299,6 +19334,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19319,6 +19355,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19389,6 +19426,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19409,6 +19447,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19557,6 +19596,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19577,6 +19617,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19613,6 +19654,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19633,6 +19675,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19653,6 +19696,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19673,6 +19717,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19709,6 +19754,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19729,6 +19775,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19749,6 +19796,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19769,6 +19817,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19805,6 +19854,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19825,6 +19875,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19845,6 +19896,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19865,6 +19917,7 @@ export namespace Prisma {
     status?: $Enums.EmployeeStatus
     monthlyBaseSalary?: Decimal | DecimalJsLike | number | string | null
     shiftTiming?: $Enums.ShiftTiming | null
+    dailyShiftHours?: Decimal | DecimalJsLike | number | string | null
     hiredAt?: Date | string | null
     avatarUrl?: string | null
     createdAt?: Date | string
@@ -19901,6 +19954,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -19921,6 +19975,7 @@ export namespace Prisma {
     status?: EnumEmployeeStatusFieldUpdateOperationsInput | $Enums.EmployeeStatus
     monthlyBaseSalary?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     shiftTiming?: NullableEnumShiftTimingFieldUpdateOperationsInput | $Enums.ShiftTiming | null
+    dailyShiftHours?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     hiredAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     avatarUrl?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

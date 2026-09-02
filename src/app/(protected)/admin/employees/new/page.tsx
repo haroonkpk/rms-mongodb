@@ -140,6 +140,14 @@ export default function CreateEmployeePage() {
                   step="0.01"
                   placeholder="e.g. 45000"
                 />
+                <Input
+                  label="Daily Shift Hours (Standard)"
+                  name="dailyShiftHours"
+                  type="number"
+                  step="0.5"
+                  defaultValue="8"
+                  placeholder="e.g. 8 or 10"
+                />
               </div>
             </div>
 

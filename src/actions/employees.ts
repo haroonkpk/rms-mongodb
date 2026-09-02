@@ -14,6 +14,7 @@ export interface EmployeeData {
   status: EmployeeStatus
   monthlyBaseSalary: number | null
   shiftTiming: ShiftTiming | null
+  dailyShiftHours: number | null
   hiredAt: string | null
   avatarUrl: string | null
   createdAt: string
@@ -53,6 +54,7 @@ export async function getEmployees(page: number = 1, pageSize: number = 10, sear
       status: user.status as EmployeeStatus,
       monthlyBaseSalary: user.monthlyBaseSalary ? Number(user.monthlyBaseSalary) : null,
       shiftTiming: user.shiftTiming as ShiftTiming | null,
+      dailyShiftHours: user.dailyShiftHours ? Number(user.dailyShiftHours) : 8,
       hiredAt: user.hiredAt ? user.hiredAt.toISOString() : null,
       avatarUrl: user.avatarUrl,
       createdAt: user.createdAt.toISOString(),
@@ -90,6 +92,7 @@ export async function getEmployeeById(id: string) {
       status: user.status as EmployeeStatus,
       monthlyBaseSalary: user.monthlyBaseSalary ? Number(user.monthlyBaseSalary) : null,
       shiftTiming: user.shiftTiming as ShiftTiming | null,
+      dailyShiftHours: user.dailyShiftHours ? Number(user.dailyShiftHours) : 8,
       hiredAt: user.hiredAt ? user.hiredAt.toISOString() : null,
       avatarUrl: user.avatarUrl,
       createdAt: user.createdAt.toISOString(),
@@ -112,6 +115,7 @@ export async function createEmployee(formData: FormData) {
     const role = (formData.get('role') as Role) || 'CASHIER'
     const monthlyBaseSalaryStr = formData.get('monthlyBaseSalary') as string
     const shiftTiming = (formData.get('shiftTiming') as ShiftTiming) || null
+    const dailyShiftHoursStr = formData.get('dailyShiftHours') as string
     const avatarUrl = (formData.get('avatarUrl') as string) || null
 
     if (!email || !password) {
@@ -142,6 +146,7 @@ export async function createEmployee(formData: FormData) {
         role,
         monthlyBaseSalary: monthlyBaseSalaryStr ? parseFloat(monthlyBaseSalaryStr) : null,
         shiftTiming,
+        dailyShiftHours: dailyShiftHoursStr ? parseFloat(dailyShiftHoursStr) : 8,
         avatarUrl,
       },
     })
@@ -165,6 +170,7 @@ export async function updateEmployee(id: string, formData: FormData) {
     const status = (formData.get('status') as EmployeeStatus) || 'ACTIVE'
     const monthlyBaseSalaryStr = formData.get('monthlyBaseSalary') as string
     const shiftTiming = (formData.get('shiftTiming') as ShiftTiming) || null
+    const dailyShiftHoursStr = formData.get('dailyShiftHours') as string
     const hiredAtStr = formData.get('hiredAt') as string
     const avatarUrl = (formData.get('avatarUrl') as string) || null
 
@@ -198,6 +204,7 @@ export async function updateEmployee(id: string, formData: FormData) {
       status: EmployeeStatus
       monthlyBaseSalary: number | null
       shiftTiming: ShiftTiming | null
+      dailyShiftHours: number | null
       hiredAt: Date | null
       avatarUrl: string | null
       password?: string
@@ -209,6 +216,7 @@ export async function updateEmployee(id: string, formData: FormData) {
       status,
       monthlyBaseSalary: monthlyBaseSalaryStr ? parseFloat(monthlyBaseSalaryStr) : null,
       shiftTiming,
+      dailyShiftHours: dailyShiftHoursStr ? parseFloat(dailyShiftHoursStr) : 8,
       hiredAt: hiredAtStr ? new Date(hiredAtStr) : null,
       avatarUrl,
     }

@@ -226,6 +226,18 @@ export default function EditEmployeePage({
                   placeholder="e.g. 45000"
                 />
                 <Input
+                  label="Daily Shift Hours (Standard)"
+                  name="dailyShiftHours"
+                  type="number"
+                  step="0.5"
+                  defaultValue={
+                    employee.dailyShiftHours !== null
+                      ? employee.dailyShiftHours
+                      : 8
+                  }
+                  placeholder="e.g. 8 or 10"
+                />
+                <Input
                   label="Hired Date"
                   name="hiredAt"
                   type="date"
