@@ -215,17 +215,51 @@ export async function updatePayrollRecord(payrollId: string, data: any) {
     const advance = data.advance !== undefined ? Number(data.advance) : Number(p.advance);
 
     const netSalary = basicSalary + overtimePay + bonus - deductions - advance;
+    const targetStatus = data.status ? (data.status as PayrollStatus) : p.status;
+
+    const updateData: any = {
+      overtimePay,
+      bonus,
+      deductions,
+      advance,
+      netSalary,
+      status: targetStatus,
+    };
+
+    if (targetStatus === 'PAID' && p.status !== 'PAID') {
+      updateData.paymentDate = new Date();
+      if (!p.paymentMethod) {
+        updateData.paymentMethod = 'CASH';
+      }
+
+      if (advance > 0) {
+        const advances = await prisma.salaryAdvance.findMany({
+          where: { userId: p.userId, status: { in: ['APPROVED', 'PENDING'] } },
+          orderBy: { createdAt: 'asc' }
+        });
+        
+        let amountToDeduct = advance;
+        for (const adv of advances) {
+          if (amountToDeduct <= 0) break;
+          const remaining = Number(adv.amount) - Number(adv.deductedAmount);
+          const deductionForThis = Math.min(remaining, amountToDeduct);
+          
+          const newDeducted = Number(adv.deductedAmount) + deductionForThis;
+          await prisma.salaryAdvance.update({
+            where: { id: adv.id },
+            data: {
+              deductedAmount: newDeducted,
+              status: newDeducted >= Number(adv.amount) ? 'DEDUCTED' : 'APPROVED'
+            }
+          });
+          amountToDeduct -= deductionForThis;
+        }
+      }
+    }
 
     await prisma.payroll.update({
       where: { id: payrollId },
-      data: {
-        overtimePay,
-        bonus,
-        deductions,
-        advance,
-        netSalary,
-        status: data.status ? data.status : p.status, // Allow approving
-      }
+      data: updateData
     });
 
     revalidatePath('/admin/payroll');

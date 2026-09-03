@@ -121,7 +121,7 @@ export function PayrollTab() {
     return formattedPayrolls.filter((p) => {
       if (statusFilter === "ALL") return true;
       if (statusFilter === "PAID") return p.status === "PAID";
-      if (statusFilter === "PENDING") return p.status !== "PAID";
+      if (statusFilter === "DRAFT") return p.status === "DRAFT";
       return true;
     });
   }, [formattedPayrolls, statusFilter]);
@@ -136,8 +136,8 @@ export function PayrollTab() {
             value: statusFilter,
             options: [
               { value: "ALL", label: "All Statuses" },
-              { value: "PENDING", label: "Pending Payments" },
-              { value: "PAID", label: "Paid Payments" },
+              { value: "DRAFT", label: "Draft" },
+              { value: "PAID", label: "Paid" },
             ],
             onChange: setStatusFilter,
           },
@@ -292,7 +292,6 @@ export function PayrollTab() {
                   defaultValue={editPayrollModal.status}
                   options={[
                     { value: "DRAFT", label: "Draft" },
-                    { value: "APPROVED", label: "Approved" },
                     { value: "PAID", label: "Paid" },
                   ]}
                 />

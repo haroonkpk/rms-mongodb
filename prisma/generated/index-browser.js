@@ -343,7 +343,6 @@ exports.LeaveStatus = exports.$Enums.LeaveStatus = {
 
 exports.PayrollStatus = exports.$Enums.PayrollStatus = {
   DRAFT: 'DRAFT',
-  APPROVED: 'APPROVED',
   PAID: 'PAID'
 };
 

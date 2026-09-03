@@ -153,7 +153,6 @@ export type LeaveType = (typeof LeaveType)[keyof typeof LeaveType]
 
 export const PayrollStatus: {
   DRAFT: 'DRAFT',
-  APPROVED: 'APPROVED',
   PAID: 'PAID'
 };
 
