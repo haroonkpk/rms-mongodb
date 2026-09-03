@@ -22,11 +22,6 @@ export default function AdminPayrollPage() {
       label: "Attendance Tracking",
       icon: <Calendar size={18} />,
     },
-    {
-      id: "PAYROLL" as const,
-      label: "Monthly Payroll",
-      icon: <Banknote size={18} />,
-    },
 
     {
       id: "LEAVES" as const,
@@ -36,6 +31,11 @@ export default function AdminPayrollPage() {
     {
       id: "ADVANCE" as const,
       label: "Salary Advances",
+      icon: <Banknote size={18} />,
+    },
+    {
+      id: "PAYROLL" as const,
+      label: "Monthly Payroll",
       icon: <Banknote size={18} />,
     },
   ];

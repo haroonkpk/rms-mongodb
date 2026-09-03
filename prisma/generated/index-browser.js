@@ -326,9 +326,7 @@ exports.PaymentStatus = exports.$Enums.PaymentStatus = {
 
 exports.AttendanceStatus = exports.$Enums.AttendanceStatus = {
   PRESENT: 'PRESENT',
-  ABSENT: 'ABSENT',
-  LATE: 'LATE',
-  HALF_DAY: 'HALF_DAY'
+  ABSENT: 'ABSENT'
 };
 
 exports.LeaveType = exports.$Enums.LeaveType = {

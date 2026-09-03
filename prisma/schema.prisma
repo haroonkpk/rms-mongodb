@@ -194,8 +194,6 @@ model OrderItem {
 enum AttendanceStatus {
   PRESENT
   ABSENT
-  LATE
-  HALF_DAY
 }
 
 model Attendance {

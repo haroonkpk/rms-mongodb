@@ -127,9 +127,7 @@ export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
 
 export const AttendanceStatus: {
   PRESENT: 'PRESENT',
-  ABSENT: 'ABSENT',
-  LATE: 'LATE',
-  HALF_DAY: 'HALF_DAY'
+  ABSENT: 'ABSENT'
 };
 
 export type AttendanceStatus = (typeof AttendanceStatus)[keyof typeof AttendanceStatus]

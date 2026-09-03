@@ -98,8 +98,7 @@ export async function generateMonthlyPayroll(month: number, year: number) {
       let totalOvertimeHours = 0;
 
       for (const att of attendances) {
-        if (att.status === 'PRESENT' || att.status === 'LATE') presentDays += 1;
-        else if (att.status === 'HALF_DAY') presentDays += 0.5;
+        if (att.status === 'PRESENT') presentDays += 1;
         if (att.overtimeHours) totalOvertimeHours += Number(att.overtimeHours);
       }
 

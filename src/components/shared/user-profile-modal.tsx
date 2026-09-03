@@ -62,7 +62,7 @@ export function UserProfileModal({
       icon: Calendar,
       label: "Hired Date",
       value: employee.createdAt
-        ? new Date(employee.createdAt).toLocaleDateString()
+        ? new Date(employee.createdAt).toLocaleDateString("en-GB")
         : "N/A",
     },
   ];

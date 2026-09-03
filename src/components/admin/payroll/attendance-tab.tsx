@@ -40,17 +40,18 @@ function EditAttendanceFormModal({
     return `${hours}:${minutes}`;
   };
 
-  const [status, setStatus] = useState(
-    modalData?.status === "NOT MARKED"
-      ? "PRESENT"
-      : modalData?.status || "PRESENT",
-  );
-  const [checkIn, setCheckIn] = useState(
-    getInitTime(modalData?.originalAttendance?.checkIn),
-  );
-  const [checkOut, setCheckOut] = useState(
-    getInitTime(modalData?.originalAttendance?.checkOut),
-  );
+  const initialCheckIn = getInitTime(modalData?.originalAttendance?.checkIn);
+  const initialCheckOut = getInitTime(modalData?.originalAttendance?.checkOut);
+
+  const [checkIn, setCheckIn] = useState(initialCheckIn);
+  const [checkOut, setCheckOut] = useState(initialCheckOut);
+
+  const [status, setStatus] = useState(() => {
+    if (modalData?.status && modalData.status !== "NOT MARKED") {
+      return modalData.status;
+    }
+    return "PRESENT";
+  });
   const [overtimeHours, setOvertimeHours] = useState<string | number>(
     modalData?.originalAttendance?.overtimeHours ??
       (modalData?.overtimeHours
@@ -149,8 +150,6 @@ function EditAttendanceFormModal({
             options={[
               { value: "PRESENT", label: "Present" },
               { value: "ABSENT", label: "Absent" },
-              { value: "LATE", label: "Late" },
-              { value: "HALF_DAY", label: "Half Day" },
             ]}
           />
 
@@ -280,8 +279,6 @@ export function AttendanceTab() {
               { value: "ALL", label: "All Statuses" },
               { value: "PRESENT", label: "Present" },
               { value: "ABSENT", label: "Absent" },
-              { value: "LATE", label: "Late" },
-              { value: "HALF_DAY", label: "Half Day" },
               { value: "NOT MARKED", label: "Not Marked" },
             ],
             onChange: setAttendanceStatusFilter,
@@ -299,7 +296,7 @@ export function AttendanceTab() {
       </ActivityFilters>
 
       <DataTable
-        heading={`Attendance for ${attendanceDate}`}
+        heading={`Attendance for ${new Date(`${attendanceDate}T00:00:00`).toLocaleDateString("en-GB")}`}
         TableHeaders={attendanceHeaders}
         TableData={filteredAttendances}
         currentPage={1}

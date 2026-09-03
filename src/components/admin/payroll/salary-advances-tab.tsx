@@ -58,7 +58,7 @@ export function SalaryAdvancesTab() {
       amount: `Rs ${a.amount}`,
       deductedAmount: `Rs ${a.deductedAmount}`,
       remainingAmount: `Rs ${Number(a.amount) - Number(a.deductedAmount)}`,
-      createdAt: new Date(a.createdAt).toLocaleDateString(),
+      createdAt: new Date(a.createdAt).toLocaleDateString("en-GB"),
     }));
   }, [advances]);
 

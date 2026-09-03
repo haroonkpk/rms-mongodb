@@ -60,8 +60,8 @@ export function LeavesTab() {
     return leaves.map((l) => ({
       ...l,
       employeeName: l.user?.fullName || "N/A",
-      startDate: new Date(l.startDate).toLocaleDateString(),
-      endDate: new Date(l.endDate).toLocaleDateString(),
+      startDate: new Date(l.startDate).toLocaleDateString("en-GB"),
+      endDate: new Date(l.endDate).toLocaleDateString("en-GB"),
     }));
   }, [leaves]);
 
