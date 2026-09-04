@@ -13,7 +13,6 @@ import {
   ArrowLeft,
   Save,
   AlertCircle,
-  KeyRound,
   CheckCircle2,
 } from "lucide-react";
 import {
@@ -28,15 +27,8 @@ const roleOptions = [
   { value: "ADMIN", label: "Administrator" },
 ];
 
-const statusOptions = [
-  { value: "ACTIVE", label: "Active" },
-  { value: "ON_LEAVE", label: "On Leave" },
-  { value: "SUSPENDED", label: "Suspended" },
-  { value: "TERMINATED", label: "Terminated" },
-];
-
 const shiftOptions = [
-  { value: "", label: "Select Shift (Optional)" },
+  { value: "", label: "Select Shift" },
   { value: "DAY", label: "Day Shift" },
   { value: "NIGHT", label: "Night Shift" },
   { value: "DUAL", label: "Dual Shift" },
@@ -74,6 +66,7 @@ export default function EditEmployeePage({
     e.preventDefault();
     setError(null);
     setSuccess(false);
+
     const formData = new FormData(e.currentTarget);
 
     startTransition(async () => {
@@ -91,22 +84,22 @@ export default function EditEmployeePage({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24 flex items-center justify-center">
-        <p className="text-slate-600 font-medium">
-          Loading employee profile...
-        </p>
+      <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[var(--color-primary)]"></div>
       </div>
     );
   }
 
   if (!employee) {
     return (
-      <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24 flex flex-col items-center justify-center gap-4">
-        <p className="text-rose-600 font-semibold">
-          {error || "Employee record not found"}
+      <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] flex flex-col items-center justify-center gap-4">
+        <p className="text-gray-600 font-medium">
+          {error || "Employee not found"}
         </p>
         <Link href="/admin/employees">
-          <Button variant="outline">Back to Employees</Button>
+          <Button variant="outline" icon={<ArrowLeft size={18} />}>
+            Back to Employees
+          </Button>
         </Link>
       </div>
     );
@@ -114,37 +107,34 @@ export default function EditEmployeePage({
 
   return (
     <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
-      {/* Top Header & Navigation */}
-      <div className="flex items-center gap-4 mb-4">
-        <Link
-          href="/admin/employees"
-          className="inline-flex items-center gap-2 text-sm font-semibold text-slate-600 hover:text-[var(--color-primary)] transition-colors"
-        >
-          <ArrowLeft size={18} />
-          <span>Back to Employees</span>
-        </Link>
-      </div>
-
       <Header title="Edit Employee Profile" />
 
-      <main className="max-w-4xl mx-auto">
-        <Card
-          variant="white"
-        >
-          <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+      <main className="max-w-4xl mx-auto flex flex-col gap-6 mt-6">
+        <div className="flex items-center justify-between">
+          <Link href="/admin/employees">
+            <Button
+              variant="outline"
+              icon={<ArrowLeft size={18} />}
+              className="text-xs"
+            >
+              Back to Employee List
+            </Button>
+          </Link>
+        </div>
+
+        <Card variant="white" className="p-6">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-6">
             {error && (
-              <div className="p-4 rounded-lg bg-rose-50 border border-rose-200 flex items-center gap-3 text-rose-700 text-sm font-medium">
-                <AlertCircle size={20} className="shrink-0 text-rose-500" />
+              <div className="flex items-center gap-2 p-3 bg-red-50 text-red-600 border border-red-200 rounded-md text-sm">
+                <AlertCircle size={18} />
                 <span>{error}</span>
               </div>
             )}
 
             {success && (
-              <div className="p-4 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center gap-3 text-emerald-700 text-sm font-medium">
-                <CheckCircle2 size={20} className="shrink-0 text-emerald-600" />
-                <span>
-                  Employee profile updated successfully! Redirecting...
-                </span>
+              <div className="flex items-center gap-2 p-3 bg-green-50 text-green-700 border border-green-200 rounded-md text-sm">
+                <CheckCircle2 size={18} />
+                <span>Employee updated successfully! Redirecting...</span>
               </div>
             )}
 
@@ -155,10 +145,10 @@ export default function EditEmployeePage({
               value={employee.avatarUrl || ""}
             />
 
-            {/* SECTION 1: Personal Info */}
+            {/* SECTION 1: Personal & Account Details */}
             <div className="flex flex-col gap-4">
               <h3 className="text-base font-bold text-[#0A2540] uppercase tracking-wide border-b pb-2">
-                1. Personal Information & Contact
+                1. Account Credentials & Basic Info
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Input
@@ -183,13 +173,19 @@ export default function EditEmployeePage({
                   defaultValue={employee.phone || ""}
                   placeholder="e.g. +92 300 1234567"
                 />
+                <Input
+                  label="New Password (Optional)"
+                  name="password"
+                  type="password"
+                  placeholder="Leave empty to keep current password"
+                />
               </div>
             </div>
 
-            {/* SECTION 2: Role, Status & Compensation */}
+            {/* SECTION 2: Role & Employment Details */}
             <div className="flex flex-col gap-4">
               <h3 className="text-base font-bold text-[#0A2540] uppercase tracking-wide border-b pb-2">
-                2. Role & Employment Settings
+                2. Role & Employment Details
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <Select
@@ -197,13 +193,6 @@ export default function EditEmployeePage({
                   name="role"
                   options={roleOptions}
                   defaultValue={employee.role}
-                  required
-                />
-                <Select
-                  label="Employment Status"
-                  name="status"
-                  options={statusOptions}
-                  defaultValue={employee.status}
                   required
                 />
                 <Select
@@ -235,34 +224,6 @@ export default function EditEmployeePage({
                       : 8
                   }
                   placeholder="e.g. 8 or 10"
-                />
-                <Input
-                  label="Hired Date"
-                  name="hiredAt"
-                  type="date"
-                  defaultValue={
-                    employee.hiredAt ? employee.hiredAt.split("T")[0] : ""
-                  }
-                />
-              </div>
-            </div>
-
-            {/* SECTION 3: Password Update Security */}
-            <div className="flex flex-col gap-4 p-4 rounded-xl bg-amber-50/50 border border-amber-200/60">
-              <div className="flex items-center gap-2 text-amber-900 font-bold text-base">
-                <KeyRound size={18} className="text-amber-600" />
-                <span>Password Update</span>
-              </div>
-              <p className="text-xs text-slate-600">
-                Leave password field empty if you do not wish to change the
-                user&apos;s password.
-              </p>
-              <div className="max-w-md">
-                <Input
-                  label="New Password (Optional)"
-                  name="password"
-                  type="password"
-                  placeholder="Enter new password to update"
                 />
               </div>
             </div>

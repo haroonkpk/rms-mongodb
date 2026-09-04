@@ -3,7 +3,7 @@
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 import { revalidatePath } from 'next/cache'
-import { Role, EmployeeStatus, ShiftTiming } from '../../prisma/generated'
+import { Role, ShiftTiming } from '../../prisma/generated'
 
 export interface EmployeeData {
   id: string
@@ -11,7 +11,6 @@ export interface EmployeeData {
   phone: string | null
   fullName: string | null
   role: Role
-  status: EmployeeStatus
   monthlyBaseSalary: number | null
   shiftTiming: ShiftTiming | null
   dailyShiftHours: number | null
@@ -51,7 +50,6 @@ export async function getEmployees(page: number = 1, pageSize: number = 10, sear
       phone: user.phone,
       fullName: user.fullName,
       role: user.role as Role,
-      status: user.status as EmployeeStatus,
       monthlyBaseSalary: user.monthlyBaseSalary ? Number(user.monthlyBaseSalary) : null,
       shiftTiming: user.shiftTiming as ShiftTiming | null,
       dailyShiftHours: user.dailyShiftHours ? Number(user.dailyShiftHours) : 8,
@@ -89,7 +87,6 @@ export async function getEmployeeById(id: string) {
       phone: user.phone,
       fullName: user.fullName,
       role: user.role as Role,
-      status: user.status as EmployeeStatus,
       monthlyBaseSalary: user.monthlyBaseSalary ? Number(user.monthlyBaseSalary) : null,
       shiftTiming: user.shiftTiming as ShiftTiming | null,
       dailyShiftHours: user.dailyShiftHours ? Number(user.dailyShiftHours) : 8,
@@ -167,7 +164,6 @@ export async function updateEmployee(id: string, formData: FormData) {
     const fullName = (formData.get('fullName') as string) || null
     const phone = (formData.get('phone') as string) || null
     const role = (formData.get('role') as Role) || 'CASHIER'
-    const status = (formData.get('status') as EmployeeStatus) || 'ACTIVE'
     const monthlyBaseSalaryStr = formData.get('monthlyBaseSalary') as string
     const shiftTiming = (formData.get('shiftTiming') as ShiftTiming) || null
     const dailyShiftHoursStr = formData.get('dailyShiftHours') as string
@@ -201,7 +197,6 @@ export async function updateEmployee(id: string, formData: FormData) {
       fullName: string | null
       phone: string | null
       role: Role
-      status: EmployeeStatus
       monthlyBaseSalary: number | null
       shiftTiming: ShiftTiming | null
       dailyShiftHours: number | null
@@ -213,7 +208,6 @@ export async function updateEmployee(id: string, formData: FormData) {
       fullName,
       phone,
       role,
-      status,
       monthlyBaseSalary: monthlyBaseSalaryStr ? parseFloat(monthlyBaseSalaryStr) : null,
       shiftTiming,
       dailyShiftHours: dailyShiftHoursStr ? parseFloat(dailyShiftHoursStr) : 8,
@@ -240,13 +234,49 @@ export async function updateEmployee(id: string, formData: FormData) {
   }
 }
 
-export async function deleteEmployee(id: string) {
+import { getCurrentUser } from '@/actions/auth'
+
+export async function deleteEmployee(id: string, adminPassword?: string) {
   try {
+    if (!adminPassword || adminPassword.trim() === '') {
+      return { success: false, error: 'Admin password is required to delete an employee.' }
+    }
+
+    const sessionUser = await getCurrentUser()
+    if (!sessionUser || sessionUser.role !== 'ADMIN') {
+      return { success: false, error: 'Unauthorized. Admin access required.' }
+    }
+
+    const currentUser = await prisma.user.findUnique({
+      where: { id: sessionUser.id },
+    })
+
+    if (!currentUser) {
+      return { success: false, error: 'Admin account not found.' }
+    }
+
+    const isMatch = await bcrypt.compare(adminPassword, currentUser.password)
+    if (!isMatch) {
+      return { success: false, error: 'Incorrect admin password. Deletion cancelled.' }
+    }
+
+    const targetUser = await prisma.user.findUnique({ where: { id } })
+    if (!targetUser) {
+      return { success: false, error: 'Employee not found.' }
+    }
+
+    if (targetUser.role === 'ADMIN') {
+      return { success: false, error: 'Administrator accounts cannot be deleted.' }
+    }
+
     await prisma.user.delete({ where: { id } })
     revalidatePath('/admin/employees')
     return { success: true }
   } catch (error) {
     console.error('Error deleting employee:', error)
-    return { success: false, error: 'Failed to delete employee' }
+    return {
+      success: false,
+      error: 'Cannot delete employee with linked orders, attendance, or payroll records.',
+    }
   }
 }

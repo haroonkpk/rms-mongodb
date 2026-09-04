@@ -35,12 +35,11 @@ export async function recalculateEmployeePayroll(
       where: { id: userId },
       select: {
         id: true,
-        status: true,
         monthlyBaseSalary: true,
         dailyShiftHours: true,
       },
     });
-    if (!emp || emp.status !== "ACTIVE" || !emp.monthlyBaseSalary) return null;
+    if (!emp || !emp.monthlyBaseSalary) return null;
 
     const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
     const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
@@ -267,7 +266,7 @@ export async function markAttendance(
 export async function generateMonthlyPayroll(month: number, year: number) {
   try {
     const employees = await prisma.user.findMany({
-      where: { status: "ACTIVE", monthlyBaseSalary: { not: null } },
+      where: { monthlyBaseSalary: { not: null } },
     });
 
     for (const emp of employees) {

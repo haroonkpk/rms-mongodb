@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Header } from "@/components/layouts";
 import { DataTable, TableHeader } from "@/components/ui/data-table";
 import { UserProfileModal } from "@/components/shared/user-profile-modal";
-import { Eye, Edit } from "lucide-react";
+import { DeleteEmployeeModal } from "@/components/admin/employees/delete-employee-modal";
+import { Eye, Edit, Trash2 } from "lucide-react";
 import { getEmployees, EmployeeData } from "@/actions/employees";
 import { UserProfileData } from "@/components/shared/user-profile-modal";
 
@@ -14,7 +15,6 @@ const tableHeaders: TableHeader[] = [
   { key: "fullName", label: "Full Name" },
   { key: "email", label: "Email Address" },
   { key: "role", label: "Role" },
-  { key: "status", label: "Status" },
   { key: "shiftTiming", label: "Shift Timing" },
   { key: "monthlyBaseSalary", label: "Base Salary" },
 ];
@@ -33,26 +33,30 @@ export default function AdminEmployeesPage() {
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  useEffect(() => {
-    let isMounted = true;
+  // Modal State for "Delete Employee"
+  const [employeeToDelete, setEmployeeToDelete] = useState<EmployeeData | null>(
+    null,
+  );
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const fetchEmployees = useCallback(() => {
     setIsLoading(true);
     getEmployees(currentPage, 10)
       .then((res) => {
-        if (isMounted && res.success && res.employees) {
+        if (res.success && res.employees) {
           setEmployees(res.employees);
           setTotalPages(res.totalPages || 1);
           setTotalEntries(res.total || 0);
         }
       })
       .finally(() => {
-        if (isMounted) {
-          setIsLoading(false);
-        }
+        setIsLoading(false);
       });
-    return () => {
-      isMounted = false;
-    };
   }, [currentPage]);
+
+  useEffect(() => {
+    fetchEmployees();
+  }, [fetchEmployees]);
 
   const formattedEmployees = React.useMemo(() => {
     return employees.map((emp) => ({
@@ -74,6 +78,14 @@ export default function AdminEmployeesPage() {
   const handleOpenViewModal = (employee: UserProfileData) => {
     setSelectedEmployee(employee);
     setIsModalOpen(true);
+  };
+
+  const handleOpenDeleteModal = (employee: EmployeeData) => {
+    if (employee.role === "ADMIN") {
+      return;
+    }
+    setEmployeeToDelete(employee);
+    setIsDeleteModalOpen(true);
   };
 
   const handleEditRedirect = (employee: { id?: string }) => {
@@ -113,9 +125,16 @@ export default function AdminEmployeesPage() {
               },
               {
                 icon: <Edit size={16} className="text-white" />,
-                text: "Edit Employee",
+                text: "Edit",
                 className: "bg-[var(--color-primary)] hover:opacity-90 ",
                 onClick: (row) => handleEditRedirect(row as { id?: string }),
+              },
+              {
+                icon: <Trash2 size={16} className="text-white" />,
+                text: "Delete",
+                className: "bg-rose-600 hover:bg-rose-700 text-white",
+                show: (row) => (row as unknown as EmployeeData).role !== "ADMIN",
+                onClick: (row) => handleOpenDeleteModal(row as unknown as EmployeeData),
               },
             ]}
           />
@@ -132,12 +151,25 @@ export default function AdminEmployeesPage() {
         </div>
       </main>
 
-      {/*   MODAL */}
+      {/* VIEW PROFILE MODAL */}
       <UserProfileModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         employee={selectedEmployee}
         onEdit={handleEditRedirect}
+      />
+
+      {/* DELETE EMPLOYEE WITH ADMIN PASSWORD MODAL */}
+      <DeleteEmployeeModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setEmployeeToDelete(null);
+        }}
+        employee={employeeToDelete}
+        onSuccess={() => {
+          fetchEmployees();
+        }}
       />
     </div>
   );

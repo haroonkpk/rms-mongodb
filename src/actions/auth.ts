@@ -18,7 +18,6 @@ export async function getCurrentUser() {
         role: true,
         avatarUrl: true,
         phone: true,
-        status: true,
         monthlyBaseSalary: true,
         shiftTiming: true,
         createdAt: true,

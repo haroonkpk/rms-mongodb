@@ -127,7 +127,6 @@ exports.Prisma.UserScalarFieldEnum = {
   password: 'password',
   fullName: 'fullName',
   role: 'role',
-  status: 'status',
   monthlyBaseSalary: 'monthlyBaseSalary',
   shiftTiming: 'shiftTiming',
   dailyShiftHours: 'dailyShiftHours',
@@ -291,13 +290,6 @@ exports.Role = exports.$Enums.Role = {
   ADMIN: 'ADMIN',
   CASHIER: 'CASHIER',
   CHEF: 'CHEF'
-};
-
-exports.EmployeeStatus = exports.$Enums.EmployeeStatus = {
-  ACTIVE: 'ACTIVE',
-  ON_LEAVE: 'ON_LEAVE',
-  SUSPENDED: 'SUSPENDED',
-  TERMINATED: 'TERMINATED'
 };
 
 exports.ShiftTiming = exports.$Enums.ShiftTiming = {

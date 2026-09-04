@@ -23,13 +23,6 @@ enum ShiftTiming {
   DUAL
 }
 
-enum EmployeeStatus {
-  ACTIVE
-  ON_LEAVE
-  SUSPENDED
-  TERMINATED
-}
-
 // ------------------------------------------
 // USER MODEL 
 // ------------------------------------------
@@ -43,7 +36,6 @@ model User {
 
   fullName String? @map("full_name")
   role     Role   @default(CASHIER)
-  status   EmployeeStatus @default(ACTIVE)
 
   // Employee & Staff Management Page fields
   monthlyBaseSalary Decimal?     @map("monthly_base_salary") @db.Decimal(10, 2)
@@ -64,7 +56,6 @@ model User {
 
   @@map("users")
   @@index([role])
-  @@index([status])
 }
 
 // ------------------------------------------
