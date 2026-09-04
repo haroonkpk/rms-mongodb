@@ -23,9 +23,11 @@ const payrollHeaders: TableHeader[] = [
   { key: "basicSalary", label: "Basic Salary" },
   { key: "overtimePay", label: "Overtime Pay" },
   { key: "bonus", label: "Bonus" },
+  { key: "carriedOverBalance", label: "Carried Over" },
   { key: "deductions", label: "Deductions" },
   { key: "advance", label: "Advance" },
-  { key: "netSalary", label: "Net Salary" },
+  { key: "alreadyPaid", label: "Already Paid" },
+  { key: "netSalary", label: "Net Payable" },
   { key: "status", label: "Status" },
 ];
 
@@ -40,6 +42,8 @@ export function PayrollTab() {
   const [isSavingPayroll, setIsSavingPayroll] = useState(false);
   const [payPayrollModal, setPayPayrollModal] = useState<any | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("CASH");
+  const [amountToPay, setAmountToPay] = useState<string>("");
+  const [payError, setPayError] = useState<string>("");
   const [isProcessingPay, setIsProcessingPay] = useState(false);
 
   useEffect(() => {
@@ -90,9 +94,11 @@ export function PayrollTab() {
         ["Basic Salary", payroll.basicSalary],
         ["Overtime Pay", payroll.overtimePay],
         ["Bonus", payroll.bonus],
+        ["Carried Over (Unpaid Arrears)", payroll.carriedOverBalance],
         ["Deductions (Absent/Unpaid Leave)", payroll.deductions],
         ["Salary Advance Deducted", payroll.advance],
-        ["Net Salary", payroll.netSalary],
+        ["Already Paid So Far", payroll.alreadyPaid],
+        ["Net Remaining Payable", payroll.netSalary],
       ],
       theme: "grid",
       headStyles: { fillColor: [5, 59, 112] },
@@ -104,24 +110,31 @@ export function PayrollTab() {
   };
 
   const formattedPayrolls = useMemo(() => {
-    return payrolls.map((p) => ({
-      ...p,
-      employeeName: p.user?.fullName || "N/A",
-      basicSalary: `Rs ${p.basicSalary}`,
-      overtimePay: `Rs ${p.overtimePay || 0}`,
-      bonus: `Rs ${p.bonus || 0}`,
-      deductions: `Rs ${p.deductions || 0}`,
-      advance: `Rs ${p.advance || 0}`,
-      netSalary: `Rs ${p.netSalary}`,
-      status: p.status,
-    }));
+    return payrolls.map((p) => {
+      const paid = Number(p.paidAmount || 0);
+      const isPaidFull = p.status === "PAID";
+      const displayStatus = isPaidFull ? "PAID" : paid > 0 ? "DRAFT (Partial)" : "DRAFT";
+      return {
+        ...p,
+        employeeName: p.user?.fullName || "N/A",
+        basicSalary: `Rs ${p.basicSalary}`,
+        overtimePay: `Rs ${p.overtimePay || 0}`,
+        bonus: `Rs ${p.bonus || 0}`,
+        carriedOverBalance: `Rs ${p.carriedOverBalance || 0}`,
+        deductions: `Rs ${p.deductions || 0}`,
+        advance: `Rs ${p.advance || 0}`,
+        alreadyPaid: `Rs ${paid}`,
+        netSalary: `Rs ${p.netSalary}`,
+        status: displayStatus,
+      };
+    });
   }, [payrolls]);
 
   const filteredPayrolls = useMemo(() => {
     return formattedPayrolls.filter((p) => {
       if (statusFilter === "ALL") return true;
       if (statusFilter === "PAID") return p.status === "PAID";
-      if (statusFilter === "DRAFT") return p.status === "DRAFT";
+      if (statusFilter === "DRAFT") return p.status !== "PAID";
       return true;
     });
   }, [formattedPayrolls, statusFilter]);
@@ -211,11 +224,14 @@ export function PayrollTab() {
           },
           {
             icon: <CheckCircle size={16} className="text-white" />,
-            text: "Mark as Paid",
+            text: "Pay Salary",
             className: "bg-green-600 hover:bg-green-700 ",
             show: (row: any) => row.status !== "PAID",
             onClick: (row) => {
               setPaymentMethod("CASH");
+              const rawNet = row.netSalary ? String(row.netSalary).replace("Rs ", "") : "0";
+              setAmountToPay(rawNet);
+              setPayError("");
               setPayPayrollModal(row);
             },
           },
@@ -241,6 +257,7 @@ export function PayrollTab() {
                   bonus: formData.get("bonus"),
                   deductions: formData.get("deductions"),
                   advance: formData.get("advance"),
+                  carriedOverBalance: formData.get("carriedOverBalance"),
                   status: formData.get("status"),
                 });
                 setEditPayrollModal(null);
@@ -251,7 +268,7 @@ export function PayrollTab() {
             }}
             className="p-4 space-y-4"
           >
-            <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm bg-slate-50 p-4  border border-slate-200/80 mb-2">
+            <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm bg-slate-50 p-4 border border-slate-200/80 mb-2">
               <div>
                 <span className="text-slate-500">Working Days:</span>{" "}
                 <span className="font-semibold text-slate-900">
@@ -276,7 +293,13 @@ export function PayrollTab() {
                   {editPayrollModal.leaveDays}
                 </span>
               </div>
-              <div className="col-span-2">
+              <div>
+                <span className="text-slate-500">Already Paid:</span>{" "}
+                <span className="font-bold text-blue-700">
+                  {editPayrollModal.alreadyPaid}
+                </span>
+              </div>
+              <div>
                 <span className="text-slate-500">OT Hours:</span>{" "}
                 <span className="font-semibold text-slate-900">
                   {editPayrollModal.totalOvertimeHours}
@@ -289,7 +312,7 @@ export function PayrollTab() {
                 <Select
                   label="Status"
                   name="status"
-                  defaultValue={editPayrollModal.status}
+                  defaultValue={editPayrollModal.status.includes("DRAFT") ? "DRAFT" : "PAID"}
                   options={[
                     { value: "DRAFT", label: "Draft" },
                     { value: "PAID", label: "Paid" },
@@ -315,6 +338,17 @@ export function PayrollTab() {
                 defaultValue={
                   editPayrollModal.bonus
                     ? editPayrollModal.bonus.replace("Rs ", "")
+                    : "0"
+                }
+              />
+
+              <Input
+                label="Carried Over Balance"
+                name="carriedOverBalance"
+                type="number"
+                defaultValue={
+                  editPayrollModal.carriedOverBalance
+                    ? editPayrollModal.carriedOverBalance.replace("Rs ", "")
                     : "0"
                 }
               />
@@ -373,18 +407,33 @@ export function PayrollTab() {
           <form
             onSubmit={async (e) => {
               e.preventDefault();
+              const maxPayable = Number(payPayrollModal.netSalary.replace("Rs ", ""));
+              const numPay = Number(amountToPay);
+              if (!numPay || numPay <= 0) {
+                setPayError("Payment amount must be greater than 0");
+                return;
+              }
+              if (numPay > maxPayable) {
+                setPayError(`Payment amount cannot exceed remaining net payable (Rs ${maxPayable})`);
+                return;
+              }
+
               setIsProcessingPay(true);
               try {
-                await markPayrollPaid(payPayrollModal.id, paymentMethod);
-                setPayPayrollModal(null);
-                fetchPayrolls();
+                const res = await markPayrollPaid(payPayrollModal.id, paymentMethod, numPay);
+                if (res.success) {
+                  setPayPayrollModal(null);
+                  fetchPayrolls();
+                } else {
+                  setPayError(res.error || "Failed to process payment");
+                }
               } finally {
                 setIsProcessingPay(false);
               }
             }}
             className="space-y-4"
           >
-            <div className="bg-slate-50 p-4  border border-slate-200/80 space-y-3 text-xs sm:text-sm">
+            <div className="bg-slate-50 p-4 border border-slate-200/80 space-y-3 text-xs sm:text-sm">
               <div className="flex items-center justify-between">
                 <span className="text-slate-500 font-medium">
                   Employee Name:
@@ -404,6 +453,10 @@ export function PayrollTab() {
                   {year}
                 </span>
               </div>
+              <div className="flex items-center justify-between text-slate-600">
+                <span>Already Paid So Far:</span>
+                <span className="font-semibold text-blue-700">{payPayrollModal.alreadyPaid}</span>
+              </div>
               <div className="flex items-center justify-between border-t border-slate-200 pt-2">
                 <span className="text-slate-600 font-bold">
                   Net Salary Payable:
@@ -413,6 +466,29 @@ export function PayrollTab() {
                 </span>
               </div>
             </div>
+
+            <Input
+              label="Amount to Pay (Rs)"
+              type="number"
+              value={amountToPay}
+              onChange={(e) => {
+                const val = e.target.value;
+                setAmountToPay(val);
+                const num = Number(val);
+                const maxPayable = Number(payPayrollModal.netSalary.replace("Rs ", ""));
+                if (num <= 0) {
+                  setPayError("Payment amount must be greater than 0");
+                } else if (num > maxPayable) {
+                  setPayError(`Payment amount cannot exceed remaining net payable (Rs ${maxPayable})`);
+                } else {
+                  setPayError("");
+                }
+              }}
+              placeholder="Enter amount to pay"
+            />
+            {payError && (
+              <p className="text-xs text-red-600 font-medium">{payError}</p>
+            )}
 
             <Select
               label="Select Payment Method"
@@ -436,6 +512,7 @@ export function PayrollTab() {
               <Button
                 type="submit"
                 variant="primary"
+                disabled={!!payError || !amountToPay || Number(amountToPay) <= 0}
                 isLoading={isProcessingPay}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >

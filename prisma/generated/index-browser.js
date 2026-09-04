@@ -241,6 +241,8 @@ exports.Prisma.PayrollScalarFieldEnum = {
   bonus: 'bonus',
   deductions: 'deductions',
   advance: 'advance',
+  carriedOverBalance: 'carriedOverBalance',
+  paidAmount: 'paidAmount',
   netSalary: 'netSalary',
   status: 'status',
   paymentDate: 'paymentDate',

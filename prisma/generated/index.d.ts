@@ -11600,6 +11600,8 @@ export namespace Prisma {
     bonus: Decimal | null
     deductions: Decimal | null
     advance: Decimal | null
+    carriedOverBalance: Decimal | null
+    paidAmount: Decimal | null
     netSalary: Decimal | null
   }
 
@@ -11616,6 +11618,8 @@ export namespace Prisma {
     bonus: Decimal | null
     deductions: Decimal | null
     advance: Decimal | null
+    carriedOverBalance: Decimal | null
+    paidAmount: Decimal | null
     netSalary: Decimal | null
   }
 
@@ -11634,6 +11638,8 @@ export namespace Prisma {
     bonus: Decimal | null
     deductions: Decimal | null
     advance: Decimal | null
+    carriedOverBalance: Decimal | null
+    paidAmount: Decimal | null
     netSalary: Decimal | null
     status: $Enums.PayrollStatus | null
     paymentDate: Date | null
@@ -11657,6 +11663,8 @@ export namespace Prisma {
     bonus: Decimal | null
     deductions: Decimal | null
     advance: Decimal | null
+    carriedOverBalance: Decimal | null
+    paidAmount: Decimal | null
     netSalary: Decimal | null
     status: $Enums.PayrollStatus | null
     paymentDate: Date | null
@@ -11680,6 +11688,8 @@ export namespace Prisma {
     bonus: number
     deductions: number
     advance: number
+    carriedOverBalance: number
+    paidAmount: number
     netSalary: number
     status: number
     paymentDate: number
@@ -11703,6 +11713,8 @@ export namespace Prisma {
     bonus?: true
     deductions?: true
     advance?: true
+    carriedOverBalance?: true
+    paidAmount?: true
     netSalary?: true
   }
 
@@ -11719,6 +11731,8 @@ export namespace Prisma {
     bonus?: true
     deductions?: true
     advance?: true
+    carriedOverBalance?: true
+    paidAmount?: true
     netSalary?: true
   }
 
@@ -11737,6 +11751,8 @@ export namespace Prisma {
     bonus?: true
     deductions?: true
     advance?: true
+    carriedOverBalance?: true
+    paidAmount?: true
     netSalary?: true
     status?: true
     paymentDate?: true
@@ -11760,6 +11776,8 @@ export namespace Prisma {
     bonus?: true
     deductions?: true
     advance?: true
+    carriedOverBalance?: true
+    paidAmount?: true
     netSalary?: true
     status?: true
     paymentDate?: true
@@ -11783,6 +11801,8 @@ export namespace Prisma {
     bonus?: true
     deductions?: true
     advance?: true
+    carriedOverBalance?: true
+    paidAmount?: true
     netSalary?: true
     status?: true
     paymentDate?: true
@@ -11893,6 +11913,8 @@ export namespace Prisma {
     bonus: Decimal | null
     deductions: Decimal | null
     advance: Decimal | null
+    carriedOverBalance: Decimal | null
+    paidAmount: Decimal | null
     netSalary: Decimal
     status: $Enums.PayrollStatus
     paymentDate: Date | null
@@ -11935,6 +11957,8 @@ export namespace Prisma {
     bonus?: boolean
     deductions?: boolean
     advance?: boolean
+    carriedOverBalance?: boolean
+    paidAmount?: boolean
     netSalary?: boolean
     status?: boolean
     paymentDate?: boolean
@@ -11959,6 +11983,8 @@ export namespace Prisma {
     bonus?: boolean
     deductions?: boolean
     advance?: boolean
+    carriedOverBalance?: boolean
+    paidAmount?: boolean
     netSalary?: boolean
     status?: boolean
     paymentDate?: boolean
@@ -11983,6 +12009,8 @@ export namespace Prisma {
     bonus?: boolean
     deductions?: boolean
     advance?: boolean
+    carriedOverBalance?: boolean
+    paidAmount?: boolean
     netSalary?: boolean
     status?: boolean
     paymentDate?: boolean
@@ -12007,6 +12035,8 @@ export namespace Prisma {
     bonus?: boolean
     deductions?: boolean
     advance?: boolean
+    carriedOverBalance?: boolean
+    paidAmount?: boolean
     netSalary?: boolean
     status?: boolean
     paymentDate?: boolean
@@ -12015,7 +12045,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type PayrollOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "month" | "year" | "workingDays" | "presentDays" | "absentDays" | "leaveDays" | "totalOvertimeHours" | "basicSalary" | "overtimePay" | "bonus" | "deductions" | "advance" | "netSalary" | "status" | "paymentDate" | "paymentMethod" | "createdAt" | "updatedAt", ExtArgs["result"]["payroll"]>
+  export type PayrollOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "month" | "year" | "workingDays" | "presentDays" | "absentDays" | "leaveDays" | "totalOvertimeHours" | "basicSalary" | "overtimePay" | "bonus" | "deductions" | "advance" | "carriedOverBalance" | "paidAmount" | "netSalary" | "status" | "paymentDate" | "paymentMethod" | "createdAt" | "updatedAt", ExtArgs["result"]["payroll"]>
   export type PayrollInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -12046,6 +12076,8 @@ export namespace Prisma {
       bonus: Prisma.Decimal | null
       deductions: Prisma.Decimal | null
       advance: Prisma.Decimal | null
+      carriedOverBalance: Prisma.Decimal | null
+      paidAmount: Prisma.Decimal | null
       netSalary: Prisma.Decimal
       status: $Enums.PayrollStatus
       paymentDate: Date | null
@@ -12490,6 +12522,8 @@ export namespace Prisma {
     readonly bonus: FieldRef<"Payroll", 'Decimal'>
     readonly deductions: FieldRef<"Payroll", 'Decimal'>
     readonly advance: FieldRef<"Payroll", 'Decimal'>
+    readonly carriedOverBalance: FieldRef<"Payroll", 'Decimal'>
+    readonly paidAmount: FieldRef<"Payroll", 'Decimal'>
     readonly netSalary: FieldRef<"Payroll", 'Decimal'>
     readonly status: FieldRef<"Payroll", 'PayrollStatus'>
     readonly paymentDate: FieldRef<"Payroll", 'DateTime'>
@@ -14214,6 +14248,8 @@ export namespace Prisma {
     bonus: 'bonus',
     deductions: 'deductions',
     advance: 'advance',
+    carriedOverBalance: 'carriedOverBalance',
+    paidAmount: 'paidAmount',
     netSalary: 'netSalary',
     status: 'status',
     paymentDate: 'paymentDate',
@@ -15246,6 +15282,8 @@ export namespace Prisma {
     bonus?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     deductions?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     advance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFilter<"Payroll"> | $Enums.PayrollStatus
     paymentDate?: DateTimeNullableFilter<"Payroll"> | Date | string | null
@@ -15270,6 +15308,8 @@ export namespace Prisma {
     bonus?: SortOrderInput | SortOrder
     deductions?: SortOrderInput | SortOrder
     advance?: SortOrderInput | SortOrder
+    carriedOverBalance?: SortOrderInput | SortOrder
+    paidAmount?: SortOrderInput | SortOrder
     netSalary?: SortOrder
     status?: SortOrder
     paymentDate?: SortOrderInput | SortOrder
@@ -15298,6 +15338,8 @@ export namespace Prisma {
     bonus?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     deductions?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     advance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFilter<"Payroll"> | $Enums.PayrollStatus
     paymentDate?: DateTimeNullableFilter<"Payroll"> | Date | string | null
@@ -15322,6 +15364,8 @@ export namespace Prisma {
     bonus?: SortOrderInput | SortOrder
     deductions?: SortOrderInput | SortOrder
     advance?: SortOrderInput | SortOrder
+    carriedOverBalance?: SortOrderInput | SortOrder
+    paidAmount?: SortOrderInput | SortOrder
     netSalary?: SortOrder
     status?: SortOrder
     paymentDate?: SortOrderInput | SortOrder
@@ -15353,6 +15397,8 @@ export namespace Prisma {
     bonus?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     deductions?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     advance?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: DecimalNullableWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalWithAggregatesFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusWithAggregatesFilter<"Payroll"> | $Enums.PayrollStatus
     paymentDate?: DateTimeNullableWithAggregatesFilter<"Payroll"> | Date | string | null
@@ -16220,6 +16266,8 @@ export namespace Prisma {
     bonus?: Decimal | DecimalJsLike | number | string | null
     deductions?: Decimal | DecimalJsLike | number | string | null
     advance?: Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: Decimal | DecimalJsLike | number | string | null
+    paidAmount?: Decimal | DecimalJsLike | number | string | null
     netSalary: Decimal | DecimalJsLike | number | string
     status?: $Enums.PayrollStatus
     paymentDate?: Date | string | null
@@ -16244,6 +16292,8 @@ export namespace Prisma {
     bonus?: Decimal | DecimalJsLike | number | string | null
     deductions?: Decimal | DecimalJsLike | number | string | null
     advance?: Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: Decimal | DecimalJsLike | number | string | null
+    paidAmount?: Decimal | DecimalJsLike | number | string | null
     netSalary: Decimal | DecimalJsLike | number | string
     status?: $Enums.PayrollStatus
     paymentDate?: Date | string | null
@@ -16266,6 +16316,8 @@ export namespace Prisma {
     bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16290,6 +16342,8 @@ export namespace Prisma {
     bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16313,6 +16367,8 @@ export namespace Prisma {
     bonus?: Decimal | DecimalJsLike | number | string | null
     deductions?: Decimal | DecimalJsLike | number | string | null
     advance?: Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: Decimal | DecimalJsLike | number | string | null
+    paidAmount?: Decimal | DecimalJsLike | number | string | null
     netSalary: Decimal | DecimalJsLike | number | string
     status?: $Enums.PayrollStatus
     paymentDate?: Date | string | null
@@ -16335,6 +16391,8 @@ export namespace Prisma {
     bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -16358,6 +16416,8 @@ export namespace Prisma {
     bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -17460,6 +17520,8 @@ export namespace Prisma {
     bonus?: SortOrder
     deductions?: SortOrder
     advance?: SortOrder
+    carriedOverBalance?: SortOrder
+    paidAmount?: SortOrder
     netSalary?: SortOrder
     status?: SortOrder
     paymentDate?: SortOrder
@@ -17481,6 +17543,8 @@ export namespace Prisma {
     bonus?: SortOrder
     deductions?: SortOrder
     advance?: SortOrder
+    carriedOverBalance?: SortOrder
+    paidAmount?: SortOrder
     netSalary?: SortOrder
   }
 
@@ -17499,6 +17563,8 @@ export namespace Prisma {
     bonus?: SortOrder
     deductions?: SortOrder
     advance?: SortOrder
+    carriedOverBalance?: SortOrder
+    paidAmount?: SortOrder
     netSalary?: SortOrder
     status?: SortOrder
     paymentDate?: SortOrder
@@ -17522,6 +17588,8 @@ export namespace Prisma {
     bonus?: SortOrder
     deductions?: SortOrder
     advance?: SortOrder
+    carriedOverBalance?: SortOrder
+    paidAmount?: SortOrder
     netSalary?: SortOrder
     status?: SortOrder
     paymentDate?: SortOrder
@@ -17543,6 +17611,8 @@ export namespace Prisma {
     bonus?: SortOrder
     deductions?: SortOrder
     advance?: SortOrder
+    carriedOverBalance?: SortOrder
+    paidAmount?: SortOrder
     netSalary?: SortOrder
   }
 
@@ -18858,6 +18928,8 @@ export namespace Prisma {
     bonus?: Decimal | DecimalJsLike | number | string | null
     deductions?: Decimal | DecimalJsLike | number | string | null
     advance?: Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: Decimal | DecimalJsLike | number | string | null
+    paidAmount?: Decimal | DecimalJsLike | number | string | null
     netSalary: Decimal | DecimalJsLike | number | string
     status?: $Enums.PayrollStatus
     paymentDate?: Date | string | null
@@ -18880,6 +18952,8 @@ export namespace Prisma {
     bonus?: Decimal | DecimalJsLike | number | string | null
     deductions?: Decimal | DecimalJsLike | number | string | null
     advance?: Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: Decimal | DecimalJsLike | number | string | null
+    paidAmount?: Decimal | DecimalJsLike | number | string | null
     netSalary: Decimal | DecimalJsLike | number | string
     status?: $Enums.PayrollStatus
     paymentDate?: Date | string | null
@@ -19064,6 +19138,8 @@ export namespace Prisma {
     bonus?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     deductions?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     advance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: DecimalNullableFilter<"Payroll"> | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFilter<"Payroll"> | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFilter<"Payroll"> | $Enums.PayrollStatus
     paymentDate?: DateTimeNullableFilter<"Payroll"> | Date | string | null
@@ -20039,6 +20115,8 @@ export namespace Prisma {
     bonus?: Decimal | DecimalJsLike | number | string | null
     deductions?: Decimal | DecimalJsLike | number | string | null
     advance?: Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: Decimal | DecimalJsLike | number | string | null
+    paidAmount?: Decimal | DecimalJsLike | number | string | null
     netSalary: Decimal | DecimalJsLike | number | string
     status?: $Enums.PayrollStatus
     paymentDate?: Date | string | null
@@ -20199,6 +20277,8 @@ export namespace Prisma {
     bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20221,6 +20301,8 @@ export namespace Prisma {
     bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -20243,6 +20325,8 @@ export namespace Prisma {
     bonus?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     deductions?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     advance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    carriedOverBalance?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    paidAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     netSalary?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     status?: EnumPayrollStatusFieldUpdateOperationsInput | $Enums.PayrollStatus
     paymentDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null

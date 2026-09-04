@@ -1,46 +1,217 @@
-'use server'
+"use server";
 
-import { prisma } from '@/lib/prisma'
-import { revalidatePath } from 'next/cache'
-import { AttendanceStatus, LeaveStatus, PayrollStatus } from '../../prisma/generated'
+import { prisma } from "@/lib/prisma";
+import { revalidatePath } from "next/cache";
+import {
+  AttendanceStatus,
+  LeaveStatus,
+  PayrollStatus,
+} from "../../prisma/generated";
 
 export async function getAttendancesByDate(date: string) {
   try {
-    const targetDate = new Date(`${date}T00:00:00.000Z`)
+    const targetDate = new Date(`${date}T00:00:00.000Z`);
     const attendances = await prisma.attendance.findMany({
       where: { date: targetDate },
       include: { user: { select: { id: true, fullName: true, role: true } } },
-    })
-    return { success: true, attendances: JSON.parse(JSON.stringify(attendances)) }
+    });
+    return {
+      success: true,
+      attendances: JSON.parse(JSON.stringify(attendances)),
+    };
   } catch (error) {
-    console.error('Failed to fetch attendances:', error)
-    return { success: false, error: 'Failed to fetch attendances' }
+    console.error("Failed to fetch attendances:", error);
+    return { success: false, error: "Failed to fetch attendances" };
+  }
+}
+
+export async function recalculateEmployeePayroll(
+  userId: string,
+  month: number,
+  year: number,
+) {
+  try {
+    const emp = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        status: true,
+        monthlyBaseSalary: true,
+        dailyShiftHours: true,
+      },
+    });
+    if (!emp || emp.status !== "ACTIVE" || !emp.monthlyBaseSalary) return null;
+
+    const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
+    const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
+    const workingDays = new Date(year, month, 0).getDate();
+
+    const attendances = await prisma.attendance.findMany({
+      where: { userId: emp.id, date: { gte: startDate, lte: endDate } },
+    });
+
+    let presentDays = 0;
+    let totalOvertimeHours = 0;
+
+    for (const att of attendances) {
+      if (att.status === "PRESENT") presentDays += 1;
+      if (att.overtimeHours) totalOvertimeHours += Number(att.overtimeHours);
+    }
+
+    const leaves = await prisma.leave.findMany({
+      where: {
+        userId: emp.id,
+        status: "APPROVED",
+        startDate: { gte: startDate },
+        endDate: { lte: endDate },
+      },
+    });
+
+    let paidLeaveDays = 0;
+    let leaveDays = 0;
+    for (const l of leaves) {
+      const days =
+        Math.ceil(
+          (l.endDate.getTime() - l.startDate.getTime()) / (1000 * 3600 * 24),
+        ) + 1;
+      leaveDays += days;
+      if (l.type !== "UNPAID") paidLeaveDays += days;
+    }
+
+    const paidDays = Math.min(workingDays, presentDays + paidLeaveDays);
+    const absentDays = Math.max(0, workingDays - paidDays);
+
+    const advances = await prisma.salaryAdvance.findMany({
+      where: { userId: emp.id, status: { in: ["APPROVED", "PENDING"] } },
+    });
+    let totalAdvanceRemaining = 0;
+    for (const adv of advances) {
+      totalAdvanceRemaining += Number(adv.amount) - Number(adv.deductedAmount);
+    }
+
+    // Carried over balance from previous month's unpaid salary
+    const prevMonth = month === 1 ? 12 : month - 1;
+    const prevYear = month === 1 ? year - 1 : year;
+    const prevPayroll = await prisma.payroll.findUnique({
+      where: {
+        userId_month_year: { userId: emp.id, month: prevMonth, year: prevYear },
+      },
+    });
+    const carriedOverBalance = prevPayroll
+      ? Number(prevPayroll.netSalary || 0)
+      : 0;
+
+    const basicSalary = Number(emp.monthlyBaseSalary);
+    const perDaySalary = basicSalary / workingDays;
+    const empShiftHours = emp.dailyShiftHours ? Number(emp.dailyShiftHours) : 8;
+
+    const calculatedDeductions = absentDays * perDaySalary;
+    const calculatedOvertimePay =
+      totalOvertimeHours * (perDaySalary / empShiftHours);
+
+    const existingPayroll = await prisma.payroll.findUnique({
+      where: { userId_month_year: { userId: emp.id, month, year } },
+    });
+
+    const bonus = existingPayroll ? Number(existingPayroll.bonus || 0) : 0;
+    const paidAmount = existingPayroll
+      ? Number(existingPayroll.paidAmount || 0)
+      : 0;
+
+    const totalGross =
+      basicSalary + calculatedOvertimePay + bonus + carriedOverBalance;
+    const preliminaryNet = totalGross - calculatedDeductions;
+
+    let calculatedAdvanceDeduction = 0;
+    if (totalAdvanceRemaining > 0 && preliminaryNet > 0) {
+      calculatedAdvanceDeduction = Math.min(
+        totalAdvanceRemaining,
+        preliminaryNet,
+      );
+    }
+
+    const totalCalculatedNet = Math.max(
+      0,
+      preliminaryNet - calculatedAdvanceDeduction,
+    );
+    const remainingNetSalary = Math.max(0, totalCalculatedNet - paidAmount);
+
+    // If remaining balance exists (> 0), status switches back to DRAFT even if previously paid
+    const status: PayrollStatus =
+      remainingNetSalary === 0 && paidAmount > 0 ? "PAID" : "DRAFT";
+
+    const payroll = await prisma.payroll.upsert({
+      where: { userId_month_year: { userId: emp.id, month, year } },
+      update: {
+        basicSalary,
+        workingDays,
+        presentDays: Math.floor(presentDays),
+        absentDays,
+        leaveDays,
+        totalOvertimeHours,
+        overtimePay: calculatedOvertimePay,
+        deductions: calculatedDeductions,
+        advance: calculatedAdvanceDeduction,
+        carriedOverBalance,
+        paidAmount,
+        netSalary: remainingNetSalary,
+        status,
+      },
+      create: {
+        userId: emp.id,
+        month,
+        year,
+        basicSalary,
+        workingDays,
+        presentDays: Math.floor(presentDays),
+        absentDays,
+        leaveDays,
+        totalOvertimeHours,
+        overtimePay: calculatedOvertimePay,
+        deductions: calculatedDeductions,
+        advance: calculatedAdvanceDeduction,
+        carriedOverBalance,
+        paidAmount: 0,
+        netSalary: remainingNetSalary,
+        status: "DRAFT",
+      },
+    });
+
+    return payroll;
+  } catch (error) {
+    console.error("Failed to recalculate employee payroll:", error);
+    return null;
   }
 }
 
 export async function markAttendance(
-  userId: string, 
-  date: string, 
-  status: AttendanceStatus, 
+  userId: string,
+  date: string,
+  status: AttendanceStatus,
   overtimeHours?: number,
   checkIn?: string,
-  checkOut?: string
+  checkOut?: string,
 ) {
   try {
-    const targetDate = new Date(`${date}T00:00:00.000Z`)
-    let finalOvertimeHours = overtimeHours !== undefined && overtimeHours !== null ? Number(overtimeHours) : null;
-    
+    const targetDate = new Date(`${date}T00:00:00.000Z`);
+    let finalOvertimeHours =
+      overtimeHours !== undefined && overtimeHours !== null
+        ? Number(overtimeHours)
+        : null;
+
     if (checkIn && checkOut && finalOvertimeHours === null) {
       const user = await prisma.user.findUnique({
         where: { id: userId },
-        select: { dailyShiftHours: true }
+        select: { dailyShiftHours: true },
       });
-      const shiftHours = user?.dailyShiftHours ? Number(user.dailyShiftHours) : 8;
+      const shiftHours = user?.dailyShiftHours
+        ? Number(user.dailyShiftHours)
+        : 8;
 
       const inDate = new Date(`1970-01-01T${checkIn}:00Z`);
       const outDate = new Date(`1970-01-01T${checkOut}:00Z`);
       let diffHours = (outDate.getTime() - inDate.getTime()) / (1000 * 60 * 60);
-      
+
       if (diffHours < 0) diffHours += 24; // Cross-midnight shift
       if (diffHours > shiftHours) {
         finalOvertimeHours = parseFloat((diffHours - shiftHours).toFixed(1));
@@ -49,145 +220,66 @@ export async function markAttendance(
       }
     }
 
-    const createData: any = { 
-      userId, 
-      date: targetDate, 
+    const createData: any = {
+      userId,
+      date: targetDate,
       status,
       overtimeHours: finalOvertimeHours,
       checkIn: checkIn ? new Date(`1970-01-01T${checkIn}:00Z`) : null,
       checkOut: checkOut ? new Date(`1970-01-01T${checkOut}:00Z`) : null,
-    }
+    };
 
-    const updateData: any = { status, checkIn: createData.checkIn, checkOut: createData.checkOut }
-    if (finalOvertimeHours !== null) updateData.overtimeHours = finalOvertimeHours;
+    const updateData: any = {
+      status,
+      checkIn: createData.checkIn,
+      checkOut: createData.checkOut,
+    };
+    if (finalOvertimeHours !== null)
+      updateData.overtimeHours = finalOvertimeHours;
 
     const attendance = await prisma.attendance.upsert({
       where: { userId_date: { userId, date: targetDate } },
       update: updateData,
       create: createData,
-    })
-    revalidatePath('/admin/payroll')
-    return { success: true, attendance: JSON.parse(JSON.stringify(attendance)) }
+    });
+
+    // // Auto-recalculate payroll if payroll record exists for this month/year
+    // const m = targetDate.getUTCMonth() + 1;
+    // const y = targetDate.getUTCFullYear();
+    // const existingPayroll = await prisma.payroll.findUnique({
+    //   where: { userId_month_year: { userId, month: m, year: y } },
+    // });
+    // if (existingPayroll) {
+    //   await recalculateEmployeePayroll(userId, m, y);
+    // }
+
+    // revalidatePath("/admin/payroll");
+    return {
+      success: true,
+      attendance: JSON.parse(JSON.stringify(attendance)),
+    };
   } catch (error) {
-    console.error('Failed to mark attendance:', error)
-    return { success: false, error: 'Failed to mark attendance' }
+    console.error("Failed to mark attendance:", error);
+    return { success: false, error: "Failed to mark attendance" };
   }
 }
 
 export async function generateMonthlyPayroll(month: number, year: number) {
   try {
     const employees = await prisma.user.findMany({
-      where: { status: 'ACTIVE', monthlyBaseSalary: { not: null } }
+      where: { status: "ACTIVE", monthlyBaseSalary: { not: null } },
     });
-
-    const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0));
-    const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999));
-    const workingDays = new Date(year, month, 0).getDate();
 
     for (const emp of employees) {
       if (!emp.monthlyBaseSalary) continue;
-
-      const attendances = await prisma.attendance.findMany({
-        where: {
-          userId: emp.id,
-          date: { gte: startDate, lte: endDate }
-        }
-      });
-
-      let presentDays = 0;
-      let totalOvertimeHours = 0;
-
-      for (const att of attendances) {
-        if (att.status === 'PRESENT') presentDays += 1;
-        if (att.overtimeHours) totalOvertimeHours += Number(att.overtimeHours);
-      }
-
-      // Query approved leaves
-      const leaves = await prisma.leave.findMany({
-        where: {
-          userId: emp.id,
-          status: 'APPROVED',
-          startDate: { gte: startDate },
-          endDate: { lte: endDate }
-        }
-      });
-
-      let paidLeaveDays = 0;
-      let leaveDays = 0;
-      for (const l of leaves) {
-        const days = Math.ceil((l.endDate.getTime() - l.startDate.getTime()) / (1000 * 3600 * 24)) + 1;
-        leaveDays += days;
-        if (l.type !== 'UNPAID') {
-          paidLeaveDays += days;
-        }
-      }
-
-      // Effective paid days and absent days calculation ("jitna attendance utna salary")
-      const paidDays = Math.min(workingDays, presentDays + paidLeaveDays);
-      const absentDays = Math.max(0, workingDays - paidDays);
-
-      // Calculate remaining advance
-      const advances = await prisma.salaryAdvance.findMany({
-        where: { userId: emp.id, status: { in: ['APPROVED', 'PENDING'] } }
-      });
-      let totalAdvanceRemaining = 0;
-      for (const adv of advances) {
-        totalAdvanceRemaining += Number(adv.amount) - Number(adv.deductedAmount);
-      }
-
-      const basicSalary = Number(emp.monthlyBaseSalary);
-      const perDaySalary = basicSalary / workingDays;
-      const empShiftHours = emp.dailyShiftHours ? Number(emp.dailyShiftHours) : 8;
-      
-      const calculatedDeductions = absentDays * perDaySalary;
-      const calculatedOvertimePay = totalOvertimeHours * (perDaySalary / empShiftHours);
-
-      let preliminaryNet = basicSalary + calculatedOvertimePay - calculatedDeductions;
-      
-      let calculatedAdvanceDeduction = 0;
-      if (totalAdvanceRemaining > 0 && preliminaryNet > 0) {
-        calculatedAdvanceDeduction = Math.min(totalAdvanceRemaining, preliminaryNet);
-      }
-      
-      const netSalary = Math.max(0, preliminaryNet - calculatedAdvanceDeduction);
-
-      await prisma.payroll.upsert({
-        where: { userId_month_year: { userId: emp.id, month, year } },
-        update: { 
-          basicSalary, 
-          workingDays,
-          presentDays: Math.floor(presentDays),
-          absentDays,
-          leaveDays,
-          totalOvertimeHours,
-          overtimePay: calculatedOvertimePay,
-          deductions: calculatedDeductions,
-          advance: calculatedAdvanceDeduction,
-          netSalary 
-        },
-        create: {
-          userId: emp.id,
-          month,
-          year,
-          basicSalary,
-          workingDays,
-          presentDays: Math.floor(presentDays),
-          absentDays,
-          leaveDays,
-          totalOvertimeHours,
-          overtimePay: calculatedOvertimePay,
-          deductions: calculatedDeductions,
-          advance: calculatedAdvanceDeduction,
-          netSalary
-        }
-      });
+      await recalculateEmployeePayroll(emp.id, month, year);
     }
 
-    revalidatePath('/admin/payroll')
-    return { success: true }
+    revalidatePath("/admin/payroll");
+    return { success: true };
   } catch (error) {
-    console.error('Failed to generate payroll:', error)
-    return { success: false, error: 'Failed to generate payroll' }
+    console.error("Failed to generate payroll:", error);
+    return { success: false, error: "Failed to generate payroll" };
   }
 }
 
@@ -195,105 +287,134 @@ export async function getPayrolls(month: number, year: number) {
   try {
     const payrolls = await prisma.payroll.findMany({
       where: { month, year },
-      include: { user: { select: { fullName: true, role: true, monthlyBaseSalary: true } } },
+      include: {
+        user: {
+          select: { fullName: true, role: true, monthlyBaseSalary: true },
+        },
+      },
     });
     return { success: true, payrolls: JSON.parse(JSON.stringify(payrolls)) };
   } catch (error) {
-    return { success: false, error: 'Failed to fetch payrolls' };
+    return { success: false, error: "Failed to fetch payrolls" };
   }
 }
 
 export async function updatePayrollRecord(payrollId: string, data: any) {
   try {
     const p = await prisma.payroll.findUnique({ where: { id: payrollId } });
-    if (!p) return { success: false, error: 'Not found' };
+    if (!p) return { success: false, error: "Not found" };
 
     const basicSalary = Number(p.basicSalary);
-    const overtimePay = data.overtimePay !== undefined ? Number(data.overtimePay) : Number(p.overtimePay);
-    const bonus = data.bonus !== undefined ? Number(data.bonus) : Number(p.bonus);
-    const deductions = data.deductions !== undefined ? Number(data.deductions) : Number(p.deductions);
-    const advance = data.advance !== undefined ? Number(data.advance) : Number(p.advance);
+    const overtimePay =
+      data.overtimePay !== undefined
+        ? Number(data.overtimePay)
+        : Number(p.overtimePay);
+    const bonus =
+      data.bonus !== undefined ? Number(data.bonus) : Number(p.bonus);
+    const deductions =
+      data.deductions !== undefined
+        ? Number(data.deductions)
+        : Number(p.deductions);
+    const advance =
+      data.advance !== undefined ? Number(data.advance) : Number(p.advance);
+    const carriedOverBalance =
+      data.carriedOverBalance !== undefined
+        ? Number(data.carriedOverBalance)
+        : Number(p.carriedOverBalance || 0);
 
-    const netSalary = basicSalary + overtimePay + bonus - deductions - advance;
-    const targetStatus = data.status ? (data.status as PayrollStatus) : p.status;
+    const paidAmount = Number(p.paidAmount || 0);
+    const totalGross = basicSalary + overtimePay + bonus + carriedOverBalance;
+    const totalNetBeforePayment = Math.max(
+      0,
+      totalGross - deductions - advance,
+    );
+    const remainingNetSalary = Math.max(0, totalNetBeforePayment - paidAmount);
+
+    const targetStatus: PayrollStatus =
+      remainingNetSalary === 0 && paidAmount > 0
+        ? "PAID"
+        : (data.status as PayrollStatus) || "DRAFT";
 
     const updateData: any = {
       overtimePay,
       bonus,
       deductions,
       advance,
-      netSalary,
+      carriedOverBalance,
+      netSalary: remainingNetSalary,
       status: targetStatus,
     };
 
-    if (targetStatus === 'PAID' && p.status !== 'PAID') {
+    if (targetStatus === "PAID" && p.status !== "PAID") {
       updateData.paymentDate = new Date();
       if (!p.paymentMethod) {
-        updateData.paymentMethod = 'CASH';
-      }
-
-      if (advance > 0) {
-        const advances = await prisma.salaryAdvance.findMany({
-          where: { userId: p.userId, status: { in: ['APPROVED', 'PENDING'] } },
-          orderBy: { createdAt: 'asc' }
-        });
-        
-        let amountToDeduct = advance;
-        for (const adv of advances) {
-          if (amountToDeduct <= 0) break;
-          const remaining = Number(adv.amount) - Number(adv.deductedAmount);
-          const deductionForThis = Math.min(remaining, amountToDeduct);
-          
-          const newDeducted = Number(adv.deductedAmount) + deductionForThis;
-          await prisma.salaryAdvance.update({
-            where: { id: adv.id },
-            data: {
-              deductedAmount: newDeducted,
-              status: newDeducted >= Number(adv.amount) ? 'DEDUCTED' : 'APPROVED'
-            }
-          });
-          amountToDeduct -= deductionForThis;
-        }
+        updateData.paymentMethod = "CASH";
       }
     }
 
     await prisma.payroll.update({
       where: { id: payrollId },
-      data: updateData
+      data: updateData,
     });
 
-    revalidatePath('/admin/payroll');
+    revalidatePath("/admin/payroll");
     return { success: true };
   } catch (error) {
-    return { success: false, error: 'Failed to update payroll' };
+    return { success: false, error: "Failed to update payroll" };
   }
 }
 
-export async function markPayrollPaid(payrollId: string, paymentMethod: any) {
+export async function markPayrollPaid(
+  payrollId: string,
+  paymentMethod: any,
+  amountToPay?: number,
+) {
   try {
     const p = await prisma.payroll.findUnique({ where: { id: payrollId } });
-    if (!p) return { success: false, error: 'Not found' };
+    if (!p) return { success: false, error: "Not found" };
+
+    const currentRemainingNet = Number(p.netSalary);
+    const currentPaid = Number(p.paidAmount || 0);
+    const payAmount =
+      amountToPay !== undefined && amountToPay !== null
+        ? Number(amountToPay)
+        : currentRemainingNet;
+
+    if (payAmount <= 0) {
+      return { success: false, error: "Payment amount must be greater than 0" };
+    }
+
+    if (payAmount > currentRemainingNet) {
+      return {
+        success: false,
+        error: `Payment amount cannot exceed remaining net payable (Rs ${currentRemainingNet})`,
+      };
+    }
+
+    const newPaidAmount = currentPaid + payAmount;
+    const newRemainingNet = Math.max(0, currentRemainingNet - payAmount);
+    const newStatus: PayrollStatus = newRemainingNet === 0 ? "PAID" : "DRAFT";
 
     // Deduct advance from actual SalaryAdvance records if paid
     if (Number(p.advance) > 0) {
       const advances = await prisma.salaryAdvance.findMany({
-        where: { userId: p.userId, status: { in: ['APPROVED', 'PENDING'] } },
-        orderBy: { createdAt: 'asc' }
+        where: { userId: p.userId, status: { in: ["APPROVED", "PENDING"] } },
+        orderBy: { createdAt: "asc" },
       });
-      
-      let amountToDeduct = Number(p.advance);
+
+      let amountToDeduct = Math.min(Number(p.advance), payAmount);
       for (const adv of advances) {
         if (amountToDeduct <= 0) break;
         const remaining = Number(adv.amount) - Number(adv.deductedAmount);
         const deductionForThis = Math.min(remaining, amountToDeduct);
-        
+
         const newDeducted = Number(adv.deductedAmount) + deductionForThis;
         await prisma.salaryAdvance.update({
           where: { id: adv.id },
           data: {
             deductedAmount: newDeducted,
-            status: newDeducted >= Number(adv.amount) ? 'DEDUCTED' : 'APPROVED'
-          }
+            status: newDeducted >= Number(adv.amount) ? "DEDUCTED" : "APPROVED",
+          },
         });
         amountToDeduct -= deductionForThis;
       }
@@ -301,41 +422,56 @@ export async function markPayrollPaid(payrollId: string, paymentMethod: any) {
 
     await prisma.payroll.update({
       where: { id: payrollId },
-      data: { status: 'PAID', paymentDate: new Date(), paymentMethod }
+      data: {
+        paidAmount: newPaidAmount,
+        netSalary: newRemainingNet,
+        status: newStatus,
+        paymentDate: new Date(),
+        paymentMethod,
+      },
     });
-    revalidatePath('/admin/payroll');
+
+    revalidatePath("/admin/payroll");
     return { success: true };
   } catch (error) {
-    return { success: false, error: 'Failed to pay' };
+    console.error("Failed to mark payroll paid:", error);
+    return { success: false, error: "Failed to process payment" };
   }
 }
 
-export async function getSalaryAdvances(type: 'PENDING' | 'DEDUCTED' = 'PENDING') {
+export async function getSalaryAdvances(
+  type: "PENDING" | "DEDUCTED" = "PENDING",
+) {
   try {
-    const whereCondition = type === 'DEDUCTED' 
-      ? { status: 'DEDUCTED' as const }
-      : { status: { in: ['PENDING', 'APPROVED'] as any } };
+    const whereCondition =
+      type === "DEDUCTED"
+        ? { status: "DEDUCTED" as const }
+        : { status: { in: ["PENDING", "APPROVED"] as any } };
 
     const advances = await prisma.salaryAdvance.findMany({
       where: whereCondition,
       include: { user: { select: { fullName: true } } },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
     return { success: true, advances: JSON.parse(JSON.stringify(advances)) };
   } catch (error) {
-    return { success: false, error: 'Failed to fetch advances' };
+    return { success: false, error: "Failed to fetch advances" };
   }
 }
 
-export async function createSalaryAdvance(userId: string, amount: number, reason: string) {
+export async function createSalaryAdvance(
+  userId: string,
+  amount: number,
+  reason: string,
+) {
   try {
     await prisma.salaryAdvance.create({
-      data: { userId, amount, reason, status: 'APPROVED' }
+      data: { userId, amount, reason, status: "APPROVED" },
     });
-    revalidatePath('/admin/payroll');
+    revalidatePath("/admin/payroll");
     return { success: true };
   } catch (error) {
-    return { success: false, error: 'Failed to create advance' };
+    return { success: false, error: "Failed to create advance" };
   }
 }
 
@@ -343,40 +479,40 @@ export async function getLeaves() {
   try {
     const leaves = await prisma.leave.findMany({
       include: { user: { select: { fullName: true } } },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
     return { success: true, leaves: JSON.parse(JSON.stringify(leaves)) };
   } catch (error) {
-    return { success: false, error: 'Failed to fetch leaves' };
+    return { success: false, error: "Failed to fetch leaves" };
   }
 }
 
 export async function updateLeave(id: string, data: any) {
   try {
     await prisma.leave.update({ where: { id }, data });
-    revalidatePath('/admin/payroll');
+    revalidatePath("/admin/payroll");
     return { success: true };
   } catch (error) {
-    return { success: false, error: 'Failed to update leave' };
+    return { success: false, error: "Failed to update leave" };
   }
 }
 
 export async function createLeave(data: any) {
   try {
     await prisma.leave.create({ data });
-    revalidatePath('/admin/payroll');
+    revalidatePath("/admin/payroll");
     return { success: true };
   } catch (error) {
-    return { success: false, error: 'Failed to create leave' };
+    return { success: false, error: "Failed to create leave" };
   }
 }
 
 export async function deleteLeave(id: string) {
   try {
     await prisma.leave.delete({ where: { id } });
-    revalidatePath('/admin/payroll');
+    revalidatePath("/admin/payroll");
     return { success: true };
   } catch (error) {
-    return { success: false, error: 'Failed to delete leave' };
+    return { success: false, error: "Failed to delete leave" };
   }
 }

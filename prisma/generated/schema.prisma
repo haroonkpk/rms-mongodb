@@ -267,11 +267,13 @@ model Payroll {
   leaveDays          Int?     @default(0) @map("leave_days")
   totalOvertimeHours Decimal? @default(0) @map("total_overtime_hours") @db.Decimal(5, 2)
 
-  basicSalary Decimal  @map("basic_salary") @db.Decimal(10, 2)
-  overtimePay Decimal? @default(0) @map("overtime_pay") @db.Decimal(10, 2)
-  bonus       Decimal? @default(0) @db.Decimal(10, 2)
-  deductions  Decimal? @default(0) @db.Decimal(10, 2)
-  advance     Decimal? @default(0) @db.Decimal(10, 2)
+  basicSalary        Decimal  @map("basic_salary") @db.Decimal(10, 2)
+  overtimePay        Decimal? @default(0) @map("overtime_pay") @db.Decimal(10, 2)
+  bonus              Decimal? @default(0) @db.Decimal(10, 2)
+  deductions         Decimal? @default(0) @db.Decimal(10, 2)
+  advance            Decimal? @default(0) @db.Decimal(10, 2)
+  carriedOverBalance Decimal? @default(0) @map("carried_over_balance") @db.Decimal(10, 2)
+  paidAmount         Decimal? @default(0) @map("paid_amount") @db.Decimal(10, 2)
 
   netSalary     Decimal              @map("net_salary") @db.Decimal(10, 2)
   status        PayrollStatus        @default(DRAFT)
