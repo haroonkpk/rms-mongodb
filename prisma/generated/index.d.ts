@@ -78,10 +78,9 @@ export type Role = (typeof Role)[keyof typeof Role]
 
 
 export const ShiftTiming: {
-  MORNING: 'MORNING',
-  EVENING: 'EVENING',
+  DAY: 'DAY',
   NIGHT: 'NIGHT',
-  FULL_DAY: 'FULL_DAY'
+  DUAL: 'DUAL'
 };
 
 export type ShiftTiming = (typeof ShiftTiming)[keyof typeof ShiftTiming]

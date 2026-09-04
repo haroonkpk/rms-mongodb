@@ -47,7 +47,11 @@ export function UserProfileModal({
       icon: Clock,
       label: "Shift Schedule",
       value: employee.shiftTiming
-        ? employee.shiftTiming.replace("_", " ")
+        ? employee.shiftTiming === "DAY"
+          ? "Day Shift"
+          : employee.shiftTiming === "NIGHT"
+            ? "Night Shift"
+            : "Dual Shift"
         : "Unassigned",
     },
     {

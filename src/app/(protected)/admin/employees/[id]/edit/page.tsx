@@ -37,10 +37,9 @@ const statusOptions = [
 
 const shiftOptions = [
   { value: "", label: "Select Shift (Optional)" },
-  { value: "MORNING", label: "Morning (06:00 - 14:00)" },
-  { value: "EVENING", label: "Evening (16:00 - 00:00)" },
-  { value: "NIGHT", label: "Night (22:00 - 06:00)" },
-  { value: "FULL_DAY", label: "Full Day (12:00 - 22:00)" },
+  { value: "DAY", label: "Day Shift" },
+  { value: "NIGHT", label: "Night Shift" },
+  { value: "DUAL", label: "Dual Shift" },
 ];
 
 export default function EditEmployeePage({

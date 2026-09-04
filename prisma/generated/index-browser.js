@@ -301,10 +301,9 @@ exports.EmployeeStatus = exports.$Enums.EmployeeStatus = {
 };
 
 exports.ShiftTiming = exports.$Enums.ShiftTiming = {
-  MORNING: 'MORNING',
-  EVENING: 'EVENING',
+  DAY: 'DAY',
   NIGHT: 'NIGHT',
-  FULL_DAY: 'FULL_DAY'
+  DUAL: 'DUAL'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {

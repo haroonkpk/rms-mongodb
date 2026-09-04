@@ -58,7 +58,13 @@ export default function AdminEmployeesPage() {
     return employees.map((emp) => ({
       ...emp,
       fullName: emp.fullName || "N/A",
-      shiftTiming: emp.shiftTiming ? emp.shiftTiming.replace("_", " ") : "—",
+      shiftTiming: emp.shiftTiming
+        ? emp.shiftTiming === "DAY"
+          ? "Day"
+          : emp.shiftTiming === "NIGHT"
+            ? "Night"
+            : "Dual"
+        : "—",
       monthlyBaseSalary: emp.monthlyBaseSalary
         ? `Rs ${emp.monthlyBaseSalary.toLocaleString()}`
         : "—",
