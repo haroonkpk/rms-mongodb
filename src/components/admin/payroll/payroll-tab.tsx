@@ -8,6 +8,7 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ActivityFilters } from "@/components/shared/filters/activity-filters";
 import { PrintPdfButton } from "@/components/shared/print-pdf-button";
+import { PrintableSalarySlip } from "./printable-salary-slip";
 import { Edit, CheckCircle, Play, Printer } from "lucide-react";
 import {
   generateMonthlyPayroll,
@@ -15,8 +16,6 @@ import {
   updatePayrollRecord,
   markPayrollPaid,
 } from "@/actions/payroll";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
 
 const payrollHeaders: TableHeader[] = [
   { key: "employeeName", label: "Employee Name" },
@@ -41,10 +40,16 @@ export function PayrollTab() {
   const [editPayrollModal, setEditPayrollModal] = useState<any | null>(null);
   const [isSavingPayroll, setIsSavingPayroll] = useState(false);
   const [payPayrollModal, setPayPayrollModal] = useState<any | null>(null);
+  const [printablePayroll, setPrintablePayroll] = useState<any | null>(null);
   const [paymentMethod, setPaymentMethod] = useState("CASH");
   const [amountToPay, setAmountToPay] = useState<string>("");
   const [payError, setPayError] = useState<string>("");
   const [isProcessingPay, setIsProcessingPay] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     fetchPayrolls();
@@ -72,48 +77,22 @@ export function PayrollTab() {
     }
   };
 
-  const generatePayslip = (payroll: any) => {
-    const doc = new jsPDF();
-    doc.setFontSize(20);
-    doc.text("Salary Payslip", 105, 20, { align: "center" });
-
-    doc.setFontSize(12);
-    doc.text(`Employee Name: ${payroll.employeeName}`, 14, 40);
-    doc.text(`Month/Year: ${month}/${year}`, 14, 48);
-    doc.text(`Status: ${payroll.status}`, 14, 56);
-    doc.text(
-      `Working Days: ${payroll.workingDays} | Present: ${payroll.presentDays} | Absent: ${payroll.absentDays} | Leave: ${payroll.leaveDays}`,
-      14,
-      64,
-    );
-
-    autoTable(doc, {
-      startY: 75,
-      head: [["Description", "Amount"]],
-      body: [
-        ["Basic Salary", payroll.basicSalary],
-        ["Overtime Pay", payroll.overtimePay],
-        ["Bonus", payroll.bonus],
-        ["Carried Over (Unpaid Arrears)", payroll.carriedOverBalance],
-        ["Deductions (Absent/Unpaid Leave)", payroll.deductions],
-        ["Salary Advance Deducted", payroll.advance],
-        ["Already Paid So Far", payroll.alreadyPaid],
-        ["Net Remaining Payable", payroll.netSalary],
-      ],
-      theme: "grid",
-      headStyles: { fillColor: [5, 59, 112] },
-    });
-
-    doc.save(
-      `Payslip_${payroll.employeeName.replace(/\s+/g, "_")}_${month}_${year}.pdf`,
-    );
+  const handlePrintSlip = (row: any) => {
+    setPrintablePayroll(row);
+    setTimeout(() => {
+      window.print();
+    }, 150);
   };
 
   const formattedPayrolls = useMemo(() => {
     return payrolls.map((p) => {
       const paid = Number(p.paidAmount || 0);
       const isPaidFull = p.status === "PAID";
-      const displayStatus = isPaidFull ? "PAID" : paid > 0 ? "DRAFT (Partial)" : "DRAFT";
+      const displayStatus = isPaidFull
+        ? "PAID"
+        : paid > 0
+          ? "DRAFT (Partial)"
+          : "DRAFT";
       return {
         ...p,
         employeeName: p.user?.fullName || "N/A",
@@ -218,9 +197,10 @@ export function PayrollTab() {
           },
           {
             icon: <Printer size={16} className="text-white" />,
-            text: "Payslip",
+            text: "Print Payslip",
             className: "bg-blue-600 hover:bg-blue-700 ",
-            onClick: (row) => generatePayslip(row),
+            show: (row: any) => row.status === "PAID" || Number(row.paidAmount || 0) > 0,
+            onClick: (row) => handlePrintSlip(row),
           },
           {
             icon: <CheckCircle size={16} className="text-white" />,
@@ -229,7 +209,9 @@ export function PayrollTab() {
             show: (row: any) => row.status !== "PAID",
             onClick: (row) => {
               setPaymentMethod("CASH");
-              const rawNet = row.netSalary ? String(row.netSalary).replace("Rs ", "") : "0";
+              const rawNet = row.netSalary
+                ? String(row.netSalary).replace("Rs ", "")
+                : "0";
               setAmountToPay(rawNet);
               setPayError("");
               setPayPayrollModal(row);
@@ -312,7 +294,9 @@ export function PayrollTab() {
                 <Select
                   label="Status"
                   name="status"
-                  defaultValue={editPayrollModal.status.includes("DRAFT") ? "DRAFT" : "PAID"}
+                  defaultValue={
+                    editPayrollModal.status.includes("DRAFT") ? "DRAFT" : "PAID"
+                  }
                   options={[
                     { value: "DRAFT", label: "Draft" },
                     { value: "PAID", label: "Paid" },
@@ -407,20 +391,28 @@ export function PayrollTab() {
           <form
             onSubmit={async (e) => {
               e.preventDefault();
-              const maxPayable = Number(payPayrollModal.netSalary.replace("Rs ", ""));
+              const maxPayable = Number(
+                payPayrollModal.netSalary.replace("Rs ", ""),
+              );
               const numPay = Number(amountToPay);
               if (!numPay || numPay <= 0) {
                 setPayError("Payment amount must be greater than 0");
                 return;
               }
               if (numPay > maxPayable) {
-                setPayError(`Payment amount cannot exceed remaining net payable (Rs ${maxPayable})`);
+                setPayError(
+                  `Payment amount cannot exceed remaining net payable (Rs ${maxPayable})`,
+                );
                 return;
               }
 
               setIsProcessingPay(true);
               try {
-                const res = await markPayrollPaid(payPayrollModal.id, paymentMethod, numPay);
+                const res = await markPayrollPaid(
+                  payPayrollModal.id,
+                  paymentMethod,
+                  numPay,
+                );
                 if (res.success) {
                   setPayPayrollModal(null);
                   fetchPayrolls();
@@ -455,7 +447,9 @@ export function PayrollTab() {
               </div>
               <div className="flex items-center justify-between text-slate-600">
                 <span>Already Paid So Far:</span>
-                <span className="font-semibold text-blue-700">{payPayrollModal.alreadyPaid}</span>
+                <span className="font-semibold text-blue-700">
+                  {payPayrollModal.alreadyPaid}
+                </span>
               </div>
               <div className="flex items-center justify-between border-t border-slate-200 pt-2">
                 <span className="text-slate-600 font-bold">
@@ -475,11 +469,15 @@ export function PayrollTab() {
                 const val = e.target.value;
                 setAmountToPay(val);
                 const num = Number(val);
-                const maxPayable = Number(payPayrollModal.netSalary.replace("Rs ", ""));
+                const maxPayable = Number(
+                  payPayrollModal.netSalary.replace("Rs ", ""),
+                );
                 if (num <= 0) {
                   setPayError("Payment amount must be greater than 0");
                 } else if (num > maxPayable) {
-                  setPayError(`Payment amount cannot exceed remaining net payable (Rs ${maxPayable})`);
+                  setPayError(
+                    `Payment amount cannot exceed remaining net payable (Rs ${maxPayable})`,
+                  );
                 } else {
                   setPayError("");
                 }
@@ -512,7 +510,9 @@ export function PayrollTab() {
               <Button
                 type="submit"
                 variant="primary"
-                disabled={!!payError || !amountToPay || Number(amountToPay) <= 0}
+                disabled={
+                  !!payError || !amountToPay || Number(amountToPay) <= 0
+                }
                 isLoading={isProcessingPay}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >
@@ -522,6 +522,13 @@ export function PayrollTab() {
           </form>
         )}
       </Modal>
+
+      {/* Printable Container Component */}
+      <PrintableSalarySlip
+        payroll={printablePayroll}
+        month={month}
+        year={year}
+      />
     </div>
   );
 }
