@@ -10,7 +10,6 @@ import {
   getMenuItems,
   createMenuItem,
   updateMenuItem,
-  toggleMenuItemAvailability,
   deleteMenuItem,
   getCategories,
   createCategory,
@@ -19,7 +18,6 @@ import {
   getAddOns,
   createAddOn,
   updateAddOn,
-  toggleAddOnAvailability,
   deleteAddOn,
   MenuItemData,
   CategoryData,
@@ -265,33 +263,6 @@ export default function AdminMenuPage() {
     });
   };
 
-  const handleToggleItemAvailability = async (
-    id: string,
-    currentStatus: boolean,
-  ) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, isAvailable: !currentStatus } : item,
-      ),
-    );
-
-    const res = await toggleMenuItemAvailability(id, !currentStatus);
-    if (res.success) {
-      toast.success(
-        res.isAvailable
-          ? "Item turned ON (Available on POS)"
-          : "Item turned OFF (Out of stock on POS)",
-      );
-    } else {
-      setItems((prev) =>
-        prev.map((item) =>
-          item.id === id ? { ...item, isAvailable: currentStatus } : item,
-        ),
-      );
-      toast.error(res.error || "Failed to toggle stock status");
-    }
-  };
-
   const handleDeleteItem = async (id: string, name: string) => {
     if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
 
@@ -414,31 +385,6 @@ export default function AdminMenuPage() {
     });
   };
 
-  const handleToggleAddOnAvailability = async (
-    id: string,
-    currentStatus: boolean,
-  ) => {
-    setAddOns((prev) =>
-      prev.map((addon) =>
-        addon.id === id ? { ...addon, isAvailable: !currentStatus } : addon,
-      ),
-    );
-
-    const res = await toggleAddOnAvailability(id, !currentStatus);
-    if (res.success) {
-      toast.success(
-        res.isAvailable ? "Add-on enabled on POS" : "Add-on disabled on POS",
-      );
-    } else {
-      setAddOns((prev) =>
-        prev.map((addon) =>
-          addon.id === id ? { ...addon, isAvailable: currentStatus } : addon,
-        ),
-      );
-      toast.error(res.error || "Failed to toggle add-on status");
-    }
-  };
-
   const handleDeleteAddOn = async (id: string, name: string) => {
     if (!confirm(`Are you sure you want to delete add-on "${name}"?`)) return;
 
@@ -553,7 +499,6 @@ export default function AdminMenuPage() {
             onPageChange={(page) => setCurrentPage(page)}
             onEdit={handleOpenEditItem}
             onDelete={handleDeleteItem}
-            onToggleAvailability={handleToggleItemAvailability}
           />
         )}
 
@@ -563,7 +508,6 @@ export default function AdminMenuPage() {
             isLoading={isAddOnsLoading}
             onEdit={handleOpenEditAddOn}
             onDelete={handleDeleteAddOn}
-            onToggleAvailability={handleToggleAddOnAvailability}
           />
         )}
 

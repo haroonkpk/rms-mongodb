@@ -32,7 +32,6 @@ interface MenuItemsTableProps {
   onPageChange: (page: number) => void;
   onEdit: (item: MenuItemData) => void;
   onDelete: (id: string, name: string) => void;
-  onToggleAvailability: (id: string, currentStatus: boolean) => void;
   isLoading?: boolean;
 }
 
@@ -51,7 +50,6 @@ export function MenuItemsTable({
   onPageChange,
   onEdit,
   onDelete,
-  onToggleAvailability,
   isLoading = false,
 }: MenuItemsTableProps) {
   const categoryFilterOptions: SelectOption[] = useMemo(() => {

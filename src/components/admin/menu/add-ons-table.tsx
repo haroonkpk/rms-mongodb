@@ -15,7 +15,6 @@ interface AddOnsTableProps {
   addOns: AddOnData[];
   onEdit: (addon: AddOnData) => void;
   onDelete: (id: string, name: string) => void;
-  onToggleAvailability: (id: string, currentStatus: boolean) => void;
   isLoading?: boolean;
 }
 
@@ -23,7 +22,6 @@ export function AddOnsTable({
   addOns,
   onEdit,
   onDelete,
-  onToggleAvailability,
   isLoading = false,
 }: AddOnsTableProps) {
   const formattedAddOns = useMemo(() => {
@@ -35,13 +33,11 @@ export function AddOnsTable({
         </span>
       ),
       availabilityToggle: (
-        <button
-          type="button"
-          onClick={() => onToggleAvailability(addon.id, addon.isAvailable)}
-          className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer border ${
+        <span
+          className={`inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-bold border border-slate-200 ${
             addon.isAvailable
-              ? "bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100"
-              : "bg-amber-50 text-amber-700 border-amber-300 hover:bg-amber-100"
+              ? "bg-emerald-50 text-emerald-700"
+              : "bg-amber-50 text-amber-700"
           }`}
         >
           {addon.isAvailable ? (
@@ -55,10 +51,10 @@ export function AddOnsTable({
               <span>Disabled</span>
             </>
           )}
-        </button>
+        </span>
       ),
     }));
-  }, [addOns, onToggleAvailability]);
+  }, [addOns]);
 
   return (
     <div className="flex flex-col gap-4">
