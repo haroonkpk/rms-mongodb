@@ -5,6 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
 import { Utensils, Plus, Layers, Sliders, FolderPlus } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   getMenuItems,
   createMenuItem,
@@ -25,7 +26,6 @@ import {
   AddOnData,
 } from "@/actions/menu";
 
-import { MenuStats } from "@/components/admin/menu/menu-stats";
 import { MenuItemsTable } from "@/components/admin/menu/menu-items-table";
 import { AddOnsTable } from "@/components/admin/menu/add-ons-table";
 import { CategoriesTable } from "@/components/admin/menu/categories-table";
@@ -187,22 +187,29 @@ export default function AdminMenuPage() {
     };
   }, []);
 
-  // Total Summary Stats`
-  const stats = useMemo(() => {
-    const totalItems = totalEntries;
-    const availableCount = items.filter((i) => i.isAvailable).length;
-    const outOfStockCount = items.filter((i) => !i.isAvailable).length;
-    const categoryCount = categories.length;
-    const addOnCount = addOns.length;
-
-    return {
-      totalItems,
-      availableCount,
-      outOfStockCount,
-      categoryCount,
-      addOnCount,
-    };
-  }, [totalEntries, items, categories, addOns]);
+  const navTabs = useMemo(
+    () => [
+      {
+        id: "items" as const,
+        label: "Food Items & Stock Control",
+        icon: Utensils,
+        count: totalEntries,
+      },
+      {
+        id: "addons" as const,
+        label: "Add-Ons & Modifiers",
+        icon: Sliders,
+        count: addOns.length,
+      },
+      {
+        id: "categories" as const,
+        label: "Categories",
+        icon: Layers,
+        count: categories.length,
+      },
+    ],
+    [totalEntries, addOns.length, categories.length],
+  );
 
   // ---------------------------------------------------------
   // ITEM HANDLERS
@@ -320,16 +327,11 @@ export default function AdminMenuPage() {
     setIsCategoryModalOpen(true);
   };
 
-  const handleSaveCategory = async (data: {
-    name: string;
-  }) => {
+  const handleSaveCategory = async (data: { name: string }) => {
     startTransition(async () => {
       let res;
       if (editingCategory) {
-        res = await updateCategory(
-          editingCategory.id,
-          data.name,
-        );
+        res = await updateCategory(editingCategory.id, data.name);
       } else {
         res = await createCategory(data.name);
       }
@@ -460,97 +462,68 @@ export default function AdminMenuPage() {
 
       <main className="flex flex-col gap-[clamp(1.25rem,2.5vw,2rem)] mt-4">
         {/* Banner Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-[clamp(1rem,2vw,1.5rem)] shadow-2xs border border-slate-200">
-          <div>
-            <h1 className="text-[clamp(1.25rem,2vw,1.75rem)] font-extrabold text-slate-900 flex items-center gap-2">
-              <Utensils className="text-[var(--color-primary)]" size={28} />
-              Menu & Catalog Management
-            </h1>
-            <p className="text-slate-500 text-[clamp(0.85rem,1vw,0.95rem)] mt-0.5">
-              Manage food items, pricing, categories, add-on modifiers, and
-              quick stock-out toggles for POS.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
-            <Button
-              variant="outline"
-              icon={<FolderPlus size={18} />}
-              onClick={handleOpenAddCategory}
-            >
-              Add Category
-            </Button>
-            <Button
-              variant="outline"
-              icon={<Sliders size={18} />}
-              onClick={handleOpenAddAddOn}
-            >
-              Add Modifier / Add-On
-            </Button>
-            <Button
-              variant="primary"
-              icon={<Plus size={18} />}
-              onClick={handleOpenAddItem}
-            >
-              Add Food Item
-            </Button>
+        <div className="w-full flex items-center justify-end">
+          <div className="w-fit flex flex-col md:flex-row md:items-center justify-center gap-4 bg-white p-[clamp(1rem,2vw,1.5rem)] shadow-2xs border border-slate-200">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+              <Button
+                variant="outline"
+                icon={<FolderPlus size={18} />}
+                onClick={handleOpenAddCategory}
+              >
+                Add Category
+              </Button>
+              <Button
+                variant="outline"
+                icon={<Sliders size={18} />}
+                onClick={handleOpenAddAddOn}
+              >
+                Add Modifier / Add-On
+              </Button>
+              <Button
+                variant="primary"
+                icon={<Plus size={18} />}
+                onClick={handleOpenAddItem}
+              >
+                Add Food Item
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Overview Stats */}
-        <MenuStats
-          totalItems={stats.totalItems}
-          availableCount={stats.availableCount}
-          outOfStockCount={stats.outOfStockCount}
-          categoryCount={stats.categoryCount}
-        />
-
-        {/* Navigation Tabs */}
-        <div className="flex border-b border-slate-200 bg-white px-4 pt-2 shadow-2xs gap-2 overflow-x-auto">
-          <button
-            onClick={() => setActiveTab("items")}
-            className={`flex items-center gap-2 px-4 py-3 font-bold text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === "items"
-                ? "border-[var(--color-primary)] text-[var(--color-primary)] bg-orange-50/50"
-                : "border-transparent text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Utensils size={18} />
-            <span>Food Items & Stock Control</span>
-            <span className="ml-1 px-2 py-0.5 text-xs bg-slate-100 text-slate-700 rounded-full font-semibold">
-              {stats.totalItems}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("addons")}
-            className={`flex items-center gap-2 px-4 py-3 font-bold text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === "addons"
-                ? "border-[var(--color-primary)] text-[var(--color-primary)] bg-orange-50/50"
-                : "border-transparent text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Sliders size={18} />
-            <span>Add-Ons & Modifiers</span>
-            <span className="ml-1 px-2 py-0.5 text-xs bg-slate-100 text-slate-700 rounded-full font-semibold">
-              {stats.addOnCount}
-            </span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab("categories")}
-            className={`flex items-center gap-2 px-4 py-3 font-bold text-sm border-b-2 transition-all cursor-pointer whitespace-nowrap ${
-              activeTab === "categories"
-                ? "border-[var(--color-primary)] text-[var(--color-primary)] bg-orange-50/50"
-                : "border-transparent text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Layers size={18} />
-            <span>Categories</span>
-            <span className="ml-1 px-2 py-0.5 text-xs bg-slate-100 text-slate-700 rounded-full font-semibold">
-              {stats.categoryCount}
-            </span>
-          </button>
+        {/* Navigation Tabs (POS Style) */}
+        <div className="w-full">
+          <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 px-0.5">
+            {navTabs.map((tab) => {
+              const Icon = tab.icon;
+              const isActive = activeTab === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  type="button"
+                  onClick={() => setActiveTab(tab.id)}
+                  className={cn(
+                    "flex items-center gap-2 px-[clamp(0.875rem,1.5vw,1.25rem)] py-[clamp(0.5rem,1vw,0.75rem)] text-xs sm:text-sm font-semibold transition-all shrink-0 cursor-pointer outline-none border shadow-2xs",
+                    isActive
+                      ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-sm scale-[1.02]"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:border-slate-300",
+                  )}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                  <span
+                    className={cn(
+                      "px-1.5 py-0.5 rounded-full text-[0.65rem] font-bold ml-1",
+                      isActive
+                        ? "bg-white/25 text-white"
+                        : "bg-slate-100 text-slate-600",
+                    )}
+                  >
+                    {tab.count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Tab Content Components */}

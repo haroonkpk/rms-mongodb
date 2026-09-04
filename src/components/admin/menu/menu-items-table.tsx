@@ -86,16 +86,14 @@ export function MenuItemsTable({
           </span>
           <div className="flex flex-wrap items-center gap-1.5">
             {item.hasSizes && item.sizes && item.sizes.length > 0 ? (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-[0.7rem] font-medium bg-purple-50 text-purple-700 border border-purple-200">
+              <span className="inline-flex items-center px-2 py-0.5  text-[0.7rem] font-medium bg-purple-50 text-purple-700 border border-purple-200">
                 {item.sizes.length} Sizes ({item.sizes.map((s) => s.name).join(", ")})
               </span>
             ) : (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-[0.7rem] font-medium bg-slate-100 text-slate-600 border border-slate-200">
-                Single Size
-              </span>
+              ""
             )}
             {item.addOns && item.addOns.length > 0 && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-[0.7rem] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="inline-flex items-center px-2 py-0.5  text-[0.7rem] font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
                 {item.addOns.length} Add-Ons
               </span>
             )}
@@ -103,43 +101,38 @@ export function MenuItemsTable({
         </div>
       ),
       categoryBadge: (
-        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[var(--color-secondary-bg)] text-[var(--color-primary)] border border-orange-200">
+        <span className="inline-flex items-center px-2.5 py-1  text-xs font-semibold bg-[var(--color-secondary-bg)] text-[var(--color-primary)] border border-orange-200">
           {item.categoryName}
         </span>
       ),
       formattedPrice: (
-        <span className="font-extrabold text-slate-900 text-[clamp(0.9rem,1.2vw,1.05rem)]">
+        <span className="font-extrabold text-slate-900 text-[clamp(0.8rem,1.2vw,1.05rem)]">
           {item.hasSizes && item.sizes && item.sizes.length > 0
             ? `Rs ${Math.min(...item.sizes.map((s) => s.price))} - ${Math.max(...item.sizes.map((s) => s.price))}`
             : `Rs ${item.basePrice.toLocaleString()}`}
         </span>
       ),
       stockToggle: (
-        <button
-          type="button"
-          onClick={() => onToggleAvailability(item.id, item.isAvailable)}
-          className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border ${
-            item.isAvailable
-              ? "bg-emerald-50 text-emerald-700 border-emerald-300 hover:bg-emerald-100"
-              : "bg-rose-50 text-rose-700 border-rose-300 hover:bg-rose-100"
+        <span
+          className={`inline-flex items-center gap-2 text-xs font-bold px-2.5 py-1 border border-slate-200 ${
+            item.isAvailable ? "text-emerald-700 bg-emerald-50" : "text-rose-700 bg-rose-50"
           }`}
-          title="Click to toggle item ON/OFF on POS screens"
         >
           {item.isAvailable ? (
             <>
               <CheckCircle2 size={15} className="text-emerald-600" />
-              <span>Available (ON)</span>
+              <span>Available</span>
             </>
           ) : (
             <>
               <XCircle size={15} className="text-rose-600" />
-              <span>Out of Stock (OFF)</span>
+              <span>Out of Stock</span>
             </>
           )}
-        </button>
+        </span>
       ),
     }));
-  }, [items, onToggleAvailability]);
+  }, [items]);
 
   const handleClearFilters = () => {
     onSearchChange("");
