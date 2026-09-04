@@ -1,7 +1,7 @@
 'use server'
 
 import { prisma } from '@/lib/prisma'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { Prisma } from '../../prisma/generated'
 
 export interface CategoryData {
@@ -94,6 +94,8 @@ export async function createCategory(name: string) {
     })
 
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true, categoryId: category.id }
   } catch (error) {
     console.error('Error creating category:', error)
@@ -127,6 +129,8 @@ export async function updateCategory(id: string, name: string) {
     })
 
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true }
   } catch (error) {
     console.error('Error updating category:', error)
@@ -138,6 +142,8 @@ export async function deleteCategory(id: string) {
   try {
     await prisma.category.delete({ where: { id } })
     revalidatePath('/admin/menu')
+    revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true }
   } catch (error) {
     console.error('Error deleting category:', error)
@@ -269,6 +275,7 @@ export async function createMenuItem(data: {
 
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true, itemId: newItem.id }
   } catch (error) {
     console.error('Error creating menu item:', error)
@@ -317,6 +324,7 @@ export async function updateMenuItem(
 
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true }
   } catch (error) {
     console.error('Error updating menu item:', error)
@@ -343,6 +351,7 @@ export async function toggleMenuItemAvailability(id: string, isAvailable?: boole
 
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true, isAvailable: targetState }
   } catch (error) {
     console.error('Error toggling menu item availability:', error)
@@ -355,6 +364,7 @@ export async function deleteMenuItem(id: string) {
     await prisma.menuItem.delete({ where: { id } })
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true }
   } catch (error) {
     console.error('Error deleting menu item:', error)
@@ -411,6 +421,7 @@ export async function createAddOn(data: {
 
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true, addOnId: addOn.id }
   } catch (error) {
     console.error('Error creating add-on:', error)
@@ -442,6 +453,7 @@ export async function updateAddOn(
 
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true }
   } catch (error) {
     console.error('Error updating add-on:', error)
@@ -468,6 +480,7 @@ export async function toggleAddOnAvailability(id: string, isAvailable?: boolean)
 
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true, isAvailable: targetState }
   } catch (error) {
     console.error('Error toggling add-on availability:', error)
@@ -480,6 +493,7 @@ export async function deleteAddOn(id: string) {
     await prisma.addOn.delete({ where: { id } })
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
+    revalidateTag('pos-data', 'max')
     return { success: true }
   } catch (error) {
     console.error('Error deleting add-on:', error)

@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/actions/auth";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import {
   POSAddOn,
   POSMenuItem,
@@ -12,26 +12,10 @@ import {
   POSOrderResult,
 } from "@/types/pos";
 
-export async function getPOSInitData(): Promise<POSInitDataResponse> {
-  try {
-    const user = await getCurrentUser();
 
-    const now = new Date();
-    const shiftStartTime = new Date(
-      now.getFullYear(),
-      now.getMonth(),
-      now.getDate(),
-      8,
-      0,
-      0,
-    );
-    const formattedShiftTime = shiftStartTime.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-
-    //Categories
+export const getCachedPOSCatalog = unstable_cache(
+  async () => {
+    // Categories
     const dbCategories = await prisma.category.findMany({
       orderBy: { name: "asc" },
       include: {
@@ -41,7 +25,7 @@ export async function getPOSInitData(): Promise<POSInitDataResponse> {
       },
     });
 
-    //Menu Items
+    // Menu Items
     const dbMenuItems = await prisma.menuItem.findMany({
       orderBy: { name: "asc" },
       include: {
@@ -77,10 +61,23 @@ export async function getPOSInitData(): Promise<POSInitDataResponse> {
       })),
     }));
 
+    return { categories, menuItems };
+  },
+  ["pos-catalog-data"],
+  {
+    tags: ["pos-data"],
+    revalidate: 3600, // 1 hour server cache window
+  }
+);
+
+export async function getPOSInitData(): Promise<POSInitDataResponse> {
+  try {
+    const user = await getCurrentUser();
+    const { categories, menuItems } = await getCachedPOSCatalog();
+
     return {
       success: true,
       cashier: user || null,
-      shiftStartTime: formattedShiftTime,
       categories,
       menuItems,
     };
@@ -90,7 +87,6 @@ export async function getPOSInitData(): Promise<POSInitDataResponse> {
       success: false,
       error: "Failed to load POS data",
       cashier: null,
-      shiftStartTime: "08:00 AM",
       categories: [],
       menuItems: [],
     };
@@ -185,6 +181,7 @@ export async function createPOSOrder(
     }
 
     revalidatePath("/pos");
+    revalidateTag("pos-data", "max");
 
     return {
       success: true,

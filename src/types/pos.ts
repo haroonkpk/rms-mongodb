@@ -83,7 +83,7 @@ export interface POSInitDataResponse {
   success: boolean;
   error?: string;
   cashier: POSCashierInfo | null;
-  shiftStartTime: string;
+  shiftStartTime?: string;
   categories: POSCategory[];
   menuItems: POSMenuItem[];
 }
