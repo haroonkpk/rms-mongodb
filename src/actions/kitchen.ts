@@ -188,9 +188,15 @@ export async function updateKitchenOrderStatus(
       data: { status },
     });
 
+    if (status === "PREPARING") {
+      const { deductInventoryForOrder } = await import("@/actions/inventory");
+      await deductInventoryForOrder(orderId);
+    }
+
     revalidatePath("/kitchen");
     revalidatePath("/pos");
     revalidatePath("/pos/live");
+    revalidatePath("/admin/inventory");
 
     return { success: true };
   } catch (error) {

@@ -1,13 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectOption } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ImageUploader } from "@/components/ui/image-uploader";
-import { Plus, Trash2, Layers, Sliders, Check } from "lucide-react";
+import { Plus, Trash2, Layers, Sliders, Check, Utensils } from "lucide-react";
 import toast from "react-hot-toast";
 import {
   MenuItemData,
@@ -33,6 +33,7 @@ interface ItemModalProps {
     hasSizes: boolean;
     sizes: MenuItemSize[];
     addOnIds: string[];
+    ingredients?: Array<{ inventoryItemId: string; quantityRequired: number }>;
   }) => Promise<void>;
   isPending: boolean;
 }
@@ -51,6 +52,20 @@ export function ItemModal({
   );
   const [prevIsOpen, setPrevIsOpen] = useState<boolean>(isOpen);
 
+  const [rawInventoryItems, setRawInventoryItems] = useState<Array<{ id: string; name: string; unit: string }>>([]);
+
+  useEffect(() => {
+    if (isOpen) {
+      import("@/actions/inventory").then((mod) => {
+        mod.getInventoryItems(1, 100).then((res) => {
+          if (res.success && res.items) {
+            setRawInventoryItems(res.items.map(i => ({ id: i.id, name: i.name, unit: i.unit })));
+          }
+        });
+      });
+    }
+  }, [isOpen]);
+
   const [formData, setFormData] = useState<{
     name: string;
     description: string;
@@ -61,6 +76,7 @@ export function ItemModal({
     hasSizes: boolean;
     sizes: MenuItemSize[];
     selectedAddOnIds: string[];
+    ingredients: Array<{ inventoryItemId: string; quantityRequired: number }>;
   }>({
     name: "",
     description: "",
@@ -71,6 +87,7 @@ export function ItemModal({
     hasSizes: false,
     sizes: [],
     selectedAddOnIds: [],
+    ingredients: [],
   });
 
   if (editingItem !== prevEditingItem || isOpen !== prevIsOpen) {
@@ -97,6 +114,12 @@ export function ItemModal({
               selectedAddOnIds: editingItem.addOns
                 ? editingItem.addOns.map((a) => a.id)
                 : [],
+              ingredients: editingItem.ingredients
+                ? editingItem.ingredients.map((ing) => ({
+                    inventoryItemId: ing.inventoryItemId,
+                    quantityRequired: ing.quantityRequired,
+                  }))
+                : [],
             }
           : {
               name: "",
@@ -111,6 +134,7 @@ export function ItemModal({
                 { name: "Large", price: 0 },
               ],
               selectedAddOnIds: [],
+              ingredients: [],
             },
       );
     }
@@ -167,6 +191,45 @@ export function ItemModal({
     });
   };
 
+  // Ingredient option handlers
+  const handleAddIngredientRow = () => {
+    if (rawInventoryItems.length === 0) {
+      toast.error("No inventory raw items available.");
+      return;
+    }
+    setFormData((prev) => ({
+      ...prev,
+      ingredients: [
+        ...prev.ingredients,
+        { inventoryItemId: rawInventoryItems[0].id, quantityRequired: 1 },
+      ],
+    }));
+  };
+
+  const handleRemoveIngredientRow = (index: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      ingredients: prev.ingredients.filter((_, i) => i !== index),
+    }));
+  };
+
+  const handleIngredientChange = (
+    index: number,
+    field: "inventoryItemId" | "quantityRequired",
+    value: string,
+  ) => {
+    setFormData((prev) => {
+      const updated = [...prev.ingredients];
+      if (field === "inventoryItemId") {
+        updated[index] = { ...updated[index], inventoryItemId: value };
+      } else {
+        const numVal = parseFloat(value) || 0;
+        updated[index] = { ...updated[index], quantityRequired: numVal };
+      }
+      return { ...prev, ingredients: updated };
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
@@ -195,7 +258,6 @@ export function ItemModal({
           return;
         }
       }
-      // If basePrice not provided, set basePrice to lowest size price
       if (isNaN(priceNum) || priceNum <= 0) {
         priceNum = formData.sizes[0].price;
       }
@@ -216,6 +278,9 @@ export function ItemModal({
       hasSizes: formData.hasSizes,
       sizes: formData.hasSizes ? formData.sizes : [],
       addOnIds: formData.selectedAddOnIds,
+      ingredients: formData.ingredients.filter(
+        (ing) => ing.inventoryItemId && ing.quantityRequired > 0,
+      ),
     });
   };
 
@@ -386,6 +451,100 @@ export function ItemModal({
               >
                 Add Size Option
               </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Recipe Ingredients Mapping */}
+        <div className="p-4 bg-emerald-50/60 border border-emerald-200 rounded-lg flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Utensils size={18} className="text-emerald-700" />
+              <div>
+                <h4 className="text-sm font-bold text-slate-900">
+                  Recipe Ingredients & Raw Materials
+                </h4>
+                <p className="text-xs text-slate-500">
+                  Raw materials automatically deducted from stock when Chef starts cooking (Status: Preparing)
+                </p>
+              </div>
+            </div>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleAddIngredientRow}
+              icon={<Plus size={14} />}
+              className="text-xs py-1 px-2.5 bg-white border-emerald-300 text-emerald-800 hover:bg-emerald-100"
+            >
+              Add Ingredient
+            </Button>
+          </div>
+
+          {formData.ingredients.length === 0 ? (
+            <p className="text-xs text-slate-400 italic">
+              No recipe ingredients added yet. Click &quot;Add Ingredient&quot; to link raw materials to this dish.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-2 pt-2 border-t border-emerald-200/60">
+              <div className="grid grid-cols-12 gap-2 text-xs font-bold text-slate-600 px-1">
+                <span className="col-span-7">Raw Material Item</span>
+                <span className="col-span-4">Qty per Serving</span>
+                <span className="col-span-1 text-center">Action</span>
+              </div>
+
+              {formData.ingredients.map((ing, idx) => {
+                const selectedInv = rawInventoryItems.find(
+                  (i) => i.id === ing.inventoryItemId,
+                );
+                return (
+                  <div key={idx} className="grid grid-cols-12 gap-2 items-center">
+                    <div className="col-span-7">
+                      <Select
+                        options={rawInventoryItems.map((item) => ({
+                          value: item.id,
+                          label: `${item.name} (${item.unit})`,
+                        }))}
+                        value={ing.inventoryItemId}
+                        onChange={(e) =>
+                          handleIngredientChange(
+                            idx,
+                            "inventoryItemId",
+                            e.target.value,
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="col-span-4 flex items-center gap-1.5">
+                      <Input
+                        type="number"
+                        step="0.01"
+                        placeholder="Qty"
+                        value={ing.quantityRequired.toString()}
+                        onChange={(e) =>
+                          handleIngredientChange(
+                            idx,
+                            "quantityRequired",
+                            e.target.value,
+                          )
+                        }
+                      />
+                      <span className="text-xs font-bold text-slate-500 shrink-0">
+                        {selectedInv?.unit || ""}
+                      </span>
+                    </div>
+                    <div className="col-span-1 flex justify-center">
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveIngredientRow(idx)}
+                        className="p-2 text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
+                        title="Remove Ingredient"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           )}
         </div>

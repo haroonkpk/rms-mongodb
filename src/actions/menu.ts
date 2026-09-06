@@ -4,6 +4,11 @@ import { prisma } from '@/lib/prisma'
 import { revalidatePath, revalidateTag } from 'next/cache'
 import { Prisma } from '../../prisma/generated'
 
+export interface MenuItemSize {
+  name: string
+  price: number
+}
+
 export interface CategoryData {
   id: string
   name: string
@@ -12,18 +17,19 @@ export interface CategoryData {
   updatedAt: string
 }
 
+export interface RecipeIngredient {
+  inventoryItemId: string
+  quantityRequired: number
+}
+
 export interface AddOnData {
   id: string
   name: string
   price: number
   isAvailable: boolean
-  createdAt: string
-  updatedAt: string
-}
-
-export interface MenuItemSize {
-  name: string
-  price: number
+  ingredients?: RecipeIngredient[]
+  createdAt?: string
+  updatedAt?: string
 }
 
 export interface MenuItemData {
@@ -34,12 +40,26 @@ export interface MenuItemData {
   imageUrl: string | null
   isAvailable: boolean
   hasSizes: boolean
-  sizes: MenuItemSize[]
+  sizes: MenuItemSize[] | null
   categoryId: string
   categoryName: string
   addOns: AddOnData[]
+  ingredients: RecipeIngredient[]
   createdAt: string
   updatedAt: string
+}
+
+export interface CreateMenuItemInput {
+  name: string
+  description?: string
+  basePrice: number
+  categoryId: string
+  imageUrl?: string
+  isAvailable?: boolean
+  hasSizes?: boolean
+  sizes?: MenuItemSize[]
+  addOnIds?: string[]
+  ingredients?: RecipeIngredient[]
 }
 
 // ----------------------------------------------------
@@ -88,9 +108,7 @@ export async function createCategory(name: string) {
     }
 
     const category = await prisma.category.create({
-      data: {
-        name: trimmedName,
-      },
+      data: { name: trimmedName },
     })
 
     revalidatePath('/admin/menu')
@@ -123,9 +141,7 @@ export async function updateCategory(id: string, name: string) {
 
     await prisma.category.update({
       where: { id },
-      data: {
-        name: trimmedName,
-      },
+      data: { name: trimmedName },
     })
 
     revalidatePath('/admin/menu')
@@ -140,19 +156,25 @@ export async function updateCategory(id: string, name: string) {
 
 export async function deleteCategory(id: string) {
   try {
-    await prisma.category.delete({ where: { id } })
+    await prisma.category.delete({
+      where: { id },
+    })
+
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
     revalidateTag('pos-data', 'max')
     return { success: true }
   } catch (error) {
     console.error('Error deleting category:', error)
-    return { success: false, error: 'Failed to delete category. Make sure it has no attached items.' }
+    return {
+      success: false,
+      error: 'Failed to delete category. Make sure it has no linked food items.',
+    }
   }
 }
 
 // ----------------------------------------------------
-// MENU ITEMS ACTIONS
+// MENU FOOD ITEMS ACTIONS
 // ----------------------------------------------------
 
 export async function getMenuItems(
@@ -160,7 +182,7 @@ export async function getMenuItems(
   pageSize: number = 10,
   search: string = '',
   categoryId: string = 'ALL',
-  isAvailableFilter?: boolean
+  isAvailable?: boolean
 ) {
   try {
     const skip = (page - 1) * pageSize
@@ -169,10 +191,7 @@ export async function getMenuItems(
 
     if (search) {
       whereConditions.push({
-        OR: [
-          { name: { contains: search, mode: 'insensitive' as const } },
-          { description: { contains: search, mode: 'insensitive' as const } },
-        ],
+        name: { contains: search, mode: 'insensitive' as const },
       })
     }
 
@@ -180,8 +199,8 @@ export async function getMenuItems(
       whereConditions.push({ categoryId })
     }
 
-    if (typeof isAvailableFilter === 'boolean') {
-      whereConditions.push({ isAvailable: isAvailableFilter })
+    if (isAvailable !== undefined) {
+      whereConditions.push({ isAvailable })
     }
 
     const whereClause = whereConditions.length > 0 ? { AND: whereConditions } : {}
@@ -200,28 +219,40 @@ export async function getMenuItems(
       prisma.menuItem.count({ where: whereClause }),
     ])
 
-    const formatted: MenuItemData[] = items.map((item) => ({
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      basePrice: Number(item.basePrice),
-      imageUrl: item.imageUrl,
-      isAvailable: item.isAvailable,
-      hasSizes: item.hasSizes ?? false,
-      sizes: Array.isArray(item.sizes) ? (item.sizes as unknown as MenuItemSize[]) : [],
-      categoryId: item.categoryId,
-      categoryName: item.category.name,
-      addOns: item.addOns.map((addon) => ({
-        id: addon.id,
-        name: addon.name,
-        price: Number(addon.price),
-        isAvailable: addon.isAvailable,
-        createdAt: addon.createdAt.toISOString(),
-        updatedAt: addon.updatedAt.toISOString(),
-      })),
-      createdAt: item.createdAt.toISOString(),
-      updatedAt: item.updatedAt.toISOString(),
-    }))
+    const formatted: MenuItemData[] = items.map((item) => {
+      let parsedSizes: MenuItemSize[] | null = null
+      if (item.hasSizes && item.sizes) {
+        parsedSizes = item.sizes as unknown as MenuItemSize[]
+      }
+
+      let parsedIngredients: RecipeIngredient[] = []
+      if (item.ingredients) {
+        parsedIngredients = item.ingredients as unknown as RecipeIngredient[]
+      }
+
+      return {
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        basePrice: Number(item.basePrice),
+        imageUrl: item.imageUrl,
+        isAvailable: item.isAvailable,
+        hasSizes: item.hasSizes,
+        sizes: parsedSizes,
+        categoryId: item.categoryId,
+        categoryName: item.category.name,
+        addOns: item.addOns.map((a) => ({
+          id: a.id,
+          name: a.name,
+          price: Number(a.price),
+          isAvailable: a.isAvailable,
+          ingredients: a.ingredients ? (a.ingredients as unknown as RecipeIngredient[]) : [],
+        })),
+        ingredients: parsedIngredients,
+        createdAt: item.createdAt.toISOString(),
+        updatedAt: item.updatedAt.toISOString(),
+      }
+    })
 
     return {
       success: true,
@@ -235,17 +266,7 @@ export async function getMenuItems(
   }
 }
 
-export async function createMenuItem(data: {
-  name: string
-  description?: string
-  basePrice: number
-  categoryId: string
-  imageUrl?: string
-  isAvailable?: boolean
-  hasSizes?: boolean
-  sizes?: MenuItemSize[]
-  addOnIds?: string[]
-}) {
+export async function createMenuItem(data: CreateMenuItemInput) {
   try {
     if (!data.name?.trim()) {
       return { success: false, error: 'Item name is required' }
@@ -257,7 +278,7 @@ export async function createMenuItem(data: {
       return { success: false, error: 'Valid base price is required' }
     }
 
-    const newItem = await prisma.menuItem.create({
+    const item = await prisma.menuItem.create({
       data: {
         name: data.name.trim(),
         description: data.description?.trim() || null,
@@ -267,36 +288,24 @@ export async function createMenuItem(data: {
         isAvailable: data.isAvailable ?? true,
         hasSizes: data.hasSizes ?? false,
         sizes: data.hasSizes && data.sizes ? (data.sizes as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
-        addOns: data.addOnIds && data.addOnIds.length > 0 ? {
-          connect: data.addOnIds.map((id) => ({ id })),
-        } : undefined,
+        ingredients: data.ingredients && data.ingredients.length > 0 ? (data.ingredients as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
+        addOns: {
+          connect: data.addOnIds ? data.addOnIds.map((id) => ({ id })) : [],
+        },
       },
     })
 
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
     revalidateTag('pos-data', 'max')
-    return { success: true, itemId: newItem.id }
+    return { success: true, itemId: item.id }
   } catch (error) {
     console.error('Error creating menu item:', error)
     return { success: false, error: 'Failed to create menu item' }
   }
 }
 
-export async function updateMenuItem(
-  id: string,
-  data: {
-    name: string
-    description?: string
-    basePrice: number
-    categoryId: string
-    imageUrl?: string
-    isAvailable?: boolean
-    hasSizes?: boolean
-    sizes?: MenuItemSize[]
-    addOnIds?: string[]
-  }
-) {
+export async function updateMenuItem(id: string, data: CreateMenuItemInput) {
   try {
     if (!data.name?.trim()) {
       return { success: false, error: 'Item name is required' }
@@ -316,6 +325,7 @@ export async function updateMenuItem(
         isAvailable: data.isAvailable ?? true,
         hasSizes: data.hasSizes ?? false,
         sizes: data.hasSizes && data.sizes ? (data.sizes as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
+        ingredients: data.ingredients && data.ingredients.length > 0 ? (data.ingredients as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
         addOns: {
           set: data.addOnIds ? data.addOnIds.map((id) => ({ id })) : [],
         },
@@ -387,6 +397,7 @@ export async function getAddOns() {
       name: addon.name,
       price: Number(addon.price),
       isAvailable: addon.isAvailable,
+      ingredients: addon.ingredients ? (addon.ingredients as unknown as RecipeIngredient[]) : [],
       createdAt: addon.createdAt.toISOString(),
       updatedAt: addon.updatedAt.toISOString(),
     }))
@@ -402,6 +413,7 @@ export async function createAddOn(data: {
   name: string
   price: number
   isAvailable?: boolean
+  ingredients?: RecipeIngredient[]
 }) {
   try {
     if (!data.name?.trim()) {
@@ -411,18 +423,19 @@ export async function createAddOn(data: {
       return { success: false, error: 'Valid price is required' }
     }
 
-    const addOn = await prisma.addOn.create({
+    const addon = await prisma.addOn.create({
       data: {
         name: data.name.trim(),
         price: data.price,
         isAvailable: data.isAvailable ?? true,
+        ingredients: data.ingredients && data.ingredients.length > 0 ? (data.ingredients as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
       },
     })
 
     revalidatePath('/admin/menu')
     revalidatePath('/pos')
     revalidateTag('pos-data', 'max')
-    return { success: true, addOnId: addOn.id }
+    return { success: true, addOnId: addon.id }
   } catch (error) {
     console.error('Error creating add-on:', error)
     return { success: false, error: 'Failed to create add-on' }
@@ -435,11 +448,15 @@ export async function updateAddOn(
     name: string
     price: number
     isAvailable?: boolean
+    ingredients?: RecipeIngredient[]
   }
 ) {
   try {
     if (!data.name?.trim()) {
       return { success: false, error: 'Add-on name is required' }
+    }
+    if (data.price === undefined || data.price < 0) {
+      return { success: false, error: 'Valid price is required' }
     }
 
     await prisma.addOn.update({
@@ -448,6 +465,7 @@ export async function updateAddOn(
         name: data.name.trim(),
         price: data.price,
         isAvailable: data.isAvailable ?? true,
+        ingredients: data.ingredients && data.ingredients.length > 0 ? (data.ingredients as unknown as Prisma.InputJsonValue) : Prisma.JsonNull,
       },
     })
 

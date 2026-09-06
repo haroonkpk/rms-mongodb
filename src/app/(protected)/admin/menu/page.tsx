@@ -22,7 +22,9 @@ import {
   MenuItemData,
   CategoryData,
   AddOnData,
+  RecipeIngredient,
 } from "@/actions/menu";
+import { getInventoryItems, InventoryItemData } from "@/actions/inventory";
 
 import { MenuItemsTable } from "@/components/admin/menu/menu-items-table";
 import { AddOnsTable } from "@/components/admin/menu/add-ons-table";
@@ -41,6 +43,7 @@ export default function AdminMenuPage() {
   const [items, setItems] = useState<MenuItemData[]>([]);
   const [categories, setCategories] = useState<CategoryData[]>([]);
   const [addOns, setAddOns] = useState<AddOnData[]>([]);
+  const [inventoryItems, setInventoryItems] = useState<InventoryItemData[]>([]);
 
   // Loading States
   const [isItemsLoading, setIsItemsLoading] = useState(true);
@@ -177,6 +180,13 @@ export default function AdminMenuPage() {
       .finally(() => {
         if (isMounted) {
           setIsAddOnsLoading(false);
+        }
+      });
+
+    getInventoryItems(1, 200)
+      .then((res) => {
+        if (isMounted && res.success && res.items) {
+          setInventoryItems(res.items);
         }
       });
 
@@ -366,6 +376,7 @@ export default function AdminMenuPage() {
     name: string;
     price: number;
     isAvailable: boolean;
+    ingredients?: RecipeIngredient[];
   }) => {
     startTransition(async () => {
       let res;
@@ -544,6 +555,7 @@ export default function AdminMenuPage() {
         isOpen={isAddOnModalOpen}
         onClose={() => setIsAddOnModalOpen(false)}
         editingAddOn={editingAddOn}
+        inventoryItems={inventoryItems}
         onSave={handleSaveAddOn}
         isPending={isPending}
       />

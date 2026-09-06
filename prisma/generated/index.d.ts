@@ -63,6 +63,31 @@ export type Payroll = $Result.DefaultSelection<Prisma.$PayrollPayload>
  * 
  */
 export type SalaryAdvance = $Result.DefaultSelection<Prisma.$SalaryAdvancePayload>
+/**
+ * Model InventoryCategory
+ * 
+ */
+export type InventoryCategory = $Result.DefaultSelection<Prisma.$InventoryCategoryPayload>
+/**
+ * Model InventoryItem
+ * 
+ */
+export type InventoryItem = $Result.DefaultSelection<Prisma.$InventoryItemPayload>
+/**
+ * Model StockMovement
+ * 
+ */
+export type StockMovement = $Result.DefaultSelection<Prisma.$StockMovementPayload>
+/**
+ * Model StockIntakeBatch
+ * 
+ */
+export type StockIntakeBatch = $Result.DefaultSelection<Prisma.$StockIntakeBatchPayload>
+/**
+ * Model StockIntakeBatchItem
+ * 
+ */
+export type StockIntakeBatchItem = $Result.DefaultSelection<Prisma.$StockIntakeBatchItemPayload>
 
 /**
  * Enums
@@ -166,6 +191,30 @@ export const AdvanceStatus: {
 
 export type AdvanceStatus = (typeof AdvanceStatus)[keyof typeof AdvanceStatus]
 
+
+export const StockMovementType: {
+  PURCHASE_IN: 'PURCHASE_IN',
+  WASTAGE_OUT: 'WASTAGE_OUT',
+  SPOILAGE_OUT: 'SPOILAGE_OUT',
+  MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT',
+  SALE_DEDUCTION: 'SALE_DEDUCTION'
+};
+
+export type StockMovementType = (typeof StockMovementType)[keyof typeof StockMovementType]
+
+
+export const InventoryUnit: {
+  KG: 'KG',
+  GRAM: 'GRAM',
+  LITER: 'LITER',
+  ML: 'ML',
+  PIECE: 'PIECE',
+  PACK: 'PACK',
+  BOX: 'BOX'
+};
+
+export type InventoryUnit = (typeof InventoryUnit)[keyof typeof InventoryUnit]
+
 }
 
 export type Role = $Enums.Role
@@ -211,6 +260,14 @@ export const SalaryPaymentMethod: typeof $Enums.SalaryPaymentMethod
 export type AdvanceStatus = $Enums.AdvanceStatus
 
 export const AdvanceStatus: typeof $Enums.AdvanceStatus
+
+export type StockMovementType = $Enums.StockMovementType
+
+export const StockMovementType: typeof $Enums.StockMovementType
+
+export type InventoryUnit = $Enums.InventoryUnit
+
+export const InventoryUnit: typeof $Enums.InventoryUnit
 
 /**
  * ##  Prisma Client ʲˢ
@@ -432,6 +489,56 @@ export class PrismaClient<
     * ```
     */
   get salaryAdvance(): Prisma.SalaryAdvanceDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryCategory`: Exposes CRUD operations for the **InventoryCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryCategories
+    * const inventoryCategories = await prisma.inventoryCategory.findMany()
+    * ```
+    */
+  get inventoryCategory(): Prisma.InventoryCategoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.inventoryItem`: Exposes CRUD operations for the **InventoryItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InventoryItems
+    * const inventoryItems = await prisma.inventoryItem.findMany()
+    * ```
+    */
+  get inventoryItem(): Prisma.InventoryItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stockMovement`: Exposes CRUD operations for the **StockMovement** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockMovements
+    * const stockMovements = await prisma.stockMovement.findMany()
+    * ```
+    */
+  get stockMovement(): Prisma.StockMovementDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stockIntakeBatch`: Exposes CRUD operations for the **StockIntakeBatch** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockIntakeBatches
+    * const stockIntakeBatches = await prisma.stockIntakeBatch.findMany()
+    * ```
+    */
+  get stockIntakeBatch(): Prisma.StockIntakeBatchDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.stockIntakeBatchItem`: Exposes CRUD operations for the **StockIntakeBatchItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more StockIntakeBatchItems
+    * const stockIntakeBatchItems = await prisma.stockIntakeBatchItem.findMany()
+    * ```
+    */
+  get stockIntakeBatchItem(): Prisma.StockIntakeBatchItemDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -888,7 +995,12 @@ export namespace Prisma {
     Attendance: 'Attendance',
     Leave: 'Leave',
     Payroll: 'Payroll',
-    SalaryAdvance: 'SalaryAdvance'
+    SalaryAdvance: 'SalaryAdvance',
+    InventoryCategory: 'InventoryCategory',
+    InventoryItem: 'InventoryItem',
+    StockMovement: 'StockMovement',
+    StockIntakeBatch: 'StockIntakeBatch',
+    StockIntakeBatchItem: 'StockIntakeBatchItem'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -904,7 +1016,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "category" | "menuItem" | "addOn" | "order" | "orderItem" | "attendance" | "leave" | "payroll" | "salaryAdvance"
+      modelProps: "user" | "category" | "menuItem" | "addOn" | "order" | "orderItem" | "attendance" | "leave" | "payroll" | "salaryAdvance" | "inventoryCategory" | "inventoryItem" | "stockMovement" | "stockIntakeBatch" | "stockIntakeBatchItem"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1648,6 +1760,376 @@ export namespace Prisma {
           }
         }
       }
+      InventoryCategory: {
+        payload: Prisma.$InventoryCategoryPayload<ExtArgs>
+        fields: Prisma.InventoryCategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryCategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryCategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryCategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryCategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>
+          }
+          findMany: {
+            args: Prisma.InventoryCategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>[]
+          }
+          create: {
+            args: Prisma.InventoryCategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>
+          }
+          createMany: {
+            args: Prisma.InventoryCategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryCategoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryCategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>
+          }
+          update: {
+            args: Prisma.InventoryCategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryCategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryCategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryCategoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryCategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryCategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryCategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryCategory>
+          }
+          groupBy: {
+            args: Prisma.InventoryCategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryCategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryCategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryCategoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      InventoryItem: {
+        payload: Prisma.$InventoryItemPayload<ExtArgs>
+        fields: Prisma.InventoryItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InventoryItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InventoryItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>
+          }
+          findFirst: {
+            args: Prisma.InventoryItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InventoryItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>
+          }
+          findMany: {
+            args: Prisma.InventoryItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>[]
+          }
+          create: {
+            args: Prisma.InventoryItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>
+          }
+          createMany: {
+            args: Prisma.InventoryItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InventoryItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>[]
+          }
+          delete: {
+            args: Prisma.InventoryItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>
+          }
+          update: {
+            args: Prisma.InventoryItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.InventoryItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InventoryItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InventoryItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.InventoryItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InventoryItemPayload>
+          }
+          aggregate: {
+            args: Prisma.InventoryItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInventoryItem>
+          }
+          groupBy: {
+            args: Prisma.InventoryItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InventoryItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InventoryItemCountArgs<ExtArgs>
+            result: $Utils.Optional<InventoryItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      StockMovement: {
+        payload: Prisma.$StockMovementPayload<ExtArgs>
+        fields: Prisma.StockMovementFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockMovementFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockMovementFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>
+          }
+          findFirst: {
+            args: Prisma.StockMovementFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockMovementFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>
+          }
+          findMany: {
+            args: Prisma.StockMovementFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>[]
+          }
+          create: {
+            args: Prisma.StockMovementCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>
+          }
+          createMany: {
+            args: Prisma.StockMovementCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockMovementCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>[]
+          }
+          delete: {
+            args: Prisma.StockMovementDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>
+          }
+          update: {
+            args: Prisma.StockMovementUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>
+          }
+          deleteMany: {
+            args: Prisma.StockMovementDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockMovementUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StockMovementUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>[]
+          }
+          upsert: {
+            args: Prisma.StockMovementUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockMovementPayload>
+          }
+          aggregate: {
+            args: Prisma.StockMovementAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockMovement>
+          }
+          groupBy: {
+            args: Prisma.StockMovementGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockMovementGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockMovementCountArgs<ExtArgs>
+            result: $Utils.Optional<StockMovementCountAggregateOutputType> | number
+          }
+        }
+      }
+      StockIntakeBatch: {
+        payload: Prisma.$StockIntakeBatchPayload<ExtArgs>
+        fields: Prisma.StockIntakeBatchFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockIntakeBatchFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockIntakeBatchFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>
+          }
+          findFirst: {
+            args: Prisma.StockIntakeBatchFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockIntakeBatchFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>
+          }
+          findMany: {
+            args: Prisma.StockIntakeBatchFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>[]
+          }
+          create: {
+            args: Prisma.StockIntakeBatchCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>
+          }
+          createMany: {
+            args: Prisma.StockIntakeBatchCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockIntakeBatchCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>[]
+          }
+          delete: {
+            args: Prisma.StockIntakeBatchDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>
+          }
+          update: {
+            args: Prisma.StockIntakeBatchUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>
+          }
+          deleteMany: {
+            args: Prisma.StockIntakeBatchDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockIntakeBatchUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StockIntakeBatchUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>[]
+          }
+          upsert: {
+            args: Prisma.StockIntakeBatchUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchPayload>
+          }
+          aggregate: {
+            args: Prisma.StockIntakeBatchAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockIntakeBatch>
+          }
+          groupBy: {
+            args: Prisma.StockIntakeBatchGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockIntakeBatchGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockIntakeBatchCountArgs<ExtArgs>
+            result: $Utils.Optional<StockIntakeBatchCountAggregateOutputType> | number
+          }
+        }
+      }
+      StockIntakeBatchItem: {
+        payload: Prisma.$StockIntakeBatchItemPayload<ExtArgs>
+        fields: Prisma.StockIntakeBatchItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.StockIntakeBatchItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.StockIntakeBatchItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>
+          }
+          findFirst: {
+            args: Prisma.StockIntakeBatchItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.StockIntakeBatchItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>
+          }
+          findMany: {
+            args: Prisma.StockIntakeBatchItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>[]
+          }
+          create: {
+            args: Prisma.StockIntakeBatchItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>
+          }
+          createMany: {
+            args: Prisma.StockIntakeBatchItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.StockIntakeBatchItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>[]
+          }
+          delete: {
+            args: Prisma.StockIntakeBatchItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>
+          }
+          update: {
+            args: Prisma.StockIntakeBatchItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.StockIntakeBatchItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.StockIntakeBatchItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.StockIntakeBatchItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.StockIntakeBatchItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$StockIntakeBatchItemPayload>
+          }
+          aggregate: {
+            args: Prisma.StockIntakeBatchItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateStockIntakeBatchItem>
+          }
+          groupBy: {
+            args: Prisma.StockIntakeBatchItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<StockIntakeBatchItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.StockIntakeBatchItemCountArgs<ExtArgs>
+            result: $Utils.Optional<StockIntakeBatchItemCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1781,6 +2263,11 @@ export namespace Prisma {
     leave?: LeaveOmit
     payroll?: PayrollOmit
     salaryAdvance?: SalaryAdvanceOmit
+    inventoryCategory?: InventoryCategoryOmit
+    inventoryItem?: InventoryItemOmit
+    stockMovement?: StockMovementOmit
+    stockIntakeBatch?: StockIntakeBatchOmit
+    stockIntakeBatchItem?: StockIntakeBatchItemOmit
   }
 
   /* Types for Logging */
@@ -1960,10 +2447,12 @@ export namespace Prisma {
 
   export type MenuItemCountOutputType = {
     addOns: number
+    orderItems: number
   }
 
   export type MenuItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     addOns?: boolean | MenuItemCountOutputTypeCountAddOnsArgs
+    orderItems?: boolean | MenuItemCountOutputTypeCountOrderItemsArgs
   }
 
   // Custom InputTypes
@@ -1982,6 +2471,13 @@ export namespace Prisma {
    */
   export type MenuItemCountOutputTypeCountAddOnsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AddOnWhereInput
+  }
+
+  /**
+   * MenuItemCountOutputType without action
+   */
+  export type MenuItemCountOutputTypeCountOrderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderItemWhereInput
   }
 
 
@@ -2044,6 +2540,108 @@ export namespace Prisma {
    */
   export type OrderCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: OrderItemWhereInput
+  }
+
+
+  /**
+   * Count Type InventoryCategoryCountOutputType
+   */
+
+  export type InventoryCategoryCountOutputType = {
+    items: number
+  }
+
+  export type InventoryCategoryCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | InventoryCategoryCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InventoryCategoryCountOutputType without action
+   */
+  export type InventoryCategoryCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategoryCountOutputType
+     */
+    select?: InventoryCategoryCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InventoryCategoryCountOutputType without action
+   */
+  export type InventoryCategoryCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryItemWhereInput
+  }
+
+
+  /**
+   * Count Type InventoryItemCountOutputType
+   */
+
+  export type InventoryItemCountOutputType = {
+    movements: number
+    stockIntakeItems: number
+  }
+
+  export type InventoryItemCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    movements?: boolean | InventoryItemCountOutputTypeCountMovementsArgs
+    stockIntakeItems?: boolean | InventoryItemCountOutputTypeCountStockIntakeItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * InventoryItemCountOutputType without action
+   */
+  export type InventoryItemCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItemCountOutputType
+     */
+    select?: InventoryItemCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * InventoryItemCountOutputType without action
+   */
+  export type InventoryItemCountOutputTypeCountMovementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockMovementWhereInput
+  }
+
+  /**
+   * InventoryItemCountOutputType without action
+   */
+  export type InventoryItemCountOutputTypeCountStockIntakeItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockIntakeBatchItemWhereInput
+  }
+
+
+  /**
+   * Count Type StockIntakeBatchCountOutputType
+   */
+
+  export type StockIntakeBatchCountOutputType = {
+    items: number
+  }
+
+  export type StockIntakeBatchCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | StockIntakeBatchCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * StockIntakeBatchCountOutputType without action
+   */
+  export type StockIntakeBatchCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchCountOutputType
+     */
+    select?: StockIntakeBatchCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * StockIntakeBatchCountOutputType without action
+   */
+  export type StockIntakeBatchCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockIntakeBatchItemWhereInput
   }
 
 
@@ -4510,6 +5108,7 @@ export namespace Prisma {
     isAvailable: number
     hasSizes: number
     sizes: number
+    ingredients: number
     categoryId: number
     createdAt: number
     updatedAt: number
@@ -4560,6 +5159,7 @@ export namespace Prisma {
     isAvailable?: true
     hasSizes?: true
     sizes?: true
+    ingredients?: true
     categoryId?: true
     createdAt?: true
     updatedAt?: true
@@ -4661,6 +5261,7 @@ export namespace Prisma {
     isAvailable: boolean
     hasSizes: boolean
     sizes: JsonValue | null
+    ingredients: JsonValue | null
     categoryId: string
     createdAt: Date
     updatedAt: Date
@@ -4694,11 +5295,13 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: boolean
+    ingredients?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     addOns?: boolean | MenuItem$addOnsArgs<ExtArgs>
+    orderItems?: boolean | MenuItem$orderItemsArgs<ExtArgs>
     _count?: boolean | MenuItemCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["menuItem"]>
 
@@ -4711,6 +5314,7 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: boolean
+    ingredients?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4726,6 +5330,7 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: boolean
+    ingredients?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
@@ -4741,15 +5346,17 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: boolean
+    ingredients?: boolean
     categoryId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "basePrice" | "imageUrl" | "isAvailable" | "hasSizes" | "sizes" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
+  export type MenuItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "basePrice" | "imageUrl" | "isAvailable" | "hasSizes" | "sizes" | "ingredients" | "categoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["menuItem"]>
   export type MenuItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | CategoryDefaultArgs<ExtArgs>
     addOns?: boolean | MenuItem$addOnsArgs<ExtArgs>
+    orderItems?: boolean | MenuItem$orderItemsArgs<ExtArgs>
     _count?: boolean | MenuItemCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type MenuItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4764,6 +5371,7 @@ export namespace Prisma {
     objects: {
       category: Prisma.$CategoryPayload<ExtArgs>
       addOns: Prisma.$AddOnPayload<ExtArgs>[]
+      orderItems: Prisma.$OrderItemPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -4774,6 +5382,7 @@ export namespace Prisma {
       isAvailable: boolean
       hasSizes: boolean
       sizes: Prisma.JsonValue | null
+      ingredients: Prisma.JsonValue | null
       categoryId: string
       createdAt: Date
       updatedAt: Date
@@ -5173,6 +5782,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     category<T extends CategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CategoryDefaultArgs<ExtArgs>>): Prisma__CategoryClient<$Result.GetResult<Prisma.$CategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     addOns<T extends MenuItem$addOnsArgs<ExtArgs> = {}>(args?: Subset<T, MenuItem$addOnsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AddOnPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orderItems<T extends MenuItem$orderItemsArgs<ExtArgs> = {}>(args?: Subset<T, MenuItem$orderItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5210,6 +5820,7 @@ export namespace Prisma {
     readonly isAvailable: FieldRef<"MenuItem", 'Boolean'>
     readonly hasSizes: FieldRef<"MenuItem", 'Boolean'>
     readonly sizes: FieldRef<"MenuItem", 'Json'>
+    readonly ingredients: FieldRef<"MenuItem", 'Json'>
     readonly categoryId: FieldRef<"MenuItem", 'String'>
     readonly createdAt: FieldRef<"MenuItem", 'DateTime'>
     readonly updatedAt: FieldRef<"MenuItem", 'DateTime'>
@@ -5638,6 +6249,30 @@ export namespace Prisma {
   }
 
   /**
+   * MenuItem.orderItems
+   */
+  export type MenuItem$orderItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderItem
+     */
+    select?: OrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderItem
+     */
+    omit?: OrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderItemInclude<ExtArgs> | null
+    where?: OrderItemWhereInput
+    orderBy?: OrderItemOrderByWithRelationInput | OrderItemOrderByWithRelationInput[]
+    cursor?: OrderItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
+  }
+
+  /**
    * MenuItem without action
    */
   export type MenuItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5699,6 +6334,7 @@ export namespace Prisma {
     name: number
     price: number
     isAvailable: number
+    ingredients: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -5736,6 +6372,7 @@ export namespace Prisma {
     name?: true
     price?: true
     isAvailable?: true
+    ingredients?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -5832,6 +6469,7 @@ export namespace Prisma {
     name: string
     price: Decimal
     isAvailable: boolean
+    ingredients: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: AddOnCountAggregateOutputType | null
@@ -5860,6 +6498,7 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     isAvailable?: boolean
+    ingredients?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     menuItems?: boolean | AddOn$menuItemsArgs<ExtArgs>
@@ -5871,6 +6510,7 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     isAvailable?: boolean
+    ingredients?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["addOn"]>
@@ -5880,6 +6520,7 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     isAvailable?: boolean
+    ingredients?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["addOn"]>
@@ -5889,11 +6530,12 @@ export namespace Prisma {
     name?: boolean
     price?: boolean
     isAvailable?: boolean
+    ingredients?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type AddOnOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "isAvailable" | "createdAt" | "updatedAt", ExtArgs["result"]["addOn"]>
+  export type AddOnOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "price" | "isAvailable" | "ingredients" | "createdAt" | "updatedAt", ExtArgs["result"]["addOn"]>
   export type AddOnInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     menuItems?: boolean | AddOn$menuItemsArgs<ExtArgs>
     _count?: boolean | AddOnCountOutputTypeDefaultArgs<ExtArgs>
@@ -5911,6 +6553,7 @@ export namespace Prisma {
       name: string
       price: Prisma.Decimal
       isAvailable: boolean
+      ingredients: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["addOn"]>
@@ -6341,6 +6984,7 @@ export namespace Prisma {
     readonly name: FieldRef<"AddOn", 'String'>
     readonly price: FieldRef<"AddOn", 'Decimal'>
     readonly isAvailable: FieldRef<"AddOn", 'Boolean'>
+    readonly ingredients: FieldRef<"AddOn", 'Json'>
     readonly createdAt: FieldRef<"AddOn", 'DateTime'>
     readonly updatedAt: FieldRef<"AddOn", 'DateTime'>
   }
@@ -8347,6 +8991,7 @@ export namespace Prisma {
     addOns?: boolean
     notes?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    menuItem?: boolean | OrderItem$menuItemArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
 
   export type OrderItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8361,6 +9006,7 @@ export namespace Prisma {
     addOns?: boolean
     notes?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    menuItem?: boolean | OrderItem$menuItemArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
 
   export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -8375,6 +9021,7 @@ export namespace Prisma {
     addOns?: boolean
     notes?: boolean
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    menuItem?: boolean | OrderItem$menuItemArgs<ExtArgs>
   }, ExtArgs["result"]["orderItem"]>
 
   export type OrderItemSelectScalar = {
@@ -8393,18 +9040,22 @@ export namespace Prisma {
   export type OrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "menuItemId" | "itemName" | "variant" | "quantity" | "unitPrice" | "totalPrice" | "addOns" | "notes", ExtArgs["result"]["orderItem"]>
   export type OrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    menuItem?: boolean | OrderItem$menuItemArgs<ExtArgs>
   }
   export type OrderItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    menuItem?: boolean | OrderItem$menuItemArgs<ExtArgs>
   }
   export type OrderItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     order?: boolean | OrderDefaultArgs<ExtArgs>
+    menuItem?: boolean | OrderItem$menuItemArgs<ExtArgs>
   }
 
   export type $OrderItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "OrderItem"
     objects: {
       order: Prisma.$OrderPayload<ExtArgs>
+      menuItem: Prisma.$MenuItemPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8812,6 +9463,7 @@ export namespace Prisma {
   export interface Prisma__OrderItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     order<T extends OrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrderDefaultArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    menuItem<T extends OrderItem$menuItemArgs<ExtArgs> = {}>(args?: Subset<T, OrderItem$menuItemArgs<ExtArgs>>): Prisma__MenuItemClient<$Result.GetResult<Prisma.$MenuItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9249,6 +9901,25 @@ export namespace Prisma {
      * Limit how many OrderItems to delete.
      */
     limit?: number
+  }
+
+  /**
+   * OrderItem.menuItem
+   */
+  export type OrderItem$menuItemArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MenuItem
+     */
+    select?: MenuItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MenuItem
+     */
+    omit?: MenuItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MenuItemInclude<ExtArgs> | null
+    where?: MenuItemWhereInput
   }
 
   /**
@@ -14062,6 +14733,5714 @@ export namespace Prisma {
 
 
   /**
+   * Model InventoryCategory
+   */
+
+  export type AggregateInventoryCategory = {
+    _count: InventoryCategoryCountAggregateOutputType | null
+    _min: InventoryCategoryMinAggregateOutputType | null
+    _max: InventoryCategoryMaxAggregateOutputType | null
+  }
+
+  export type InventoryCategoryMinAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InventoryCategoryMaxAggregateOutputType = {
+    id: string | null
+    name: string | null
+    description: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InventoryCategoryCountAggregateOutputType = {
+    id: number
+    name: number
+    description: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InventoryCategoryMinAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InventoryCategoryMaxAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InventoryCategoryCountAggregateInputType = {
+    id?: true
+    name?: true
+    description?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InventoryCategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryCategory to aggregate.
+     */
+    where?: InventoryCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryCategories to fetch.
+     */
+    orderBy?: InventoryCategoryOrderByWithRelationInput | InventoryCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryCategories
+    **/
+    _count?: true | InventoryCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryCategoryMaxAggregateInputType
+  }
+
+  export type GetInventoryCategoryAggregateType<T extends InventoryCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryCategory[P]>
+      : GetScalarType<T[P], AggregateInventoryCategory[P]>
+  }
+
+
+
+
+  export type InventoryCategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryCategoryWhereInput
+    orderBy?: InventoryCategoryOrderByWithAggregationInput | InventoryCategoryOrderByWithAggregationInput[]
+    by: InventoryCategoryScalarFieldEnum[] | InventoryCategoryScalarFieldEnum
+    having?: InventoryCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryCategoryCountAggregateInputType | true
+    _min?: InventoryCategoryMinAggregateInputType
+    _max?: InventoryCategoryMaxAggregateInputType
+  }
+
+  export type InventoryCategoryGroupByOutputType = {
+    id: string
+    name: string
+    description: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: InventoryCategoryCountAggregateOutputType | null
+    _min: InventoryCategoryMinAggregateOutputType | null
+    _max: InventoryCategoryMaxAggregateOutputType | null
+  }
+
+  type GetInventoryCategoryGroupByPayload<T extends InventoryCategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    items?: boolean | InventoryCategory$itemsArgs<ExtArgs>
+    _count?: boolean | InventoryCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryCategory"]>
+
+  export type InventoryCategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["inventoryCategory"]>
+
+  export type InventoryCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["inventoryCategory"]>
+
+  export type InventoryCategorySelectScalar = {
+    id?: boolean
+    name?: boolean
+    description?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InventoryCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryCategory"]>
+  export type InventoryCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | InventoryCategory$itemsArgs<ExtArgs>
+    _count?: boolean | InventoryCategoryCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type InventoryCategoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type InventoryCategoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $InventoryCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryCategory"
+    objects: {
+      items: Prisma.$InventoryItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      name: string
+      description: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inventoryCategory"]>
+    composites: {}
+  }
+
+  type InventoryCategoryGetPayload<S extends boolean | null | undefined | InventoryCategoryDefaultArgs> = $Result.GetResult<Prisma.$InventoryCategoryPayload, S>
+
+  type InventoryCategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryCategoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryCategoryCountAggregateInputType | true
+    }
+
+  export interface InventoryCategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryCategory'], meta: { name: 'InventoryCategory' } }
+    /**
+     * Find zero or one InventoryCategory that matches the filter.
+     * @param {InventoryCategoryFindUniqueArgs} args - Arguments to find a InventoryCategory
+     * @example
+     * // Get one InventoryCategory
+     * const inventoryCategory = await prisma.inventoryCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryCategoryFindUniqueArgs>(args: SelectSubset<T, InventoryCategoryFindUniqueArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryCategory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryCategoryFindUniqueOrThrowArgs} args - Arguments to find a InventoryCategory
+     * @example
+     * // Get one InventoryCategory
+     * const inventoryCategory = await prisma.inventoryCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryCategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryCategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryCategoryFindFirstArgs} args - Arguments to find a InventoryCategory
+     * @example
+     * // Get one InventoryCategory
+     * const inventoryCategory = await prisma.inventoryCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryCategoryFindFirstArgs>(args?: SelectSubset<T, InventoryCategoryFindFirstArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryCategory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryCategoryFindFirstOrThrowArgs} args - Arguments to find a InventoryCategory
+     * @example
+     * // Get one InventoryCategory
+     * const inventoryCategory = await prisma.inventoryCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryCategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryCategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryCategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryCategories
+     * const inventoryCategories = await prisma.inventoryCategory.findMany()
+     * 
+     * // Get first 10 InventoryCategories
+     * const inventoryCategories = await prisma.inventoryCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryCategoryWithIdOnly = await prisma.inventoryCategory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryCategoryFindManyArgs>(args?: SelectSubset<T, InventoryCategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryCategory.
+     * @param {InventoryCategoryCreateArgs} args - Arguments to create a InventoryCategory.
+     * @example
+     * // Create one InventoryCategory
+     * const InventoryCategory = await prisma.inventoryCategory.create({
+     *   data: {
+     *     // ... data to create a InventoryCategory
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryCategoryCreateArgs>(args: SelectSubset<T, InventoryCategoryCreateArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryCategories.
+     * @param {InventoryCategoryCreateManyArgs} args - Arguments to create many InventoryCategories.
+     * @example
+     * // Create many InventoryCategories
+     * const inventoryCategory = await prisma.inventoryCategory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryCategoryCreateManyArgs>(args?: SelectSubset<T, InventoryCategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryCategories and returns the data saved in the database.
+     * @param {InventoryCategoryCreateManyAndReturnArgs} args - Arguments to create many InventoryCategories.
+     * @example
+     * // Create many InventoryCategories
+     * const inventoryCategory = await prisma.inventoryCategory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryCategories and only return the `id`
+     * const inventoryCategoryWithIdOnly = await prisma.inventoryCategory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryCategoryCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryCategoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryCategory.
+     * @param {InventoryCategoryDeleteArgs} args - Arguments to delete one InventoryCategory.
+     * @example
+     * // Delete one InventoryCategory
+     * const InventoryCategory = await prisma.inventoryCategory.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryCategory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryCategoryDeleteArgs>(args: SelectSubset<T, InventoryCategoryDeleteArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryCategory.
+     * @param {InventoryCategoryUpdateArgs} args - Arguments to update one InventoryCategory.
+     * @example
+     * // Update one InventoryCategory
+     * const inventoryCategory = await prisma.inventoryCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryCategoryUpdateArgs>(args: SelectSubset<T, InventoryCategoryUpdateArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryCategories.
+     * @param {InventoryCategoryDeleteManyArgs} args - Arguments to filter InventoryCategories to delete.
+     * @example
+     * // Delete a few InventoryCategories
+     * const { count } = await prisma.inventoryCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryCategoryDeleteManyArgs>(args?: SelectSubset<T, InventoryCategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryCategories
+     * const inventoryCategory = await prisma.inventoryCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryCategoryUpdateManyArgs>(args: SelectSubset<T, InventoryCategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryCategories and returns the data updated in the database.
+     * @param {InventoryCategoryUpdateManyAndReturnArgs} args - Arguments to update many InventoryCategories.
+     * @example
+     * // Update many InventoryCategories
+     * const inventoryCategory = await prisma.inventoryCategory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryCategories and only return the `id`
+     * const inventoryCategoryWithIdOnly = await prisma.inventoryCategory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryCategoryUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryCategoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryCategory.
+     * @param {InventoryCategoryUpsertArgs} args - Arguments to update or create a InventoryCategory.
+     * @example
+     * // Update or create a InventoryCategory
+     * const inventoryCategory = await prisma.inventoryCategory.upsert({
+     *   create: {
+     *     // ... data to create a InventoryCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryCategory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryCategoryUpsertArgs>(args: SelectSubset<T, InventoryCategoryUpsertArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryCategoryCountArgs} args - Arguments to filter InventoryCategories to count.
+     * @example
+     * // Count the number of InventoryCategories
+     * const count = await prisma.inventoryCategory.count({
+     *   where: {
+     *     // ... the filter for the InventoryCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryCategoryCountArgs>(
+      args?: Subset<T, InventoryCategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryCategoryAggregateArgs>(args: Subset<T, InventoryCategoryAggregateArgs>): Prisma.PrismaPromise<GetInventoryCategoryAggregateType<T>>
+
+    /**
+     * Group by InventoryCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryCategory model
+   */
+  readonly fields: InventoryCategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    items<T extends InventoryCategory$itemsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryCategory$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryCategory model
+   */
+  interface InventoryCategoryFieldRefs {
+    readonly id: FieldRef<"InventoryCategory", 'String'>
+    readonly name: FieldRef<"InventoryCategory", 'String'>
+    readonly description: FieldRef<"InventoryCategory", 'String'>
+    readonly createdAt: FieldRef<"InventoryCategory", 'DateTime'>
+    readonly updatedAt: FieldRef<"InventoryCategory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryCategory findUnique
+   */
+  export type InventoryCategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryCategory to fetch.
+     */
+    where: InventoryCategoryWhereUniqueInput
+  }
+
+  /**
+   * InventoryCategory findUniqueOrThrow
+   */
+  export type InventoryCategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryCategory to fetch.
+     */
+    where: InventoryCategoryWhereUniqueInput
+  }
+
+  /**
+   * InventoryCategory findFirst
+   */
+  export type InventoryCategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryCategory to fetch.
+     */
+    where?: InventoryCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryCategories to fetch.
+     */
+    orderBy?: InventoryCategoryOrderByWithRelationInput | InventoryCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryCategories.
+     */
+    cursor?: InventoryCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryCategories.
+     */
+    distinct?: InventoryCategoryScalarFieldEnum | InventoryCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryCategory findFirstOrThrow
+   */
+  export type InventoryCategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryCategory to fetch.
+     */
+    where?: InventoryCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryCategories to fetch.
+     */
+    orderBy?: InventoryCategoryOrderByWithRelationInput | InventoryCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryCategories.
+     */
+    cursor?: InventoryCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryCategories.
+     */
+    distinct?: InventoryCategoryScalarFieldEnum | InventoryCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryCategory findMany
+   */
+  export type InventoryCategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryCategories to fetch.
+     */
+    where?: InventoryCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryCategories to fetch.
+     */
+    orderBy?: InventoryCategoryOrderByWithRelationInput | InventoryCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryCategories.
+     */
+    cursor?: InventoryCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryCategories.
+     */
+    distinct?: InventoryCategoryScalarFieldEnum | InventoryCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryCategory create
+   */
+  export type InventoryCategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryCategory.
+     */
+    data: XOR<InventoryCategoryCreateInput, InventoryCategoryUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryCategory createMany
+   */
+  export type InventoryCategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryCategories.
+     */
+    data: InventoryCategoryCreateManyInput | InventoryCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryCategory createManyAndReturn
+   */
+  export type InventoryCategoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryCategories.
+     */
+    data: InventoryCategoryCreateManyInput | InventoryCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryCategory update
+   */
+  export type InventoryCategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryCategory.
+     */
+    data: XOR<InventoryCategoryUpdateInput, InventoryCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryCategory to update.
+     */
+    where: InventoryCategoryWhereUniqueInput
+  }
+
+  /**
+   * InventoryCategory updateMany
+   */
+  export type InventoryCategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryCategories.
+     */
+    data: XOR<InventoryCategoryUpdateManyMutationInput, InventoryCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryCategories to update
+     */
+    where?: InventoryCategoryWhereInput
+    /**
+     * Limit how many InventoryCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryCategory updateManyAndReturn
+   */
+  export type InventoryCategoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryCategories.
+     */
+    data: XOR<InventoryCategoryUpdateManyMutationInput, InventoryCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryCategories to update
+     */
+    where?: InventoryCategoryWhereInput
+    /**
+     * Limit how many InventoryCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryCategory upsert
+   */
+  export type InventoryCategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryCategory to update in case it exists.
+     */
+    where: InventoryCategoryWhereUniqueInput
+    /**
+     * In case the InventoryCategory found by the `where` argument doesn't exist, create a new InventoryCategory with this data.
+     */
+    create: XOR<InventoryCategoryCreateInput, InventoryCategoryUncheckedCreateInput>
+    /**
+     * In case the InventoryCategory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryCategoryUpdateInput, InventoryCategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryCategory delete
+   */
+  export type InventoryCategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryCategory to delete.
+     */
+    where: InventoryCategoryWhereUniqueInput
+  }
+
+  /**
+   * InventoryCategory deleteMany
+   */
+  export type InventoryCategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryCategories to delete
+     */
+    where?: InventoryCategoryWhereInput
+    /**
+     * Limit how many InventoryCategories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryCategory.items
+   */
+  export type InventoryCategory$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    where?: InventoryItemWhereInput
+    orderBy?: InventoryItemOrderByWithRelationInput | InventoryItemOrderByWithRelationInput[]
+    cursor?: InventoryItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InventoryItemScalarFieldEnum | InventoryItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryCategory without action
+   */
+  export type InventoryCategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryCategory
+     */
+    select?: InventoryCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryCategory
+     */
+    omit?: InventoryCategoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryCategoryInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model InventoryItem
+   */
+
+  export type AggregateInventoryItem = {
+    _count: InventoryItemCountAggregateOutputType | null
+    _avg: InventoryItemAvgAggregateOutputType | null
+    _sum: InventoryItemSumAggregateOutputType | null
+    _min: InventoryItemMinAggregateOutputType | null
+    _max: InventoryItemMaxAggregateOutputType | null
+  }
+
+  export type InventoryItemAvgAggregateOutputType = {
+    quantity: Decimal | null
+    minStockLevel: Decimal | null
+    unitCost: Decimal | null
+  }
+
+  export type InventoryItemSumAggregateOutputType = {
+    quantity: Decimal | null
+    minStockLevel: Decimal | null
+    unitCost: Decimal | null
+  }
+
+  export type InventoryItemMinAggregateOutputType = {
+    id: string | null
+    sku: string | null
+    name: string | null
+    categoryId: string | null
+    unit: $Enums.InventoryUnit | null
+    quantity: Decimal | null
+    minStockLevel: Decimal | null
+    unitCost: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InventoryItemMaxAggregateOutputType = {
+    id: string | null
+    sku: string | null
+    name: string | null
+    categoryId: string | null
+    unit: $Enums.InventoryUnit | null
+    quantity: Decimal | null
+    minStockLevel: Decimal | null
+    unitCost: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InventoryItemCountAggregateOutputType = {
+    id: number
+    sku: number
+    name: number
+    categoryId: number
+    unit: number
+    quantity: number
+    minStockLevel: number
+    unitCost: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InventoryItemAvgAggregateInputType = {
+    quantity?: true
+    minStockLevel?: true
+    unitCost?: true
+  }
+
+  export type InventoryItemSumAggregateInputType = {
+    quantity?: true
+    minStockLevel?: true
+    unitCost?: true
+  }
+
+  export type InventoryItemMinAggregateInputType = {
+    id?: true
+    sku?: true
+    name?: true
+    categoryId?: true
+    unit?: true
+    quantity?: true
+    minStockLevel?: true
+    unitCost?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InventoryItemMaxAggregateInputType = {
+    id?: true
+    sku?: true
+    name?: true
+    categoryId?: true
+    unit?: true
+    quantity?: true
+    minStockLevel?: true
+    unitCost?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InventoryItemCountAggregateInputType = {
+    id?: true
+    sku?: true
+    name?: true
+    categoryId?: true
+    unit?: true
+    quantity?: true
+    minStockLevel?: true
+    unitCost?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InventoryItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryItem to aggregate.
+     */
+    where?: InventoryItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryItems to fetch.
+     */
+    orderBy?: InventoryItemOrderByWithRelationInput | InventoryItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InventoryItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InventoryItems
+    **/
+    _count?: true | InventoryItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InventoryItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InventoryItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InventoryItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InventoryItemMaxAggregateInputType
+  }
+
+  export type GetInventoryItemAggregateType<T extends InventoryItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateInventoryItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInventoryItem[P]>
+      : GetScalarType<T[P], AggregateInventoryItem[P]>
+  }
+
+
+
+
+  export type InventoryItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InventoryItemWhereInput
+    orderBy?: InventoryItemOrderByWithAggregationInput | InventoryItemOrderByWithAggregationInput[]
+    by: InventoryItemScalarFieldEnum[] | InventoryItemScalarFieldEnum
+    having?: InventoryItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InventoryItemCountAggregateInputType | true
+    _avg?: InventoryItemAvgAggregateInputType
+    _sum?: InventoryItemSumAggregateInputType
+    _min?: InventoryItemMinAggregateInputType
+    _max?: InventoryItemMaxAggregateInputType
+  }
+
+  export type InventoryItemGroupByOutputType = {
+    id: string
+    sku: string | null
+    name: string
+    categoryId: string
+    unit: $Enums.InventoryUnit
+    quantity: Decimal
+    minStockLevel: Decimal
+    unitCost: Decimal
+    createdAt: Date
+    updatedAt: Date
+    _count: InventoryItemCountAggregateOutputType | null
+    _avg: InventoryItemAvgAggregateOutputType | null
+    _sum: InventoryItemSumAggregateOutputType | null
+    _min: InventoryItemMinAggregateOutputType | null
+    _max: InventoryItemMaxAggregateOutputType | null
+  }
+
+  type GetInventoryItemGroupByPayload<T extends InventoryItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InventoryItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InventoryItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InventoryItemGroupByOutputType[P]>
+            : GetScalarType<T[P], InventoryItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InventoryItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sku?: boolean
+    name?: boolean
+    categoryId?: boolean
+    unit?: boolean
+    quantity?: boolean
+    minStockLevel?: boolean
+    unitCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    category?: boolean | InventoryCategoryDefaultArgs<ExtArgs>
+    movements?: boolean | InventoryItem$movementsArgs<ExtArgs>
+    stockIntakeItems?: boolean | InventoryItem$stockIntakeItemsArgs<ExtArgs>
+    _count?: boolean | InventoryItemCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryItem"]>
+
+  export type InventoryItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sku?: boolean
+    name?: boolean
+    categoryId?: boolean
+    unit?: boolean
+    quantity?: boolean
+    minStockLevel?: boolean
+    unitCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    category?: boolean | InventoryCategoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryItem"]>
+
+  export type InventoryItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    sku?: boolean
+    name?: boolean
+    categoryId?: boolean
+    unit?: boolean
+    quantity?: boolean
+    minStockLevel?: boolean
+    unitCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    category?: boolean | InventoryCategoryDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["inventoryItem"]>
+
+  export type InventoryItemSelectScalar = {
+    id?: boolean
+    sku?: boolean
+    name?: boolean
+    categoryId?: boolean
+    unit?: boolean
+    quantity?: boolean
+    minStockLevel?: boolean
+    unitCost?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InventoryItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "categoryId" | "unit" | "quantity" | "minStockLevel" | "unitCost" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryItem"]>
+  export type InventoryItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | InventoryCategoryDefaultArgs<ExtArgs>
+    movements?: boolean | InventoryItem$movementsArgs<ExtArgs>
+    stockIntakeItems?: boolean | InventoryItem$stockIntakeItemsArgs<ExtArgs>
+    _count?: boolean | InventoryItemCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type InventoryItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | InventoryCategoryDefaultArgs<ExtArgs>
+  }
+  export type InventoryItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    category?: boolean | InventoryCategoryDefaultArgs<ExtArgs>
+  }
+
+  export type $InventoryItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InventoryItem"
+    objects: {
+      category: Prisma.$InventoryCategoryPayload<ExtArgs>
+      movements: Prisma.$StockMovementPayload<ExtArgs>[]
+      stockIntakeItems: Prisma.$StockIntakeBatchItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      sku: string | null
+      name: string
+      categoryId: string
+      unit: $Enums.InventoryUnit
+      quantity: Prisma.Decimal
+      minStockLevel: Prisma.Decimal
+      unitCost: Prisma.Decimal
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["inventoryItem"]>
+    composites: {}
+  }
+
+  type InventoryItemGetPayload<S extends boolean | null | undefined | InventoryItemDefaultArgs> = $Result.GetResult<Prisma.$InventoryItemPayload, S>
+
+  type InventoryItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InventoryItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InventoryItemCountAggregateInputType | true
+    }
+
+  export interface InventoryItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InventoryItem'], meta: { name: 'InventoryItem' } }
+    /**
+     * Find zero or one InventoryItem that matches the filter.
+     * @param {InventoryItemFindUniqueArgs} args - Arguments to find a InventoryItem
+     * @example
+     * // Get one InventoryItem
+     * const inventoryItem = await prisma.inventoryItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InventoryItemFindUniqueArgs>(args: SelectSubset<T, InventoryItemFindUniqueArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InventoryItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InventoryItemFindUniqueOrThrowArgs} args - Arguments to find a InventoryItem
+     * @example
+     * // Get one InventoryItem
+     * const inventoryItem = await prisma.inventoryItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InventoryItemFindUniqueOrThrowArgs>(args: SelectSubset<T, InventoryItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryItemFindFirstArgs} args - Arguments to find a InventoryItem
+     * @example
+     * // Get one InventoryItem
+     * const inventoryItem = await prisma.inventoryItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InventoryItemFindFirstArgs>(args?: SelectSubset<T, InventoryItemFindFirstArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InventoryItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryItemFindFirstOrThrowArgs} args - Arguments to find a InventoryItem
+     * @example
+     * // Get one InventoryItem
+     * const inventoryItem = await prisma.inventoryItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InventoryItemFindFirstOrThrowArgs>(args?: SelectSubset<T, InventoryItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InventoryItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InventoryItems
+     * const inventoryItems = await prisma.inventoryItem.findMany()
+     * 
+     * // Get first 10 InventoryItems
+     * const inventoryItems = await prisma.inventoryItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const inventoryItemWithIdOnly = await prisma.inventoryItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InventoryItemFindManyArgs>(args?: SelectSubset<T, InventoryItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InventoryItem.
+     * @param {InventoryItemCreateArgs} args - Arguments to create a InventoryItem.
+     * @example
+     * // Create one InventoryItem
+     * const InventoryItem = await prisma.inventoryItem.create({
+     *   data: {
+     *     // ... data to create a InventoryItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends InventoryItemCreateArgs>(args: SelectSubset<T, InventoryItemCreateArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InventoryItems.
+     * @param {InventoryItemCreateManyArgs} args - Arguments to create many InventoryItems.
+     * @example
+     * // Create many InventoryItems
+     * const inventoryItem = await prisma.inventoryItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InventoryItemCreateManyArgs>(args?: SelectSubset<T, InventoryItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InventoryItems and returns the data saved in the database.
+     * @param {InventoryItemCreateManyAndReturnArgs} args - Arguments to create many InventoryItems.
+     * @example
+     * // Create many InventoryItems
+     * const inventoryItem = await prisma.inventoryItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InventoryItems and only return the `id`
+     * const inventoryItemWithIdOnly = await prisma.inventoryItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InventoryItemCreateManyAndReturnArgs>(args?: SelectSubset<T, InventoryItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InventoryItem.
+     * @param {InventoryItemDeleteArgs} args - Arguments to delete one InventoryItem.
+     * @example
+     * // Delete one InventoryItem
+     * const InventoryItem = await prisma.inventoryItem.delete({
+     *   where: {
+     *     // ... filter to delete one InventoryItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InventoryItemDeleteArgs>(args: SelectSubset<T, InventoryItemDeleteArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InventoryItem.
+     * @param {InventoryItemUpdateArgs} args - Arguments to update one InventoryItem.
+     * @example
+     * // Update one InventoryItem
+     * const inventoryItem = await prisma.inventoryItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InventoryItemUpdateArgs>(args: SelectSubset<T, InventoryItemUpdateArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InventoryItems.
+     * @param {InventoryItemDeleteManyArgs} args - Arguments to filter InventoryItems to delete.
+     * @example
+     * // Delete a few InventoryItems
+     * const { count } = await prisma.inventoryItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InventoryItemDeleteManyArgs>(args?: SelectSubset<T, InventoryItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InventoryItems
+     * const inventoryItem = await prisma.inventoryItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InventoryItemUpdateManyArgs>(args: SelectSubset<T, InventoryItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InventoryItems and returns the data updated in the database.
+     * @param {InventoryItemUpdateManyAndReturnArgs} args - Arguments to update many InventoryItems.
+     * @example
+     * // Update many InventoryItems
+     * const inventoryItem = await prisma.inventoryItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InventoryItems and only return the `id`
+     * const inventoryItemWithIdOnly = await prisma.inventoryItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InventoryItemUpdateManyAndReturnArgs>(args: SelectSubset<T, InventoryItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InventoryItem.
+     * @param {InventoryItemUpsertArgs} args - Arguments to update or create a InventoryItem.
+     * @example
+     * // Update or create a InventoryItem
+     * const inventoryItem = await prisma.inventoryItem.upsert({
+     *   create: {
+     *     // ... data to create a InventoryItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InventoryItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InventoryItemUpsertArgs>(args: SelectSubset<T, InventoryItemUpsertArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InventoryItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryItemCountArgs} args - Arguments to filter InventoryItems to count.
+     * @example
+     * // Count the number of InventoryItems
+     * const count = await prisma.inventoryItem.count({
+     *   where: {
+     *     // ... the filter for the InventoryItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends InventoryItemCountArgs>(
+      args?: Subset<T, InventoryItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InventoryItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InventoryItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InventoryItemAggregateArgs>(args: Subset<T, InventoryItemAggregateArgs>): Prisma.PrismaPromise<GetInventoryItemAggregateType<T>>
+
+    /**
+     * Group by InventoryItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InventoryItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InventoryItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InventoryItemGroupByArgs['orderBy'] }
+        : { orderBy?: InventoryItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InventoryItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInventoryItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InventoryItem model
+   */
+  readonly fields: InventoryItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InventoryItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InventoryItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    category<T extends InventoryCategoryDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryCategoryDefaultArgs<ExtArgs>>): Prisma__InventoryCategoryClient<$Result.GetResult<Prisma.$InventoryCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    movements<T extends InventoryItem$movementsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryItem$movementsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    stockIntakeItems<T extends InventoryItem$stockIntakeItemsArgs<ExtArgs> = {}>(args?: Subset<T, InventoryItem$stockIntakeItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InventoryItem model
+   */
+  interface InventoryItemFieldRefs {
+    readonly id: FieldRef<"InventoryItem", 'String'>
+    readonly sku: FieldRef<"InventoryItem", 'String'>
+    readonly name: FieldRef<"InventoryItem", 'String'>
+    readonly categoryId: FieldRef<"InventoryItem", 'String'>
+    readonly unit: FieldRef<"InventoryItem", 'InventoryUnit'>
+    readonly quantity: FieldRef<"InventoryItem", 'Decimal'>
+    readonly minStockLevel: FieldRef<"InventoryItem", 'Decimal'>
+    readonly unitCost: FieldRef<"InventoryItem", 'Decimal'>
+    readonly createdAt: FieldRef<"InventoryItem", 'DateTime'>
+    readonly updatedAt: FieldRef<"InventoryItem", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InventoryItem findUnique
+   */
+  export type InventoryItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryItem to fetch.
+     */
+    where: InventoryItemWhereUniqueInput
+  }
+
+  /**
+   * InventoryItem findUniqueOrThrow
+   */
+  export type InventoryItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryItem to fetch.
+     */
+    where: InventoryItemWhereUniqueInput
+  }
+
+  /**
+   * InventoryItem findFirst
+   */
+  export type InventoryItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryItem to fetch.
+     */
+    where?: InventoryItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryItems to fetch.
+     */
+    orderBy?: InventoryItemOrderByWithRelationInput | InventoryItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryItems.
+     */
+    cursor?: InventoryItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryItems.
+     */
+    distinct?: InventoryItemScalarFieldEnum | InventoryItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryItem findFirstOrThrow
+   */
+  export type InventoryItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryItem to fetch.
+     */
+    where?: InventoryItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryItems to fetch.
+     */
+    orderBy?: InventoryItemOrderByWithRelationInput | InventoryItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InventoryItems.
+     */
+    cursor?: InventoryItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryItems.
+     */
+    distinct?: InventoryItemScalarFieldEnum | InventoryItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryItem findMany
+   */
+  export type InventoryItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * Filter, which InventoryItems to fetch.
+     */
+    where?: InventoryItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InventoryItems to fetch.
+     */
+    orderBy?: InventoryItemOrderByWithRelationInput | InventoryItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InventoryItems.
+     */
+    cursor?: InventoryItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InventoryItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InventoryItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InventoryItems.
+     */
+    distinct?: InventoryItemScalarFieldEnum | InventoryItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryItem create
+   */
+  export type InventoryItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InventoryItem.
+     */
+    data: XOR<InventoryItemCreateInput, InventoryItemUncheckedCreateInput>
+  }
+
+  /**
+   * InventoryItem createMany
+   */
+  export type InventoryItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InventoryItems.
+     */
+    data: InventoryItemCreateManyInput | InventoryItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InventoryItem createManyAndReturn
+   */
+  export type InventoryItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many InventoryItems.
+     */
+    data: InventoryItemCreateManyInput | InventoryItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryItem update
+   */
+  export type InventoryItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InventoryItem.
+     */
+    data: XOR<InventoryItemUpdateInput, InventoryItemUncheckedUpdateInput>
+    /**
+     * Choose, which InventoryItem to update.
+     */
+    where: InventoryItemWhereUniqueInput
+  }
+
+  /**
+   * InventoryItem updateMany
+   */
+  export type InventoryItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InventoryItems.
+     */
+    data: XOR<InventoryItemUpdateManyMutationInput, InventoryItemUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryItems to update
+     */
+    where?: InventoryItemWhereInput
+    /**
+     * Limit how many InventoryItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryItem updateManyAndReturn
+   */
+  export type InventoryItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * The data used to update InventoryItems.
+     */
+    data: XOR<InventoryItemUpdateManyMutationInput, InventoryItemUncheckedUpdateManyInput>
+    /**
+     * Filter which InventoryItems to update
+     */
+    where?: InventoryItemWhereInput
+    /**
+     * Limit how many InventoryItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InventoryItem upsert
+   */
+  export type InventoryItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InventoryItem to update in case it exists.
+     */
+    where: InventoryItemWhereUniqueInput
+    /**
+     * In case the InventoryItem found by the `where` argument doesn't exist, create a new InventoryItem with this data.
+     */
+    create: XOR<InventoryItemCreateInput, InventoryItemUncheckedCreateInput>
+    /**
+     * In case the InventoryItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InventoryItemUpdateInput, InventoryItemUncheckedUpdateInput>
+  }
+
+  /**
+   * InventoryItem delete
+   */
+  export type InventoryItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+    /**
+     * Filter which InventoryItem to delete.
+     */
+    where: InventoryItemWhereUniqueInput
+  }
+
+  /**
+   * InventoryItem deleteMany
+   */
+  export type InventoryItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InventoryItems to delete
+     */
+    where?: InventoryItemWhereInput
+    /**
+     * Limit how many InventoryItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InventoryItem.movements
+   */
+  export type InventoryItem$movementsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    where?: StockMovementWhereInput
+    orderBy?: StockMovementOrderByWithRelationInput | StockMovementOrderByWithRelationInput[]
+    cursor?: StockMovementWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryItem.stockIntakeItems
+   */
+  export type InventoryItem$stockIntakeItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    where?: StockIntakeBatchItemWhereInput
+    orderBy?: StockIntakeBatchItemOrderByWithRelationInput | StockIntakeBatchItemOrderByWithRelationInput[]
+    cursor?: StockIntakeBatchItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockIntakeBatchItemScalarFieldEnum | StockIntakeBatchItemScalarFieldEnum[]
+  }
+
+  /**
+   * InventoryItem without action
+   */
+  export type InventoryItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InventoryItem
+     */
+    select?: InventoryItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InventoryItem
+     */
+    omit?: InventoryItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InventoryItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StockMovement
+   */
+
+  export type AggregateStockMovement = {
+    _count: StockMovementCountAggregateOutputType | null
+    _avg: StockMovementAvgAggregateOutputType | null
+    _sum: StockMovementSumAggregateOutputType | null
+    _min: StockMovementMinAggregateOutputType | null
+    _max: StockMovementMaxAggregateOutputType | null
+  }
+
+  export type StockMovementAvgAggregateOutputType = {
+    quantityChange: Decimal | null
+    previousQuantity: Decimal | null
+    newQuantity: Decimal | null
+  }
+
+  export type StockMovementSumAggregateOutputType = {
+    quantityChange: Decimal | null
+    previousQuantity: Decimal | null
+    newQuantity: Decimal | null
+  }
+
+  export type StockMovementMinAggregateOutputType = {
+    id: string | null
+    inventoryItemId: string | null
+    type: $Enums.StockMovementType | null
+    quantityChange: Decimal | null
+    previousQuantity: Decimal | null
+    newQuantity: Decimal | null
+    reason: string | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type StockMovementMaxAggregateOutputType = {
+    id: string | null
+    inventoryItemId: string | null
+    type: $Enums.StockMovementType | null
+    quantityChange: Decimal | null
+    previousQuantity: Decimal | null
+    newQuantity: Decimal | null
+    reason: string | null
+    createdById: string | null
+    createdAt: Date | null
+  }
+
+  export type StockMovementCountAggregateOutputType = {
+    id: number
+    inventoryItemId: number
+    type: number
+    quantityChange: number
+    previousQuantity: number
+    newQuantity: number
+    reason: number
+    createdById: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type StockMovementAvgAggregateInputType = {
+    quantityChange?: true
+    previousQuantity?: true
+    newQuantity?: true
+  }
+
+  export type StockMovementSumAggregateInputType = {
+    quantityChange?: true
+    previousQuantity?: true
+    newQuantity?: true
+  }
+
+  export type StockMovementMinAggregateInputType = {
+    id?: true
+    inventoryItemId?: true
+    type?: true
+    quantityChange?: true
+    previousQuantity?: true
+    newQuantity?: true
+    reason?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type StockMovementMaxAggregateInputType = {
+    id?: true
+    inventoryItemId?: true
+    type?: true
+    quantityChange?: true
+    previousQuantity?: true
+    newQuantity?: true
+    reason?: true
+    createdById?: true
+    createdAt?: true
+  }
+
+  export type StockMovementCountAggregateInputType = {
+    id?: true
+    inventoryItemId?: true
+    type?: true
+    quantityChange?: true
+    previousQuantity?: true
+    newQuantity?: true
+    reason?: true
+    createdById?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type StockMovementAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockMovement to aggregate.
+     */
+    where?: StockMovementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockMovements to fetch.
+     */
+    orderBy?: StockMovementOrderByWithRelationInput | StockMovementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockMovementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockMovements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockMovements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockMovements
+    **/
+    _count?: true | StockMovementCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StockMovementAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StockMovementSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockMovementMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockMovementMaxAggregateInputType
+  }
+
+  export type GetStockMovementAggregateType<T extends StockMovementAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockMovement]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockMovement[P]>
+      : GetScalarType<T[P], AggregateStockMovement[P]>
+  }
+
+
+
+
+  export type StockMovementGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockMovementWhereInput
+    orderBy?: StockMovementOrderByWithAggregationInput | StockMovementOrderByWithAggregationInput[]
+    by: StockMovementScalarFieldEnum[] | StockMovementScalarFieldEnum
+    having?: StockMovementScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockMovementCountAggregateInputType | true
+    _avg?: StockMovementAvgAggregateInputType
+    _sum?: StockMovementSumAggregateInputType
+    _min?: StockMovementMinAggregateInputType
+    _max?: StockMovementMaxAggregateInputType
+  }
+
+  export type StockMovementGroupByOutputType = {
+    id: string
+    inventoryItemId: string
+    type: $Enums.StockMovementType
+    quantityChange: Decimal
+    previousQuantity: Decimal
+    newQuantity: Decimal
+    reason: string | null
+    createdById: string | null
+    createdAt: Date
+    _count: StockMovementCountAggregateOutputType | null
+    _avg: StockMovementAvgAggregateOutputType | null
+    _sum: StockMovementSumAggregateOutputType | null
+    _min: StockMovementMinAggregateOutputType | null
+    _max: StockMovementMaxAggregateOutputType | null
+  }
+
+  type GetStockMovementGroupByPayload<T extends StockMovementGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockMovementGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockMovementGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockMovementGroupByOutputType[P]>
+            : GetScalarType<T[P], StockMovementGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockMovementSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    inventoryItemId?: boolean
+    type?: boolean
+    quantityChange?: boolean
+    previousQuantity?: boolean
+    newQuantity?: boolean
+    reason?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockMovement"]>
+
+  export type StockMovementSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    inventoryItemId?: boolean
+    type?: boolean
+    quantityChange?: boolean
+    previousQuantity?: boolean
+    newQuantity?: boolean
+    reason?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockMovement"]>
+
+  export type StockMovementSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    inventoryItemId?: boolean
+    type?: boolean
+    quantityChange?: boolean
+    previousQuantity?: boolean
+    newQuantity?: boolean
+    reason?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockMovement"]>
+
+  export type StockMovementSelectScalar = {
+    id?: boolean
+    inventoryItemId?: boolean
+    type?: boolean
+    quantityChange?: boolean
+    previousQuantity?: boolean
+    newQuantity?: boolean
+    reason?: boolean
+    createdById?: boolean
+    createdAt?: boolean
+  }
+
+  export type StockMovementOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "inventoryItemId" | "type" | "quantityChange" | "previousQuantity" | "newQuantity" | "reason" | "createdById" | "createdAt", ExtArgs["result"]["stockMovement"]>
+  export type StockMovementInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }
+  export type StockMovementIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }
+  export type StockMovementIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }
+
+  export type $StockMovementPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockMovement"
+    objects: {
+      inventoryItem: Prisma.$InventoryItemPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      inventoryItemId: string
+      type: $Enums.StockMovementType
+      quantityChange: Prisma.Decimal
+      previousQuantity: Prisma.Decimal
+      newQuantity: Prisma.Decimal
+      reason: string | null
+      createdById: string | null
+      createdAt: Date
+    }, ExtArgs["result"]["stockMovement"]>
+    composites: {}
+  }
+
+  type StockMovementGetPayload<S extends boolean | null | undefined | StockMovementDefaultArgs> = $Result.GetResult<Prisma.$StockMovementPayload, S>
+
+  type StockMovementCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StockMovementFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StockMovementCountAggregateInputType | true
+    }
+
+  export interface StockMovementDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockMovement'], meta: { name: 'StockMovement' } }
+    /**
+     * Find zero or one StockMovement that matches the filter.
+     * @param {StockMovementFindUniqueArgs} args - Arguments to find a StockMovement
+     * @example
+     * // Get one StockMovement
+     * const stockMovement = await prisma.stockMovement.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockMovementFindUniqueArgs>(args: SelectSubset<T, StockMovementFindUniqueArgs<ExtArgs>>): Prisma__StockMovementClient<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StockMovement that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StockMovementFindUniqueOrThrowArgs} args - Arguments to find a StockMovement
+     * @example
+     * // Get one StockMovement
+     * const stockMovement = await prisma.stockMovement.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockMovementFindUniqueOrThrowArgs>(args: SelectSubset<T, StockMovementFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockMovementClient<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockMovement that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockMovementFindFirstArgs} args - Arguments to find a StockMovement
+     * @example
+     * // Get one StockMovement
+     * const stockMovement = await prisma.stockMovement.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockMovementFindFirstArgs>(args?: SelectSubset<T, StockMovementFindFirstArgs<ExtArgs>>): Prisma__StockMovementClient<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockMovement that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockMovementFindFirstOrThrowArgs} args - Arguments to find a StockMovement
+     * @example
+     * // Get one StockMovement
+     * const stockMovement = await prisma.stockMovement.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockMovementFindFirstOrThrowArgs>(args?: SelectSubset<T, StockMovementFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockMovementClient<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StockMovements that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockMovementFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockMovements
+     * const stockMovements = await prisma.stockMovement.findMany()
+     * 
+     * // Get first 10 StockMovements
+     * const stockMovements = await prisma.stockMovement.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockMovementWithIdOnly = await prisma.stockMovement.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockMovementFindManyArgs>(args?: SelectSubset<T, StockMovementFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StockMovement.
+     * @param {StockMovementCreateArgs} args - Arguments to create a StockMovement.
+     * @example
+     * // Create one StockMovement
+     * const StockMovement = await prisma.stockMovement.create({
+     *   data: {
+     *     // ... data to create a StockMovement
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockMovementCreateArgs>(args: SelectSubset<T, StockMovementCreateArgs<ExtArgs>>): Prisma__StockMovementClient<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StockMovements.
+     * @param {StockMovementCreateManyArgs} args - Arguments to create many StockMovements.
+     * @example
+     * // Create many StockMovements
+     * const stockMovement = await prisma.stockMovement.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockMovementCreateManyArgs>(args?: SelectSubset<T, StockMovementCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockMovements and returns the data saved in the database.
+     * @param {StockMovementCreateManyAndReturnArgs} args - Arguments to create many StockMovements.
+     * @example
+     * // Create many StockMovements
+     * const stockMovement = await prisma.stockMovement.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockMovements and only return the `id`
+     * const stockMovementWithIdOnly = await prisma.stockMovement.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockMovementCreateManyAndReturnArgs>(args?: SelectSubset<T, StockMovementCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StockMovement.
+     * @param {StockMovementDeleteArgs} args - Arguments to delete one StockMovement.
+     * @example
+     * // Delete one StockMovement
+     * const StockMovement = await prisma.stockMovement.delete({
+     *   where: {
+     *     // ... filter to delete one StockMovement
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockMovementDeleteArgs>(args: SelectSubset<T, StockMovementDeleteArgs<ExtArgs>>): Prisma__StockMovementClient<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StockMovement.
+     * @param {StockMovementUpdateArgs} args - Arguments to update one StockMovement.
+     * @example
+     * // Update one StockMovement
+     * const stockMovement = await prisma.stockMovement.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockMovementUpdateArgs>(args: SelectSubset<T, StockMovementUpdateArgs<ExtArgs>>): Prisma__StockMovementClient<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StockMovements.
+     * @param {StockMovementDeleteManyArgs} args - Arguments to filter StockMovements to delete.
+     * @example
+     * // Delete a few StockMovements
+     * const { count } = await prisma.stockMovement.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockMovementDeleteManyArgs>(args?: SelectSubset<T, StockMovementDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockMovements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockMovementUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockMovements
+     * const stockMovement = await prisma.stockMovement.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockMovementUpdateManyArgs>(args: SelectSubset<T, StockMovementUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockMovements and returns the data updated in the database.
+     * @param {StockMovementUpdateManyAndReturnArgs} args - Arguments to update many StockMovements.
+     * @example
+     * // Update many StockMovements
+     * const stockMovement = await prisma.stockMovement.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StockMovements and only return the `id`
+     * const stockMovementWithIdOnly = await prisma.stockMovement.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StockMovementUpdateManyAndReturnArgs>(args: SelectSubset<T, StockMovementUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StockMovement.
+     * @param {StockMovementUpsertArgs} args - Arguments to update or create a StockMovement.
+     * @example
+     * // Update or create a StockMovement
+     * const stockMovement = await prisma.stockMovement.upsert({
+     *   create: {
+     *     // ... data to create a StockMovement
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockMovement we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockMovementUpsertArgs>(args: SelectSubset<T, StockMovementUpsertArgs<ExtArgs>>): Prisma__StockMovementClient<$Result.GetResult<Prisma.$StockMovementPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StockMovements.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockMovementCountArgs} args - Arguments to filter StockMovements to count.
+     * @example
+     * // Count the number of StockMovements
+     * const count = await prisma.stockMovement.count({
+     *   where: {
+     *     // ... the filter for the StockMovements we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockMovementCountArgs>(
+      args?: Subset<T, StockMovementCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockMovementCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockMovement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockMovementAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockMovementAggregateArgs>(args: Subset<T, StockMovementAggregateArgs>): Prisma.PrismaPromise<GetStockMovementAggregateType<T>>
+
+    /**
+     * Group by StockMovement.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockMovementGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockMovementGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockMovementGroupByArgs['orderBy'] }
+        : { orderBy?: StockMovementGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockMovementGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockMovementGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockMovement model
+   */
+  readonly fields: StockMovementFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockMovement.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockMovementClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    inventoryItem<T extends InventoryItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryItemDefaultArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockMovement model
+   */
+  interface StockMovementFieldRefs {
+    readonly id: FieldRef<"StockMovement", 'String'>
+    readonly inventoryItemId: FieldRef<"StockMovement", 'String'>
+    readonly type: FieldRef<"StockMovement", 'StockMovementType'>
+    readonly quantityChange: FieldRef<"StockMovement", 'Decimal'>
+    readonly previousQuantity: FieldRef<"StockMovement", 'Decimal'>
+    readonly newQuantity: FieldRef<"StockMovement", 'Decimal'>
+    readonly reason: FieldRef<"StockMovement", 'String'>
+    readonly createdById: FieldRef<"StockMovement", 'String'>
+    readonly createdAt: FieldRef<"StockMovement", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockMovement findUnique
+   */
+  export type StockMovementFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * Filter, which StockMovement to fetch.
+     */
+    where: StockMovementWhereUniqueInput
+  }
+
+  /**
+   * StockMovement findUniqueOrThrow
+   */
+  export type StockMovementFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * Filter, which StockMovement to fetch.
+     */
+    where: StockMovementWhereUniqueInput
+  }
+
+  /**
+   * StockMovement findFirst
+   */
+  export type StockMovementFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * Filter, which StockMovement to fetch.
+     */
+    where?: StockMovementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockMovements to fetch.
+     */
+    orderBy?: StockMovementOrderByWithRelationInput | StockMovementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockMovements.
+     */
+    cursor?: StockMovementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockMovements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockMovements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockMovements.
+     */
+    distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * StockMovement findFirstOrThrow
+   */
+  export type StockMovementFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * Filter, which StockMovement to fetch.
+     */
+    where?: StockMovementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockMovements to fetch.
+     */
+    orderBy?: StockMovementOrderByWithRelationInput | StockMovementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockMovements.
+     */
+    cursor?: StockMovementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockMovements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockMovements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockMovements.
+     */
+    distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * StockMovement findMany
+   */
+  export type StockMovementFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * Filter, which StockMovements to fetch.
+     */
+    where?: StockMovementWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockMovements to fetch.
+     */
+    orderBy?: StockMovementOrderByWithRelationInput | StockMovementOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockMovements.
+     */
+    cursor?: StockMovementWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockMovements from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockMovements.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockMovements.
+     */
+    distinct?: StockMovementScalarFieldEnum | StockMovementScalarFieldEnum[]
+  }
+
+  /**
+   * StockMovement create
+   */
+  export type StockMovementCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockMovement.
+     */
+    data: XOR<StockMovementCreateInput, StockMovementUncheckedCreateInput>
+  }
+
+  /**
+   * StockMovement createMany
+   */
+  export type StockMovementCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockMovements.
+     */
+    data: StockMovementCreateManyInput | StockMovementCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockMovement createManyAndReturn
+   */
+  export type StockMovementCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * The data used to create many StockMovements.
+     */
+    data: StockMovementCreateManyInput | StockMovementCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockMovement update
+   */
+  export type StockMovementUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockMovement.
+     */
+    data: XOR<StockMovementUpdateInput, StockMovementUncheckedUpdateInput>
+    /**
+     * Choose, which StockMovement to update.
+     */
+    where: StockMovementWhereUniqueInput
+  }
+
+  /**
+   * StockMovement updateMany
+   */
+  export type StockMovementUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockMovements.
+     */
+    data: XOR<StockMovementUpdateManyMutationInput, StockMovementUncheckedUpdateManyInput>
+    /**
+     * Filter which StockMovements to update
+     */
+    where?: StockMovementWhereInput
+    /**
+     * Limit how many StockMovements to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockMovement updateManyAndReturn
+   */
+  export type StockMovementUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * The data used to update StockMovements.
+     */
+    data: XOR<StockMovementUpdateManyMutationInput, StockMovementUncheckedUpdateManyInput>
+    /**
+     * Filter which StockMovements to update
+     */
+    where?: StockMovementWhereInput
+    /**
+     * Limit how many StockMovements to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockMovement upsert
+   */
+  export type StockMovementUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockMovement to update in case it exists.
+     */
+    where: StockMovementWhereUniqueInput
+    /**
+     * In case the StockMovement found by the `where` argument doesn't exist, create a new StockMovement with this data.
+     */
+    create: XOR<StockMovementCreateInput, StockMovementUncheckedCreateInput>
+    /**
+     * In case the StockMovement was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockMovementUpdateInput, StockMovementUncheckedUpdateInput>
+  }
+
+  /**
+   * StockMovement delete
+   */
+  export type StockMovementDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+    /**
+     * Filter which StockMovement to delete.
+     */
+    where: StockMovementWhereUniqueInput
+  }
+
+  /**
+   * StockMovement deleteMany
+   */
+  export type StockMovementDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockMovements to delete
+     */
+    where?: StockMovementWhereInput
+    /**
+     * Limit how many StockMovements to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockMovement without action
+   */
+  export type StockMovementDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockMovement
+     */
+    select?: StockMovementSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockMovement
+     */
+    omit?: StockMovementOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockMovementInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StockIntakeBatch
+   */
+
+  export type AggregateStockIntakeBatch = {
+    _count: StockIntakeBatchCountAggregateOutputType | null
+    _avg: StockIntakeBatchAvgAggregateOutputType | null
+    _sum: StockIntakeBatchSumAggregateOutputType | null
+    _min: StockIntakeBatchMinAggregateOutputType | null
+    _max: StockIntakeBatchMaxAggregateOutputType | null
+  }
+
+  export type StockIntakeBatchAvgAggregateOutputType = {
+    totalAmount: Decimal | null
+  }
+
+  export type StockIntakeBatchSumAggregateOutputType = {
+    totalAmount: Decimal | null
+  }
+
+  export type StockIntakeBatchMinAggregateOutputType = {
+    id: string | null
+    batchNumber: string | null
+    notes: string | null
+    totalAmount: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StockIntakeBatchMaxAggregateOutputType = {
+    id: string | null
+    batchNumber: string | null
+    notes: string | null
+    totalAmount: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type StockIntakeBatchCountAggregateOutputType = {
+    id: number
+    batchNumber: number
+    notes: number
+    totalAmount: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type StockIntakeBatchAvgAggregateInputType = {
+    totalAmount?: true
+  }
+
+  export type StockIntakeBatchSumAggregateInputType = {
+    totalAmount?: true
+  }
+
+  export type StockIntakeBatchMinAggregateInputType = {
+    id?: true
+    batchNumber?: true
+    notes?: true
+    totalAmount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StockIntakeBatchMaxAggregateInputType = {
+    id?: true
+    batchNumber?: true
+    notes?: true
+    totalAmount?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type StockIntakeBatchCountAggregateInputType = {
+    id?: true
+    batchNumber?: true
+    notes?: true
+    totalAmount?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type StockIntakeBatchAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockIntakeBatch to aggregate.
+     */
+    where?: StockIntakeBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockIntakeBatches to fetch.
+     */
+    orderBy?: StockIntakeBatchOrderByWithRelationInput | StockIntakeBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockIntakeBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockIntakeBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockIntakeBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockIntakeBatches
+    **/
+    _count?: true | StockIntakeBatchCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StockIntakeBatchAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StockIntakeBatchSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockIntakeBatchMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockIntakeBatchMaxAggregateInputType
+  }
+
+  export type GetStockIntakeBatchAggregateType<T extends StockIntakeBatchAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockIntakeBatch]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockIntakeBatch[P]>
+      : GetScalarType<T[P], AggregateStockIntakeBatch[P]>
+  }
+
+
+
+
+  export type StockIntakeBatchGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockIntakeBatchWhereInput
+    orderBy?: StockIntakeBatchOrderByWithAggregationInput | StockIntakeBatchOrderByWithAggregationInput[]
+    by: StockIntakeBatchScalarFieldEnum[] | StockIntakeBatchScalarFieldEnum
+    having?: StockIntakeBatchScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockIntakeBatchCountAggregateInputType | true
+    _avg?: StockIntakeBatchAvgAggregateInputType
+    _sum?: StockIntakeBatchSumAggregateInputType
+    _min?: StockIntakeBatchMinAggregateInputType
+    _max?: StockIntakeBatchMaxAggregateInputType
+  }
+
+  export type StockIntakeBatchGroupByOutputType = {
+    id: string
+    batchNumber: string
+    notes: string | null
+    totalAmount: Decimal
+    createdAt: Date
+    updatedAt: Date
+    _count: StockIntakeBatchCountAggregateOutputType | null
+    _avg: StockIntakeBatchAvgAggregateOutputType | null
+    _sum: StockIntakeBatchSumAggregateOutputType | null
+    _min: StockIntakeBatchMinAggregateOutputType | null
+    _max: StockIntakeBatchMaxAggregateOutputType | null
+  }
+
+  type GetStockIntakeBatchGroupByPayload<T extends StockIntakeBatchGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockIntakeBatchGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockIntakeBatchGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockIntakeBatchGroupByOutputType[P]>
+            : GetScalarType<T[P], StockIntakeBatchGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockIntakeBatchSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    batchNumber?: boolean
+    notes?: boolean
+    totalAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    items?: boolean | StockIntakeBatch$itemsArgs<ExtArgs>
+    _count?: boolean | StockIntakeBatchCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockIntakeBatch"]>
+
+  export type StockIntakeBatchSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    batchNumber?: boolean
+    notes?: boolean
+    totalAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["stockIntakeBatch"]>
+
+  export type StockIntakeBatchSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    batchNumber?: boolean
+    notes?: boolean
+    totalAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["stockIntakeBatch"]>
+
+  export type StockIntakeBatchSelectScalar = {
+    id?: boolean
+    batchNumber?: boolean
+    notes?: boolean
+    totalAmount?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type StockIntakeBatchOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "batchNumber" | "notes" | "totalAmount" | "createdAt" | "updatedAt", ExtArgs["result"]["stockIntakeBatch"]>
+  export type StockIntakeBatchInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | StockIntakeBatch$itemsArgs<ExtArgs>
+    _count?: boolean | StockIntakeBatchCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type StockIntakeBatchIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type StockIntakeBatchIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $StockIntakeBatchPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockIntakeBatch"
+    objects: {
+      items: Prisma.$StockIntakeBatchItemPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      batchNumber: string
+      notes: string | null
+      totalAmount: Prisma.Decimal
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["stockIntakeBatch"]>
+    composites: {}
+  }
+
+  type StockIntakeBatchGetPayload<S extends boolean | null | undefined | StockIntakeBatchDefaultArgs> = $Result.GetResult<Prisma.$StockIntakeBatchPayload, S>
+
+  type StockIntakeBatchCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StockIntakeBatchFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StockIntakeBatchCountAggregateInputType | true
+    }
+
+  export interface StockIntakeBatchDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockIntakeBatch'], meta: { name: 'StockIntakeBatch' } }
+    /**
+     * Find zero or one StockIntakeBatch that matches the filter.
+     * @param {StockIntakeBatchFindUniqueArgs} args - Arguments to find a StockIntakeBatch
+     * @example
+     * // Get one StockIntakeBatch
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockIntakeBatchFindUniqueArgs>(args: SelectSubset<T, StockIntakeBatchFindUniqueArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StockIntakeBatch that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StockIntakeBatchFindUniqueOrThrowArgs} args - Arguments to find a StockIntakeBatch
+     * @example
+     * // Get one StockIntakeBatch
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockIntakeBatchFindUniqueOrThrowArgs>(args: SelectSubset<T, StockIntakeBatchFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockIntakeBatch that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchFindFirstArgs} args - Arguments to find a StockIntakeBatch
+     * @example
+     * // Get one StockIntakeBatch
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockIntakeBatchFindFirstArgs>(args?: SelectSubset<T, StockIntakeBatchFindFirstArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockIntakeBatch that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchFindFirstOrThrowArgs} args - Arguments to find a StockIntakeBatch
+     * @example
+     * // Get one StockIntakeBatch
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockIntakeBatchFindFirstOrThrowArgs>(args?: SelectSubset<T, StockIntakeBatchFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StockIntakeBatches that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockIntakeBatches
+     * const stockIntakeBatches = await prisma.stockIntakeBatch.findMany()
+     * 
+     * // Get first 10 StockIntakeBatches
+     * const stockIntakeBatches = await prisma.stockIntakeBatch.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockIntakeBatchWithIdOnly = await prisma.stockIntakeBatch.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockIntakeBatchFindManyArgs>(args?: SelectSubset<T, StockIntakeBatchFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StockIntakeBatch.
+     * @param {StockIntakeBatchCreateArgs} args - Arguments to create a StockIntakeBatch.
+     * @example
+     * // Create one StockIntakeBatch
+     * const StockIntakeBatch = await prisma.stockIntakeBatch.create({
+     *   data: {
+     *     // ... data to create a StockIntakeBatch
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockIntakeBatchCreateArgs>(args: SelectSubset<T, StockIntakeBatchCreateArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StockIntakeBatches.
+     * @param {StockIntakeBatchCreateManyArgs} args - Arguments to create many StockIntakeBatches.
+     * @example
+     * // Create many StockIntakeBatches
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockIntakeBatchCreateManyArgs>(args?: SelectSubset<T, StockIntakeBatchCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockIntakeBatches and returns the data saved in the database.
+     * @param {StockIntakeBatchCreateManyAndReturnArgs} args - Arguments to create many StockIntakeBatches.
+     * @example
+     * // Create many StockIntakeBatches
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockIntakeBatches and only return the `id`
+     * const stockIntakeBatchWithIdOnly = await prisma.stockIntakeBatch.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockIntakeBatchCreateManyAndReturnArgs>(args?: SelectSubset<T, StockIntakeBatchCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StockIntakeBatch.
+     * @param {StockIntakeBatchDeleteArgs} args - Arguments to delete one StockIntakeBatch.
+     * @example
+     * // Delete one StockIntakeBatch
+     * const StockIntakeBatch = await prisma.stockIntakeBatch.delete({
+     *   where: {
+     *     // ... filter to delete one StockIntakeBatch
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockIntakeBatchDeleteArgs>(args: SelectSubset<T, StockIntakeBatchDeleteArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StockIntakeBatch.
+     * @param {StockIntakeBatchUpdateArgs} args - Arguments to update one StockIntakeBatch.
+     * @example
+     * // Update one StockIntakeBatch
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockIntakeBatchUpdateArgs>(args: SelectSubset<T, StockIntakeBatchUpdateArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StockIntakeBatches.
+     * @param {StockIntakeBatchDeleteManyArgs} args - Arguments to filter StockIntakeBatches to delete.
+     * @example
+     * // Delete a few StockIntakeBatches
+     * const { count } = await prisma.stockIntakeBatch.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockIntakeBatchDeleteManyArgs>(args?: SelectSubset<T, StockIntakeBatchDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockIntakeBatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockIntakeBatches
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockIntakeBatchUpdateManyArgs>(args: SelectSubset<T, StockIntakeBatchUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockIntakeBatches and returns the data updated in the database.
+     * @param {StockIntakeBatchUpdateManyAndReturnArgs} args - Arguments to update many StockIntakeBatches.
+     * @example
+     * // Update many StockIntakeBatches
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StockIntakeBatches and only return the `id`
+     * const stockIntakeBatchWithIdOnly = await prisma.stockIntakeBatch.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StockIntakeBatchUpdateManyAndReturnArgs>(args: SelectSubset<T, StockIntakeBatchUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StockIntakeBatch.
+     * @param {StockIntakeBatchUpsertArgs} args - Arguments to update or create a StockIntakeBatch.
+     * @example
+     * // Update or create a StockIntakeBatch
+     * const stockIntakeBatch = await prisma.stockIntakeBatch.upsert({
+     *   create: {
+     *     // ... data to create a StockIntakeBatch
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockIntakeBatch we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockIntakeBatchUpsertArgs>(args: SelectSubset<T, StockIntakeBatchUpsertArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StockIntakeBatches.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchCountArgs} args - Arguments to filter StockIntakeBatches to count.
+     * @example
+     * // Count the number of StockIntakeBatches
+     * const count = await prisma.stockIntakeBatch.count({
+     *   where: {
+     *     // ... the filter for the StockIntakeBatches we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockIntakeBatchCountArgs>(
+      args?: Subset<T, StockIntakeBatchCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockIntakeBatchCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockIntakeBatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockIntakeBatchAggregateArgs>(args: Subset<T, StockIntakeBatchAggregateArgs>): Prisma.PrismaPromise<GetStockIntakeBatchAggregateType<T>>
+
+    /**
+     * Group by StockIntakeBatch.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockIntakeBatchGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockIntakeBatchGroupByArgs['orderBy'] }
+        : { orderBy?: StockIntakeBatchGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockIntakeBatchGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockIntakeBatchGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockIntakeBatch model
+   */
+  readonly fields: StockIntakeBatchFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockIntakeBatch.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockIntakeBatchClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    items<T extends StockIntakeBatch$itemsArgs<ExtArgs> = {}>(args?: Subset<T, StockIntakeBatch$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockIntakeBatch model
+   */
+  interface StockIntakeBatchFieldRefs {
+    readonly id: FieldRef<"StockIntakeBatch", 'String'>
+    readonly batchNumber: FieldRef<"StockIntakeBatch", 'String'>
+    readonly notes: FieldRef<"StockIntakeBatch", 'String'>
+    readonly totalAmount: FieldRef<"StockIntakeBatch", 'Decimal'>
+    readonly createdAt: FieldRef<"StockIntakeBatch", 'DateTime'>
+    readonly updatedAt: FieldRef<"StockIntakeBatch", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockIntakeBatch findUnique
+   */
+  export type StockIntakeBatchFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatch to fetch.
+     */
+    where: StockIntakeBatchWhereUniqueInput
+  }
+
+  /**
+   * StockIntakeBatch findUniqueOrThrow
+   */
+  export type StockIntakeBatchFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatch to fetch.
+     */
+    where: StockIntakeBatchWhereUniqueInput
+  }
+
+  /**
+   * StockIntakeBatch findFirst
+   */
+  export type StockIntakeBatchFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatch to fetch.
+     */
+    where?: StockIntakeBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockIntakeBatches to fetch.
+     */
+    orderBy?: StockIntakeBatchOrderByWithRelationInput | StockIntakeBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockIntakeBatches.
+     */
+    cursor?: StockIntakeBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockIntakeBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockIntakeBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockIntakeBatches.
+     */
+    distinct?: StockIntakeBatchScalarFieldEnum | StockIntakeBatchScalarFieldEnum[]
+  }
+
+  /**
+   * StockIntakeBatch findFirstOrThrow
+   */
+  export type StockIntakeBatchFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatch to fetch.
+     */
+    where?: StockIntakeBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockIntakeBatches to fetch.
+     */
+    orderBy?: StockIntakeBatchOrderByWithRelationInput | StockIntakeBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockIntakeBatches.
+     */
+    cursor?: StockIntakeBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockIntakeBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockIntakeBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockIntakeBatches.
+     */
+    distinct?: StockIntakeBatchScalarFieldEnum | StockIntakeBatchScalarFieldEnum[]
+  }
+
+  /**
+   * StockIntakeBatch findMany
+   */
+  export type StockIntakeBatchFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatches to fetch.
+     */
+    where?: StockIntakeBatchWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockIntakeBatches to fetch.
+     */
+    orderBy?: StockIntakeBatchOrderByWithRelationInput | StockIntakeBatchOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockIntakeBatches.
+     */
+    cursor?: StockIntakeBatchWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockIntakeBatches from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockIntakeBatches.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockIntakeBatches.
+     */
+    distinct?: StockIntakeBatchScalarFieldEnum | StockIntakeBatchScalarFieldEnum[]
+  }
+
+  /**
+   * StockIntakeBatch create
+   */
+  export type StockIntakeBatchCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockIntakeBatch.
+     */
+    data: XOR<StockIntakeBatchCreateInput, StockIntakeBatchUncheckedCreateInput>
+  }
+
+  /**
+   * StockIntakeBatch createMany
+   */
+  export type StockIntakeBatchCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockIntakeBatches.
+     */
+    data: StockIntakeBatchCreateManyInput | StockIntakeBatchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockIntakeBatch createManyAndReturn
+   */
+  export type StockIntakeBatchCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * The data used to create many StockIntakeBatches.
+     */
+    data: StockIntakeBatchCreateManyInput | StockIntakeBatchCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockIntakeBatch update
+   */
+  export type StockIntakeBatchUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockIntakeBatch.
+     */
+    data: XOR<StockIntakeBatchUpdateInput, StockIntakeBatchUncheckedUpdateInput>
+    /**
+     * Choose, which StockIntakeBatch to update.
+     */
+    where: StockIntakeBatchWhereUniqueInput
+  }
+
+  /**
+   * StockIntakeBatch updateMany
+   */
+  export type StockIntakeBatchUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockIntakeBatches.
+     */
+    data: XOR<StockIntakeBatchUpdateManyMutationInput, StockIntakeBatchUncheckedUpdateManyInput>
+    /**
+     * Filter which StockIntakeBatches to update
+     */
+    where?: StockIntakeBatchWhereInput
+    /**
+     * Limit how many StockIntakeBatches to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockIntakeBatch updateManyAndReturn
+   */
+  export type StockIntakeBatchUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * The data used to update StockIntakeBatches.
+     */
+    data: XOR<StockIntakeBatchUpdateManyMutationInput, StockIntakeBatchUncheckedUpdateManyInput>
+    /**
+     * Filter which StockIntakeBatches to update
+     */
+    where?: StockIntakeBatchWhereInput
+    /**
+     * Limit how many StockIntakeBatches to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockIntakeBatch upsert
+   */
+  export type StockIntakeBatchUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockIntakeBatch to update in case it exists.
+     */
+    where: StockIntakeBatchWhereUniqueInput
+    /**
+     * In case the StockIntakeBatch found by the `where` argument doesn't exist, create a new StockIntakeBatch with this data.
+     */
+    create: XOR<StockIntakeBatchCreateInput, StockIntakeBatchUncheckedCreateInput>
+    /**
+     * In case the StockIntakeBatch was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockIntakeBatchUpdateInput, StockIntakeBatchUncheckedUpdateInput>
+  }
+
+  /**
+   * StockIntakeBatch delete
+   */
+  export type StockIntakeBatchDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+    /**
+     * Filter which StockIntakeBatch to delete.
+     */
+    where: StockIntakeBatchWhereUniqueInput
+  }
+
+  /**
+   * StockIntakeBatch deleteMany
+   */
+  export type StockIntakeBatchDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockIntakeBatches to delete
+     */
+    where?: StockIntakeBatchWhereInput
+    /**
+     * Limit how many StockIntakeBatches to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockIntakeBatch.items
+   */
+  export type StockIntakeBatch$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    where?: StockIntakeBatchItemWhereInput
+    orderBy?: StockIntakeBatchItemOrderByWithRelationInput | StockIntakeBatchItemOrderByWithRelationInput[]
+    cursor?: StockIntakeBatchItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: StockIntakeBatchItemScalarFieldEnum | StockIntakeBatchItemScalarFieldEnum[]
+  }
+
+  /**
+   * StockIntakeBatch without action
+   */
+  export type StockIntakeBatchDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatch
+     */
+    select?: StockIntakeBatchSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatch
+     */
+    omit?: StockIntakeBatchOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model StockIntakeBatchItem
+   */
+
+  export type AggregateStockIntakeBatchItem = {
+    _count: StockIntakeBatchItemCountAggregateOutputType | null
+    _avg: StockIntakeBatchItemAvgAggregateOutputType | null
+    _sum: StockIntakeBatchItemSumAggregateOutputType | null
+    _min: StockIntakeBatchItemMinAggregateOutputType | null
+    _max: StockIntakeBatchItemMaxAggregateOutputType | null
+  }
+
+  export type StockIntakeBatchItemAvgAggregateOutputType = {
+    quantity: Decimal | null
+    unitCost: Decimal | null
+    totalPrice: Decimal | null
+  }
+
+  export type StockIntakeBatchItemSumAggregateOutputType = {
+    quantity: Decimal | null
+    unitCost: Decimal | null
+    totalPrice: Decimal | null
+  }
+
+  export type StockIntakeBatchItemMinAggregateOutputType = {
+    id: string | null
+    stockIntakeBatchId: string | null
+    inventoryItemId: string | null
+    quantity: Decimal | null
+    unitCost: Decimal | null
+    totalPrice: Decimal | null
+  }
+
+  export type StockIntakeBatchItemMaxAggregateOutputType = {
+    id: string | null
+    stockIntakeBatchId: string | null
+    inventoryItemId: string | null
+    quantity: Decimal | null
+    unitCost: Decimal | null
+    totalPrice: Decimal | null
+  }
+
+  export type StockIntakeBatchItemCountAggregateOutputType = {
+    id: number
+    stockIntakeBatchId: number
+    inventoryItemId: number
+    quantity: number
+    unitCost: number
+    totalPrice: number
+    _all: number
+  }
+
+
+  export type StockIntakeBatchItemAvgAggregateInputType = {
+    quantity?: true
+    unitCost?: true
+    totalPrice?: true
+  }
+
+  export type StockIntakeBatchItemSumAggregateInputType = {
+    quantity?: true
+    unitCost?: true
+    totalPrice?: true
+  }
+
+  export type StockIntakeBatchItemMinAggregateInputType = {
+    id?: true
+    stockIntakeBatchId?: true
+    inventoryItemId?: true
+    quantity?: true
+    unitCost?: true
+    totalPrice?: true
+  }
+
+  export type StockIntakeBatchItemMaxAggregateInputType = {
+    id?: true
+    stockIntakeBatchId?: true
+    inventoryItemId?: true
+    quantity?: true
+    unitCost?: true
+    totalPrice?: true
+  }
+
+  export type StockIntakeBatchItemCountAggregateInputType = {
+    id?: true
+    stockIntakeBatchId?: true
+    inventoryItemId?: true
+    quantity?: true
+    unitCost?: true
+    totalPrice?: true
+    _all?: true
+  }
+
+  export type StockIntakeBatchItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockIntakeBatchItem to aggregate.
+     */
+    where?: StockIntakeBatchItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockIntakeBatchItems to fetch.
+     */
+    orderBy?: StockIntakeBatchItemOrderByWithRelationInput | StockIntakeBatchItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: StockIntakeBatchItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockIntakeBatchItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockIntakeBatchItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned StockIntakeBatchItems
+    **/
+    _count?: true | StockIntakeBatchItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: StockIntakeBatchItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: StockIntakeBatchItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: StockIntakeBatchItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: StockIntakeBatchItemMaxAggregateInputType
+  }
+
+  export type GetStockIntakeBatchItemAggregateType<T extends StockIntakeBatchItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateStockIntakeBatchItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateStockIntakeBatchItem[P]>
+      : GetScalarType<T[P], AggregateStockIntakeBatchItem[P]>
+  }
+
+
+
+
+  export type StockIntakeBatchItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: StockIntakeBatchItemWhereInput
+    orderBy?: StockIntakeBatchItemOrderByWithAggregationInput | StockIntakeBatchItemOrderByWithAggregationInput[]
+    by: StockIntakeBatchItemScalarFieldEnum[] | StockIntakeBatchItemScalarFieldEnum
+    having?: StockIntakeBatchItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: StockIntakeBatchItemCountAggregateInputType | true
+    _avg?: StockIntakeBatchItemAvgAggregateInputType
+    _sum?: StockIntakeBatchItemSumAggregateInputType
+    _min?: StockIntakeBatchItemMinAggregateInputType
+    _max?: StockIntakeBatchItemMaxAggregateInputType
+  }
+
+  export type StockIntakeBatchItemGroupByOutputType = {
+    id: string
+    stockIntakeBatchId: string
+    inventoryItemId: string
+    quantity: Decimal
+    unitCost: Decimal
+    totalPrice: Decimal
+    _count: StockIntakeBatchItemCountAggregateOutputType | null
+    _avg: StockIntakeBatchItemAvgAggregateOutputType | null
+    _sum: StockIntakeBatchItemSumAggregateOutputType | null
+    _min: StockIntakeBatchItemMinAggregateOutputType | null
+    _max: StockIntakeBatchItemMaxAggregateOutputType | null
+  }
+
+  type GetStockIntakeBatchItemGroupByPayload<T extends StockIntakeBatchItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<StockIntakeBatchItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof StockIntakeBatchItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], StockIntakeBatchItemGroupByOutputType[P]>
+            : GetScalarType<T[P], StockIntakeBatchItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type StockIntakeBatchItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    stockIntakeBatchId?: boolean
+    inventoryItemId?: boolean
+    quantity?: boolean
+    unitCost?: boolean
+    totalPrice?: boolean
+    stockIntakeBatch?: boolean | StockIntakeBatchDefaultArgs<ExtArgs>
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockIntakeBatchItem"]>
+
+  export type StockIntakeBatchItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    stockIntakeBatchId?: boolean
+    inventoryItemId?: boolean
+    quantity?: boolean
+    unitCost?: boolean
+    totalPrice?: boolean
+    stockIntakeBatch?: boolean | StockIntakeBatchDefaultArgs<ExtArgs>
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockIntakeBatchItem"]>
+
+  export type StockIntakeBatchItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    stockIntakeBatchId?: boolean
+    inventoryItemId?: boolean
+    quantity?: boolean
+    unitCost?: boolean
+    totalPrice?: boolean
+    stockIntakeBatch?: boolean | StockIntakeBatchDefaultArgs<ExtArgs>
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["stockIntakeBatchItem"]>
+
+  export type StockIntakeBatchItemSelectScalar = {
+    id?: boolean
+    stockIntakeBatchId?: boolean
+    inventoryItemId?: boolean
+    quantity?: boolean
+    unitCost?: boolean
+    totalPrice?: boolean
+  }
+
+  export type StockIntakeBatchItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "stockIntakeBatchId" | "inventoryItemId" | "quantity" | "unitCost" | "totalPrice", ExtArgs["result"]["stockIntakeBatchItem"]>
+  export type StockIntakeBatchItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stockIntakeBatch?: boolean | StockIntakeBatchDefaultArgs<ExtArgs>
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }
+  export type StockIntakeBatchItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stockIntakeBatch?: boolean | StockIntakeBatchDefaultArgs<ExtArgs>
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }
+  export type StockIntakeBatchItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    stockIntakeBatch?: boolean | StockIntakeBatchDefaultArgs<ExtArgs>
+    inventoryItem?: boolean | InventoryItemDefaultArgs<ExtArgs>
+  }
+
+  export type $StockIntakeBatchItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "StockIntakeBatchItem"
+    objects: {
+      stockIntakeBatch: Prisma.$StockIntakeBatchPayload<ExtArgs>
+      inventoryItem: Prisma.$InventoryItemPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      stockIntakeBatchId: string
+      inventoryItemId: string
+      quantity: Prisma.Decimal
+      unitCost: Prisma.Decimal
+      totalPrice: Prisma.Decimal
+    }, ExtArgs["result"]["stockIntakeBatchItem"]>
+    composites: {}
+  }
+
+  type StockIntakeBatchItemGetPayload<S extends boolean | null | undefined | StockIntakeBatchItemDefaultArgs> = $Result.GetResult<Prisma.$StockIntakeBatchItemPayload, S>
+
+  type StockIntakeBatchItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<StockIntakeBatchItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: StockIntakeBatchItemCountAggregateInputType | true
+    }
+
+  export interface StockIntakeBatchItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['StockIntakeBatchItem'], meta: { name: 'StockIntakeBatchItem' } }
+    /**
+     * Find zero or one StockIntakeBatchItem that matches the filter.
+     * @param {StockIntakeBatchItemFindUniqueArgs} args - Arguments to find a StockIntakeBatchItem
+     * @example
+     * // Get one StockIntakeBatchItem
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends StockIntakeBatchItemFindUniqueArgs>(args: SelectSubset<T, StockIntakeBatchItemFindUniqueArgs<ExtArgs>>): Prisma__StockIntakeBatchItemClient<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one StockIntakeBatchItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {StockIntakeBatchItemFindUniqueOrThrowArgs} args - Arguments to find a StockIntakeBatchItem
+     * @example
+     * // Get one StockIntakeBatchItem
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends StockIntakeBatchItemFindUniqueOrThrowArgs>(args: SelectSubset<T, StockIntakeBatchItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__StockIntakeBatchItemClient<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockIntakeBatchItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchItemFindFirstArgs} args - Arguments to find a StockIntakeBatchItem
+     * @example
+     * // Get one StockIntakeBatchItem
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends StockIntakeBatchItemFindFirstArgs>(args?: SelectSubset<T, StockIntakeBatchItemFindFirstArgs<ExtArgs>>): Prisma__StockIntakeBatchItemClient<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first StockIntakeBatchItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchItemFindFirstOrThrowArgs} args - Arguments to find a StockIntakeBatchItem
+     * @example
+     * // Get one StockIntakeBatchItem
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends StockIntakeBatchItemFindFirstOrThrowArgs>(args?: SelectSubset<T, StockIntakeBatchItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__StockIntakeBatchItemClient<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more StockIntakeBatchItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all StockIntakeBatchItems
+     * const stockIntakeBatchItems = await prisma.stockIntakeBatchItem.findMany()
+     * 
+     * // Get first 10 StockIntakeBatchItems
+     * const stockIntakeBatchItems = await prisma.stockIntakeBatchItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const stockIntakeBatchItemWithIdOnly = await prisma.stockIntakeBatchItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends StockIntakeBatchItemFindManyArgs>(args?: SelectSubset<T, StockIntakeBatchItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a StockIntakeBatchItem.
+     * @param {StockIntakeBatchItemCreateArgs} args - Arguments to create a StockIntakeBatchItem.
+     * @example
+     * // Create one StockIntakeBatchItem
+     * const StockIntakeBatchItem = await prisma.stockIntakeBatchItem.create({
+     *   data: {
+     *     // ... data to create a StockIntakeBatchItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends StockIntakeBatchItemCreateArgs>(args: SelectSubset<T, StockIntakeBatchItemCreateArgs<ExtArgs>>): Prisma__StockIntakeBatchItemClient<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many StockIntakeBatchItems.
+     * @param {StockIntakeBatchItemCreateManyArgs} args - Arguments to create many StockIntakeBatchItems.
+     * @example
+     * // Create many StockIntakeBatchItems
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends StockIntakeBatchItemCreateManyArgs>(args?: SelectSubset<T, StockIntakeBatchItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many StockIntakeBatchItems and returns the data saved in the database.
+     * @param {StockIntakeBatchItemCreateManyAndReturnArgs} args - Arguments to create many StockIntakeBatchItems.
+     * @example
+     * // Create many StockIntakeBatchItems
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many StockIntakeBatchItems and only return the `id`
+     * const stockIntakeBatchItemWithIdOnly = await prisma.stockIntakeBatchItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends StockIntakeBatchItemCreateManyAndReturnArgs>(args?: SelectSubset<T, StockIntakeBatchItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a StockIntakeBatchItem.
+     * @param {StockIntakeBatchItemDeleteArgs} args - Arguments to delete one StockIntakeBatchItem.
+     * @example
+     * // Delete one StockIntakeBatchItem
+     * const StockIntakeBatchItem = await prisma.stockIntakeBatchItem.delete({
+     *   where: {
+     *     // ... filter to delete one StockIntakeBatchItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends StockIntakeBatchItemDeleteArgs>(args: SelectSubset<T, StockIntakeBatchItemDeleteArgs<ExtArgs>>): Prisma__StockIntakeBatchItemClient<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one StockIntakeBatchItem.
+     * @param {StockIntakeBatchItemUpdateArgs} args - Arguments to update one StockIntakeBatchItem.
+     * @example
+     * // Update one StockIntakeBatchItem
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends StockIntakeBatchItemUpdateArgs>(args: SelectSubset<T, StockIntakeBatchItemUpdateArgs<ExtArgs>>): Prisma__StockIntakeBatchItemClient<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more StockIntakeBatchItems.
+     * @param {StockIntakeBatchItemDeleteManyArgs} args - Arguments to filter StockIntakeBatchItems to delete.
+     * @example
+     * // Delete a few StockIntakeBatchItems
+     * const { count } = await prisma.stockIntakeBatchItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends StockIntakeBatchItemDeleteManyArgs>(args?: SelectSubset<T, StockIntakeBatchItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockIntakeBatchItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many StockIntakeBatchItems
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends StockIntakeBatchItemUpdateManyArgs>(args: SelectSubset<T, StockIntakeBatchItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more StockIntakeBatchItems and returns the data updated in the database.
+     * @param {StockIntakeBatchItemUpdateManyAndReturnArgs} args - Arguments to update many StockIntakeBatchItems.
+     * @example
+     * // Update many StockIntakeBatchItems
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more StockIntakeBatchItems and only return the `id`
+     * const stockIntakeBatchItemWithIdOnly = await prisma.stockIntakeBatchItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends StockIntakeBatchItemUpdateManyAndReturnArgs>(args: SelectSubset<T, StockIntakeBatchItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one StockIntakeBatchItem.
+     * @param {StockIntakeBatchItemUpsertArgs} args - Arguments to update or create a StockIntakeBatchItem.
+     * @example
+     * // Update or create a StockIntakeBatchItem
+     * const stockIntakeBatchItem = await prisma.stockIntakeBatchItem.upsert({
+     *   create: {
+     *     // ... data to create a StockIntakeBatchItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the StockIntakeBatchItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends StockIntakeBatchItemUpsertArgs>(args: SelectSubset<T, StockIntakeBatchItemUpsertArgs<ExtArgs>>): Prisma__StockIntakeBatchItemClient<$Result.GetResult<Prisma.$StockIntakeBatchItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of StockIntakeBatchItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchItemCountArgs} args - Arguments to filter StockIntakeBatchItems to count.
+     * @example
+     * // Count the number of StockIntakeBatchItems
+     * const count = await prisma.stockIntakeBatchItem.count({
+     *   where: {
+     *     // ... the filter for the StockIntakeBatchItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends StockIntakeBatchItemCountArgs>(
+      args?: Subset<T, StockIntakeBatchItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], StockIntakeBatchItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a StockIntakeBatchItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends StockIntakeBatchItemAggregateArgs>(args: Subset<T, StockIntakeBatchItemAggregateArgs>): Prisma.PrismaPromise<GetStockIntakeBatchItemAggregateType<T>>
+
+    /**
+     * Group by StockIntakeBatchItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {StockIntakeBatchItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends StockIntakeBatchItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: StockIntakeBatchItemGroupByArgs['orderBy'] }
+        : { orderBy?: StockIntakeBatchItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, StockIntakeBatchItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetStockIntakeBatchItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the StockIntakeBatchItem model
+   */
+  readonly fields: StockIntakeBatchItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for StockIntakeBatchItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__StockIntakeBatchItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    stockIntakeBatch<T extends StockIntakeBatchDefaultArgs<ExtArgs> = {}>(args?: Subset<T, StockIntakeBatchDefaultArgs<ExtArgs>>): Prisma__StockIntakeBatchClient<$Result.GetResult<Prisma.$StockIntakeBatchPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    inventoryItem<T extends InventoryItemDefaultArgs<ExtArgs> = {}>(args?: Subset<T, InventoryItemDefaultArgs<ExtArgs>>): Prisma__InventoryItemClient<$Result.GetResult<Prisma.$InventoryItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the StockIntakeBatchItem model
+   */
+  interface StockIntakeBatchItemFieldRefs {
+    readonly id: FieldRef<"StockIntakeBatchItem", 'String'>
+    readonly stockIntakeBatchId: FieldRef<"StockIntakeBatchItem", 'String'>
+    readonly inventoryItemId: FieldRef<"StockIntakeBatchItem", 'String'>
+    readonly quantity: FieldRef<"StockIntakeBatchItem", 'Decimal'>
+    readonly unitCost: FieldRef<"StockIntakeBatchItem", 'Decimal'>
+    readonly totalPrice: FieldRef<"StockIntakeBatchItem", 'Decimal'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * StockIntakeBatchItem findUnique
+   */
+  export type StockIntakeBatchItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatchItem to fetch.
+     */
+    where: StockIntakeBatchItemWhereUniqueInput
+  }
+
+  /**
+   * StockIntakeBatchItem findUniqueOrThrow
+   */
+  export type StockIntakeBatchItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatchItem to fetch.
+     */
+    where: StockIntakeBatchItemWhereUniqueInput
+  }
+
+  /**
+   * StockIntakeBatchItem findFirst
+   */
+  export type StockIntakeBatchItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatchItem to fetch.
+     */
+    where?: StockIntakeBatchItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockIntakeBatchItems to fetch.
+     */
+    orderBy?: StockIntakeBatchItemOrderByWithRelationInput | StockIntakeBatchItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockIntakeBatchItems.
+     */
+    cursor?: StockIntakeBatchItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockIntakeBatchItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockIntakeBatchItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockIntakeBatchItems.
+     */
+    distinct?: StockIntakeBatchItemScalarFieldEnum | StockIntakeBatchItemScalarFieldEnum[]
+  }
+
+  /**
+   * StockIntakeBatchItem findFirstOrThrow
+   */
+  export type StockIntakeBatchItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatchItem to fetch.
+     */
+    where?: StockIntakeBatchItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockIntakeBatchItems to fetch.
+     */
+    orderBy?: StockIntakeBatchItemOrderByWithRelationInput | StockIntakeBatchItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for StockIntakeBatchItems.
+     */
+    cursor?: StockIntakeBatchItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockIntakeBatchItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockIntakeBatchItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockIntakeBatchItems.
+     */
+    distinct?: StockIntakeBatchItemScalarFieldEnum | StockIntakeBatchItemScalarFieldEnum[]
+  }
+
+  /**
+   * StockIntakeBatchItem findMany
+   */
+  export type StockIntakeBatchItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * Filter, which StockIntakeBatchItems to fetch.
+     */
+    where?: StockIntakeBatchItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of StockIntakeBatchItems to fetch.
+     */
+    orderBy?: StockIntakeBatchItemOrderByWithRelationInput | StockIntakeBatchItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing StockIntakeBatchItems.
+     */
+    cursor?: StockIntakeBatchItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` StockIntakeBatchItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` StockIntakeBatchItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of StockIntakeBatchItems.
+     */
+    distinct?: StockIntakeBatchItemScalarFieldEnum | StockIntakeBatchItemScalarFieldEnum[]
+  }
+
+  /**
+   * StockIntakeBatchItem create
+   */
+  export type StockIntakeBatchItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a StockIntakeBatchItem.
+     */
+    data: XOR<StockIntakeBatchItemCreateInput, StockIntakeBatchItemUncheckedCreateInput>
+  }
+
+  /**
+   * StockIntakeBatchItem createMany
+   */
+  export type StockIntakeBatchItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many StockIntakeBatchItems.
+     */
+    data: StockIntakeBatchItemCreateManyInput | StockIntakeBatchItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * StockIntakeBatchItem createManyAndReturn
+   */
+  export type StockIntakeBatchItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many StockIntakeBatchItems.
+     */
+    data: StockIntakeBatchItemCreateManyInput | StockIntakeBatchItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockIntakeBatchItem update
+   */
+  export type StockIntakeBatchItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a StockIntakeBatchItem.
+     */
+    data: XOR<StockIntakeBatchItemUpdateInput, StockIntakeBatchItemUncheckedUpdateInput>
+    /**
+     * Choose, which StockIntakeBatchItem to update.
+     */
+    where: StockIntakeBatchItemWhereUniqueInput
+  }
+
+  /**
+   * StockIntakeBatchItem updateMany
+   */
+  export type StockIntakeBatchItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update StockIntakeBatchItems.
+     */
+    data: XOR<StockIntakeBatchItemUpdateManyMutationInput, StockIntakeBatchItemUncheckedUpdateManyInput>
+    /**
+     * Filter which StockIntakeBatchItems to update
+     */
+    where?: StockIntakeBatchItemWhereInput
+    /**
+     * Limit how many StockIntakeBatchItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockIntakeBatchItem updateManyAndReturn
+   */
+  export type StockIntakeBatchItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * The data used to update StockIntakeBatchItems.
+     */
+    data: XOR<StockIntakeBatchItemUpdateManyMutationInput, StockIntakeBatchItemUncheckedUpdateManyInput>
+    /**
+     * Filter which StockIntakeBatchItems to update
+     */
+    where?: StockIntakeBatchItemWhereInput
+    /**
+     * Limit how many StockIntakeBatchItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * StockIntakeBatchItem upsert
+   */
+  export type StockIntakeBatchItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the StockIntakeBatchItem to update in case it exists.
+     */
+    where: StockIntakeBatchItemWhereUniqueInput
+    /**
+     * In case the StockIntakeBatchItem found by the `where` argument doesn't exist, create a new StockIntakeBatchItem with this data.
+     */
+    create: XOR<StockIntakeBatchItemCreateInput, StockIntakeBatchItemUncheckedCreateInput>
+    /**
+     * In case the StockIntakeBatchItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<StockIntakeBatchItemUpdateInput, StockIntakeBatchItemUncheckedUpdateInput>
+  }
+
+  /**
+   * StockIntakeBatchItem delete
+   */
+  export type StockIntakeBatchItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+    /**
+     * Filter which StockIntakeBatchItem to delete.
+     */
+    where: StockIntakeBatchItemWhereUniqueInput
+  }
+
+  /**
+   * StockIntakeBatchItem deleteMany
+   */
+  export type StockIntakeBatchItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which StockIntakeBatchItems to delete
+     */
+    where?: StockIntakeBatchItemWhereInput
+    /**
+     * Limit how many StockIntakeBatchItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * StockIntakeBatchItem without action
+   */
+  export type StockIntakeBatchItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the StockIntakeBatchItem
+     */
+    select?: StockIntakeBatchItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the StockIntakeBatchItem
+     */
+    omit?: StockIntakeBatchItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: StockIntakeBatchItemInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -14114,6 +20493,7 @@ export namespace Prisma {
     isAvailable: 'isAvailable',
     hasSizes: 'hasSizes',
     sizes: 'sizes',
+    ingredients: 'ingredients',
     categoryId: 'categoryId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -14127,6 +20507,7 @@ export namespace Prisma {
     name: 'name',
     price: 'price',
     isAvailable: 'isAvailable',
+    ingredients: 'ingredients',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -14244,6 +20625,72 @@ export namespace Prisma {
   };
 
   export type SalaryAdvanceScalarFieldEnum = (typeof SalaryAdvanceScalarFieldEnum)[keyof typeof SalaryAdvanceScalarFieldEnum]
+
+
+  export const InventoryCategoryScalarFieldEnum: {
+    id: 'id',
+    name: 'name',
+    description: 'description',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InventoryCategoryScalarFieldEnum = (typeof InventoryCategoryScalarFieldEnum)[keyof typeof InventoryCategoryScalarFieldEnum]
+
+
+  export const InventoryItemScalarFieldEnum: {
+    id: 'id',
+    sku: 'sku',
+    name: 'name',
+    categoryId: 'categoryId',
+    unit: 'unit',
+    quantity: 'quantity',
+    minStockLevel: 'minStockLevel',
+    unitCost: 'unitCost',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InventoryItemScalarFieldEnum = (typeof InventoryItemScalarFieldEnum)[keyof typeof InventoryItemScalarFieldEnum]
+
+
+  export const StockMovementScalarFieldEnum: {
+    id: 'id',
+    inventoryItemId: 'inventoryItemId',
+    type: 'type',
+    quantityChange: 'quantityChange',
+    previousQuantity: 'previousQuantity',
+    newQuantity: 'newQuantity',
+    reason: 'reason',
+    createdById: 'createdById',
+    createdAt: 'createdAt'
+  };
+
+  export type StockMovementScalarFieldEnum = (typeof StockMovementScalarFieldEnum)[keyof typeof StockMovementScalarFieldEnum]
+
+
+  export const StockIntakeBatchScalarFieldEnum: {
+    id: 'id',
+    batchNumber: 'batchNumber',
+    notes: 'notes',
+    totalAmount: 'totalAmount',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type StockIntakeBatchScalarFieldEnum = (typeof StockIntakeBatchScalarFieldEnum)[keyof typeof StockIntakeBatchScalarFieldEnum]
+
+
+  export const StockIntakeBatchItemScalarFieldEnum: {
+    id: 'id',
+    stockIntakeBatchId: 'stockIntakeBatchId',
+    inventoryItemId: 'inventoryItemId',
+    quantity: 'quantity',
+    unitCost: 'unitCost',
+    totalPrice: 'totalPrice'
+  };
+
+  export type StockIntakeBatchItemScalarFieldEnum = (typeof StockIntakeBatchItemScalarFieldEnum)[keyof typeof StockIntakeBatchItemScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -14524,6 +20971,34 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'InventoryUnit'
+   */
+  export type EnumInventoryUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryUnit'>
+    
+
+
+  /**
+   * Reference to a field of type 'InventoryUnit[]'
+   */
+  export type ListEnumInventoryUnitFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InventoryUnit[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'StockMovementType'
+   */
+  export type EnumStockMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockMovementType'>
+    
+
+
+  /**
+   * Reference to a field of type 'StockMovementType[]'
+   */
+  export type ListEnumStockMovementTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'StockMovementType[]'>
+    
+
+
+  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -14716,11 +21191,13 @@ export namespace Prisma {
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     hasSizes?: BoolFilter<"MenuItem"> | boolean
     sizes?: JsonNullableFilter<"MenuItem">
+    ingredients?: JsonNullableFilter<"MenuItem">
     categoryId?: UuidFilter<"MenuItem"> | string
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     addOns?: AddOnListRelationFilter
+    orderItems?: OrderItemListRelationFilter
   }
 
   export type MenuItemOrderByWithRelationInput = {
@@ -14732,11 +21209,13 @@ export namespace Prisma {
     isAvailable?: SortOrder
     hasSizes?: SortOrder
     sizes?: SortOrderInput | SortOrder
+    ingredients?: SortOrderInput | SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     category?: CategoryOrderByWithRelationInput
     addOns?: AddOnOrderByRelationAggregateInput
+    orderItems?: OrderItemOrderByRelationAggregateInput
   }
 
   export type MenuItemWhereUniqueInput = Prisma.AtLeast<{
@@ -14751,11 +21230,13 @@ export namespace Prisma {
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     hasSizes?: BoolFilter<"MenuItem"> | boolean
     sizes?: JsonNullableFilter<"MenuItem">
+    ingredients?: JsonNullableFilter<"MenuItem">
     categoryId?: UuidFilter<"MenuItem"> | string
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
     category?: XOR<CategoryScalarRelationFilter, CategoryWhereInput>
     addOns?: AddOnListRelationFilter
+    orderItems?: OrderItemListRelationFilter
   }, "id">
 
   export type MenuItemOrderByWithAggregationInput = {
@@ -14767,6 +21248,7 @@ export namespace Prisma {
     isAvailable?: SortOrder
     hasSizes?: SortOrder
     sizes?: SortOrderInput | SortOrder
+    ingredients?: SortOrderInput | SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -14789,6 +21271,7 @@ export namespace Prisma {
     isAvailable?: BoolWithAggregatesFilter<"MenuItem"> | boolean
     hasSizes?: BoolWithAggregatesFilter<"MenuItem"> | boolean
     sizes?: JsonNullableWithAggregatesFilter<"MenuItem">
+    ingredients?: JsonNullableWithAggregatesFilter<"MenuItem">
     categoryId?: UuidWithAggregatesFilter<"MenuItem"> | string
     createdAt?: DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MenuItem"> | Date | string
@@ -14802,6 +21285,7 @@ export namespace Prisma {
     name?: StringFilter<"AddOn"> | string
     price?: DecimalFilter<"AddOn"> | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFilter<"AddOn"> | boolean
+    ingredients?: JsonNullableFilter<"AddOn">
     createdAt?: DateTimeFilter<"AddOn"> | Date | string
     updatedAt?: DateTimeFilter<"AddOn"> | Date | string
     menuItems?: MenuItemListRelationFilter
@@ -14812,6 +21296,7 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     isAvailable?: SortOrder
+    ingredients?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     menuItems?: MenuItemOrderByRelationAggregateInput
@@ -14825,6 +21310,7 @@ export namespace Prisma {
     name?: StringFilter<"AddOn"> | string
     price?: DecimalFilter<"AddOn"> | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFilter<"AddOn"> | boolean
+    ingredients?: JsonNullableFilter<"AddOn">
     createdAt?: DateTimeFilter<"AddOn"> | Date | string
     updatedAt?: DateTimeFilter<"AddOn"> | Date | string
     menuItems?: MenuItemListRelationFilter
@@ -14835,6 +21321,7 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     isAvailable?: SortOrder
+    ingredients?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: AddOnCountOrderByAggregateInput
@@ -14852,6 +21339,7 @@ export namespace Prisma {
     name?: StringWithAggregatesFilter<"AddOn"> | string
     price?: DecimalWithAggregatesFilter<"AddOn"> | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolWithAggregatesFilter<"AddOn"> | boolean
+    ingredients?: JsonNullableWithAggregatesFilter<"AddOn">
     createdAt?: DateTimeWithAggregatesFilter<"AddOn"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"AddOn"> | Date | string
   }
@@ -14991,6 +21479,7 @@ export namespace Prisma {
     addOns?: StringNullableFilter<"OrderItem"> | string | null
     notes?: StringNullableFilter<"OrderItem"> | string | null
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    menuItem?: XOR<MenuItemNullableScalarRelationFilter, MenuItemWhereInput> | null
   }
 
   export type OrderItemOrderByWithRelationInput = {
@@ -15005,6 +21494,7 @@ export namespace Prisma {
     addOns?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     order?: OrderOrderByWithRelationInput
+    menuItem?: MenuItemOrderByWithRelationInput
   }
 
   export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
@@ -15022,6 +21512,7 @@ export namespace Prisma {
     addOns?: StringNullableFilter<"OrderItem"> | string | null
     notes?: StringNullableFilter<"OrderItem"> | string | null
     order?: XOR<OrderScalarRelationFilter, OrderWhereInput>
+    menuItem?: XOR<MenuItemNullableScalarRelationFilter, MenuItemWhereInput> | null
   }, "id">
 
   export type OrderItemOrderByWithAggregationInput = {
@@ -15431,6 +21922,353 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"SalaryAdvance"> | Date | string
   }
 
+  export type InventoryCategoryWhereInput = {
+    AND?: InventoryCategoryWhereInput | InventoryCategoryWhereInput[]
+    OR?: InventoryCategoryWhereInput[]
+    NOT?: InventoryCategoryWhereInput | InventoryCategoryWhereInput[]
+    id?: UuidFilter<"InventoryCategory"> | string
+    name?: StringFilter<"InventoryCategory"> | string
+    description?: StringNullableFilter<"InventoryCategory"> | string | null
+    createdAt?: DateTimeFilter<"InventoryCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryCategory"> | Date | string
+    items?: InventoryItemListRelationFilter
+  }
+
+  export type InventoryCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    items?: InventoryItemOrderByRelationAggregateInput
+  }
+
+  export type InventoryCategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    name?: string
+    AND?: InventoryCategoryWhereInput | InventoryCategoryWhereInput[]
+    OR?: InventoryCategoryWhereInput[]
+    NOT?: InventoryCategoryWhereInput | InventoryCategoryWhereInput[]
+    description?: StringNullableFilter<"InventoryCategory"> | string | null
+    createdAt?: DateTimeFilter<"InventoryCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryCategory"> | Date | string
+    items?: InventoryItemListRelationFilter
+  }, "id" | "name">
+
+  export type InventoryCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InventoryCategoryCountOrderByAggregateInput
+    _max?: InventoryCategoryMaxOrderByAggregateInput
+    _min?: InventoryCategoryMinOrderByAggregateInput
+  }
+
+  export type InventoryCategoryScalarWhereWithAggregatesInput = {
+    AND?: InventoryCategoryScalarWhereWithAggregatesInput | InventoryCategoryScalarWhereWithAggregatesInput[]
+    OR?: InventoryCategoryScalarWhereWithAggregatesInput[]
+    NOT?: InventoryCategoryScalarWhereWithAggregatesInput | InventoryCategoryScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"InventoryCategory"> | string
+    name?: StringWithAggregatesFilter<"InventoryCategory"> | string
+    description?: StringNullableWithAggregatesFilter<"InventoryCategory"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryCategory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InventoryCategory"> | Date | string
+  }
+
+  export type InventoryItemWhereInput = {
+    AND?: InventoryItemWhereInput | InventoryItemWhereInput[]
+    OR?: InventoryItemWhereInput[]
+    NOT?: InventoryItemWhereInput | InventoryItemWhereInput[]
+    id?: UuidFilter<"InventoryItem"> | string
+    sku?: StringNullableFilter<"InventoryItem"> | string | null
+    name?: StringFilter<"InventoryItem"> | string
+    categoryId?: UuidFilter<"InventoryItem"> | string
+    unit?: EnumInventoryUnitFilter<"InventoryItem"> | $Enums.InventoryUnit
+    quantity?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"InventoryItem"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryItem"> | Date | string
+    category?: XOR<InventoryCategoryScalarRelationFilter, InventoryCategoryWhereInput>
+    movements?: StockMovementListRelationFilter
+    stockIntakeItems?: StockIntakeBatchItemListRelationFilter
+  }
+
+  export type InventoryItemOrderByWithRelationInput = {
+    id?: SortOrder
+    sku?: SortOrderInput | SortOrder
+    name?: SortOrder
+    categoryId?: SortOrder
+    unit?: SortOrder
+    quantity?: SortOrder
+    minStockLevel?: SortOrder
+    unitCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    category?: InventoryCategoryOrderByWithRelationInput
+    movements?: StockMovementOrderByRelationAggregateInput
+    stockIntakeItems?: StockIntakeBatchItemOrderByRelationAggregateInput
+  }
+
+  export type InventoryItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    sku?: string
+    AND?: InventoryItemWhereInput | InventoryItemWhereInput[]
+    OR?: InventoryItemWhereInput[]
+    NOT?: InventoryItemWhereInput | InventoryItemWhereInput[]
+    name?: StringFilter<"InventoryItem"> | string
+    categoryId?: UuidFilter<"InventoryItem"> | string
+    unit?: EnumInventoryUnitFilter<"InventoryItem"> | $Enums.InventoryUnit
+    quantity?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"InventoryItem"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryItem"> | Date | string
+    category?: XOR<InventoryCategoryScalarRelationFilter, InventoryCategoryWhereInput>
+    movements?: StockMovementListRelationFilter
+    stockIntakeItems?: StockIntakeBatchItemListRelationFilter
+  }, "id" | "sku">
+
+  export type InventoryItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    sku?: SortOrderInput | SortOrder
+    name?: SortOrder
+    categoryId?: SortOrder
+    unit?: SortOrder
+    quantity?: SortOrder
+    minStockLevel?: SortOrder
+    unitCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InventoryItemCountOrderByAggregateInput
+    _avg?: InventoryItemAvgOrderByAggregateInput
+    _max?: InventoryItemMaxOrderByAggregateInput
+    _min?: InventoryItemMinOrderByAggregateInput
+    _sum?: InventoryItemSumOrderByAggregateInput
+  }
+
+  export type InventoryItemScalarWhereWithAggregatesInput = {
+    AND?: InventoryItemScalarWhereWithAggregatesInput | InventoryItemScalarWhereWithAggregatesInput[]
+    OR?: InventoryItemScalarWhereWithAggregatesInput[]
+    NOT?: InventoryItemScalarWhereWithAggregatesInput | InventoryItemScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"InventoryItem"> | string
+    sku?: StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
+    name?: StringWithAggregatesFilter<"InventoryItem"> | string
+    categoryId?: UuidWithAggregatesFilter<"InventoryItem"> | string
+    unit?: EnumInventoryUnitWithAggregatesFilter<"InventoryItem"> | $Enums.InventoryUnit
+    quantity?: DecimalWithAggregatesFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalWithAggregatesFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalWithAggregatesFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"InventoryItem"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InventoryItem"> | Date | string
+  }
+
+  export type StockMovementWhereInput = {
+    AND?: StockMovementWhereInput | StockMovementWhereInput[]
+    OR?: StockMovementWhereInput[]
+    NOT?: StockMovementWhereInput | StockMovementWhereInput[]
+    id?: UuidFilter<"StockMovement"> | string
+    inventoryItemId?: UuidFilter<"StockMovement"> | string
+    type?: EnumStockMovementTypeFilter<"StockMovement"> | $Enums.StockMovementType
+    quantityChange?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    reason?: StringNullableFilter<"StockMovement"> | string | null
+    createdById?: UuidNullableFilter<"StockMovement"> | string | null
+    createdAt?: DateTimeFilter<"StockMovement"> | Date | string
+    inventoryItem?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
+  }
+
+  export type StockMovementOrderByWithRelationInput = {
+    id?: SortOrder
+    inventoryItemId?: SortOrder
+    type?: SortOrder
+    quantityChange?: SortOrder
+    previousQuantity?: SortOrder
+    newQuantity?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    inventoryItem?: InventoryItemOrderByWithRelationInput
+  }
+
+  export type StockMovementWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StockMovementWhereInput | StockMovementWhereInput[]
+    OR?: StockMovementWhereInput[]
+    NOT?: StockMovementWhereInput | StockMovementWhereInput[]
+    inventoryItemId?: UuidFilter<"StockMovement"> | string
+    type?: EnumStockMovementTypeFilter<"StockMovement"> | $Enums.StockMovementType
+    quantityChange?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    reason?: StringNullableFilter<"StockMovement"> | string | null
+    createdById?: UuidNullableFilter<"StockMovement"> | string | null
+    createdAt?: DateTimeFilter<"StockMovement"> | Date | string
+    inventoryItem?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
+  }, "id">
+
+  export type StockMovementOrderByWithAggregationInput = {
+    id?: SortOrder
+    inventoryItemId?: SortOrder
+    type?: SortOrder
+    quantityChange?: SortOrder
+    previousQuantity?: SortOrder
+    newQuantity?: SortOrder
+    reason?: SortOrderInput | SortOrder
+    createdById?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    _count?: StockMovementCountOrderByAggregateInput
+    _avg?: StockMovementAvgOrderByAggregateInput
+    _max?: StockMovementMaxOrderByAggregateInput
+    _min?: StockMovementMinOrderByAggregateInput
+    _sum?: StockMovementSumOrderByAggregateInput
+  }
+
+  export type StockMovementScalarWhereWithAggregatesInput = {
+    AND?: StockMovementScalarWhereWithAggregatesInput | StockMovementScalarWhereWithAggregatesInput[]
+    OR?: StockMovementScalarWhereWithAggregatesInput[]
+    NOT?: StockMovementScalarWhereWithAggregatesInput | StockMovementScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"StockMovement"> | string
+    inventoryItemId?: UuidWithAggregatesFilter<"StockMovement"> | string
+    type?: EnumStockMovementTypeWithAggregatesFilter<"StockMovement"> | $Enums.StockMovementType
+    quantityChange?: DecimalWithAggregatesFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalWithAggregatesFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalWithAggregatesFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    reason?: StringNullableWithAggregatesFilter<"StockMovement"> | string | null
+    createdById?: UuidNullableWithAggregatesFilter<"StockMovement"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"StockMovement"> | Date | string
+  }
+
+  export type StockIntakeBatchWhereInput = {
+    AND?: StockIntakeBatchWhereInput | StockIntakeBatchWhereInput[]
+    OR?: StockIntakeBatchWhereInput[]
+    NOT?: StockIntakeBatchWhereInput | StockIntakeBatchWhereInput[]
+    id?: UuidFilter<"StockIntakeBatch"> | string
+    batchNumber?: StringFilter<"StockIntakeBatch"> | string
+    notes?: StringNullableFilter<"StockIntakeBatch"> | string | null
+    totalAmount?: DecimalFilter<"StockIntakeBatch"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"StockIntakeBatch"> | Date | string
+    updatedAt?: DateTimeFilter<"StockIntakeBatch"> | Date | string
+    items?: StockIntakeBatchItemListRelationFilter
+  }
+
+  export type StockIntakeBatchOrderByWithRelationInput = {
+    id?: SortOrder
+    batchNumber?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    totalAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    items?: StockIntakeBatchItemOrderByRelationAggregateInput
+  }
+
+  export type StockIntakeBatchWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    batchNumber?: string
+    AND?: StockIntakeBatchWhereInput | StockIntakeBatchWhereInput[]
+    OR?: StockIntakeBatchWhereInput[]
+    NOT?: StockIntakeBatchWhereInput | StockIntakeBatchWhereInput[]
+    notes?: StringNullableFilter<"StockIntakeBatch"> | string | null
+    totalAmount?: DecimalFilter<"StockIntakeBatch"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"StockIntakeBatch"> | Date | string
+    updatedAt?: DateTimeFilter<"StockIntakeBatch"> | Date | string
+    items?: StockIntakeBatchItemListRelationFilter
+  }, "id" | "batchNumber">
+
+  export type StockIntakeBatchOrderByWithAggregationInput = {
+    id?: SortOrder
+    batchNumber?: SortOrder
+    notes?: SortOrderInput | SortOrder
+    totalAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: StockIntakeBatchCountOrderByAggregateInput
+    _avg?: StockIntakeBatchAvgOrderByAggregateInput
+    _max?: StockIntakeBatchMaxOrderByAggregateInput
+    _min?: StockIntakeBatchMinOrderByAggregateInput
+    _sum?: StockIntakeBatchSumOrderByAggregateInput
+  }
+
+  export type StockIntakeBatchScalarWhereWithAggregatesInput = {
+    AND?: StockIntakeBatchScalarWhereWithAggregatesInput | StockIntakeBatchScalarWhereWithAggregatesInput[]
+    OR?: StockIntakeBatchScalarWhereWithAggregatesInput[]
+    NOT?: StockIntakeBatchScalarWhereWithAggregatesInput | StockIntakeBatchScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"StockIntakeBatch"> | string
+    batchNumber?: StringWithAggregatesFilter<"StockIntakeBatch"> | string
+    notes?: StringNullableWithAggregatesFilter<"StockIntakeBatch"> | string | null
+    totalAmount?: DecimalWithAggregatesFilter<"StockIntakeBatch"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeWithAggregatesFilter<"StockIntakeBatch"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"StockIntakeBatch"> | Date | string
+  }
+
+  export type StockIntakeBatchItemWhereInput = {
+    AND?: StockIntakeBatchItemWhereInput | StockIntakeBatchItemWhereInput[]
+    OR?: StockIntakeBatchItemWhereInput[]
+    NOT?: StockIntakeBatchItemWhereInput | StockIntakeBatchItemWhereInput[]
+    id?: UuidFilter<"StockIntakeBatchItem"> | string
+    stockIntakeBatchId?: UuidFilter<"StockIntakeBatchItem"> | string
+    inventoryItemId?: UuidFilter<"StockIntakeBatchItem"> | string
+    quantity?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    stockIntakeBatch?: XOR<StockIntakeBatchScalarRelationFilter, StockIntakeBatchWhereInput>
+    inventoryItem?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
+  }
+
+  export type StockIntakeBatchItemOrderByWithRelationInput = {
+    id?: SortOrder
+    stockIntakeBatchId?: SortOrder
+    inventoryItemId?: SortOrder
+    quantity?: SortOrder
+    unitCost?: SortOrder
+    totalPrice?: SortOrder
+    stockIntakeBatch?: StockIntakeBatchOrderByWithRelationInput
+    inventoryItem?: InventoryItemOrderByWithRelationInput
+  }
+
+  export type StockIntakeBatchItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: StockIntakeBatchItemWhereInput | StockIntakeBatchItemWhereInput[]
+    OR?: StockIntakeBatchItemWhereInput[]
+    NOT?: StockIntakeBatchItemWhereInput | StockIntakeBatchItemWhereInput[]
+    stockIntakeBatchId?: UuidFilter<"StockIntakeBatchItem"> | string
+    inventoryItemId?: UuidFilter<"StockIntakeBatchItem"> | string
+    quantity?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    stockIntakeBatch?: XOR<StockIntakeBatchScalarRelationFilter, StockIntakeBatchWhereInput>
+    inventoryItem?: XOR<InventoryItemScalarRelationFilter, InventoryItemWhereInput>
+  }, "id">
+
+  export type StockIntakeBatchItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    stockIntakeBatchId?: SortOrder
+    inventoryItemId?: SortOrder
+    quantity?: SortOrder
+    unitCost?: SortOrder
+    totalPrice?: SortOrder
+    _count?: StockIntakeBatchItemCountOrderByAggregateInput
+    _avg?: StockIntakeBatchItemAvgOrderByAggregateInput
+    _max?: StockIntakeBatchItemMaxOrderByAggregateInput
+    _min?: StockIntakeBatchItemMinOrderByAggregateInput
+    _sum?: StockIntakeBatchItemSumOrderByAggregateInput
+  }
+
+  export type StockIntakeBatchItemScalarWhereWithAggregatesInput = {
+    AND?: StockIntakeBatchItemScalarWhereWithAggregatesInput | StockIntakeBatchItemScalarWhereWithAggregatesInput[]
+    OR?: StockIntakeBatchItemScalarWhereWithAggregatesInput[]
+    NOT?: StockIntakeBatchItemScalarWhereWithAggregatesInput | StockIntakeBatchItemScalarWhereWithAggregatesInput[]
+    id?: UuidWithAggregatesFilter<"StockIntakeBatchItem"> | string
+    stockIntakeBatchId?: UuidWithAggregatesFilter<"StockIntakeBatchItem"> | string
+    inventoryItemId?: UuidWithAggregatesFilter<"StockIntakeBatchItem"> | string
+    quantity?: DecimalWithAggregatesFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalWithAggregatesFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalWithAggregatesFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+  }
+
   export type UserCreateInput = {
     id?: string
     email: string
@@ -15632,10 +22470,12 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutMenuItemsInput
     addOns?: AddOnCreateNestedManyWithoutMenuItemsInput
+    orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
   }
 
   export type MenuItemUncheckedCreateInput = {
@@ -15647,10 +22487,12 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
     addOns?: AddOnUncheckedCreateNestedManyWithoutMenuItemsInput
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
   }
 
   export type MenuItemUpdateInput = {
@@ -15662,10 +22504,12 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutMenuItemsNestedInput
     addOns?: AddOnUpdateManyWithoutMenuItemsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
   }
 
   export type MenuItemUncheckedUpdateInput = {
@@ -15677,10 +22521,12 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addOns?: AddOnUncheckedUpdateManyWithoutMenuItemsNestedInput
+    orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
   }
 
   export type MenuItemCreateManyInput = {
@@ -15692,6 +22538,7 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -15706,6 +22553,7 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15719,6 +22567,7 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -15729,6 +22578,7 @@ export namespace Prisma {
     name: string
     price: Decimal | DecimalJsLike | number | string
     isAvailable?: boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     menuItems?: MenuItemCreateNestedManyWithoutAddOnsInput
@@ -15739,6 +22589,7 @@ export namespace Prisma {
     name: string
     price: Decimal | DecimalJsLike | number | string
     isAvailable?: boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     menuItems?: MenuItemUncheckedCreateNestedManyWithoutAddOnsInput
@@ -15749,6 +22600,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     menuItems?: MenuItemUpdateManyWithoutAddOnsNestedInput
@@ -15759,6 +22611,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     menuItems?: MenuItemUncheckedUpdateManyWithoutAddOnsNestedInput
@@ -15769,6 +22622,7 @@ export namespace Prisma {
     name: string
     price: Decimal | DecimalJsLike | number | string
     isAvailable?: boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -15778,6 +22632,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15787,6 +22642,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -15936,7 +22792,6 @@ export namespace Prisma {
 
   export type OrderItemCreateInput = {
     id?: string
-    menuItemId?: string | null
     itemName: string
     variant?: string | null
     quantity: number
@@ -15945,6 +22800,7 @@ export namespace Prisma {
     addOns?: string | null
     notes?: string | null
     order: OrderCreateNestedOneWithoutItemsInput
+    menuItem?: MenuItemCreateNestedOneWithoutOrderItemsInput
   }
 
   export type OrderItemUncheckedCreateInput = {
@@ -15962,7 +22818,6 @@ export namespace Prisma {
 
   export type OrderItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
     itemName?: StringFieldUpdateOperationsInput | string
     variant?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
@@ -15971,6 +22826,7 @@ export namespace Prisma {
     addOns?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     order?: OrderUpdateOneRequiredWithoutItemsNestedInput
+    menuItem?: MenuItemUpdateOneWithoutOrderItemsNestedInput
   }
 
   export type OrderItemUncheckedUpdateInput = {
@@ -16001,7 +22857,6 @@ export namespace Prisma {
 
   export type OrderItemUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
     itemName?: StringFieldUpdateOperationsInput | string
     variant?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
@@ -16447,6 +23302,375 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type InventoryCategoryCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: InventoryItemCreateNestedManyWithoutCategoryInput
+  }
+
+  export type InventoryCategoryUncheckedCreateInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: InventoryItemUncheckedCreateNestedManyWithoutCategoryInput
+  }
+
+  export type InventoryCategoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: InventoryItemUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type InventoryCategoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: InventoryItemUncheckedUpdateManyWithoutCategoryNestedInput
+  }
+
+  export type InventoryCategoryCreateManyInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InventoryCategoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InventoryCategoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InventoryItemCreateInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: InventoryCategoryCreateNestedOneWithoutItemsInput
+    movements?: StockMovementCreateNestedManyWithoutInventoryItemInput
+    stockIntakeItems?: StockIntakeBatchItemCreateNestedManyWithoutInventoryItemInput
+  }
+
+  export type InventoryItemUncheckedCreateInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    categoryId: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    movements?: StockMovementUncheckedCreateNestedManyWithoutInventoryItemInput
+    stockIntakeItems?: StockIntakeBatchItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  }
+
+  export type InventoryItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: InventoryCategoryUpdateOneRequiredWithoutItemsNestedInput
+    movements?: StockMovementUpdateManyWithoutInventoryItemNestedInput
+    stockIntakeItems?: StockIntakeBatchItemUpdateManyWithoutInventoryItemNestedInput
+  }
+
+  export type InventoryItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    movements?: StockMovementUncheckedUpdateManyWithoutInventoryItemNestedInput
+    stockIntakeItems?: StockIntakeBatchItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  }
+
+  export type InventoryItemCreateManyInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    categoryId: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InventoryItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InventoryItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockMovementCreateInput = {
+    id?: string
+    type: $Enums.StockMovementType
+    quantityChange: Decimal | DecimalJsLike | number | string
+    previousQuantity: Decimal | DecimalJsLike | number | string
+    newQuantity: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+    inventoryItem: InventoryItemCreateNestedOneWithoutMovementsInput
+  }
+
+  export type StockMovementUncheckedCreateInput = {
+    id?: string
+    inventoryItemId: string
+    type: $Enums.StockMovementType
+    quantityChange: Decimal | DecimalJsLike | number | string
+    previousQuantity: Decimal | DecimalJsLike | number | string
+    newQuantity: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockMovementUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
+    quantityChange?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    inventoryItem?: InventoryItemUpdateOneRequiredWithoutMovementsNestedInput
+  }
+
+  export type StockMovementUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inventoryItemId?: StringFieldUpdateOperationsInput | string
+    type?: EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
+    quantityChange?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockMovementCreateManyInput = {
+    id?: string
+    inventoryItemId: string
+    type: $Enums.StockMovementType
+    quantityChange: Decimal | DecimalJsLike | number | string
+    previousQuantity: Decimal | DecimalJsLike | number | string
+    newQuantity: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockMovementUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
+    quantityChange?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockMovementUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inventoryItemId?: StringFieldUpdateOperationsInput | string
+    type?: EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
+    quantityChange?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockIntakeBatchCreateInput = {
+    id?: string
+    batchNumber: string
+    notes?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StockIntakeBatchItemCreateNestedManyWithoutStockIntakeBatchInput
+  }
+
+  export type StockIntakeBatchUncheckedCreateInput = {
+    id?: string
+    batchNumber: string
+    notes?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: StockIntakeBatchItemUncheckedCreateNestedManyWithoutStockIntakeBatchInput
+  }
+
+  export type StockIntakeBatchUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batchNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StockIntakeBatchItemUpdateManyWithoutStockIntakeBatchNestedInput
+  }
+
+  export type StockIntakeBatchUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batchNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: StockIntakeBatchItemUncheckedUpdateManyWithoutStockIntakeBatchNestedInput
+  }
+
+  export type StockIntakeBatchCreateManyInput = {
+    id?: string
+    batchNumber: string
+    notes?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StockIntakeBatchUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batchNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockIntakeBatchUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batchNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockIntakeBatchItemCreateInput = {
+    id?: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+    stockIntakeBatch: StockIntakeBatchCreateNestedOneWithoutItemsInput
+    inventoryItem: InventoryItemCreateNestedOneWithoutStockIntakeItemsInput
+  }
+
+  export type StockIntakeBatchItemUncheckedCreateInput = {
+    id?: string
+    stockIntakeBatchId: string
+    inventoryItemId: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    stockIntakeBatch?: StockIntakeBatchUpdateOneRequiredWithoutItemsNestedInput
+    inventoryItem?: InventoryItemUpdateOneRequiredWithoutStockIntakeItemsNestedInput
+  }
+
+  export type StockIntakeBatchItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stockIntakeBatchId?: StringFieldUpdateOperationsInput | string
+    inventoryItemId?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemCreateManyInput = {
+    id?: string
+    stockIntakeBatchId: string
+    inventoryItemId: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stockIntakeBatchId?: StringFieldUpdateOperationsInput | string
+    inventoryItemId?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
   export type UuidFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -16848,7 +24072,17 @@ export namespace Prisma {
     none?: AddOnWhereInput
   }
 
+  export type OrderItemListRelationFilter = {
+    every?: OrderItemWhereInput
+    some?: OrderItemWhereInput
+    none?: OrderItemWhereInput
+  }
+
   export type AddOnOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type OrderItemOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -16861,6 +24095,7 @@ export namespace Prisma {
     isAvailable?: SortOrder
     hasSizes?: SortOrder
     sizes?: SortOrder
+    ingredients?: SortOrder
     categoryId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -16955,6 +24190,7 @@ export namespace Prisma {
     name?: SortOrder
     price?: SortOrder
     isAvailable?: SortOrder
+    ingredients?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -17032,16 +24268,6 @@ export namespace Prisma {
   export type UserNullableScalarRelationFilter = {
     is?: UserWhereInput | null
     isNot?: UserWhereInput | null
-  }
-
-  export type OrderItemListRelationFilter = {
-    every?: OrderItemWhereInput
-    some?: OrderItemWhereInput
-    none?: OrderItemWhereInput
-  }
-
-  export type OrderItemOrderByRelationAggregateInput = {
-    _count?: SortOrder
   }
 
   export type OrderCountOrderByAggregateInput = {
@@ -17197,6 +24423,11 @@ export namespace Prisma {
   export type OrderScalarRelationFilter = {
     is?: OrderWhereInput
     isNot?: OrderWhereInput
+  }
+
+  export type MenuItemNullableScalarRelationFilter = {
+    is?: MenuItemWhereInput | null
+    isNot?: MenuItemWhereInput | null
   }
 
   export type OrderItemCountOrderByAggregateInput = {
@@ -17621,6 +24852,282 @@ export namespace Prisma {
     _max?: NestedEnumAdvanceStatusFilter<$PrismaModel>
   }
 
+  export type InventoryItemListRelationFilter = {
+    every?: InventoryItemWhereInput
+    some?: InventoryItemWhereInput
+    none?: InventoryItemWhereInput
+  }
+
+  export type InventoryItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InventoryCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InventoryCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InventoryCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumInventoryUnitFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryUnit | EnumInventoryUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryUnit[] | ListEnumInventoryUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryUnit[] | ListEnumInventoryUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryUnitFilter<$PrismaModel> | $Enums.InventoryUnit
+  }
+
+  export type InventoryCategoryScalarRelationFilter = {
+    is?: InventoryCategoryWhereInput
+    isNot?: InventoryCategoryWhereInput
+  }
+
+  export type StockMovementListRelationFilter = {
+    every?: StockMovementWhereInput
+    some?: StockMovementWhereInput
+    none?: StockMovementWhereInput
+  }
+
+  export type StockIntakeBatchItemListRelationFilter = {
+    every?: StockIntakeBatchItemWhereInput
+    some?: StockIntakeBatchItemWhereInput
+    none?: StockIntakeBatchItemWhereInput
+  }
+
+  export type StockMovementOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type StockIntakeBatchItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InventoryItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    sku?: SortOrder
+    name?: SortOrder
+    categoryId?: SortOrder
+    unit?: SortOrder
+    quantity?: SortOrder
+    minStockLevel?: SortOrder
+    unitCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InventoryItemAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    minStockLevel?: SortOrder
+    unitCost?: SortOrder
+  }
+
+  export type InventoryItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    sku?: SortOrder
+    name?: SortOrder
+    categoryId?: SortOrder
+    unit?: SortOrder
+    quantity?: SortOrder
+    minStockLevel?: SortOrder
+    unitCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InventoryItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    sku?: SortOrder
+    name?: SortOrder
+    categoryId?: SortOrder
+    unit?: SortOrder
+    quantity?: SortOrder
+    minStockLevel?: SortOrder
+    unitCost?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InventoryItemSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    minStockLevel?: SortOrder
+    unitCost?: SortOrder
+  }
+
+  export type EnumInventoryUnitWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryUnit | EnumInventoryUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryUnit[] | ListEnumInventoryUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryUnit[] | ListEnumInventoryUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryUnitWithAggregatesFilter<$PrismaModel> | $Enums.InventoryUnit
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryUnitFilter<$PrismaModel>
+    _max?: NestedEnumInventoryUnitFilter<$PrismaModel>
+  }
+
+  export type EnumStockMovementTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.StockMovementType | EnumStockMovementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumStockMovementTypeFilter<$PrismaModel> | $Enums.StockMovementType
+  }
+
+  export type InventoryItemScalarRelationFilter = {
+    is?: InventoryItemWhereInput
+    isNot?: InventoryItemWhereInput
+  }
+
+  export type StockMovementCountOrderByAggregateInput = {
+    id?: SortOrder
+    inventoryItemId?: SortOrder
+    type?: SortOrder
+    quantityChange?: SortOrder
+    previousQuantity?: SortOrder
+    newQuantity?: SortOrder
+    reason?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockMovementAvgOrderByAggregateInput = {
+    quantityChange?: SortOrder
+    previousQuantity?: SortOrder
+    newQuantity?: SortOrder
+  }
+
+  export type StockMovementMaxOrderByAggregateInput = {
+    id?: SortOrder
+    inventoryItemId?: SortOrder
+    type?: SortOrder
+    quantityChange?: SortOrder
+    previousQuantity?: SortOrder
+    newQuantity?: SortOrder
+    reason?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockMovementMinOrderByAggregateInput = {
+    id?: SortOrder
+    inventoryItemId?: SortOrder
+    type?: SortOrder
+    quantityChange?: SortOrder
+    previousQuantity?: SortOrder
+    newQuantity?: SortOrder
+    reason?: SortOrder
+    createdById?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type StockMovementSumOrderByAggregateInput = {
+    quantityChange?: SortOrder
+    previousQuantity?: SortOrder
+    newQuantity?: SortOrder
+  }
+
+  export type EnumStockMovementTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StockMovementType | EnumStockMovementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumStockMovementTypeWithAggregatesFilter<$PrismaModel> | $Enums.StockMovementType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStockMovementTypeFilter<$PrismaModel>
+    _max?: NestedEnumStockMovementTypeFilter<$PrismaModel>
+  }
+
+  export type StockIntakeBatchCountOrderByAggregateInput = {
+    id?: SortOrder
+    batchNumber?: SortOrder
+    notes?: SortOrder
+    totalAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StockIntakeBatchAvgOrderByAggregateInput = {
+    totalAmount?: SortOrder
+  }
+
+  export type StockIntakeBatchMaxOrderByAggregateInput = {
+    id?: SortOrder
+    batchNumber?: SortOrder
+    notes?: SortOrder
+    totalAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StockIntakeBatchMinOrderByAggregateInput = {
+    id?: SortOrder
+    batchNumber?: SortOrder
+    notes?: SortOrder
+    totalAmount?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type StockIntakeBatchSumOrderByAggregateInput = {
+    totalAmount?: SortOrder
+  }
+
+  export type StockIntakeBatchScalarRelationFilter = {
+    is?: StockIntakeBatchWhereInput
+    isNot?: StockIntakeBatchWhereInput
+  }
+
+  export type StockIntakeBatchItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    stockIntakeBatchId?: SortOrder
+    inventoryItemId?: SortOrder
+    quantity?: SortOrder
+    unitCost?: SortOrder
+    totalPrice?: SortOrder
+  }
+
+  export type StockIntakeBatchItemAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    unitCost?: SortOrder
+    totalPrice?: SortOrder
+  }
+
+  export type StockIntakeBatchItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    stockIntakeBatchId?: SortOrder
+    inventoryItemId?: SortOrder
+    quantity?: SortOrder
+    unitCost?: SortOrder
+    totalPrice?: SortOrder
+  }
+
+  export type StockIntakeBatchItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    stockIntakeBatchId?: SortOrder
+    inventoryItemId?: SortOrder
+    quantity?: SortOrder
+    unitCost?: SortOrder
+    totalPrice?: SortOrder
+  }
+
+  export type StockIntakeBatchItemSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    unitCost?: SortOrder
+    totalPrice?: SortOrder
+  }
+
   export type OrderCreateNestedManyWithoutCashierInput = {
     create?: XOR<OrderCreateWithoutCashierInput, OrderUncheckedCreateWithoutCashierInput> | OrderCreateWithoutCashierInput[] | OrderUncheckedCreateWithoutCashierInput[]
     connectOrCreate?: OrderCreateOrConnectWithoutCashierInput | OrderCreateOrConnectWithoutCashierInput[]
@@ -17917,10 +25424,24 @@ export namespace Prisma {
     connect?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
   }
 
+  export type OrderItemCreateNestedManyWithoutMenuItemInput = {
+    create?: XOR<OrderItemCreateWithoutMenuItemInput, OrderItemUncheckedCreateWithoutMenuItemInput> | OrderItemCreateWithoutMenuItemInput[] | OrderItemUncheckedCreateWithoutMenuItemInput[]
+    connectOrCreate?: OrderItemCreateOrConnectWithoutMenuItemInput | OrderItemCreateOrConnectWithoutMenuItemInput[]
+    createMany?: OrderItemCreateManyMenuItemInputEnvelope
+    connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
   export type AddOnUncheckedCreateNestedManyWithoutMenuItemsInput = {
     create?: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput> | AddOnCreateWithoutMenuItemsInput[] | AddOnUncheckedCreateWithoutMenuItemsInput[]
     connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemsInput | AddOnCreateOrConnectWithoutMenuItemsInput[]
     connect?: AddOnWhereUniqueInput | AddOnWhereUniqueInput[]
+  }
+
+  export type OrderItemUncheckedCreateNestedManyWithoutMenuItemInput = {
+    create?: XOR<OrderItemCreateWithoutMenuItemInput, OrderItemUncheckedCreateWithoutMenuItemInput> | OrderItemCreateWithoutMenuItemInput[] | OrderItemUncheckedCreateWithoutMenuItemInput[]
+    connectOrCreate?: OrderItemCreateOrConnectWithoutMenuItemInput | OrderItemCreateOrConnectWithoutMenuItemInput[]
+    createMany?: OrderItemCreateManyMenuItemInputEnvelope
+    connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
   }
 
   export type DecimalFieldUpdateOperationsInput = {
@@ -17956,6 +25477,20 @@ export namespace Prisma {
     deleteMany?: AddOnScalarWhereInput | AddOnScalarWhereInput[]
   }
 
+  export type OrderItemUpdateManyWithoutMenuItemNestedInput = {
+    create?: XOR<OrderItemCreateWithoutMenuItemInput, OrderItemUncheckedCreateWithoutMenuItemInput> | OrderItemCreateWithoutMenuItemInput[] | OrderItemUncheckedCreateWithoutMenuItemInput[]
+    connectOrCreate?: OrderItemCreateOrConnectWithoutMenuItemInput | OrderItemCreateOrConnectWithoutMenuItemInput[]
+    upsert?: OrderItemUpsertWithWhereUniqueWithoutMenuItemInput | OrderItemUpsertWithWhereUniqueWithoutMenuItemInput[]
+    createMany?: OrderItemCreateManyMenuItemInputEnvelope
+    set?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    disconnect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    delete?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    update?: OrderItemUpdateWithWhereUniqueWithoutMenuItemInput | OrderItemUpdateWithWhereUniqueWithoutMenuItemInput[]
+    updateMany?: OrderItemUpdateManyWithWhereWithoutMenuItemInput | OrderItemUpdateManyWithWhereWithoutMenuItemInput[]
+    deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
   export type AddOnUncheckedUpdateManyWithoutMenuItemsNestedInput = {
     create?: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput> | AddOnCreateWithoutMenuItemsInput[] | AddOnUncheckedCreateWithoutMenuItemsInput[]
     connectOrCreate?: AddOnCreateOrConnectWithoutMenuItemsInput | AddOnCreateOrConnectWithoutMenuItemsInput[]
@@ -17967,6 +25502,20 @@ export namespace Prisma {
     update?: AddOnUpdateWithWhereUniqueWithoutMenuItemsInput | AddOnUpdateWithWhereUniqueWithoutMenuItemsInput[]
     updateMany?: AddOnUpdateManyWithWhereWithoutMenuItemsInput | AddOnUpdateManyWithWhereWithoutMenuItemsInput[]
     deleteMany?: AddOnScalarWhereInput | AddOnScalarWhereInput[]
+  }
+
+  export type OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput = {
+    create?: XOR<OrderItemCreateWithoutMenuItemInput, OrderItemUncheckedCreateWithoutMenuItemInput> | OrderItemCreateWithoutMenuItemInput[] | OrderItemUncheckedCreateWithoutMenuItemInput[]
+    connectOrCreate?: OrderItemCreateOrConnectWithoutMenuItemInput | OrderItemCreateOrConnectWithoutMenuItemInput[]
+    upsert?: OrderItemUpsertWithWhereUniqueWithoutMenuItemInput | OrderItemUpsertWithWhereUniqueWithoutMenuItemInput[]
+    createMany?: OrderItemCreateManyMenuItemInputEnvelope
+    set?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    disconnect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    delete?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+    update?: OrderItemUpdateWithWhereUniqueWithoutMenuItemInput | OrderItemUpdateWithWhereUniqueWithoutMenuItemInput[]
+    updateMany?: OrderItemUpdateManyWithWhereWithoutMenuItemInput | OrderItemUpdateManyWithWhereWithoutMenuItemInput[]
+    deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
   }
 
   export type MenuItemCreateNestedManyWithoutAddOnsInput = {
@@ -18091,6 +25640,12 @@ export namespace Prisma {
     connect?: OrderWhereUniqueInput
   }
 
+  export type MenuItemCreateNestedOneWithoutOrderItemsInput = {
+    create?: XOR<MenuItemCreateWithoutOrderItemsInput, MenuItemUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: MenuItemCreateOrConnectWithoutOrderItemsInput
+    connect?: MenuItemWhereUniqueInput
+  }
+
   export type IntFieldUpdateOperationsInput = {
     set?: number
     increment?: number
@@ -18105,6 +25660,16 @@ export namespace Prisma {
     upsert?: OrderUpsertWithoutItemsInput
     connect?: OrderWhereUniqueInput
     update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutItemsInput, OrderUpdateWithoutItemsInput>, OrderUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type MenuItemUpdateOneWithoutOrderItemsNestedInput = {
+    create?: XOR<MenuItemCreateWithoutOrderItemsInput, MenuItemUncheckedCreateWithoutOrderItemsInput>
+    connectOrCreate?: MenuItemCreateOrConnectWithoutOrderItemsInput
+    upsert?: MenuItemUpsertWithoutOrderItemsInput
+    disconnect?: MenuItemWhereInput | boolean
+    delete?: MenuItemWhereInput | boolean
+    connect?: MenuItemWhereUniqueInput
+    update?: XOR<XOR<MenuItemUpdateToOneWithWhereWithoutOrderItemsInput, MenuItemUpdateWithoutOrderItemsInput>, MenuItemUncheckedUpdateWithoutOrderItemsInput>
   }
 
   export type UserCreateNestedOneWithoutAttendancesInput = {
@@ -18185,6 +25750,238 @@ export namespace Prisma {
     upsert?: UserUpsertWithoutSalaryAdvancesInput
     connect?: UserWhereUniqueInput
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutSalaryAdvancesInput, UserUpdateWithoutSalaryAdvancesInput>, UserUncheckedUpdateWithoutSalaryAdvancesInput>
+  }
+
+  export type InventoryItemCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<InventoryItemCreateWithoutCategoryInput, InventoryItemUncheckedCreateWithoutCategoryInput> | InventoryItemCreateWithoutCategoryInput[] | InventoryItemUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: InventoryItemCreateOrConnectWithoutCategoryInput | InventoryItemCreateOrConnectWithoutCategoryInput[]
+    createMany?: InventoryItemCreateManyCategoryInputEnvelope
+    connect?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+  }
+
+  export type InventoryItemUncheckedCreateNestedManyWithoutCategoryInput = {
+    create?: XOR<InventoryItemCreateWithoutCategoryInput, InventoryItemUncheckedCreateWithoutCategoryInput> | InventoryItemCreateWithoutCategoryInput[] | InventoryItemUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: InventoryItemCreateOrConnectWithoutCategoryInput | InventoryItemCreateOrConnectWithoutCategoryInput[]
+    createMany?: InventoryItemCreateManyCategoryInputEnvelope
+    connect?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+  }
+
+  export type InventoryItemUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<InventoryItemCreateWithoutCategoryInput, InventoryItemUncheckedCreateWithoutCategoryInput> | InventoryItemCreateWithoutCategoryInput[] | InventoryItemUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: InventoryItemCreateOrConnectWithoutCategoryInput | InventoryItemCreateOrConnectWithoutCategoryInput[]
+    upsert?: InventoryItemUpsertWithWhereUniqueWithoutCategoryInput | InventoryItemUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: InventoryItemCreateManyCategoryInputEnvelope
+    set?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+    disconnect?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+    delete?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+    connect?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+    update?: InventoryItemUpdateWithWhereUniqueWithoutCategoryInput | InventoryItemUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: InventoryItemUpdateManyWithWhereWithoutCategoryInput | InventoryItemUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: InventoryItemScalarWhereInput | InventoryItemScalarWhereInput[]
+  }
+
+  export type InventoryItemUncheckedUpdateManyWithoutCategoryNestedInput = {
+    create?: XOR<InventoryItemCreateWithoutCategoryInput, InventoryItemUncheckedCreateWithoutCategoryInput> | InventoryItemCreateWithoutCategoryInput[] | InventoryItemUncheckedCreateWithoutCategoryInput[]
+    connectOrCreate?: InventoryItemCreateOrConnectWithoutCategoryInput | InventoryItemCreateOrConnectWithoutCategoryInput[]
+    upsert?: InventoryItemUpsertWithWhereUniqueWithoutCategoryInput | InventoryItemUpsertWithWhereUniqueWithoutCategoryInput[]
+    createMany?: InventoryItemCreateManyCategoryInputEnvelope
+    set?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+    disconnect?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+    delete?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+    connect?: InventoryItemWhereUniqueInput | InventoryItemWhereUniqueInput[]
+    update?: InventoryItemUpdateWithWhereUniqueWithoutCategoryInput | InventoryItemUpdateWithWhereUniqueWithoutCategoryInput[]
+    updateMany?: InventoryItemUpdateManyWithWhereWithoutCategoryInput | InventoryItemUpdateManyWithWhereWithoutCategoryInput[]
+    deleteMany?: InventoryItemScalarWhereInput | InventoryItemScalarWhereInput[]
+  }
+
+  export type InventoryCategoryCreateNestedOneWithoutItemsInput = {
+    create?: XOR<InventoryCategoryCreateWithoutItemsInput, InventoryCategoryUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: InventoryCategoryCreateOrConnectWithoutItemsInput
+    connect?: InventoryCategoryWhereUniqueInput
+  }
+
+  export type StockMovementCreateNestedManyWithoutInventoryItemInput = {
+    create?: XOR<StockMovementCreateWithoutInventoryItemInput, StockMovementUncheckedCreateWithoutInventoryItemInput> | StockMovementCreateWithoutInventoryItemInput[] | StockMovementUncheckedCreateWithoutInventoryItemInput[]
+    connectOrCreate?: StockMovementCreateOrConnectWithoutInventoryItemInput | StockMovementCreateOrConnectWithoutInventoryItemInput[]
+    createMany?: StockMovementCreateManyInventoryItemInputEnvelope
+    connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type StockIntakeBatchItemCreateNestedManyWithoutInventoryItemInput = {
+    create?: XOR<StockIntakeBatchItemCreateWithoutInventoryItemInput, StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput> | StockIntakeBatchItemCreateWithoutInventoryItemInput[] | StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput[]
+    connectOrCreate?: StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput | StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput[]
+    createMany?: StockIntakeBatchItemCreateManyInventoryItemInputEnvelope
+    connect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+  }
+
+  export type StockMovementUncheckedCreateNestedManyWithoutInventoryItemInput = {
+    create?: XOR<StockMovementCreateWithoutInventoryItemInput, StockMovementUncheckedCreateWithoutInventoryItemInput> | StockMovementCreateWithoutInventoryItemInput[] | StockMovementUncheckedCreateWithoutInventoryItemInput[]
+    connectOrCreate?: StockMovementCreateOrConnectWithoutInventoryItemInput | StockMovementCreateOrConnectWithoutInventoryItemInput[]
+    createMany?: StockMovementCreateManyInventoryItemInputEnvelope
+    connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+  }
+
+  export type StockIntakeBatchItemUncheckedCreateNestedManyWithoutInventoryItemInput = {
+    create?: XOR<StockIntakeBatchItemCreateWithoutInventoryItemInput, StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput> | StockIntakeBatchItemCreateWithoutInventoryItemInput[] | StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput[]
+    connectOrCreate?: StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput | StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput[]
+    createMany?: StockIntakeBatchItemCreateManyInventoryItemInputEnvelope
+    connect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+  }
+
+  export type EnumInventoryUnitFieldUpdateOperationsInput = {
+    set?: $Enums.InventoryUnit
+  }
+
+  export type InventoryCategoryUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<InventoryCategoryCreateWithoutItemsInput, InventoryCategoryUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: InventoryCategoryCreateOrConnectWithoutItemsInput
+    upsert?: InventoryCategoryUpsertWithoutItemsInput
+    connect?: InventoryCategoryWhereUniqueInput
+    update?: XOR<XOR<InventoryCategoryUpdateToOneWithWhereWithoutItemsInput, InventoryCategoryUpdateWithoutItemsInput>, InventoryCategoryUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type StockMovementUpdateManyWithoutInventoryItemNestedInput = {
+    create?: XOR<StockMovementCreateWithoutInventoryItemInput, StockMovementUncheckedCreateWithoutInventoryItemInput> | StockMovementCreateWithoutInventoryItemInput[] | StockMovementUncheckedCreateWithoutInventoryItemInput[]
+    connectOrCreate?: StockMovementCreateOrConnectWithoutInventoryItemInput | StockMovementCreateOrConnectWithoutInventoryItemInput[]
+    upsert?: StockMovementUpsertWithWhereUniqueWithoutInventoryItemInput | StockMovementUpsertWithWhereUniqueWithoutInventoryItemInput[]
+    createMany?: StockMovementCreateManyInventoryItemInputEnvelope
+    set?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+    disconnect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+    delete?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+    connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+    update?: StockMovementUpdateWithWhereUniqueWithoutInventoryItemInput | StockMovementUpdateWithWhereUniqueWithoutInventoryItemInput[]
+    updateMany?: StockMovementUpdateManyWithWhereWithoutInventoryItemInput | StockMovementUpdateManyWithWhereWithoutInventoryItemInput[]
+    deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
+  }
+
+  export type StockIntakeBatchItemUpdateManyWithoutInventoryItemNestedInput = {
+    create?: XOR<StockIntakeBatchItemCreateWithoutInventoryItemInput, StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput> | StockIntakeBatchItemCreateWithoutInventoryItemInput[] | StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput[]
+    connectOrCreate?: StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput | StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput[]
+    upsert?: StockIntakeBatchItemUpsertWithWhereUniqueWithoutInventoryItemInput | StockIntakeBatchItemUpsertWithWhereUniqueWithoutInventoryItemInput[]
+    createMany?: StockIntakeBatchItemCreateManyInventoryItemInputEnvelope
+    set?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    disconnect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    delete?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    connect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    update?: StockIntakeBatchItemUpdateWithWhereUniqueWithoutInventoryItemInput | StockIntakeBatchItemUpdateWithWhereUniqueWithoutInventoryItemInput[]
+    updateMany?: StockIntakeBatchItemUpdateManyWithWhereWithoutInventoryItemInput | StockIntakeBatchItemUpdateManyWithWhereWithoutInventoryItemInput[]
+    deleteMany?: StockIntakeBatchItemScalarWhereInput | StockIntakeBatchItemScalarWhereInput[]
+  }
+
+  export type StockMovementUncheckedUpdateManyWithoutInventoryItemNestedInput = {
+    create?: XOR<StockMovementCreateWithoutInventoryItemInput, StockMovementUncheckedCreateWithoutInventoryItemInput> | StockMovementCreateWithoutInventoryItemInput[] | StockMovementUncheckedCreateWithoutInventoryItemInput[]
+    connectOrCreate?: StockMovementCreateOrConnectWithoutInventoryItemInput | StockMovementCreateOrConnectWithoutInventoryItemInput[]
+    upsert?: StockMovementUpsertWithWhereUniqueWithoutInventoryItemInput | StockMovementUpsertWithWhereUniqueWithoutInventoryItemInput[]
+    createMany?: StockMovementCreateManyInventoryItemInputEnvelope
+    set?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+    disconnect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+    delete?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+    connect?: StockMovementWhereUniqueInput | StockMovementWhereUniqueInput[]
+    update?: StockMovementUpdateWithWhereUniqueWithoutInventoryItemInput | StockMovementUpdateWithWhereUniqueWithoutInventoryItemInput[]
+    updateMany?: StockMovementUpdateManyWithWhereWithoutInventoryItemInput | StockMovementUpdateManyWithWhereWithoutInventoryItemInput[]
+    deleteMany?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
+  }
+
+  export type StockIntakeBatchItemUncheckedUpdateManyWithoutInventoryItemNestedInput = {
+    create?: XOR<StockIntakeBatchItemCreateWithoutInventoryItemInput, StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput> | StockIntakeBatchItemCreateWithoutInventoryItemInput[] | StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput[]
+    connectOrCreate?: StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput | StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput[]
+    upsert?: StockIntakeBatchItemUpsertWithWhereUniqueWithoutInventoryItemInput | StockIntakeBatchItemUpsertWithWhereUniqueWithoutInventoryItemInput[]
+    createMany?: StockIntakeBatchItemCreateManyInventoryItemInputEnvelope
+    set?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    disconnect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    delete?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    connect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    update?: StockIntakeBatchItemUpdateWithWhereUniqueWithoutInventoryItemInput | StockIntakeBatchItemUpdateWithWhereUniqueWithoutInventoryItemInput[]
+    updateMany?: StockIntakeBatchItemUpdateManyWithWhereWithoutInventoryItemInput | StockIntakeBatchItemUpdateManyWithWhereWithoutInventoryItemInput[]
+    deleteMany?: StockIntakeBatchItemScalarWhereInput | StockIntakeBatchItemScalarWhereInput[]
+  }
+
+  export type InventoryItemCreateNestedOneWithoutMovementsInput = {
+    create?: XOR<InventoryItemCreateWithoutMovementsInput, InventoryItemUncheckedCreateWithoutMovementsInput>
+    connectOrCreate?: InventoryItemCreateOrConnectWithoutMovementsInput
+    connect?: InventoryItemWhereUniqueInput
+  }
+
+  export type EnumStockMovementTypeFieldUpdateOperationsInput = {
+    set?: $Enums.StockMovementType
+  }
+
+  export type InventoryItemUpdateOneRequiredWithoutMovementsNestedInput = {
+    create?: XOR<InventoryItemCreateWithoutMovementsInput, InventoryItemUncheckedCreateWithoutMovementsInput>
+    connectOrCreate?: InventoryItemCreateOrConnectWithoutMovementsInput
+    upsert?: InventoryItemUpsertWithoutMovementsInput
+    connect?: InventoryItemWhereUniqueInput
+    update?: XOR<XOR<InventoryItemUpdateToOneWithWhereWithoutMovementsInput, InventoryItemUpdateWithoutMovementsInput>, InventoryItemUncheckedUpdateWithoutMovementsInput>
+  }
+
+  export type StockIntakeBatchItemCreateNestedManyWithoutStockIntakeBatchInput = {
+    create?: XOR<StockIntakeBatchItemCreateWithoutStockIntakeBatchInput, StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput> | StockIntakeBatchItemCreateWithoutStockIntakeBatchInput[] | StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput[]
+    connectOrCreate?: StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput | StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput[]
+    createMany?: StockIntakeBatchItemCreateManyStockIntakeBatchInputEnvelope
+    connect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+  }
+
+  export type StockIntakeBatchItemUncheckedCreateNestedManyWithoutStockIntakeBatchInput = {
+    create?: XOR<StockIntakeBatchItemCreateWithoutStockIntakeBatchInput, StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput> | StockIntakeBatchItemCreateWithoutStockIntakeBatchInput[] | StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput[]
+    connectOrCreate?: StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput | StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput[]
+    createMany?: StockIntakeBatchItemCreateManyStockIntakeBatchInputEnvelope
+    connect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+  }
+
+  export type StockIntakeBatchItemUpdateManyWithoutStockIntakeBatchNestedInput = {
+    create?: XOR<StockIntakeBatchItemCreateWithoutStockIntakeBatchInput, StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput> | StockIntakeBatchItemCreateWithoutStockIntakeBatchInput[] | StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput[]
+    connectOrCreate?: StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput | StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput[]
+    upsert?: StockIntakeBatchItemUpsertWithWhereUniqueWithoutStockIntakeBatchInput | StockIntakeBatchItemUpsertWithWhereUniqueWithoutStockIntakeBatchInput[]
+    createMany?: StockIntakeBatchItemCreateManyStockIntakeBatchInputEnvelope
+    set?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    disconnect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    delete?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    connect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    update?: StockIntakeBatchItemUpdateWithWhereUniqueWithoutStockIntakeBatchInput | StockIntakeBatchItemUpdateWithWhereUniqueWithoutStockIntakeBatchInput[]
+    updateMany?: StockIntakeBatchItemUpdateManyWithWhereWithoutStockIntakeBatchInput | StockIntakeBatchItemUpdateManyWithWhereWithoutStockIntakeBatchInput[]
+    deleteMany?: StockIntakeBatchItemScalarWhereInput | StockIntakeBatchItemScalarWhereInput[]
+  }
+
+  export type StockIntakeBatchItemUncheckedUpdateManyWithoutStockIntakeBatchNestedInput = {
+    create?: XOR<StockIntakeBatchItemCreateWithoutStockIntakeBatchInput, StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput> | StockIntakeBatchItemCreateWithoutStockIntakeBatchInput[] | StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput[]
+    connectOrCreate?: StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput | StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput[]
+    upsert?: StockIntakeBatchItemUpsertWithWhereUniqueWithoutStockIntakeBatchInput | StockIntakeBatchItemUpsertWithWhereUniqueWithoutStockIntakeBatchInput[]
+    createMany?: StockIntakeBatchItemCreateManyStockIntakeBatchInputEnvelope
+    set?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    disconnect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    delete?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    connect?: StockIntakeBatchItemWhereUniqueInput | StockIntakeBatchItemWhereUniqueInput[]
+    update?: StockIntakeBatchItemUpdateWithWhereUniqueWithoutStockIntakeBatchInput | StockIntakeBatchItemUpdateWithWhereUniqueWithoutStockIntakeBatchInput[]
+    updateMany?: StockIntakeBatchItemUpdateManyWithWhereWithoutStockIntakeBatchInput | StockIntakeBatchItemUpdateManyWithWhereWithoutStockIntakeBatchInput[]
+    deleteMany?: StockIntakeBatchItemScalarWhereInput | StockIntakeBatchItemScalarWhereInput[]
+  }
+
+  export type StockIntakeBatchCreateNestedOneWithoutItemsInput = {
+    create?: XOR<StockIntakeBatchCreateWithoutItemsInput, StockIntakeBatchUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: StockIntakeBatchCreateOrConnectWithoutItemsInput
+    connect?: StockIntakeBatchWhereUniqueInput
+  }
+
+  export type InventoryItemCreateNestedOneWithoutStockIntakeItemsInput = {
+    create?: XOR<InventoryItemCreateWithoutStockIntakeItemsInput, InventoryItemUncheckedCreateWithoutStockIntakeItemsInput>
+    connectOrCreate?: InventoryItemCreateOrConnectWithoutStockIntakeItemsInput
+    connect?: InventoryItemWhereUniqueInput
+  }
+
+  export type StockIntakeBatchUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<StockIntakeBatchCreateWithoutItemsInput, StockIntakeBatchUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: StockIntakeBatchCreateOrConnectWithoutItemsInput
+    upsert?: StockIntakeBatchUpsertWithoutItemsInput
+    connect?: StockIntakeBatchWhereUniqueInput
+    update?: XOR<XOR<StockIntakeBatchUpdateToOneWithWhereWithoutItemsInput, StockIntakeBatchUpdateWithoutItemsInput>, StockIntakeBatchUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type InventoryItemUpdateOneRequiredWithoutStockIntakeItemsNestedInput = {
+    create?: XOR<InventoryItemCreateWithoutStockIntakeItemsInput, InventoryItemUncheckedCreateWithoutStockIntakeItemsInput>
+    connectOrCreate?: InventoryItemCreateOrConnectWithoutStockIntakeItemsInput
+    upsert?: InventoryItemUpsertWithoutStockIntakeItemsInput
+    connect?: InventoryItemWhereUniqueInput
+    update?: XOR<XOR<InventoryItemUpdateToOneWithWhereWithoutStockIntakeItemsInput, InventoryItemUpdateWithoutStockIntakeItemsInput>, InventoryItemUncheckedUpdateWithoutStockIntakeItemsInput>
   }
 
   export type NestedUuidFilter<$PrismaModel = never> = {
@@ -18702,6 +26499,40 @@ export namespace Prisma {
     _max?: NestedEnumAdvanceStatusFilter<$PrismaModel>
   }
 
+  export type NestedEnumInventoryUnitFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryUnit | EnumInventoryUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryUnit[] | ListEnumInventoryUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryUnit[] | ListEnumInventoryUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryUnitFilter<$PrismaModel> | $Enums.InventoryUnit
+  }
+
+  export type NestedEnumInventoryUnitWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.InventoryUnit | EnumInventoryUnitFieldRefInput<$PrismaModel>
+    in?: $Enums.InventoryUnit[] | ListEnumInventoryUnitFieldRefInput<$PrismaModel>
+    notIn?: $Enums.InventoryUnit[] | ListEnumInventoryUnitFieldRefInput<$PrismaModel>
+    not?: NestedEnumInventoryUnitWithAggregatesFilter<$PrismaModel> | $Enums.InventoryUnit
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumInventoryUnitFilter<$PrismaModel>
+    _max?: NestedEnumInventoryUnitFilter<$PrismaModel>
+  }
+
+  export type NestedEnumStockMovementTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.StockMovementType | EnumStockMovementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumStockMovementTypeFilter<$PrismaModel> | $Enums.StockMovementType
+  }
+
+  export type NestedEnumStockMovementTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.StockMovementType | EnumStockMovementTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.StockMovementType[] | ListEnumStockMovementTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumStockMovementTypeWithAggregatesFilter<$PrismaModel> | $Enums.StockMovementType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumStockMovementTypeFilter<$PrismaModel>
+    _max?: NestedEnumStockMovementTypeFilter<$PrismaModel>
+  }
+
   export type OrderCreateWithoutCashierInput = {
     id?: string
     orderNumber: string
@@ -19091,9 +26922,11 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     addOns?: AddOnCreateNestedManyWithoutMenuItemsInput
+    orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
   }
 
   export type MenuItemUncheckedCreateWithoutCategoryInput = {
@@ -19105,9 +26938,11 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     addOns?: AddOnUncheckedCreateNestedManyWithoutMenuItemsInput
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
   }
 
   export type MenuItemCreateOrConnectWithoutCategoryInput = {
@@ -19148,6 +26983,7 @@ export namespace Prisma {
     isAvailable?: BoolFilter<"MenuItem"> | boolean
     hasSizes?: BoolFilter<"MenuItem"> | boolean
     sizes?: JsonNullableFilter<"MenuItem">
+    ingredients?: JsonNullableFilter<"MenuItem">
     categoryId?: UuidFilter<"MenuItem"> | string
     createdAt?: DateTimeFilter<"MenuItem"> | Date | string
     updatedAt?: DateTimeFilter<"MenuItem"> | Date | string
@@ -19179,6 +27015,7 @@ export namespace Prisma {
     name: string
     price: Decimal | DecimalJsLike | number | string
     isAvailable?: boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19188,6 +27025,7 @@ export namespace Prisma {
     name: string
     price: Decimal | DecimalJsLike | number | string
     isAvailable?: boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -19195,6 +27033,40 @@ export namespace Prisma {
   export type AddOnCreateOrConnectWithoutMenuItemsInput = {
     where: AddOnWhereUniqueInput
     create: XOR<AddOnCreateWithoutMenuItemsInput, AddOnUncheckedCreateWithoutMenuItemsInput>
+  }
+
+  export type OrderItemCreateWithoutMenuItemInput = {
+    id?: string
+    itemName: string
+    variant?: string | null
+    quantity: number
+    unitPrice: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+    addOns?: string | null
+    notes?: string | null
+    order: OrderCreateNestedOneWithoutItemsInput
+  }
+
+  export type OrderItemUncheckedCreateWithoutMenuItemInput = {
+    id?: string
+    orderId: string
+    itemName: string
+    variant?: string | null
+    quantity: number
+    unitPrice: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+    addOns?: string | null
+    notes?: string | null
+  }
+
+  export type OrderItemCreateOrConnectWithoutMenuItemInput = {
+    where: OrderItemWhereUniqueInput
+    create: XOR<OrderItemCreateWithoutMenuItemInput, OrderItemUncheckedCreateWithoutMenuItemInput>
+  }
+
+  export type OrderItemCreateManyMenuItemInputEnvelope = {
+    data: OrderItemCreateManyMenuItemInput | OrderItemCreateManyMenuItemInput[]
+    skipDuplicates?: boolean
   }
 
   export type CategoryUpsertWithoutMenuItemsInput = {
@@ -19248,8 +27120,41 @@ export namespace Prisma {
     name?: StringFilter<"AddOn"> | string
     price?: DecimalFilter<"AddOn"> | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFilter<"AddOn"> | boolean
+    ingredients?: JsonNullableFilter<"AddOn">
     createdAt?: DateTimeFilter<"AddOn"> | Date | string
     updatedAt?: DateTimeFilter<"AddOn"> | Date | string
+  }
+
+  export type OrderItemUpsertWithWhereUniqueWithoutMenuItemInput = {
+    where: OrderItemWhereUniqueInput
+    update: XOR<OrderItemUpdateWithoutMenuItemInput, OrderItemUncheckedUpdateWithoutMenuItemInput>
+    create: XOR<OrderItemCreateWithoutMenuItemInput, OrderItemUncheckedCreateWithoutMenuItemInput>
+  }
+
+  export type OrderItemUpdateWithWhereUniqueWithoutMenuItemInput = {
+    where: OrderItemWhereUniqueInput
+    data: XOR<OrderItemUpdateWithoutMenuItemInput, OrderItemUncheckedUpdateWithoutMenuItemInput>
+  }
+
+  export type OrderItemUpdateManyWithWhereWithoutMenuItemInput = {
+    where: OrderItemScalarWhereInput
+    data: XOR<OrderItemUpdateManyMutationInput, OrderItemUncheckedUpdateManyWithoutMenuItemInput>
+  }
+
+  export type OrderItemScalarWhereInput = {
+    AND?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+    OR?: OrderItemScalarWhereInput[]
+    NOT?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+    id?: UuidFilter<"OrderItem"> | string
+    orderId?: UuidFilter<"OrderItem"> | string
+    menuItemId?: UuidNullableFilter<"OrderItem"> | string | null
+    itemName?: StringFilter<"OrderItem"> | string
+    variant?: StringNullableFilter<"OrderItem"> | string | null
+    quantity?: IntFilter<"OrderItem"> | number
+    unitPrice?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
+    addOns?: StringNullableFilter<"OrderItem"> | string | null
+    notes?: StringNullableFilter<"OrderItem"> | string | null
   }
 
   export type MenuItemCreateWithoutAddOnsInput = {
@@ -19261,9 +27166,11 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutMenuItemsInput
+    orderItems?: OrderItemCreateNestedManyWithoutMenuItemInput
   }
 
   export type MenuItemUncheckedCreateWithoutAddOnsInput = {
@@ -19275,9 +27182,11 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     categoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+    orderItems?: OrderItemUncheckedCreateNestedManyWithoutMenuItemInput
   }
 
   export type MenuItemCreateOrConnectWithoutAddOnsInput = {
@@ -19348,7 +27257,6 @@ export namespace Prisma {
 
   export type OrderItemCreateWithoutOrderInput = {
     id?: string
-    menuItemId?: string | null
     itemName: string
     variant?: string | null
     quantity: number
@@ -19356,6 +27264,7 @@ export namespace Prisma {
     totalPrice: Decimal | DecimalJsLike | number | string
     addOns?: string | null
     notes?: string | null
+    menuItem?: MenuItemCreateNestedOneWithoutOrderItemsInput
   }
 
   export type OrderItemUncheckedCreateWithoutOrderInput = {
@@ -19447,22 +27356,6 @@ export namespace Prisma {
     data: XOR<OrderItemUpdateManyMutationInput, OrderItemUncheckedUpdateManyWithoutOrderInput>
   }
 
-  export type OrderItemScalarWhereInput = {
-    AND?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
-    OR?: OrderItemScalarWhereInput[]
-    NOT?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
-    id?: UuidFilter<"OrderItem"> | string
-    orderId?: UuidFilter<"OrderItem"> | string
-    menuItemId?: UuidNullableFilter<"OrderItem"> | string | null
-    itemName?: StringFilter<"OrderItem"> | string
-    variant?: StringNullableFilter<"OrderItem"> | string | null
-    quantity?: IntFilter<"OrderItem"> | number
-    unitPrice?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
-    totalPrice?: DecimalFilter<"OrderItem"> | Decimal | DecimalJsLike | number | string
-    addOns?: StringNullableFilter<"OrderItem"> | string | null
-    notes?: StringNullableFilter<"OrderItem"> | string | null
-  }
-
   export type OrderCreateWithoutItemsInput = {
     id?: string
     orderNumber: string
@@ -19506,6 +27399,43 @@ export namespace Prisma {
   export type OrderCreateOrConnectWithoutItemsInput = {
     where: OrderWhereUniqueInput
     create: XOR<OrderCreateWithoutItemsInput, OrderUncheckedCreateWithoutItemsInput>
+  }
+
+  export type MenuItemCreateWithoutOrderItemsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    basePrice: Decimal | DecimalJsLike | number | string
+    imageUrl?: string | null
+    isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: CategoryCreateNestedOneWithoutMenuItemsInput
+    addOns?: AddOnCreateNestedManyWithoutMenuItemsInput
+  }
+
+  export type MenuItemUncheckedCreateWithoutOrderItemsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    basePrice: Decimal | DecimalJsLike | number | string
+    imageUrl?: string | null
+    isAvailable?: boolean
+    hasSizes?: boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
+    categoryId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    addOns?: AddOnUncheckedCreateNestedManyWithoutMenuItemsInput
+  }
+
+  export type MenuItemCreateOrConnectWithoutOrderItemsInput = {
+    where: MenuItemWhereUniqueInput
+    create: XOR<MenuItemCreateWithoutOrderItemsInput, MenuItemUncheckedCreateWithoutOrderItemsInput>
   }
 
   export type OrderUpsertWithoutItemsInput = {
@@ -19557,6 +27487,49 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MenuItemUpsertWithoutOrderItemsInput = {
+    update: XOR<MenuItemUpdateWithoutOrderItemsInput, MenuItemUncheckedUpdateWithoutOrderItemsInput>
+    create: XOR<MenuItemCreateWithoutOrderItemsInput, MenuItemUncheckedCreateWithoutOrderItemsInput>
+    where?: MenuItemWhereInput
+  }
+
+  export type MenuItemUpdateToOneWithWhereWithoutOrderItemsInput = {
+    where?: MenuItemWhereInput
+    data: XOR<MenuItemUpdateWithoutOrderItemsInput, MenuItemUncheckedUpdateWithoutOrderItemsInput>
+  }
+
+  export type MenuItemUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: CategoryUpdateOneRequiredWithoutMenuItemsNestedInput
+    addOns?: AddOnUpdateManyWithoutMenuItemsNestedInput
+  }
+
+  export type MenuItemUncheckedUpdateWithoutOrderItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    basePrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    hasSizes?: BoolFieldUpdateOperationsInput | boolean
+    sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
+    categoryId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    addOns?: AddOnUncheckedUpdateManyWithoutMenuItemsNestedInput
   }
 
   export type UserCreateWithoutAttendancesInput = {
@@ -19943,6 +27916,479 @@ export namespace Prisma {
     payrolls?: PayrollUncheckedUpdateManyWithoutUserNestedInput
   }
 
+  export type InventoryItemCreateWithoutCategoryInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    movements?: StockMovementCreateNestedManyWithoutInventoryItemInput
+    stockIntakeItems?: StockIntakeBatchItemCreateNestedManyWithoutInventoryItemInput
+  }
+
+  export type InventoryItemUncheckedCreateWithoutCategoryInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    movements?: StockMovementUncheckedCreateNestedManyWithoutInventoryItemInput
+    stockIntakeItems?: StockIntakeBatchItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  }
+
+  export type InventoryItemCreateOrConnectWithoutCategoryInput = {
+    where: InventoryItemWhereUniqueInput
+    create: XOR<InventoryItemCreateWithoutCategoryInput, InventoryItemUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type InventoryItemCreateManyCategoryInputEnvelope = {
+    data: InventoryItemCreateManyCategoryInput | InventoryItemCreateManyCategoryInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryItemUpsertWithWhereUniqueWithoutCategoryInput = {
+    where: InventoryItemWhereUniqueInput
+    update: XOR<InventoryItemUpdateWithoutCategoryInput, InventoryItemUncheckedUpdateWithoutCategoryInput>
+    create: XOR<InventoryItemCreateWithoutCategoryInput, InventoryItemUncheckedCreateWithoutCategoryInput>
+  }
+
+  export type InventoryItemUpdateWithWhereUniqueWithoutCategoryInput = {
+    where: InventoryItemWhereUniqueInput
+    data: XOR<InventoryItemUpdateWithoutCategoryInput, InventoryItemUncheckedUpdateWithoutCategoryInput>
+  }
+
+  export type InventoryItemUpdateManyWithWhereWithoutCategoryInput = {
+    where: InventoryItemScalarWhereInput
+    data: XOR<InventoryItemUpdateManyMutationInput, InventoryItemUncheckedUpdateManyWithoutCategoryInput>
+  }
+
+  export type InventoryItemScalarWhereInput = {
+    AND?: InventoryItemScalarWhereInput | InventoryItemScalarWhereInput[]
+    OR?: InventoryItemScalarWhereInput[]
+    NOT?: InventoryItemScalarWhereInput | InventoryItemScalarWhereInput[]
+    id?: UuidFilter<"InventoryItem"> | string
+    sku?: StringNullableFilter<"InventoryItem"> | string | null
+    name?: StringFilter<"InventoryItem"> | string
+    categoryId?: UuidFilter<"InventoryItem"> | string
+    unit?: EnumInventoryUnitFilter<"InventoryItem"> | $Enums.InventoryUnit
+    quantity?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFilter<"InventoryItem"> | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFilter<"InventoryItem"> | Date | string
+    updatedAt?: DateTimeFilter<"InventoryItem"> | Date | string
+  }
+
+  export type InventoryCategoryCreateWithoutItemsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InventoryCategoryUncheckedCreateWithoutItemsInput = {
+    id?: string
+    name: string
+    description?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InventoryCategoryCreateOrConnectWithoutItemsInput = {
+    where: InventoryCategoryWhereUniqueInput
+    create: XOR<InventoryCategoryCreateWithoutItemsInput, InventoryCategoryUncheckedCreateWithoutItemsInput>
+  }
+
+  export type StockMovementCreateWithoutInventoryItemInput = {
+    id?: string
+    type: $Enums.StockMovementType
+    quantityChange: Decimal | DecimalJsLike | number | string
+    previousQuantity: Decimal | DecimalJsLike | number | string
+    newQuantity: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockMovementUncheckedCreateWithoutInventoryItemInput = {
+    id?: string
+    type: $Enums.StockMovementType
+    quantityChange: Decimal | DecimalJsLike | number | string
+    previousQuantity: Decimal | DecimalJsLike | number | string
+    newQuantity: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockMovementCreateOrConnectWithoutInventoryItemInput = {
+    where: StockMovementWhereUniqueInput
+    create: XOR<StockMovementCreateWithoutInventoryItemInput, StockMovementUncheckedCreateWithoutInventoryItemInput>
+  }
+
+  export type StockMovementCreateManyInventoryItemInputEnvelope = {
+    data: StockMovementCreateManyInventoryItemInput | StockMovementCreateManyInventoryItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StockIntakeBatchItemCreateWithoutInventoryItemInput = {
+    id?: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+    stockIntakeBatch: StockIntakeBatchCreateNestedOneWithoutItemsInput
+  }
+
+  export type StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput = {
+    id?: string
+    stockIntakeBatchId: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemCreateOrConnectWithoutInventoryItemInput = {
+    where: StockIntakeBatchItemWhereUniqueInput
+    create: XOR<StockIntakeBatchItemCreateWithoutInventoryItemInput, StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput>
+  }
+
+  export type StockIntakeBatchItemCreateManyInventoryItemInputEnvelope = {
+    data: StockIntakeBatchItemCreateManyInventoryItemInput | StockIntakeBatchItemCreateManyInventoryItemInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type InventoryCategoryUpsertWithoutItemsInput = {
+    update: XOR<InventoryCategoryUpdateWithoutItemsInput, InventoryCategoryUncheckedUpdateWithoutItemsInput>
+    create: XOR<InventoryCategoryCreateWithoutItemsInput, InventoryCategoryUncheckedCreateWithoutItemsInput>
+    where?: InventoryCategoryWhereInput
+  }
+
+  export type InventoryCategoryUpdateToOneWithWhereWithoutItemsInput = {
+    where?: InventoryCategoryWhereInput
+    data: XOR<InventoryCategoryUpdateWithoutItemsInput, InventoryCategoryUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type InventoryCategoryUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InventoryCategoryUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockMovementUpsertWithWhereUniqueWithoutInventoryItemInput = {
+    where: StockMovementWhereUniqueInput
+    update: XOR<StockMovementUpdateWithoutInventoryItemInput, StockMovementUncheckedUpdateWithoutInventoryItemInput>
+    create: XOR<StockMovementCreateWithoutInventoryItemInput, StockMovementUncheckedCreateWithoutInventoryItemInput>
+  }
+
+  export type StockMovementUpdateWithWhereUniqueWithoutInventoryItemInput = {
+    where: StockMovementWhereUniqueInput
+    data: XOR<StockMovementUpdateWithoutInventoryItemInput, StockMovementUncheckedUpdateWithoutInventoryItemInput>
+  }
+
+  export type StockMovementUpdateManyWithWhereWithoutInventoryItemInput = {
+    where: StockMovementScalarWhereInput
+    data: XOR<StockMovementUpdateManyMutationInput, StockMovementUncheckedUpdateManyWithoutInventoryItemInput>
+  }
+
+  export type StockMovementScalarWhereInput = {
+    AND?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
+    OR?: StockMovementScalarWhereInput[]
+    NOT?: StockMovementScalarWhereInput | StockMovementScalarWhereInput[]
+    id?: UuidFilter<"StockMovement"> | string
+    inventoryItemId?: UuidFilter<"StockMovement"> | string
+    type?: EnumStockMovementTypeFilter<"StockMovement"> | $Enums.StockMovementType
+    quantityChange?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFilter<"StockMovement"> | Decimal | DecimalJsLike | number | string
+    reason?: StringNullableFilter<"StockMovement"> | string | null
+    createdById?: UuidNullableFilter<"StockMovement"> | string | null
+    createdAt?: DateTimeFilter<"StockMovement"> | Date | string
+  }
+
+  export type StockIntakeBatchItemUpsertWithWhereUniqueWithoutInventoryItemInput = {
+    where: StockIntakeBatchItemWhereUniqueInput
+    update: XOR<StockIntakeBatchItemUpdateWithoutInventoryItemInput, StockIntakeBatchItemUncheckedUpdateWithoutInventoryItemInput>
+    create: XOR<StockIntakeBatchItemCreateWithoutInventoryItemInput, StockIntakeBatchItemUncheckedCreateWithoutInventoryItemInput>
+  }
+
+  export type StockIntakeBatchItemUpdateWithWhereUniqueWithoutInventoryItemInput = {
+    where: StockIntakeBatchItemWhereUniqueInput
+    data: XOR<StockIntakeBatchItemUpdateWithoutInventoryItemInput, StockIntakeBatchItemUncheckedUpdateWithoutInventoryItemInput>
+  }
+
+  export type StockIntakeBatchItemUpdateManyWithWhereWithoutInventoryItemInput = {
+    where: StockIntakeBatchItemScalarWhereInput
+    data: XOR<StockIntakeBatchItemUpdateManyMutationInput, StockIntakeBatchItemUncheckedUpdateManyWithoutInventoryItemInput>
+  }
+
+  export type StockIntakeBatchItemScalarWhereInput = {
+    AND?: StockIntakeBatchItemScalarWhereInput | StockIntakeBatchItemScalarWhereInput[]
+    OR?: StockIntakeBatchItemScalarWhereInput[]
+    NOT?: StockIntakeBatchItemScalarWhereInput | StockIntakeBatchItemScalarWhereInput[]
+    id?: UuidFilter<"StockIntakeBatchItem"> | string
+    stockIntakeBatchId?: UuidFilter<"StockIntakeBatchItem"> | string
+    inventoryItemId?: UuidFilter<"StockIntakeBatchItem"> | string
+    quantity?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFilter<"StockIntakeBatchItem"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type InventoryItemCreateWithoutMovementsInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: InventoryCategoryCreateNestedOneWithoutItemsInput
+    stockIntakeItems?: StockIntakeBatchItemCreateNestedManyWithoutInventoryItemInput
+  }
+
+  export type InventoryItemUncheckedCreateWithoutMovementsInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    categoryId: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    stockIntakeItems?: StockIntakeBatchItemUncheckedCreateNestedManyWithoutInventoryItemInput
+  }
+
+  export type InventoryItemCreateOrConnectWithoutMovementsInput = {
+    where: InventoryItemWhereUniqueInput
+    create: XOR<InventoryItemCreateWithoutMovementsInput, InventoryItemUncheckedCreateWithoutMovementsInput>
+  }
+
+  export type InventoryItemUpsertWithoutMovementsInput = {
+    update: XOR<InventoryItemUpdateWithoutMovementsInput, InventoryItemUncheckedUpdateWithoutMovementsInput>
+    create: XOR<InventoryItemCreateWithoutMovementsInput, InventoryItemUncheckedCreateWithoutMovementsInput>
+    where?: InventoryItemWhereInput
+  }
+
+  export type InventoryItemUpdateToOneWithWhereWithoutMovementsInput = {
+    where?: InventoryItemWhereInput
+    data: XOR<InventoryItemUpdateWithoutMovementsInput, InventoryItemUncheckedUpdateWithoutMovementsInput>
+  }
+
+  export type InventoryItemUpdateWithoutMovementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: InventoryCategoryUpdateOneRequiredWithoutItemsNestedInput
+    stockIntakeItems?: StockIntakeBatchItemUpdateManyWithoutInventoryItemNestedInput
+  }
+
+  export type InventoryItemUncheckedUpdateWithoutMovementsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    stockIntakeItems?: StockIntakeBatchItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  }
+
+  export type StockIntakeBatchItemCreateWithoutStockIntakeBatchInput = {
+    id?: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+    inventoryItem: InventoryItemCreateNestedOneWithoutStockIntakeItemsInput
+  }
+
+  export type StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput = {
+    id?: string
+    inventoryItemId: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemCreateOrConnectWithoutStockIntakeBatchInput = {
+    where: StockIntakeBatchItemWhereUniqueInput
+    create: XOR<StockIntakeBatchItemCreateWithoutStockIntakeBatchInput, StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput>
+  }
+
+  export type StockIntakeBatchItemCreateManyStockIntakeBatchInputEnvelope = {
+    data: StockIntakeBatchItemCreateManyStockIntakeBatchInput | StockIntakeBatchItemCreateManyStockIntakeBatchInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type StockIntakeBatchItemUpsertWithWhereUniqueWithoutStockIntakeBatchInput = {
+    where: StockIntakeBatchItemWhereUniqueInput
+    update: XOR<StockIntakeBatchItemUpdateWithoutStockIntakeBatchInput, StockIntakeBatchItemUncheckedUpdateWithoutStockIntakeBatchInput>
+    create: XOR<StockIntakeBatchItemCreateWithoutStockIntakeBatchInput, StockIntakeBatchItemUncheckedCreateWithoutStockIntakeBatchInput>
+  }
+
+  export type StockIntakeBatchItemUpdateWithWhereUniqueWithoutStockIntakeBatchInput = {
+    where: StockIntakeBatchItemWhereUniqueInput
+    data: XOR<StockIntakeBatchItemUpdateWithoutStockIntakeBatchInput, StockIntakeBatchItemUncheckedUpdateWithoutStockIntakeBatchInput>
+  }
+
+  export type StockIntakeBatchItemUpdateManyWithWhereWithoutStockIntakeBatchInput = {
+    where: StockIntakeBatchItemScalarWhereInput
+    data: XOR<StockIntakeBatchItemUpdateManyMutationInput, StockIntakeBatchItemUncheckedUpdateManyWithoutStockIntakeBatchInput>
+  }
+
+  export type StockIntakeBatchCreateWithoutItemsInput = {
+    id?: string
+    batchNumber: string
+    notes?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StockIntakeBatchUncheckedCreateWithoutItemsInput = {
+    id?: string
+    batchNumber: string
+    notes?: string | null
+    totalAmount: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type StockIntakeBatchCreateOrConnectWithoutItemsInput = {
+    where: StockIntakeBatchWhereUniqueInput
+    create: XOR<StockIntakeBatchCreateWithoutItemsInput, StockIntakeBatchUncheckedCreateWithoutItemsInput>
+  }
+
+  export type InventoryItemCreateWithoutStockIntakeItemsInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    category: InventoryCategoryCreateNestedOneWithoutItemsInput
+    movements?: StockMovementCreateNestedManyWithoutInventoryItemInput
+  }
+
+  export type InventoryItemUncheckedCreateWithoutStockIntakeItemsInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    categoryId: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    movements?: StockMovementUncheckedCreateNestedManyWithoutInventoryItemInput
+  }
+
+  export type InventoryItemCreateOrConnectWithoutStockIntakeItemsInput = {
+    where: InventoryItemWhereUniqueInput
+    create: XOR<InventoryItemCreateWithoutStockIntakeItemsInput, InventoryItemUncheckedCreateWithoutStockIntakeItemsInput>
+  }
+
+  export type StockIntakeBatchUpsertWithoutItemsInput = {
+    update: XOR<StockIntakeBatchUpdateWithoutItemsInput, StockIntakeBatchUncheckedUpdateWithoutItemsInput>
+    create: XOR<StockIntakeBatchCreateWithoutItemsInput, StockIntakeBatchUncheckedCreateWithoutItemsInput>
+    where?: StockIntakeBatchWhereInput
+  }
+
+  export type StockIntakeBatchUpdateToOneWithWhereWithoutItemsInput = {
+    where?: StockIntakeBatchWhereInput
+    data: XOR<StockIntakeBatchUpdateWithoutItemsInput, StockIntakeBatchUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type StockIntakeBatchUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batchNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockIntakeBatchUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    batchNumber?: StringFieldUpdateOperationsInput | string
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InventoryItemUpsertWithoutStockIntakeItemsInput = {
+    update: XOR<InventoryItemUpdateWithoutStockIntakeItemsInput, InventoryItemUncheckedUpdateWithoutStockIntakeItemsInput>
+    create: XOR<InventoryItemCreateWithoutStockIntakeItemsInput, InventoryItemUncheckedCreateWithoutStockIntakeItemsInput>
+    where?: InventoryItemWhereInput
+  }
+
+  export type InventoryItemUpdateToOneWithWhereWithoutStockIntakeItemsInput = {
+    where?: InventoryItemWhereInput
+    data: XOR<InventoryItemUpdateWithoutStockIntakeItemsInput, InventoryItemUncheckedUpdateWithoutStockIntakeItemsInput>
+  }
+
+  export type InventoryItemUpdateWithoutStockIntakeItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    category?: InventoryCategoryUpdateOneRequiredWithoutItemsNestedInput
+    movements?: StockMovementUpdateManyWithoutInventoryItemNestedInput
+  }
+
+  export type InventoryItemUncheckedUpdateWithoutStockIntakeItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    categoryId?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    movements?: StockMovementUncheckedUpdateManyWithoutInventoryItemNestedInput
+  }
+
   export type OrderCreateManyCashierInput = {
     id?: string
     orderNumber: string
@@ -20258,6 +28704,7 @@ export namespace Prisma {
     isAvailable?: boolean
     hasSizes?: boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -20271,9 +28718,11 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addOns?: AddOnUpdateManyWithoutMenuItemsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
   }
 
   export type MenuItemUncheckedUpdateWithoutCategoryInput = {
@@ -20285,9 +28734,11 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     addOns?: AddOnUncheckedUpdateManyWithoutMenuItemsNestedInput
+    orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
   }
 
   export type MenuItemUncheckedUpdateManyWithoutCategoryInput = {
@@ -20299,8 +28750,21 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderItemCreateManyMenuItemInput = {
+    id?: string
+    orderId: string
+    itemName: string
+    variant?: string | null
+    quantity: number
+    unitPrice: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+    addOns?: string | null
+    notes?: string | null
   }
 
   export type AddOnUpdateWithoutMenuItemsInput = {
@@ -20308,6 +28772,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20317,6 +28782,7 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -20326,8 +28792,45 @@ export namespace Prisma {
     name?: StringFieldUpdateOperationsInput | string
     price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type OrderItemUpdateWithoutMenuItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemName?: StringFieldUpdateOperationsInput | string
+    variant?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    addOns?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    order?: OrderUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type OrderItemUncheckedUpdateWithoutMenuItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    itemName?: StringFieldUpdateOperationsInput | string
+    variant?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    addOns?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type OrderItemUncheckedUpdateManyWithoutMenuItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    itemName?: StringFieldUpdateOperationsInput | string
+    variant?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    unitPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    addOns?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MenuItemUpdateWithoutAddOnsInput = {
@@ -20339,9 +28842,11 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutMenuItemsNestedInput
+    orderItems?: OrderItemUpdateManyWithoutMenuItemNestedInput
   }
 
   export type MenuItemUncheckedUpdateWithoutAddOnsInput = {
@@ -20353,9 +28858,11 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    orderItems?: OrderItemUncheckedUpdateManyWithoutMenuItemNestedInput
   }
 
   export type MenuItemUncheckedUpdateManyWithoutAddOnsInput = {
@@ -20367,6 +28874,7 @@ export namespace Prisma {
     isAvailable?: BoolFieldUpdateOperationsInput | boolean
     hasSizes?: BoolFieldUpdateOperationsInput | boolean
     sizes?: NullableJsonNullValueInput | InputJsonValue
+    ingredients?: NullableJsonNullValueInput | InputJsonValue
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -20386,7 +28894,6 @@ export namespace Prisma {
 
   export type OrderItemUpdateWithoutOrderInput = {
     id?: StringFieldUpdateOperationsInput | string
-    menuItemId?: NullableStringFieldUpdateOperationsInput | string | null
     itemName?: StringFieldUpdateOperationsInput | string
     variant?: NullableStringFieldUpdateOperationsInput | string | null
     quantity?: IntFieldUpdateOperationsInput | number
@@ -20394,6 +28901,7 @@ export namespace Prisma {
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     addOns?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+    menuItem?: MenuItemUpdateOneWithoutOrderItemsNestedInput
   }
 
   export type OrderItemUncheckedUpdateWithoutOrderInput = {
@@ -20418,6 +28926,166 @@ export namespace Prisma {
     totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     addOns?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
+  }
+
+  export type InventoryItemCreateManyCategoryInput = {
+    id?: string
+    sku?: string | null
+    name: string
+    unit?: $Enums.InventoryUnit
+    quantity?: Decimal | DecimalJsLike | number | string
+    minStockLevel?: Decimal | DecimalJsLike | number | string
+    unitCost?: Decimal | DecimalJsLike | number | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InventoryItemUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    movements?: StockMovementUpdateManyWithoutInventoryItemNestedInput
+    stockIntakeItems?: StockIntakeBatchItemUpdateManyWithoutInventoryItemNestedInput
+  }
+
+  export type InventoryItemUncheckedUpdateWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    movements?: StockMovementUncheckedUpdateManyWithoutInventoryItemNestedInput
+    stockIntakeItems?: StockIntakeBatchItemUncheckedUpdateManyWithoutInventoryItemNestedInput
+  }
+
+  export type InventoryItemUncheckedUpdateManyWithoutCategoryInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sku?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    minStockLevel?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockMovementCreateManyInventoryItemInput = {
+    id?: string
+    type: $Enums.StockMovementType
+    quantityChange: Decimal | DecimalJsLike | number | string
+    previousQuantity: Decimal | DecimalJsLike | number | string
+    newQuantity: Decimal | DecimalJsLike | number | string
+    reason?: string | null
+    createdById?: string | null
+    createdAt?: Date | string
+  }
+
+  export type StockIntakeBatchItemCreateManyInventoryItemInput = {
+    id?: string
+    stockIntakeBatchId: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockMovementUpdateWithoutInventoryItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
+    quantityChange?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockMovementUncheckedUpdateWithoutInventoryItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
+    quantityChange?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockMovementUncheckedUpdateManyWithoutInventoryItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    type?: EnumStockMovementTypeFieldUpdateOperationsInput | $Enums.StockMovementType
+    quantityChange?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    previousQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    newQuantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    reason?: NullableStringFieldUpdateOperationsInput | string | null
+    createdById?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type StockIntakeBatchItemUpdateWithoutInventoryItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    stockIntakeBatch?: StockIntakeBatchUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type StockIntakeBatchItemUncheckedUpdateWithoutInventoryItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stockIntakeBatchId?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemUncheckedUpdateManyWithoutInventoryItemInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stockIntakeBatchId?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemCreateManyStockIntakeBatchInput = {
+    id?: string
+    inventoryItemId: string
+    quantity: Decimal | DecimalJsLike | number | string
+    unitCost: Decimal | DecimalJsLike | number | string
+    totalPrice: Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemUpdateWithoutStockIntakeBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    inventoryItem?: InventoryItemUpdateOneRequiredWithoutStockIntakeItemsNestedInput
+  }
+
+  export type StockIntakeBatchItemUncheckedUpdateWithoutStockIntakeBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inventoryItemId?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type StockIntakeBatchItemUncheckedUpdateManyWithoutStockIntakeBatchInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    inventoryItemId?: StringFieldUpdateOperationsInput | string
+    quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    unitCost?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalPrice?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
 

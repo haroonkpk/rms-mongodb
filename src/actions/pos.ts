@@ -176,6 +176,11 @@ export async function createPOSOrder(
       });
       savedOrderId = dbOrder.id;
       savedKotNumber = dbOrder.kotNumber;
+
+      if (dbOrder.status === "PREPARING" && savedOrderId) {
+        const { deductInventoryForOrder } = await import("@/actions/inventory");
+        await deductInventoryForOrder(savedOrderId);
+      }
     } catch (err) {
       console.warn("DB order insertion warning:", err);
     }

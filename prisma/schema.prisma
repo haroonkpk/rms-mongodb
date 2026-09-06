@@ -82,13 +82,15 @@ model MenuItem {
   isAvailable Boolean  @default(true) @map("is_available")
   hasSizes    Boolean  @default(false) @map("has_sizes")
   sizes       Json?
+  ingredients Json?
 
   categoryId String   @map("category_id") @db.Uuid
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  addOns    AddOn[]  @relation("MenuItemToAddOn")
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  addOns     AddOn[]     @relation("MenuItemToAddOn")
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
 
   @@map("menu_items")
   @@index([categoryId])
@@ -100,6 +102,7 @@ model AddOn {
   name        String
   price       Decimal    @db.Decimal(10, 2)
   isAvailable Boolean    @default(true) @map("is_available")
+  ingredients Json?
   menuItems   MenuItem[] @relation("MenuItemToAddOn")
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
@@ -161,11 +164,12 @@ model Order {
 }
 
 model OrderItem {
-  id         String   @id @default(uuid()) @db.Uuid
-  orderId    String   @map("order_id") @db.Uuid
-  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  menuItemId String?  @map("menu_item_id") @db.Uuid
-  itemName   String   @map("item_name")
+  id         String    @id @default(uuid()) @db.Uuid
+  orderId    String    @map("order_id") @db.Uuid
+  order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  menuItemId String?   @map("menu_item_id") @db.Uuid
+  menuItem   MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: SetNull)
+  itemName   String    @map("item_name")
   variant    String?
   quantity   Int
   unitPrice  Decimal  @map("unit_price") @db.Decimal(10, 2)
@@ -297,4 +301,105 @@ model SalaryAdvance {
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   @@map("salary_advances")
+}
+
+// ------------------------------------------
+// INVENTORY & STOCK MANAGEMENT MODELS
+// ------------------------------------------
+
+enum StockMovementType {
+  PURCHASE_IN
+  WASTAGE_OUT
+  SPOILAGE_OUT
+  MANUAL_ADJUSTMENT
+  SALE_DEDUCTION
+}
+
+enum InventoryUnit {
+  KG
+  GRAM
+  LITER
+  ML
+  PIECE
+  PACK
+  BOX
+}
+
+model InventoryCategory {
+  id          String          @id @default(uuid()) @db.Uuid
+  name        String          @unique
+  description String?
+  items       InventoryItem[]
+  createdAt   DateTime        @default(now()) @map("created_at")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+
+  @@map("inventory_categories")
+}
+
+model InventoryItem {
+  id            String                 @id @default(uuid()) @db.Uuid
+  sku           String?                @unique
+  name          String
+  categoryId    String                 @map("category_id") @db.Uuid
+  category      InventoryCategory      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  unit          InventoryUnit          @default(KG)
+  quantity      Decimal                @default(0) @db.Decimal(10, 2)
+  minStockLevel Decimal                @default(10) @map("min_stock_level") @db.Decimal(10, 2)
+  unitCost      Decimal                @default(0) @map("unit_cost") @db.Decimal(10, 2)
+  
+  movements        StockMovement[]
+  stockIntakeItems StockIntakeBatchItem[]
+
+  createdAt     DateTime               @default(now()) @map("created_at")
+  updatedAt     DateTime               @updatedAt @map("updated_at")
+
+  @@map("inventory_items")
+  @@index([categoryId])
+  @@index([quantity])
+}
+
+model StockMovement {
+  id               String            @id @default(uuid()) @db.Uuid
+  inventoryItemId  String            @map("inventory_item_id") @db.Uuid
+  inventoryItem    InventoryItem     @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+  type             StockMovementType
+  quantityChange   Decimal           @map("quantity_change") @db.Decimal(10, 2)
+  previousQuantity Decimal           @map("previous_quantity") @db.Decimal(10, 2)
+  newQuantity      Decimal           @map("new_quantity") @db.Decimal(10, 2)
+  reason           String?
+  createdById      String?           @map("created_by_id") @db.Uuid
+
+  createdAt        DateTime          @default(now()) @map("created_at")
+
+  @@map("stock_movements")
+  @@index([inventoryItemId])
+  @@index([createdAt])
+}
+
+model StockIntakeBatch {
+  id          String                 @id @default(uuid()) @db.Uuid
+  batchNumber String                 @unique @map("batch_number")
+  notes       String?
+  totalAmount Decimal                @map("total_amount") @db.Decimal(10, 2)
+  items       StockIntakeBatchItem[]
+
+  createdAt   DateTime               @default(now()) @map("created_at")
+  updatedAt   DateTime               @updatedAt @map("updated_at")
+
+  @@map("stock_intake_batches")
+}
+
+model StockIntakeBatchItem {
+  id                 String           @id @default(uuid()) @db.Uuid
+  stockIntakeBatchId String           @map("stock_intake_batch_id") @db.Uuid
+  stockIntakeBatch   StockIntakeBatch @relation(fields: [stockIntakeBatchId], references: [id], onDelete: Cascade)
+  inventoryItemId    String           @map("inventory_item_id") @db.Uuid
+  inventoryItem      InventoryItem    @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+  quantity           Decimal          @db.Decimal(10, 2)
+  unitCost           Decimal          @map("unit_cost") @db.Decimal(10, 2)
+  totalPrice         Decimal          @map("total_price") @db.Decimal(10, 2)
+
+  @@map("stock_intake_batch_items")
+  @@index([stockIntakeBatchId])
+  @@index([inventoryItemId])
 }

@@ -153,6 +153,7 @@ exports.Prisma.MenuItemScalarFieldEnum = {
   isAvailable: 'isAvailable',
   hasSizes: 'hasSizes',
   sizes: 'sizes',
+  ingredients: 'ingredients',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -163,6 +164,7 @@ exports.Prisma.AddOnScalarFieldEnum = {
   name: 'name',
   price: 'price',
   isAvailable: 'isAvailable',
+  ingredients: 'ingredients',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -261,6 +263,57 @@ exports.Prisma.SalaryAdvanceScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.InventoryCategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.InventoryItemScalarFieldEnum = {
+  id: 'id',
+  sku: 'sku',
+  name: 'name',
+  categoryId: 'categoryId',
+  unit: 'unit',
+  quantity: 'quantity',
+  minStockLevel: 'minStockLevel',
+  unitCost: 'unitCost',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StockMovementScalarFieldEnum = {
+  id: 'id',
+  inventoryItemId: 'inventoryItemId',
+  type: 'type',
+  quantityChange: 'quantityChange',
+  previousQuantity: 'previousQuantity',
+  newQuantity: 'newQuantity',
+  reason: 'reason',
+  createdById: 'createdById',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.StockIntakeBatchScalarFieldEnum = {
+  id: 'id',
+  batchNumber: 'batchNumber',
+  notes: 'notes',
+  totalAmount: 'totalAmount',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.StockIntakeBatchItemScalarFieldEnum = {
+  id: 'id',
+  stockIntakeBatchId: 'stockIntakeBatchId',
+  inventoryItemId: 'inventoryItemId',
+  quantity: 'quantity',
+  unitCost: 'unitCost',
+  totalPrice: 'totalPrice'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -352,6 +405,24 @@ exports.AdvanceStatus = exports.$Enums.AdvanceStatus = {
   DEDUCTED: 'DEDUCTED'
 };
 
+exports.InventoryUnit = exports.$Enums.InventoryUnit = {
+  KG: 'KG',
+  GRAM: 'GRAM',
+  LITER: 'LITER',
+  ML: 'ML',
+  PIECE: 'PIECE',
+  PACK: 'PACK',
+  BOX: 'BOX'
+};
+
+exports.StockMovementType = exports.$Enums.StockMovementType = {
+  PURCHASE_IN: 'PURCHASE_IN',
+  WASTAGE_OUT: 'WASTAGE_OUT',
+  SPOILAGE_OUT: 'SPOILAGE_OUT',
+  MANUAL_ADJUSTMENT: 'MANUAL_ADJUSTMENT',
+  SALE_DEDUCTION: 'SALE_DEDUCTION'
+};
+
 exports.Prisma.ModelName = {
   User: 'User',
   Category: 'Category',
@@ -362,7 +433,12 @@ exports.Prisma.ModelName = {
   Attendance: 'Attendance',
   Leave: 'Leave',
   Payroll: 'Payroll',
-  SalaryAdvance: 'SalaryAdvance'
+  SalaryAdvance: 'SalaryAdvance',
+  InventoryCategory: 'InventoryCategory',
+  InventoryItem: 'InventoryItem',
+  StockMovement: 'StockMovement',
+  StockIntakeBatch: 'StockIntakeBatch',
+  StockIntakeBatchItem: 'StockIntakeBatchItem'
 };
 
 /**
