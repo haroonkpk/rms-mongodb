@@ -3,16 +3,18 @@ import { prisma } from "../src/lib/prisma";
 import { InventoryUnit, StockMovementType } from "./generated";
 
 async function seedInventory() {
-  console.log("🌱 Seeding Inventory, Recipes & Stock Management sample data...");
+  console.log(
+    "🌱 Seeding Inventory, Recipes & Stock Management sample data...",
+  );
 
   // 1. Inventory Raw Material Categories
   const categoriesData = [
-    { name: "Dairy & Eggs", description: "Mozzarella Cheese, Butter, Cream, Eggs, Milk" },
-    { name: "Meat & Poultry", description: "Chicken Boneless, Beef Patty, Mince" },
-    { name: "Fresh Produce", description: "Vegetables, Potatoes, Onions, Tomatoes, Lettuce" },
-    { name: "Bakery & Buns", description: "Burger Buns, Pizza Dough, Sandwich Bread" },
-    { name: "Spices & Condiments", description: "Salt, Black Pepper, Cooking Oils, Pizza Sauce, Mayonnaise" },
-    { name: "Packaging & Disposable", description: "Burger Boxes, Cups, Straws, Napkins" },
+    { name: "Dairy & Eggs" },
+    { name: "Meat & Poultry" },
+    { name: "Fresh Produce" },
+    { name: "Bakery & Buns" },
+    { name: "Spices & Condiments" },
+    { name: "Packaging & Disposable" },
   ];
 
   const categoryMap = new Map<string, string>();
@@ -37,7 +39,6 @@ async function seedInventory() {
   const itemsData = [
     {
       name: "Chicken Boneless",
-      sku: "RAW-[CHK]-001",
       categoryName: "Meat & Poultry",
       unit: InventoryUnit.KG,
       quantity: 50.0,
@@ -46,7 +47,6 @@ async function seedInventory() {
     },
     {
       name: "Mozzarella Cheese",
-      sku: "RAW-[CHS]-002",
       categoryName: "Dairy & Eggs",
       unit: InventoryUnit.KG,
       quantity: 20.0,
@@ -55,7 +55,6 @@ async function seedInventory() {
     },
     {
       name: "Burger Buns",
-      sku: "RAW-[BUN]-003",
       categoryName: "Bakery & Buns",
       unit: InventoryUnit.PIECE,
       quantity: 100.0,
@@ -64,7 +63,6 @@ async function seedInventory() {
     },
     {
       name: "Potato Fries (Frozen)",
-      sku: "RAW-[FRS]-004",
       categoryName: "Fresh Produce",
       unit: InventoryUnit.KG,
       quantity: 35.0,
@@ -73,7 +71,6 @@ async function seedInventory() {
     },
     {
       name: "Cooking Oil",
-      sku: "RAW-[OIL]-005",
       categoryName: "Spices & Condiments",
       unit: InventoryUnit.LITER,
       quantity: 40.0,
@@ -82,7 +79,6 @@ async function seedInventory() {
     },
     {
       name: "Pizza Sauce & Mayo",
-      sku: "RAW-[SAC]-006",
       categoryName: "Spices & Condiments",
       unit: InventoryUnit.KG,
       quantity: 15.0,
@@ -91,7 +87,6 @@ async function seedInventory() {
     },
     {
       name: "Flour / Dough Base",
-      sku: "RAW-[FLR]-007",
       categoryName: "Bakery & Buns",
       unit: InventoryUnit.KG,
       quantity: 25.0,
@@ -116,7 +111,6 @@ async function seedInventory() {
       const created = await prisma.inventoryItem.create({
         data: {
           name: item.name,
-          sku: item.sku,
           categoryId,
           unit: item.unit,
           quantity: item.quantity,
@@ -159,9 +153,24 @@ async function seedInventory() {
           totalAmount: 50 * 1200 + 20 * 1900 + 100 * 40,
           items: {
             create: [
-              { inventoryItemId: chickenId, quantity: 50, unitCost: 1200, totalPrice: 60000 },
-              { inventoryItemId: cheeseId, quantity: 20, unitCost: 1900, totalPrice: 38000 },
-              { inventoryItemId: bunsId, quantity: 100, unitCost: 40, totalPrice: 4000 },
+              {
+                inventoryItemId: chickenId,
+                quantity: 50,
+                unitCost: 1200,
+                totalPrice: 60000,
+              },
+              {
+                inventoryItemId: cheeseId,
+                quantity: 20,
+                unitCost: 1900,
+                totalPrice: 38000,
+              },
+              {
+                inventoryItemId: bunsId,
+                quantity: 100,
+                unitCost: 40,
+                totalPrice: 4000,
+              },
             ],
           },
         },
@@ -182,20 +191,56 @@ async function seedInventory() {
   for (const menuItem of menuItems) {
     const lowerName = menuItem.name.toLowerCase();
 
-    const ingredientsToSave: Array<{ inventoryItemId: string; quantityRequired: number }> = [];
+    const ingredientsToSave: Array<{
+      inventoryItemId: string;
+      quantityRequired: number;
+    }> = [];
 
     if (lowerName.includes("burger") || lowerName.includes("zinger")) {
-      if (bunId) ingredientsToSave.push({ inventoryItemId: bunId, quantityRequired: 1 });
-      if (chickenId) ingredientsToSave.push({ inventoryItemId: chickenId, quantityRequired: 0.15 });
-      if (oilId) ingredientsToSave.push({ inventoryItemId: oilId, quantityRequired: 0.05 });
-      if (cheeseId) ingredientsToSave.push({ inventoryItemId: cheeseId, quantityRequired: 0.02 });
+      if (bunId)
+        ingredientsToSave.push({ inventoryItemId: bunId, quantityRequired: 1 });
+      if (chickenId)
+        ingredientsToSave.push({
+          inventoryItemId: chickenId,
+          quantityRequired: 0.15,
+        });
+      if (oilId)
+        ingredientsToSave.push({
+          inventoryItemId: oilId,
+          quantityRequired: 0.05,
+        });
+      if (cheeseId)
+        ingredientsToSave.push({
+          inventoryItemId: cheeseId,
+          quantityRequired: 0.02,
+        });
     } else if (lowerName.includes("pizza") || lowerName.includes("tikka")) {
-      if (cheeseId) ingredientsToSave.push({ inventoryItemId: cheeseId, quantityRequired: 0.18 });
-      if (chickenId) ingredientsToSave.push({ inventoryItemId: chickenId, quantityRequired: 0.12 });
+      if (cheeseId)
+        ingredientsToSave.push({
+          inventoryItemId: cheeseId,
+          quantityRequired: 0.18,
+        });
+      if (chickenId)
+        ingredientsToSave.push({
+          inventoryItemId: chickenId,
+          quantityRequired: 0.12,
+        });
     } else if (lowerName.includes("fries") || lowerName.includes("loaded")) {
-      if (friesId) ingredientsToSave.push({ inventoryItemId: friesId, quantityRequired: 0.25 });
-      if (oilId) ingredientsToSave.push({ inventoryItemId: oilId, quantityRequired: 0.05 });
-      if (cheeseId) ingredientsToSave.push({ inventoryItemId: cheeseId, quantityRequired: 0.03 });
+      if (friesId)
+        ingredientsToSave.push({
+          inventoryItemId: friesId,
+          quantityRequired: 0.25,
+        });
+      if (oilId)
+        ingredientsToSave.push({
+          inventoryItemId: oilId,
+          quantityRequired: 0.05,
+        });
+      if (cheeseId)
+        ingredientsToSave.push({
+          inventoryItemId: cheeseId,
+          quantityRequired: 0.03,
+        });
     }
 
     if (ingredientsToSave.length > 0) {
@@ -205,7 +250,9 @@ async function seedInventory() {
           ingredients: ingredientsToSave,
         },
       });
-      console.log(`🔗 Updated ${ingredientsToSave.length} JSON recipe ingredients on "${menuItem.name}"`);
+      console.log(
+        `🔗 Updated ${ingredientsToSave.length} JSON recipe ingredients on "${menuItem.name}"`,
+      );
     }
   }
 
@@ -213,7 +260,10 @@ async function seedInventory() {
   const addOns = await prisma.addOn.findMany();
   for (const addon of addOns) {
     const lower = addon.name.toLowerCase();
-    const addOnIngs: Array<{ inventoryItemId: string; quantityRequired: number }> = [];
+    const addOnIngs: Array<{
+      inventoryItemId: string;
+      quantityRequired: number;
+    }> = [];
 
     if (lower.includes("cheese") && cheeseId) {
       addOnIngs.push({ inventoryItemId: cheeseId, quantityRequired: 0.03 });
@@ -226,7 +276,9 @@ async function seedInventory() {
         where: { id: addon.id },
         data: { ingredients: addOnIngs },
       });
-      console.log(`🔗 Updated ${addOnIngs.length} JSON ingredients on AddOn "${addon.name}"`);
+      console.log(
+        `🔗 Updated ${addOnIngs.length} JSON ingredients on AddOn "${addon.name}"`,
+      );
     }
   }
 

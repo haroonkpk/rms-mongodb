@@ -266,14 +266,12 @@ exports.Prisma.SalaryAdvanceScalarFieldEnum = {
 exports.Prisma.InventoryCategoryScalarFieldEnum = {
   id: 'id',
   name: 'name',
-  description: 'description',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
 exports.Prisma.InventoryItemScalarFieldEnum = {
   id: 'id',
-  sku: 'sku',
   name: 'name',
   categoryId: 'categoryId',
   unit: 'unit',

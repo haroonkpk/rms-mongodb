@@ -15,7 +15,6 @@ interface InventoryItemModalProps {
   categories: InventoryCategoryData[];
   onSave: (data: {
     name: string;
-    sku?: string;
     categoryId: string;
     unit: InventoryUnit;
     quantity?: number;
@@ -34,7 +33,6 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
   isPending,
 }) => {
   const [name, setName] = useState("");
-  const [sku, setSku] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [unit, setUnit] = useState<InventoryUnit>(InventoryUnit.KG);
   const [quantity, setQuantity] = useState("0");
@@ -45,7 +43,6 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
   useEffect(() => {
     if (editingItem) {
       setName(editingItem.name);
-      setSku(editingItem.sku || "");
       setCategoryId(editingItem.categoryId);
       setUnit(editingItem.unit);
       setQuantity(editingItem.quantity.toString());
@@ -53,7 +50,6 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
       setUnitCost(editingItem.unitCost.toString());
     } else {
       setName("");
-      setSku("");
       setCategoryId(categories.length > 0 ? categories[0].id : "");
       setUnit(InventoryUnit.KG);
       setQuantity("0");
@@ -77,7 +73,6 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
     setError("");
     await onSave({
       name: name.trim(),
-      sku: sku.trim() || undefined,
       categoryId,
       unit,
       quantity: parseFloat(quantity) || 0,
@@ -120,17 +115,6 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-            />
-          </div>
-
-          <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              SKU Code (Optional)
-            </label>
-            <Input
-              placeholder="e.g. RAW-CHS-001"
-              value={sku}
-              onChange={(e) => setSku(e.target.value)}
             />
           </div>
         </div>
@@ -213,7 +197,11 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
             Cancel
           </Button>
           <Button variant="primary" type="submit" disabled={isPending}>
-            {isPending ? "Saving..." : editingItem ? "Update Item" : "Save Item"}
+            {isPending
+              ? "Saving..."
+              : editingItem
+                ? "Update Item"
+                : "Save Item"}
           </Button>
         </div>
       </form>

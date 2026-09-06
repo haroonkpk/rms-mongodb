@@ -33,7 +33,10 @@ import {
   StockIntakeBatchData,
   InventoryCategoryData,
 } from "@/actions/inventory";
-import { StockMovementType, InventoryUnit } from "../../../../../prisma/generated";
+import {
+  StockMovementType,
+  InventoryUnit,
+} from "../../../../../prisma/generated";
 
 import { InventoryStatsCards } from "@/components/admin/inventory/inventory-stats-cards";
 import { InventoryItemsTable } from "@/components/admin/inventory/inventory-items-table";
@@ -84,19 +87,20 @@ export default function AdminInventoryPage() {
 
   // Modal Visibility States
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<InventoryItemData | null>(null);
+  const [editingItem, setEditingItem] = useState<InventoryItemData | null>(
+    null,
+  );
 
   const [isAdjustModalOpen, setIsAdjustModalOpen] = useState(false);
   const [adjustingItem, setAdjustingItem] = useState<InventoryItemData | null>(
-    null
+    null,
   );
 
   const [isIntakeModalOpen, setIsIntakeModalOpen] = useState(false);
 
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<InventoryCategoryData | null>(
-    null
-  );
+  const [editingCategory, setEditingCategory] =
+    useState<InventoryCategoryData | null>(null);
 
   // ---------------------------------------------------------
   // FETCH HELPERS
@@ -141,17 +145,11 @@ export default function AdminInventoryPage() {
     page: number,
     query: string,
     catId: string,
-    statusFilter: "ALL" | "GOOD" | "LOW_STOCK" | "OUT_OF_STOCK"
+    statusFilter: "ALL" | "GOOD" | "LOW_STOCK" | "OUT_OF_STOCK",
   ) => {
     setIsItemsLoading(true);
     try {
-      const res = await getInventoryItems(
-        page,
-        10,
-        query,
-        catId,
-        statusFilter
-      );
+      const res = await getInventoryItems(page, 10, query, catId, statusFilter);
       if (res.success && res.items) {
         setItems(res.items);
         setItemsTotalPages(res.totalPages || 1);
@@ -185,35 +183,33 @@ export default function AdminInventoryPage() {
 
   // Initial Load
   useEffect(() => {
-    let isMounted = true;
-    Promise.all([
-      fetchStats(),
-      fetchCategories(),
-      fetchIntakeBatches(),
-      fetchAllItemsUnpaginated(),
-    ]);
-
-    return () => {
-      isMounted = false;
-    };
+    void Promise.resolve().then(() =>
+      Promise.all([
+        fetchStats(),
+        fetchCategories(),
+        fetchIntakeBatches(),
+        fetchAllItemsUnpaginated(),
+      ]),
+    );
   }, []);
 
   // Items Filter Effect
   useEffect(() => {
-    let isMounted = true;
-    fetchItems(itemsPage, searchQuery, selectedCategoryFilter, stockStatusFilter);
-    return () => {
-      isMounted = false;
-    };
+    void Promise.resolve().then(() =>
+      fetchItems(
+        itemsPage,
+        searchQuery,
+        selectedCategoryFilter,
+        stockStatusFilter,
+      ),
+    );
   }, [itemsPage, searchQuery, selectedCategoryFilter, stockStatusFilter]);
 
   // Movements Filter Effect
   useEffect(() => {
-    let isMounted = true;
-    fetchMovements(movementsPage, movementTypeFilter);
-    return () => {
-      isMounted = false;
-    };
+    void Promise.resolve().then(() =>
+      fetchMovements(movementsPage, movementTypeFilter),
+    );
   }, [movementsPage, movementTypeFilter]);
 
   const refreshAllData = async () => {
@@ -222,7 +218,12 @@ export default function AdminInventoryPage() {
       fetchCategories(),
       fetchIntakeBatches(),
       fetchAllItemsUnpaginated(),
-      fetchItems(itemsPage, searchQuery, selectedCategoryFilter, stockStatusFilter),
+      fetchItems(
+        itemsPage,
+        searchQuery,
+        selectedCategoryFilter,
+        stockStatusFilter,
+      ),
       fetchMovements(movementsPage, movementTypeFilter),
     ]);
   };
@@ -259,7 +260,7 @@ export default function AdminInventoryPage() {
       batches.length,
       movementsTotalEntries,
       categories.length,
-    ]
+    ],
   );
 
   // ---------------------------------------------------------
@@ -279,7 +280,6 @@ export default function AdminInventoryPage() {
 
   const handleSaveItem = async (data: {
     name: string;
-    sku?: string;
     categoryId: string;
     unit: InventoryUnit;
     quantity?: number;
@@ -298,7 +298,7 @@ export default function AdminInventoryPage() {
         toast.success(
           editingItem
             ? "Inventory item updated successfully!"
-            : "Inventory item created successfully!"
+            : "Inventory item created successfully!",
         );
         setIsItemModalOpen(false);
         await refreshAllData();
@@ -349,7 +349,9 @@ export default function AdminInventoryPage() {
   // Stock Intake Batch Handler
   const handleOpenAddIntake = () => {
     if (allAllItems.length === 0) {
-      toast.error("Please add raw material inventory items before recording stock intake.");
+      toast.error(
+        "Please add raw material inventory items before recording stock intake.",
+      );
       return;
     }
     setIsIntakeModalOpen(true);
@@ -366,7 +368,9 @@ export default function AdminInventoryPage() {
     startTransition(async () => {
       const res = await createStockIntakeBatch(data);
       if (res.success) {
-        toast.success(`Stock Intake Batch ${res.batchNumber} recorded & stock updated!`);
+        toast.success(
+          `Stock Intake Batch ${res.batchNumber} recorded & stock updated!`,
+        );
         setIsIntakeModalOpen(false);
         await refreshAllData();
       } else {
@@ -386,7 +390,7 @@ export default function AdminInventoryPage() {
     setIsCategoryModalOpen(true);
   };
 
-  const handleSaveCategory = async (data: { name: string; description?: string }) => {
+  const handleSaveCategory = async (data: { name: string }) => {
     startTransition(async () => {
       let res;
       if (editingCategory) {
@@ -396,7 +400,9 @@ export default function AdminInventoryPage() {
       }
 
       if (res.success) {
-        toast.success(editingCategory ? "Category updated!" : "Category created!");
+        toast.success(
+          editingCategory ? "Category updated!" : "Category created!",
+        );
         setIsCategoryModalOpen(false);
         await fetchCategories();
       } else {
@@ -420,7 +426,7 @@ export default function AdminInventoryPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--color-page-bg)] p-[clamp(1rem,3vw,2.5rem)] pb-24">
+    <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
       <Toaster position="top-right" />
 
       {/* Header */}
@@ -441,20 +447,21 @@ export default function AdminInventoryPage() {
               >
                 Add Category
               </Button>
-              <Button
+                <Button
                 variant="outline"
-                icon={<PackagePlus size={18} />}
-                onClick={handleOpenAddIntake}
-              >
-                Record Stock Intake
-              </Button>
-              <Button
-                variant="primary"
                 icon={<Plus size={18} />}
                 onClick={handleOpenAddItem}
               >
                 Add Raw Material Item
               </Button>
+              <Button
+                variant="primary"
+                icon={<PackagePlus size={18} />}
+                onClick={handleOpenAddIntake}
+              >
+                Record Stock Intake
+              </Button>
+            
             </div>
           </div>
         </div>
@@ -473,8 +480,8 @@ export default function AdminInventoryPage() {
                   className={cn(
                     "flex items-center gap-2 px-[clamp(0.875rem,1.5vw,1.25rem)] py-[clamp(0.5rem,1vw,0.75rem)] text-xs sm:text-sm font-semibold transition-all shrink-0 cursor-pointer outline-none border shadow-2xs",
                     isActive
-                      ? "bg-[var(--color-primary)] text-white border-[var(--color-primary)] shadow-sm scale-[1.02]"
-                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:border-slate-300"
+                      ? "bg-(--color-primary) text-white border-(--color-primary) shadow-sm scale-[1.02]"
+                      : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50 hover:border-slate-300",
                   )}
                 >
                   <Icon className="w-4 h-4" />
@@ -484,7 +491,7 @@ export default function AdminInventoryPage() {
                       "px-1.5 py-0.5 rounded-full text-[0.65rem] font-bold ml-1",
                       isActive
                         ? "bg-white/25 text-white"
-                        : "bg-slate-100 text-slate-600"
+                        : "bg-slate-100 text-slate-600",
                     )}
                   >
                     {tab.count}
@@ -527,10 +534,7 @@ export default function AdminInventoryPage() {
         )}
 
         {activeTab === "intakes" && (
-          <StockIntakeTable
-            batches={batches}
-            isLoading={isBatchesLoading}
-          />
+          <StockIntakeTable batches={batches} isLoading={isBatchesLoading} />
         )}
 
         {activeTab === "movements" && (
@@ -586,6 +590,7 @@ export default function AdminInventoryPage() {
       />
 
       <InventoryCategoryModal
+        key={`${isCategoryModalOpen ? "open" : "closed"}-${editingCategory?.id ?? "new"}`}
         isOpen={isCategoryModalOpen}
         onClose={() => setIsCategoryModalOpen(false)}
         editingCategory={editingCategory}

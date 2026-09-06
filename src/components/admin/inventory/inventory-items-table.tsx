@@ -16,7 +16,7 @@ interface InventoryItemsTableProps {
   onCategoryFilterChange: (catId: string) => void;
   stockStatusFilter: "ALL" | "GOOD" | "LOW_STOCK" | "OUT_OF_STOCK";
   onStockStatusFilterChange: (
-    status: "ALL" | "GOOD" | "LOW_STOCK" | "OUT_OF_STOCK"
+    status: "ALL" | "GOOD" | "LOW_STOCK" | "OUT_OF_STOCK",
   ) => void;
   currentPage: number;
   totalPages: number;
@@ -47,7 +47,7 @@ export const InventoryItemsTable: React.FC<InventoryItemsTableProps> = ({
   onAdjustStock,
 }) => {
   const tableHeaders: TableHeader[] = [
-    { key: "nameFormatted", label: "Item Name & SKU" },
+    { key: "nameFormatted", label: "Item Name" },
     { key: "categoryName", label: "Category" },
     { key: "quantityFormatted", label: "Current Stock" },
     { key: "minStockLevelFormatted", label: "Min Reorder Level" },
@@ -71,18 +71,15 @@ export const InventoryItemsTable: React.FC<InventoryItemsTableProps> = ({
     return {
       id: item.id,
       nameFormatted: (
-        <div className="flex flex-col">
-          <span className="font-semibold text-slate-900">{item.name}</span>
-          <span className="text-[11px] text-slate-500 font-mono">
-            {item.sku ? `SKU: ${item.sku}` : "No SKU"}
-          </span>
-        </div>
+        <span className="font-semibold text-slate-900">{item.name}</span>
       ),
       categoryName: item.categoryName,
       quantityFormatted: (
         <span className="font-bold text-slate-900">
           {item.quantity.toLocaleString()}{" "}
-          <span className="text-xs font-normal text-slate-500">{item.unit}</span>
+          <span className="text-xs font-normal text-slate-500">
+            {item.unit}
+          </span>
         </span>
       ),
       minStockLevelFormatted: (
@@ -115,19 +112,22 @@ export const InventoryItemsTable: React.FC<InventoryItemsTableProps> = ({
     {
       icon: <SlidersHorizontal size={15} />,
       text: "Quick Adjust Stock",
-      className: "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300",
+      className:
+        "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300",
       onClick: (row: (typeof formattedData)[0]) => onAdjustStock(row.rawItem),
     },
     {
       icon: <Edit2 size={15} />,
       text: "Edit Item",
-      className: "bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200",
+      className:
+        "bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200",
       onClick: (row: (typeof formattedData)[0]) => onEdit(row.rawItem),
     },
     {
       icon: <Trash2 size={15} />,
       text: "Delete Item",
-      className: "bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200",
+      className:
+        "bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200",
       onClick: (row: (typeof formattedData)[0]) =>
         onDelete(row.id, row.rawItem.name),
     },
@@ -162,7 +162,7 @@ export const InventoryItemsTable: React.FC<InventoryItemsTableProps> = ({
           value={stockStatusFilter}
           onChange={(e) =>
             onStockStatusFilterChange(
-              e.target.value as "ALL" | "GOOD" | "LOW_STOCK" | "OUT_OF_STOCK"
+              e.target.value as "ALL" | "GOOD" | "LOW_STOCK" | "OUT_OF_STOCK",
             )
           }
           options={[

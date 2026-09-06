@@ -326,19 +326,17 @@ enum InventoryUnit {
 }
 
 model InventoryCategory {
-  id          String          @id @default(uuid()) @db.Uuid
-  name        String          @unique
-  description String?
-  items       InventoryItem[]
-  createdAt   DateTime        @default(now()) @map("created_at")
-  updatedAt   DateTime        @updatedAt @map("updated_at")
+  id        String          @id @default(uuid()) @db.Uuid
+  name      String          @unique
+  items     InventoryItem[]
+  createdAt DateTime        @default(now()) @map("created_at")
+  updatedAt DateTime        @updatedAt @map("updated_at")
 
   @@map("inventory_categories")
 }
 
 model InventoryItem {
   id            String            @id @default(uuid()) @db.Uuid
-  sku           String?           @unique
   name          String
   categoryId    String            @map("category_id") @db.Uuid
   category      InventoryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)

@@ -14745,7 +14745,6 @@ export namespace Prisma {
   export type InventoryCategoryMinAggregateOutputType = {
     id: string | null
     name: string | null
-    description: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -14753,7 +14752,6 @@ export namespace Prisma {
   export type InventoryCategoryMaxAggregateOutputType = {
     id: string | null
     name: string | null
-    description: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -14761,7 +14759,6 @@ export namespace Prisma {
   export type InventoryCategoryCountAggregateOutputType = {
     id: number
     name: number
-    description: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -14771,7 +14768,6 @@ export namespace Prisma {
   export type InventoryCategoryMinAggregateInputType = {
     id?: true
     name?: true
-    description?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -14779,7 +14775,6 @@ export namespace Prisma {
   export type InventoryCategoryMaxAggregateInputType = {
     id?: true
     name?: true
-    description?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -14787,7 +14782,6 @@ export namespace Prisma {
   export type InventoryCategoryCountAggregateInputType = {
     id?: true
     name?: true
-    description?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -14868,7 +14862,6 @@ export namespace Prisma {
   export type InventoryCategoryGroupByOutputType = {
     id: string
     name: string
-    description: string | null
     createdAt: Date
     updatedAt: Date
     _count: InventoryCategoryCountAggregateOutputType | null
@@ -14893,7 +14886,6 @@ export namespace Prisma {
   export type InventoryCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     items?: boolean | InventoryCategory$itemsArgs<ExtArgs>
@@ -14903,7 +14895,6 @@ export namespace Prisma {
   export type InventoryCategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["inventoryCategory"]>
@@ -14911,7 +14902,6 @@ export namespace Prisma {
   export type InventoryCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
     name?: boolean
-    description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["inventoryCategory"]>
@@ -14919,12 +14909,11 @@ export namespace Prisma {
   export type InventoryCategorySelectScalar = {
     id?: boolean
     name?: boolean
-    description?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type InventoryCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryCategory"]>
+  export type InventoryCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryCategory"]>
   export type InventoryCategoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     items?: boolean | InventoryCategory$itemsArgs<ExtArgs>
     _count?: boolean | InventoryCategoryCountOutputTypeDefaultArgs<ExtArgs>
@@ -14940,7 +14929,6 @@ export namespace Prisma {
     scalars: $Extensions.GetPayloadResult<{
       id: string
       name: string
-      description: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["inventoryCategory"]>
@@ -15369,7 +15357,6 @@ export namespace Prisma {
   interface InventoryCategoryFieldRefs {
     readonly id: FieldRef<"InventoryCategory", 'String'>
     readonly name: FieldRef<"InventoryCategory", 'String'>
-    readonly description: FieldRef<"InventoryCategory", 'String'>
     readonly createdAt: FieldRef<"InventoryCategory", 'DateTime'>
     readonly updatedAt: FieldRef<"InventoryCategory", 'DateTime'>
   }
@@ -15833,7 +15820,6 @@ export namespace Prisma {
 
   export type InventoryItemMinAggregateOutputType = {
     id: string | null
-    sku: string | null
     name: string | null
     categoryId: string | null
     unit: $Enums.InventoryUnit | null
@@ -15846,7 +15832,6 @@ export namespace Prisma {
 
   export type InventoryItemMaxAggregateOutputType = {
     id: string | null
-    sku: string | null
     name: string | null
     categoryId: string | null
     unit: $Enums.InventoryUnit | null
@@ -15859,7 +15844,6 @@ export namespace Prisma {
 
   export type InventoryItemCountAggregateOutputType = {
     id: number
-    sku: number
     name: number
     categoryId: number
     unit: number
@@ -15886,7 +15870,6 @@ export namespace Prisma {
 
   export type InventoryItemMinAggregateInputType = {
     id?: true
-    sku?: true
     name?: true
     categoryId?: true
     unit?: true
@@ -15899,7 +15882,6 @@ export namespace Prisma {
 
   export type InventoryItemMaxAggregateInputType = {
     id?: true
-    sku?: true
     name?: true
     categoryId?: true
     unit?: true
@@ -15912,7 +15894,6 @@ export namespace Prisma {
 
   export type InventoryItemCountAggregateInputType = {
     id?: true
-    sku?: true
     name?: true
     categoryId?: true
     unit?: true
@@ -16012,7 +15993,6 @@ export namespace Prisma {
 
   export type InventoryItemGroupByOutputType = {
     id: string
-    sku: string | null
     name: string
     categoryId: string
     unit: $Enums.InventoryUnit
@@ -16044,7 +16024,6 @@ export namespace Prisma {
 
   export type InventoryItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    sku?: boolean
     name?: boolean
     categoryId?: boolean
     unit?: boolean
@@ -16061,7 +16040,6 @@ export namespace Prisma {
 
   export type InventoryItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    sku?: boolean
     name?: boolean
     categoryId?: boolean
     unit?: boolean
@@ -16075,7 +16053,6 @@ export namespace Prisma {
 
   export type InventoryItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    sku?: boolean
     name?: boolean
     categoryId?: boolean
     unit?: boolean
@@ -16089,7 +16066,6 @@ export namespace Prisma {
 
   export type InventoryItemSelectScalar = {
     id?: boolean
-    sku?: boolean
     name?: boolean
     categoryId?: boolean
     unit?: boolean
@@ -16100,7 +16076,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type InventoryItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sku" | "name" | "categoryId" | "unit" | "quantity" | "minStockLevel" | "unitCost" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryItem"]>
+  export type InventoryItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "categoryId" | "unit" | "quantity" | "minStockLevel" | "unitCost" | "createdAt" | "updatedAt", ExtArgs["result"]["inventoryItem"]>
   export type InventoryItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     category?: boolean | InventoryCategoryDefaultArgs<ExtArgs>
     movements?: boolean | InventoryItem$movementsArgs<ExtArgs>
@@ -16123,7 +16099,6 @@ export namespace Prisma {
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      sku: string | null
       name: string
       categoryId: string
       unit: $Enums.InventoryUnit
@@ -16559,7 +16534,6 @@ export namespace Prisma {
    */
   interface InventoryItemFieldRefs {
     readonly id: FieldRef<"InventoryItem", 'String'>
-    readonly sku: FieldRef<"InventoryItem", 'String'>
     readonly name: FieldRef<"InventoryItem", 'String'>
     readonly categoryId: FieldRef<"InventoryItem", 'String'>
     readonly unit: FieldRef<"InventoryItem", 'InventoryUnit'>
@@ -20630,7 +20604,6 @@ export namespace Prisma {
   export const InventoryCategoryScalarFieldEnum: {
     id: 'id',
     name: 'name',
-    description: 'description',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -20640,7 +20613,6 @@ export namespace Prisma {
 
   export const InventoryItemScalarFieldEnum: {
     id: 'id',
-    sku: 'sku',
     name: 'name',
     categoryId: 'categoryId',
     unit: 'unit',
@@ -21928,7 +21900,6 @@ export namespace Prisma {
     NOT?: InventoryCategoryWhereInput | InventoryCategoryWhereInput[]
     id?: UuidFilter<"InventoryCategory"> | string
     name?: StringFilter<"InventoryCategory"> | string
-    description?: StringNullableFilter<"InventoryCategory"> | string | null
     createdAt?: DateTimeFilter<"InventoryCategory"> | Date | string
     updatedAt?: DateTimeFilter<"InventoryCategory"> | Date | string
     items?: InventoryItemListRelationFilter
@@ -21937,7 +21908,6 @@ export namespace Prisma {
   export type InventoryCategoryOrderByWithRelationInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     items?: InventoryItemOrderByRelationAggregateInput
@@ -21949,7 +21919,6 @@ export namespace Prisma {
     AND?: InventoryCategoryWhereInput | InventoryCategoryWhereInput[]
     OR?: InventoryCategoryWhereInput[]
     NOT?: InventoryCategoryWhereInput | InventoryCategoryWhereInput[]
-    description?: StringNullableFilter<"InventoryCategory"> | string | null
     createdAt?: DateTimeFilter<"InventoryCategory"> | Date | string
     updatedAt?: DateTimeFilter<"InventoryCategory"> | Date | string
     items?: InventoryItemListRelationFilter
@@ -21958,7 +21927,6 @@ export namespace Prisma {
   export type InventoryCategoryOrderByWithAggregationInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: InventoryCategoryCountOrderByAggregateInput
@@ -21972,7 +21940,6 @@ export namespace Prisma {
     NOT?: InventoryCategoryScalarWhereWithAggregatesInput | InventoryCategoryScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"InventoryCategory"> | string
     name?: StringWithAggregatesFilter<"InventoryCategory"> | string
-    description?: StringNullableWithAggregatesFilter<"InventoryCategory"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"InventoryCategory"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"InventoryCategory"> | Date | string
   }
@@ -21982,7 +21949,6 @@ export namespace Prisma {
     OR?: InventoryItemWhereInput[]
     NOT?: InventoryItemWhereInput | InventoryItemWhereInput[]
     id?: UuidFilter<"InventoryItem"> | string
-    sku?: StringNullableFilter<"InventoryItem"> | string | null
     name?: StringFilter<"InventoryItem"> | string
     categoryId?: UuidFilter<"InventoryItem"> | string
     unit?: EnumInventoryUnitFilter<"InventoryItem"> | $Enums.InventoryUnit
@@ -21998,7 +21964,6 @@ export namespace Prisma {
 
   export type InventoryItemOrderByWithRelationInput = {
     id?: SortOrder
-    sku?: SortOrderInput | SortOrder
     name?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
@@ -22014,7 +21979,6 @@ export namespace Prisma {
 
   export type InventoryItemWhereUniqueInput = Prisma.AtLeast<{
     id?: string
-    sku?: string
     AND?: InventoryItemWhereInput | InventoryItemWhereInput[]
     OR?: InventoryItemWhereInput[]
     NOT?: InventoryItemWhereInput | InventoryItemWhereInput[]
@@ -22029,11 +21993,10 @@ export namespace Prisma {
     category?: XOR<InventoryCategoryScalarRelationFilter, InventoryCategoryWhereInput>
     movements?: StockMovementListRelationFilter
     stockIntakeItems?: StockIntakeBatchItemListRelationFilter
-  }, "id" | "sku">
+  }, "id">
 
   export type InventoryItemOrderByWithAggregationInput = {
     id?: SortOrder
-    sku?: SortOrderInput | SortOrder
     name?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
@@ -22054,7 +22017,6 @@ export namespace Prisma {
     OR?: InventoryItemScalarWhereWithAggregatesInput[]
     NOT?: InventoryItemScalarWhereWithAggregatesInput | InventoryItemScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"InventoryItem"> | string
-    sku?: StringNullableWithAggregatesFilter<"InventoryItem"> | string | null
     name?: StringWithAggregatesFilter<"InventoryItem"> | string
     categoryId?: UuidWithAggregatesFilter<"InventoryItem"> | string
     unit?: EnumInventoryUnitWithAggregatesFilter<"InventoryItem"> | $Enums.InventoryUnit
@@ -23305,7 +23267,6 @@ export namespace Prisma {
   export type InventoryCategoryCreateInput = {
     id?: string
     name: string
-    description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: InventoryItemCreateNestedManyWithoutCategoryInput
@@ -23314,7 +23275,6 @@ export namespace Prisma {
   export type InventoryCategoryUncheckedCreateInput = {
     id?: string
     name: string
-    description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: InventoryItemUncheckedCreateNestedManyWithoutCategoryInput
@@ -23323,7 +23283,6 @@ export namespace Prisma {
   export type InventoryCategoryUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: InventoryItemUpdateManyWithoutCategoryNestedInput
@@ -23332,7 +23291,6 @@ export namespace Prisma {
   export type InventoryCategoryUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: InventoryItemUncheckedUpdateManyWithoutCategoryNestedInput
@@ -23341,7 +23299,6 @@ export namespace Prisma {
   export type InventoryCategoryCreateManyInput = {
     id?: string
     name: string
-    description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -23349,7 +23306,6 @@ export namespace Prisma {
   export type InventoryCategoryUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23357,14 +23313,12 @@ export namespace Prisma {
   export type InventoryCategoryUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type InventoryItemCreateInput = {
     id?: string
-    sku?: string | null
     name: string
     unit?: $Enums.InventoryUnit
     quantity?: Decimal | DecimalJsLike | number | string
@@ -23379,7 +23333,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedCreateInput = {
     id?: string
-    sku?: string | null
     name: string
     categoryId: string
     unit?: $Enums.InventoryUnit
@@ -23394,7 +23347,6 @@ export namespace Prisma {
 
   export type InventoryItemUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -23409,7 +23361,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
@@ -23424,7 +23375,6 @@ export namespace Prisma {
 
   export type InventoryItemCreateManyInput = {
     id?: string
-    sku?: string | null
     name: string
     categoryId: string
     unit?: $Enums.InventoryUnit
@@ -23437,7 +23387,6 @@ export namespace Prisma {
 
   export type InventoryItemUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -23449,7 +23398,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
@@ -24865,7 +24813,6 @@ export namespace Prisma {
   export type InventoryCategoryCountOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24873,7 +24820,6 @@ export namespace Prisma {
   export type InventoryCategoryMaxOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24881,7 +24827,6 @@ export namespace Prisma {
   export type InventoryCategoryMinOrderByAggregateInput = {
     id?: SortOrder
     name?: SortOrder
-    description?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24920,7 +24865,6 @@ export namespace Prisma {
 
   export type InventoryItemCountOrderByAggregateInput = {
     id?: SortOrder
-    sku?: SortOrder
     name?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
@@ -24939,7 +24883,6 @@ export namespace Prisma {
 
   export type InventoryItemMaxOrderByAggregateInput = {
     id?: SortOrder
-    sku?: SortOrder
     name?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
@@ -24952,7 +24895,6 @@ export namespace Prisma {
 
   export type InventoryItemMinOrderByAggregateInput = {
     id?: SortOrder
-    sku?: SortOrder
     name?: SortOrder
     categoryId?: SortOrder
     unit?: SortOrder
@@ -27918,7 +27860,6 @@ export namespace Prisma {
 
   export type InventoryItemCreateWithoutCategoryInput = {
     id?: string
-    sku?: string | null
     name: string
     unit?: $Enums.InventoryUnit
     quantity?: Decimal | DecimalJsLike | number | string
@@ -27932,7 +27873,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedCreateWithoutCategoryInput = {
     id?: string
-    sku?: string | null
     name: string
     unit?: $Enums.InventoryUnit
     quantity?: Decimal | DecimalJsLike | number | string
@@ -27975,7 +27915,6 @@ export namespace Prisma {
     OR?: InventoryItemScalarWhereInput[]
     NOT?: InventoryItemScalarWhereInput | InventoryItemScalarWhereInput[]
     id?: UuidFilter<"InventoryItem"> | string
-    sku?: StringNullableFilter<"InventoryItem"> | string | null
     name?: StringFilter<"InventoryItem"> | string
     categoryId?: UuidFilter<"InventoryItem"> | string
     unit?: EnumInventoryUnitFilter<"InventoryItem"> | $Enums.InventoryUnit
@@ -27989,7 +27928,6 @@ export namespace Prisma {
   export type InventoryCategoryCreateWithoutItemsInput = {
     id?: string
     name: string
-    description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27997,7 +27935,6 @@ export namespace Prisma {
   export type InventoryCategoryUncheckedCreateWithoutItemsInput = {
     id?: string
     name: string
-    description?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28079,7 +28016,6 @@ export namespace Prisma {
   export type InventoryCategoryUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28087,7 +28023,6 @@ export namespace Prisma {
   export type InventoryCategoryUncheckedUpdateWithoutItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
     name?: StringFieldUpdateOperationsInput | string
-    description?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28153,7 +28088,6 @@ export namespace Prisma {
 
   export type InventoryItemCreateWithoutMovementsInput = {
     id?: string
-    sku?: string | null
     name: string
     unit?: $Enums.InventoryUnit
     quantity?: Decimal | DecimalJsLike | number | string
@@ -28167,7 +28101,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedCreateWithoutMovementsInput = {
     id?: string
-    sku?: string | null
     name: string
     categoryId: string
     unit?: $Enums.InventoryUnit
@@ -28197,7 +28130,6 @@ export namespace Prisma {
 
   export type InventoryItemUpdateWithoutMovementsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -28211,7 +28143,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedUpdateWithoutMovementsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
@@ -28290,7 +28221,6 @@ export namespace Prisma {
 
   export type InventoryItemCreateWithoutStockIntakeItemsInput = {
     id?: string
-    sku?: string | null
     name: string
     unit?: $Enums.InventoryUnit
     quantity?: Decimal | DecimalJsLike | number | string
@@ -28304,7 +28234,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedCreateWithoutStockIntakeItemsInput = {
     id?: string
-    sku?: string | null
     name: string
     categoryId: string
     unit?: $Enums.InventoryUnit
@@ -28363,7 +28292,6 @@ export namespace Prisma {
 
   export type InventoryItemUpdateWithoutStockIntakeItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -28377,7 +28305,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedUpdateWithoutStockIntakeItemsInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     categoryId?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
@@ -28930,7 +28857,6 @@ export namespace Prisma {
 
   export type InventoryItemCreateManyCategoryInput = {
     id?: string
-    sku?: string | null
     name: string
     unit?: $Enums.InventoryUnit
     quantity?: Decimal | DecimalJsLike | number | string
@@ -28942,7 +28868,6 @@ export namespace Prisma {
 
   export type InventoryItemUpdateWithoutCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -28956,7 +28881,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedUpdateWithoutCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
@@ -28970,7 +28894,6 @@ export namespace Prisma {
 
   export type InventoryItemUncheckedUpdateManyWithoutCategoryInput = {
     id?: StringFieldUpdateOperationsInput | string
-    sku?: NullableStringFieldUpdateOperationsInput | string | null
     name?: StringFieldUpdateOperationsInput | string
     unit?: EnumInventoryUnitFieldUpdateOperationsInput | $Enums.InventoryUnit
     quantity?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
