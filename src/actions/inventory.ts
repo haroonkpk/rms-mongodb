@@ -680,7 +680,7 @@ export async function createStockIntakeBatch(data: {
 }
 
 // ----------------------------------------------------
-// AUTOMATED COOKING INVENTORY DEDUCTION (PREPARING Status)
+// AUTOMATED COOKING INVENTORY DEDUCTION (READY Status)
 // ----------------------------------------------------
 
 export async function deductInventoryForOrder(

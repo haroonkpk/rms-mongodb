@@ -183,12 +183,21 @@ export async function updateKitchenOrderStatus(
       return { success: false, error: "Invalid status value provided" };
     }
 
+    const currentOrder = await prisma.order.findUnique({
+      where: { id: orderId },
+      select: { status: true },
+    });
+
+    if (!currentOrder) {
+      return { success: false, error: "Order not found" };
+    }
+
     await prisma.order.update({
       where: { id: orderId },
       data: { status },
     });
 
-    if (status === "PREPARING") {
+    if (currentOrder.status === "PREPARING" && status === "READY") {
       const { deductInventoryForOrder } = await import("@/actions/inventory");
       await deductInventoryForOrder(orderId);
     }

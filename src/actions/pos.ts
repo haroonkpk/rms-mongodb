@@ -12,7 +12,6 @@ import {
   POSOrderResult,
 } from "@/types/pos";
 
-
 export const getCachedPOSCatalog = unstable_cache(
   async () => {
     // Categories
@@ -67,7 +66,7 @@ export const getCachedPOSCatalog = unstable_cache(
   {
     tags: ["pos-data"],
     revalidate: 3600, // 1 hour server cache window
-  }
+  },
 );
 
 export async function getPOSInitData(): Promise<POSInitDataResponse> {
@@ -119,7 +118,7 @@ export async function createPOSOrder(
         0,
         0,
         0,
-        0
+        0,
       );
 
       const lastOrderToday = await prisma.order.findFirst({
@@ -176,11 +175,6 @@ export async function createPOSOrder(
       });
       savedOrderId = dbOrder.id;
       savedKotNumber = dbOrder.kotNumber;
-
-      if (dbOrder.status === "PREPARING" && savedOrderId) {
-        const { deductInventoryForOrder } = await import("@/actions/inventory");
-        await deductInventoryForOrder(savedOrderId);
-      }
     } catch (err) {
       console.warn("DB order insertion warning:", err);
     }
