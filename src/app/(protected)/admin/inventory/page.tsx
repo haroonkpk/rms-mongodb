@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  getInventoryStats,
   getInventoryItems,
   createInventoryItem,
   updateInventoryItem,
@@ -27,7 +26,6 @@ import {
   createInventoryCategory,
   updateInventoryCategory,
   deleteInventoryCategory,
-  InventoryStats,
   InventoryItemData,
   StockMovementData,
   StockIntakeBatchData,
@@ -38,7 +36,6 @@ import {
   InventoryUnit,
 } from "../../../../../prisma/generated";
 
-import { InventoryStatsCards } from "@/components/admin/inventory/inventory-stats-cards";
 import { InventoryItemsTable } from "@/components/admin/inventory/inventory-items-table";
 import { InventoryItemModal } from "@/components/admin/inventory/inventory-item-modal";
 import { StockAdjustmentModal } from "@/components/admin/inventory/stock-adjustment-modal";
@@ -55,7 +52,6 @@ export default function AdminInventoryPage() {
   const [isPending, startTransition] = useTransition();
 
   // Data States
-  const [stats, setStats] = useState<InventoryStats | null>(null);
   const [items, setItems] = useState<InventoryItemData[]>([]);
   const [allAllItems, setAllItems] = useState<InventoryItemData[]>([]);
   const [batches, setBatches] = useState<StockIntakeBatchData[]>([]);
@@ -63,7 +59,6 @@ export default function AdminInventoryPage() {
   const [categories, setCategories] = useState<InventoryCategoryData[]>([]);
 
   // Loading States
-  const [isStatsLoading, setIsStatsLoading] = useState(true);
   const [isItemsLoading, setIsItemsLoading] = useState(true);
   const [isBatchesLoading, setIsBatchesLoading] = useState(true);
   const [isMovementsLoading, setIsMovementsLoading] = useState(true);
@@ -105,17 +100,7 @@ export default function AdminInventoryPage() {
   // ---------------------------------------------------------
   // FETCH HELPERS
   // ---------------------------------------------------------
-  const fetchStats = async () => {
-    setIsStatsLoading(true);
-    try {
-      const res = await getInventoryStats();
-      if (res.success && res.stats) {
-        setStats(res.stats);
-      }
-    } finally {
-      setIsStatsLoading(false);
-    }
-  };
+
 
   const fetchCategories = async () => {
     setIsCategoriesLoading(true);
@@ -185,7 +170,6 @@ export default function AdminInventoryPage() {
   useEffect(() => {
     void Promise.resolve().then(() =>
       Promise.all([
-        fetchStats(),
         fetchCategories(),
         fetchIntakeBatches(),
         fetchAllItemsUnpaginated(),
@@ -214,7 +198,6 @@ export default function AdminInventoryPage() {
 
   const refreshAllData = async () => {
     await Promise.all([
-      fetchStats(),
       fetchCategories(),
       fetchIntakeBatches(),
       fetchAllItemsUnpaginated(),
@@ -433,13 +416,11 @@ export default function AdminInventoryPage() {
       <Header title="Inventory & Stock Management" />
 
       <main className="flex flex-col gap-[clamp(1.25rem,2.5vw,2rem)] mt-4">
-        {/* Overview Stats Cards */}
-        <InventoryStatsCards stats={stats} isLoading={isStatsLoading} />
 
         {/* Action Controls Banner */}
         <div className="w-full flex items-center justify-end">
           <div className="w-fit flex flex-col md:flex-row md:items-center justify-center gap-4 bg-white p-[clamp(1rem,2vw,1.5rem)] shadow-2xs border border-slate-200">
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex flex-wrap gap-2 sm:gap-3">
               <Button
                 variant="outline"
                 icon={<FolderPlus size={18} />}
@@ -466,7 +447,7 @@ export default function AdminInventoryPage() {
           </div>
         </div>
 
-        {/* Navigation Tabs (POS Style Pills) */}
+        {/* Navigation Tabs  */}
         <div className="w-full">
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 px-0.5">
             {navTabs.map((tab) => {

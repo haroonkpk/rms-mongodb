@@ -421,7 +421,7 @@ export default function AdminMenuPage() {
         {/* Banner Controls */}
         <div className="w-full flex items-center justify-end">
           <div className="w-fit flex flex-col md:flex-row md:items-center justify-center gap-4 bg-white p-[clamp(1rem,2vw,1.5rem)] shadow-2xs border border-slate-200">
-            <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            <div className="flex flex-wrap  gap-2 sm:gap-3">
               <Button
                 variant="outline"
                 icon={<FolderPlus size={18} />}

@@ -99,7 +99,7 @@ export const InventoryItemsTable: React.FC<InventoryItemsTableProps> = ({
       ),
       statusBadge: (
         <span
-          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${badgeColor}`}
+          className={`inline-flex items-center px-2.5 py-0.5  text-xs font-semibold border ${badgeColor}`}
         >
           {statusText}
         </span>
@@ -120,7 +120,7 @@ export const InventoryItemsTable: React.FC<InventoryItemsTableProps> = ({
       icon: <Edit2 size={15} />,
       text: "Edit Item",
       className:
-        "bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200",
+        "bg-(--color-page-bg) text-(--color-primary)  border border-(--color-secondary-bg) ",
       onClick: (row: (typeof formattedData)[0]) => onEdit(row.rawItem),
     },
     {

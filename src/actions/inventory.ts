@@ -70,56 +70,6 @@ export interface InventoryStats {
   outOfStockCount: number;
 }
 
-// ----------------------------------------------------
-// STATS ACTION
-// ----------------------------------------------------
-
-export async function getInventoryStats(): Promise<{
-  success: boolean;
-  stats?: InventoryStats;
-  error?: string;
-}> {
-  try {
-    const items = await prisma.inventoryItem.findMany({
-      select: {
-        quantity: true,
-        minStockLevel: true,
-        unitCost: true,
-      },
-    });
-
-    let totalValuation = 0;
-    let lowStockCount = 0;
-    let outOfStockCount = 0;
-
-    items.forEach((item) => {
-      const qty = Number(item.quantity);
-      const minLevel = Number(item.minStockLevel);
-      const cost = Number(item.unitCost);
-
-      totalValuation += qty * cost;
-
-      if (qty <= 0) {
-        outOfStockCount++;
-      } else if (qty <= minLevel) {
-        lowStockCount++;
-      }
-    });
-
-    return {
-      success: true,
-      stats: {
-        totalItems: items.length,
-        totalValuation,
-        lowStockCount,
-        outOfStockCount,
-      },
-    };
-  } catch (error) {
-    console.error("Error fetching inventory stats:", error);
-    return { success: false, error: "Failed to calculate inventory stats" };
-  }
-}
 
 // ----------------------------------------------------
 // INVENTORY CATEGORIES ACTIONS
