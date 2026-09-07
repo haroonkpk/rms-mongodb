@@ -83,7 +83,7 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
         {/* Info Banner */}
-        <div className="p-3 bg-slate-50 border border-slate-200 rounded-sm flex items-center justify-between">
+        <div className="p-3 bg-slate-50 border border-slate-200  flex items-center justify-between">
           <div>
             <p className="text-xs text-slate-500 font-medium">Current Stock</p>
             <p className="text-lg font-bold text-slate-900">
@@ -92,14 +92,14 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
           </div>
           <div className="text-right">
             <p className="text-xs text-slate-500 font-medium">Projected Stock</p>
-            <p className="text-lg font-bold text-blue-600">
+            <p className="text-lg font-bold text-(--color-primary)">
               {projectQty.toLocaleString()} {item.unit}
             </p>
           </div>
         </div>
 
         {error && (
-          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-sm">
+          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 ">
             {error}
           </div>
         )}
@@ -121,10 +121,10 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
                 }
               }}
               options={[
-                { label: "Wastage / Spoiled (-)", value: StockMovementType.WASTAGE_OUT },
-                { label: "Expired / Damaged (-)", value: StockMovementType.SPOILAGE_OUT },
-                { label: "Stock Intake / Received (+)", value: StockMovementType.PURCHASE_IN },
-                { label: "Manual Audit Correction", value: StockMovementType.MANUAL_ADJUSTMENT },
+                { label: "Wastage (-)", value: StockMovementType.WASTAGE_OUT },
+                { label: "Damaged (-)", value: StockMovementType.SPOILAGE_OUT },
+                { label: "Stock Intake(+)", value: StockMovementType.PURCHASE_IN },
+                { label: "Manual Correction", value: StockMovementType.MANUAL_ADJUSTMENT },
               ]}
             />
           </div>
@@ -160,10 +160,10 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
 
         <div>
           <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Reason / Audit Notes
+            Notes
           </label>
           <Textarea
-            placeholder="e.g. Spilled milk during rush hour, physical stock count discrepancy..."
+            placeholder="Reason for adjustment"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             rows={2}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -24,40 +24,31 @@ interface InventoryItemModalProps {
   isPending: boolean;
 }
 
-export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
+const InventoryItemModalContent: React.FC<InventoryItemModalProps> = ({
   isOpen,
   onClose,
   editingItem,
   categories,
   onSave,
-  isPending,
+  isPending
 }) => {
-  const [name, setName] = useState("");
-  const [categoryId, setCategoryId] = useState("");
-  const [unit, setUnit] = useState<InventoryUnit>(InventoryUnit.KG);
-  const [quantity, setQuantity] = useState("0");
-  const [minStockLevel, setMinStockLevel] = useState("10");
-  const [unitCost, setUnitCost] = useState("0");
+  const [name, setName] = useState(editingItem?.name ?? "");
+  const [categoryId, setCategoryId] = useState(
+    editingItem?.categoryId ?? (categories[0]?.id ?? ""),
+  );
+  const [unit, setUnit] = useState<InventoryUnit>(
+    editingItem?.unit ?? InventoryUnit.KG,
+  );
+  const [quantity, setQuantity] = useState(
+    editingItem?.quantity.toString() ?? "0",
+  );
+  const [minStockLevel, setMinStockLevel] = useState(
+    editingItem?.minStockLevel.toString() ?? "10",
+  );
+  const [unitCost, setUnitCost] = useState(
+    editingItem?.unitCost.toString() ?? "0",
+  );
   const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (editingItem) {
-      setName(editingItem.name);
-      setCategoryId(editingItem.categoryId);
-      setUnit(editingItem.unit);
-      setQuantity(editingItem.quantity.toString());
-      setMinStockLevel(editingItem.minStockLevel.toString());
-      setUnitCost(editingItem.unitCost.toString());
-    } else {
-      setName("");
-      setCategoryId(categories.length > 0 ? categories[0].id : "");
-      setUnit(InventoryUnit.KG);
-      setQuantity("0");
-      setMinStockLevel("10");
-      setUnitCost("0");
-    }
-    setError("");
-  }, [editingItem, categories, isOpen]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,19 +96,17 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="text-xs font-semibold text-slate-700 block mb-1">
               Item Name *
             </label>
             <Input
-              placeholder="e.g. Mozzarella Cheese, Flour"
+              placeholder="e.g. Tomatoes"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
             />
           </div>
-        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -128,7 +117,6 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
               options={[
-                { label: "-- Select Category --", value: "" },
                 ...categories.map((c) => ({ label: c.name, value: c.id })),
               ]}
               required
@@ -147,7 +135,7 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {!editingItem && (
             <div>
               <label className="text-xs font-semibold text-slate-700 block mb-1">
@@ -208,3 +196,10 @@ export const InventoryItemModal: React.FC<InventoryItemModalProps> = ({
     </Modal>
   );
 };
+
+export const InventoryItemModal: React.FC<InventoryItemModalProps> = (props) => (
+  <InventoryItemModalContent
+    key={`${props.isOpen}-${props.editingItem?.id ?? "new"}`}
+    {...props}
+  />
+);

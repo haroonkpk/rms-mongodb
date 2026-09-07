@@ -164,10 +164,10 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
 
         <div className="w-full">
           <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Intake Batch Reference / Notes (Optional)
+            Intake Notes (Optional)
           </label>
           <Input
-            placeholder="e.g. Purchased from Local Market, Bulk Wholesale Intake"
+            placeholder="e.g. Purchased from Local Market"
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
@@ -177,8 +177,7 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
         <div>
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-              <PackagePlus size={16} className="text-[var(--color-primary)]" />
-              Arrived Items & Quantities
+            Items & Quantities
             </h4>
             <Button
               type="button"
@@ -202,14 +201,13 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
               return (
                 <div
                   key={index}
-                  className="flex flex-col sm:flex-row items-center gap-2 p-2.5 bg-slate-50 border border-slate-200 rounded-md"
+                  className="flex flex-col sm:flex-row items-center gap-2 p-2.5 bg-slate-50 border border-slate-200 "
                 >
                   <div className="flex-1 w-full">
                     <Select
                       value={row.inventoryItemId}
                       onChange={(e) => handleItemSelect(index, e.target.value)}
                       options={[
-                        { label: "-- Select Raw Material --", value: "" },
                         ...inventoryItems.map((i) => ({
                           label: `${i.name} (${i.unit})`,
                           value: i.id,
@@ -255,7 +253,7 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
                     <button
                       type="button"
                       onClick={() => handleRemoveItemRow(index)}
-                      className="p-1.5 text-rose-600 hover:bg-rose-100 rounded"
+                      className="p-1.5 text-rose-600 hover:bg-rose-100 "
                     >
                       <Trash2 size={16} />
                     </button>
@@ -265,9 +263,9 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
             })}
           </div>
         </div>
-
+,
         {/* Bill Summary */}
-        <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-md flex items-center justify-between">
+        <div className="p-3 bg-emerald-50 border border-emerald-200  flex items-center justify-between">
           <span className="text-xs font-bold text-emerald-900 uppercase tracking-wider">
             Total Intake Amount:
           </span>

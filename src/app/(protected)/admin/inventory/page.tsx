@@ -4,6 +4,7 @@ import React, { useEffect, useState, useTransition, useMemo } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
 import {
   Boxes,
   Plus,
@@ -96,11 +97,14 @@ export default function AdminInventoryPage() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] =
     useState<InventoryCategoryData | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   // ---------------------------------------------------------
   // FETCH HELPERS
   // ---------------------------------------------------------
-
 
   const fetchCategories = async () => {
     setIsCategoriesLoading(true);
@@ -292,12 +296,18 @@ export default function AdminInventoryPage() {
   };
 
   const handleDeleteItem = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete item "${name}"?`)) return;
+    setItemToDelete({ id, name });
+  };
 
+  const handleConfirmDeleteItem = async () => {
+    if (!itemToDelete) return;
+
+    const { id, name } = itemToDelete;
     startTransition(async () => {
       const res = await deleteInventoryItem(id);
       if (res.success) {
         toast.success(`"${name}" deleted.`);
+        setItemToDelete(null);
         await refreshAllData();
       } else {
         toast.error(res.error || "Failed to delete item.");
@@ -416,7 +426,6 @@ export default function AdminInventoryPage() {
       <Header title="Inventory & Stock Management" />
 
       <main className="flex flex-col gap-[clamp(1.25rem,2.5vw,2rem)] mt-4">
-
         {/* Action Controls Banner */}
         <div className="w-full flex items-center justify-end">
           <div className="w-fit flex flex-col md:flex-row md:items-center justify-center gap-4 bg-white p-[clamp(1rem,2vw,1.5rem)] shadow-2xs border border-slate-200">
@@ -428,7 +437,7 @@ export default function AdminInventoryPage() {
               >
                 Add Category
               </Button>
-                <Button
+              <Button
                 variant="outline"
                 icon={<Plus size={18} />}
                 onClick={handleOpenAddItem}
@@ -442,7 +451,6 @@ export default function AdminInventoryPage() {
               >
                 Record Stock Intake
               </Button>
-            
             </div>
           </div>
         </div>
@@ -577,6 +585,16 @@ export default function AdminInventoryPage() {
         editingCategory={editingCategory}
         onSave={handleSaveCategory}
         isPending={isPending}
+      />
+
+      <ConfirmModal
+        isOpen={itemToDelete !== null}
+        onClose={() => setItemToDelete(null)}
+        onConfirm={handleConfirmDeleteItem}
+        title="Delete Inventory Item"
+        message={`Are you sure you want to delete "${itemToDelete?.name ?? ""}"?`}
+        confirmText="Confirm"
+        isLoading={isPending}
       />
     </div>
   );
