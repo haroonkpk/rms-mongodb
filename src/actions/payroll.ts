@@ -6,7 +6,9 @@ import {
   AttendanceStatus,
   LeaveStatus,
   PayrollStatus,
+  ExpensePaymentMethod,
 } from "../../prisma/generated";
+import { recordSalaryExpense } from "@/actions/expenses";
 
 export async function getAttendancesByDate(date: string) {
   try {
@@ -242,17 +244,10 @@ export async function markAttendance(
       create: createData,
     });
 
-    // // Auto-recalculate payroll if payroll record exists for this month/year
-    // const m = targetDate.getUTCMonth() + 1;
-    // const y = targetDate.getUTCFullYear();
-    // const existingPayroll = await prisma.payroll.findUnique({
-    //   where: { userId_month_year: { userId, month: m, year: y } },
-    // });
-    // if (existingPayroll) {
-    //   await recalculateEmployeePayroll(userId, m, y);
-    // }
-
-    // revalidatePath("/admin/payroll");
+    const attendanceMonth = targetDate.getUTCMonth() + 1;
+    const attendanceYear = targetDate.getUTCFullYear();
+    await recalculateEmployeePayroll(userId, attendanceMonth, attendanceYear);
+    revalidatePath("/admin/payroll");
     return {
       success: true,
       attendance: JSON.parse(JSON.stringify(attendance)),
@@ -369,7 +364,10 @@ export async function markPayrollPaid(
   amountToPay?: number,
 ) {
   try {
-    const p = await prisma.payroll.findUnique({ where: { id: payrollId } });
+    const p = await prisma.payroll.findUnique({
+      where: { id: payrollId },
+      include: { user: { select: { fullName: true, email: true } } },
+    });
     if (!p) return { success: false, error: "Not found" };
 
     const currentRemainingNet = Number(p.netSalary);
@@ -430,6 +428,19 @@ export async function markPayrollPaid(
       },
     });
 
+    await recordSalaryExpense({
+      title: `Salary - ${p.user.fullName || p.user.email}`,
+      amount: payAmount,
+      expenseDate: new Date(),
+      paymentMethod:
+        paymentMethod === "BANK_TRANSFER"
+          ? ExpensePaymentMethod.BANK_TRANSFER
+          : paymentMethod === "CHEQUE"
+            ? ExpensePaymentMethod.OTHER
+            : ExpensePaymentMethod.CASH,
+      notes: `Payroll payment for ${p.month}/${p.year}`,
+    });
+
     revalidatePath("/admin/payroll");
     return { success: true };
   } catch (error) {
@@ -467,6 +478,12 @@ export async function createSalaryAdvance(
     await prisma.salaryAdvance.create({
       data: { userId, amount, reason, status: "APPROVED" },
     });
+    const now = new Date();
+    await recalculateEmployeePayroll(
+      userId,
+      now.getMonth() + 1,
+      now.getFullYear(),
+    );
     revalidatePath("/admin/payroll");
     return { success: true };
   } catch (error) {

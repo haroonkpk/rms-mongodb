@@ -7,11 +7,9 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { ActivityFilters } from "@/components/shared/filters/activity-filters";
-import { PrintPdfButton } from "@/components/shared/print-pdf-button";
 import { PrintableSalarySlip } from "./printable-salary-slip";
-import { Edit, CheckCircle, Play, Printer } from "lucide-react";
+import { Edit, CheckCircle, Printer } from "lucide-react";
 import {
-  generateMonthlyPayroll,
   getPayrolls,
   updatePayrollRecord,
   markPayrollPaid,
@@ -36,7 +34,6 @@ export function PayrollTab() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [isLoading, setIsLoading] = useState(false);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [editPayrollModal, setEditPayrollModal] = useState<any | null>(null);
   const [isSavingPayroll, setIsSavingPayroll] = useState(false);
   const [payPayrollModal, setPayPayrollModal] = useState<any | null>(null);
@@ -45,12 +42,6 @@ export function PayrollTab() {
   const [amountToPay, setAmountToPay] = useState<string>("");
   const [payError, setPayError] = useState<string>("");
   const [isProcessingPay, setIsProcessingPay] = useState(false);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   useEffect(() => {
     fetchPayrolls();
   }, [month, year]);
@@ -64,16 +55,6 @@ export function PayrollTab() {
       }
     } finally {
       setIsLoading(false);
-    }
-  };
-
-  const handleGeneratePayroll = async () => {
-    setIsGenerating(true);
-    try {
-      await generateMonthlyPayroll(month, year);
-      await fetchPayrolls();
-    } finally {
-      setIsGenerating(false);
     }
   };
 
@@ -154,27 +135,6 @@ export function PayrollTab() {
         </div>
       </ActivityFilters>
 
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-4 rounded-xl border border-slate-200 shadow-2xs">
-        <Button
-          variant="primary"
-          icon={<Play size={16} />}
-          isLoading={isGenerating}
-          onClick={handleGeneratePayroll}
-        >
-          {isGenerating ? "Generating..." : "Generate Monthly Payroll"}
-        </Button>
-
-        <PrintPdfButton
-          title={`Payroll - ${new Date(year, month - 1).toLocaleString(
-            "default",
-            { month: "long" },
-          )} ${year}`}
-          headers={payrollHeaders}
-          data={filteredPayrolls}
-          fileName={`Payroll_${year}_${month}`}
-        />
-      </div>
-
       <DataTable
         heading={`Payroll for ${new Date(year, month - 1).toLocaleString(
           "default",
@@ -199,7 +159,8 @@ export function PayrollTab() {
             icon: <Printer size={16} className="text-white" />,
             text: "Print Payslip",
             className: "bg-blue-600 hover:bg-blue-700 ",
-            show: (row: any) => row.status === "PAID" || Number(row.paidAmount || 0) > 0,
+            show: (row: any) =>
+              row.status === "PAID" || Number(row.paidAmount || 0) > 0,
             onClick: (row) => handlePrintSlip(row),
           },
           {

@@ -31,6 +31,31 @@ export interface ExpenseTypeData {
 
 const expensePath = "/admin/expenses";
 
+export async function recordSalaryExpense(data: {
+  title: string;
+  amount: number;
+  expenseDate?: Date;
+  paymentMethod: ExpensePaymentMethod;
+  notes?: string;
+}) {
+  const salaryType = await prisma.expenseType.upsert({
+    where: { name: "Salaries" },
+    update: {},
+    create: { name: "Salaries" },
+  });
+
+  return prisma.expense.create({
+    data: {
+      title: data.title,
+      expenseType: salaryType.name,
+      amount: data.amount,
+      expenseDate: data.expenseDate ?? new Date(),
+      paymentMethod: data.paymentMethod,
+      notes: data.notes ?? null,
+    },
+  });
+}
+
 function formatExpense(expense: {
   id: string;
   title: string;
@@ -331,16 +356,5 @@ export async function updateExpense(
   } catch (error) {
     console.error("Error updating expense:", error);
     return { success: false, error: "Failed to update expense." };
-  }
-}
-
-export async function deleteExpense(id: string) {
-  try {
-    await prisma.expense.delete({ where: { id } });
-    revalidatePath(expensePath);
-    return { success: true };
-  } catch (error) {
-    console.error("Error deleting expense:", error);
-    return { success: false, error: "Failed to delete expense." };
   }
 }

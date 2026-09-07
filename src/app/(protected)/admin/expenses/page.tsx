@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
 import {
   createExpense,
-  deleteExpense,
   ExpenseData,
   getExpenses,
   getExpenseTypes,
@@ -48,9 +47,6 @@ export default function AdminExpensesPage() {
   const [formExpense, setFormExpense] = useState<
     ExpenseData | null | undefined
   >(undefined);
-  const [expenseToDelete, setExpenseToDelete] = useState<ExpenseData | null>(
-    null,
-  );
 
   const fetchExpenses = async () => {
     setIsLoading(true);
@@ -126,20 +122,6 @@ export default function AdminExpensesPage() {
       }
       toast.success(formExpense ? "Expense updated" : "Expense recorded");
       setFormExpense(undefined);
-      await fetchExpenses();
-    });
-  };
-
-  const confirmDelete = () => {
-    if (!expenseToDelete) return;
-    startTransition(async () => {
-      const result = await deleteExpense(expenseToDelete.id);
-      if (!result.success) {
-        toast.error(result.error ?? "Unable to delete expense");
-        return;
-      }
-      toast.success("Expense deleted");
-      setExpenseToDelete(null);
       await fetchExpenses();
     });
   };
@@ -244,7 +226,6 @@ export default function AdminExpensesPage() {
             }}
             onPageChange={setPage}
             onEdit={setFormExpense}
-            onDelete={setExpenseToDelete}
           />
         )}
       </main>
@@ -274,15 +255,6 @@ export default function AdminExpensesPage() {
         title="Delete expense type"
         message={`Delete "${typeToDelete?.name ?? ""}"? Expense types linked to expenses cannot be deleted.`}
         confirmText="Delete expense type"
-        isLoading={isPending}
-      />
-      <ConfirmModal
-        isOpen={Boolean(expenseToDelete)}
-        onClose={() => setExpenseToDelete(null)}
-        onConfirm={confirmDelete}
-        title="Delete expense"
-        message={`Delete "${expenseToDelete?.title ?? ""}" from the expense ledger? This action cannot be undone.`}
-        confirmText="Delete expense"
         isLoading={isPending}
       />
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Edit2, Search, Trash2 } from "lucide-react";
+import { Edit2, Search } from "lucide-react";
 import { ExpenseData } from "@/actions/expenses";
 import { DataTable, TableHeader } from "@/components/ui/data-table";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,6 @@ interface ExpensesTableProps {
   onMonthChange: (value: string) => void;
   onPageChange: (page: number) => void;
   onEdit: (expense: ExpenseData) => void;
-  onDelete: (expense: ExpenseData) => void;
 }
 
 function formatCurrency(value: number) {
@@ -44,12 +43,11 @@ export function ExpensesTable({
   onMonthChange,
   onPageChange,
   onEdit,
-  onDelete,
 }: ExpensesTableProps) {
   const tableHeaders: TableHeader[] = [
+      { key: "dateFormatted", label: "Expense Date" },
     { key: "titleFormatted", label: "Expense" },
     { key: "expenseTypeName", label: "Expense Type" },
-    { key: "dateFormatted", label: "Expense Date" },
     { key: "paymentFormatted", label: "Payment Method" },
     { key: "amountFormatted", label: "Amount" },
   ];
@@ -134,13 +132,6 @@ export function ExpensesTable({
           className:
             "bg-(--color-page-bg) text-(--color-primary) border border-(--color-secondary-bg)",
           onClick: (row) => onEdit(row.rawExpense),
-        },
-        {
-          icon: <Trash2 size={15} />,
-          text: "Delete Expense",
-          className:
-            "bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200",
-          onClick: (row) => onDelete(row.rawExpense),
         },
       ]}
     />

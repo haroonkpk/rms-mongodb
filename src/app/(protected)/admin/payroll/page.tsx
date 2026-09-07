@@ -23,11 +23,11 @@ export default function AdminPayrollPage() {
       icon: <Calendar size={18} />,
     },
 
-    {
-      id: "LEAVES" as const,
-      label: "Leave Management",
-      icon: <BookOpen size={18} />,
-    },
+    // {
+    //   id: "LEAVES" as const,
+    //   label: "Leave Management",
+    //   icon: <BookOpen size={18} />,
+    // },
     {
       id: "ADVANCE" as const,
       label: "Salary Advances",
@@ -72,7 +72,7 @@ export default function AdminPayrollPage() {
       <main className="flex flex-col gap-6">
         {activeTab === "ATTENDANCE" && <AttendanceTab />}
         {activeTab === "PAYROLL" && <PayrollTab />}
-        {activeTab === "LEAVES" && <LeavesTab />}
+        {/* {activeTab === "LEAVES" && <LeavesTab />} */}
         {activeTab === "ADVANCE" && <SalaryAdvancesTab />}
       </main>
     </div>
