@@ -22,9 +22,9 @@ export const InventoryCategoriesTable: React.FC<
 
   const formattedData = categories.map((cat) => ({
     id: cat.id,
-    nameFormatted: <span className="font-bold text-slate-900">{cat.name}</span>,
+    nameFormatted: cat.name,
     itemCountFormatted: (
-      <span className="px-2.5 py-1 rounded bg-slate-100 font-bold text-slate-800 text-xs">
+      <span className="px-2.5 py-1 roundedtext-xs font-semibold border  bg-emerald-100 text-emerald-800 border-emerald-200 text-xs">
         {cat.itemCount} Items
       </span>
     ),
@@ -36,7 +36,7 @@ export const InventoryCategoriesTable: React.FC<
       icon: <Edit2 size={15} />,
       text: "Edit Category",
       className:
-        "bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200",
+        "bg-(--color-page-bg) text-(--color-primary) border border-(--color-secondary-bg) ",
       onClick: (row: (typeof formattedData)[0]) => onEdit(row.rawCategory),
     },
     {

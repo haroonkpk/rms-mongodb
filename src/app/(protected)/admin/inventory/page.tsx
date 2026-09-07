@@ -101,6 +101,10 @@ export default function AdminInventoryPage() {
     id: string;
     name: string;
   } | null>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   // ---------------------------------------------------------
   // FETCH HELPERS
@@ -405,17 +409,20 @@ export default function AdminInventoryPage() {
   };
 
   const handleDeleteCategory = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete category "${name}"?`)) return;
-
     startTransition(async () => {
       const res = await deleteInventoryCategory(id);
       if (res.success) {
         toast.success(`Category "${name}" deleted.`);
+        setCategoryToDelete(null);
         await fetchCategories();
       } else {
         toast.error(res.error || "Failed to delete category.");
       }
     });
+  };
+
+  const handleRequestDeleteCategory = (id: string, name: string) => {
+    setCategoryToDelete({ id, name });
   };
 
   return (
@@ -547,7 +554,7 @@ export default function AdminInventoryPage() {
             categories={categories}
             isLoading={isCategoriesLoading}
             onEdit={handleOpenEditCategory}
-            onDelete={handleDeleteCategory}
+            onDelete={handleRequestDeleteCategory}
           />
         )}
       </main>
@@ -593,6 +600,23 @@ export default function AdminInventoryPage() {
         onConfirm={handleConfirmDeleteItem}
         title="Delete Inventory Item"
         message={`Are you sure you want to delete "${itemToDelete?.name ?? ""}"?`}
+        confirmText="Confirm"
+        isLoading={isPending}
+      />
+
+      <ConfirmModal
+        isOpen={categoryToDelete !== null}
+        onClose={() => setCategoryToDelete(null)}
+        onConfirm={() => {
+          if (categoryToDelete) {
+            void handleDeleteCategory(
+              categoryToDelete.id,
+              categoryToDelete.name,
+            );
+          }
+        }}
+        title="Delete Inventory Category"
+        message={`Are you sure you want to delete "${categoryToDelete?.name ?? ""}"?`}
         confirmText="Confirm"
         isLoading={isPending}
       />

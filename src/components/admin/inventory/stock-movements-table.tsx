@@ -76,7 +76,7 @@ export const StockMovementsTable: React.FC<StockMovementsTableProps> = ({
       ),
       typeBadge: (
         <span
-          className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${typeBadgeColor}`}
+          className={`inline-flex items-center px-2 py-0.5 text-xs font-semibold border ${typeBadgeColor}`}
         >
           {typeLabel}
         </span>
@@ -113,7 +113,7 @@ export const StockMovementsTable: React.FC<StockMovementsTableProps> = ({
           { label: "All Movement Types", value: "ALL" },
           { label: "Purchase IN", value: "PURCHASE_IN" },
           { label: "Wastage OUT", value: "WASTAGE_OUT" },
-          { label: "Spoilage / Expired", value: "SPOILAGE_OUT" },
+          { label: "Expired", value: "SPOILAGE_OUT" },
           { label: "Audit Correction", value: "MANUAL_ADJUSTMENT" },
           { label: "Sale Deduction", value: "SALE_DEDUCTION" },
         ]}

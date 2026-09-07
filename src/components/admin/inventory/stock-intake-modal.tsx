@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -38,23 +38,26 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
 }) => {
   const [notes, setNotes] = useState("");
   const [items, setItems] = useState<StockIntakeItemRow[]>([
-    { inventoryItemId: "", quantity: "1", unitCost: "0" },
+    {
+      inventoryItemId: inventoryItems[0]?.id ?? "",
+      quantity: "1",
+      unitCost: inventoryItems[0]?.unitCost.toString() ?? "0",
+    },
   ]);
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (isOpen) {
-      setNotes("");
-      setItems([
-        {
-          inventoryItemId: inventoryItems.length > 0 ? inventoryItems[0].id : "",
-          quantity: "1",
-          unitCost: inventoryItems.length > 0 ? inventoryItems[0].unitCost.toString() : "0",
-        },
-      ]);
-      setError("");
-    }
-  }, [isOpen, inventoryItems]);
+  const handleClose = () => {
+    setNotes("");
+    setItems([
+      {
+        inventoryItemId: inventoryItems[0]?.id ?? "",
+        quantity: "1",
+        unitCost: inventoryItems[0]?.unitCost.toString() ?? "0",
+      },
+    ]);
+    setError("");
+    onClose();
+  };
 
   const handleAddItemRow = () => {
     const defaultItem = inventoryItems.length > 0 ? inventoryItems[0] : null;
@@ -82,18 +85,20 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
               inventoryItemId: itemId,
               unitCost: selectedItem ? selectedItem.unitCost.toString() : "0",
             }
-          : row
-      )
+          : row,
+      ),
     );
   };
 
   const handleRowChange = (
     index: number,
     field: "quantity" | "unitCost",
-    value: string
+    value: string,
   ) => {
     setItems((prev) =>
-      prev.map((row, idx) => (idx === index ? { ...row, [field]: value } : row))
+      prev.map((row, idx) =>
+        idx === index ? { ...row, [field]: value } : row,
+      ),
     );
   };
 
@@ -151,17 +156,16 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
   return (
     <Modal
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={handleClose}
       title="Record Stock Intake / Restock Entry"
       className="max-w-2xl"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
         {error && (
-          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-sm">
+          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 ">
             {error}
           </div>
         )}
-
         <div className="w-full">
           <label className="text-xs font-semibold text-slate-700 block mb-1">
             Intake Notes (Optional)
@@ -172,12 +176,11 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
             onChange={(e) => setNotes(e.target.value)}
           />
         </div>
-
         {/* Restock Items List */}
         <div>
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
-            Items & Quantities
+              Items & Quantities
             </h4>
             <Button
               type="button"
@@ -189,10 +192,10 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
             </Button>
           </div>
 
-          <div className="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1">
+          <div className="flex flex-col-reverse gap-2 max-h-60 overflow-y-auto pr-1">
             {items.map((row, index) => {
               const selectedItem = inventoryItems.find(
-                (i) => i.id === row.inventoryItemId
+                (i) => i.id === row.inventoryItemId,
               );
               const rowTotal =
                 (parseFloat(row.quantity) || 0) *
@@ -263,8 +266,7 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
             })}
           </div>
         </div>
-,
-        {/* Bill Summary */}
+        ,{/* Bill Summary */}
         <div className="p-3 bg-emerald-50 border border-emerald-200  flex items-center justify-between">
           <span className="text-xs font-bold text-emerald-900 uppercase tracking-wider">
             Total Intake Amount:
@@ -273,9 +275,8 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
             PKR {calculateTotal().toLocaleString()}
           </span>
         </div>
-
         <div className="flex justify-end gap-3 mt-2 pt-3 border-t border-slate-200">
-          <Button variant="outline" onClick={onClose} type="button">
+          <Button variant="outline" onClick={handleClose} type="button">
             Cancel
           </Button>
           <Button variant="primary" type="submit" disabled={isPending}>
