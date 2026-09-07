@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -30,22 +30,12 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
   isPending,
 }) => {
   const [adjustmentType, setAdjustmentType] = useState<StockMovementType>(
-    StockMovementType.MANUAL_ADJUSTMENT
+    StockMovementType.MANUAL_ADJUSTMENT,
   );
   const [quantity, setQuantity] = useState("1");
   const [direction, setDirection] = useState<"ADD" | "SUBTRACT">("SUBTRACT");
   const [reason, setReason] = useState("");
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (isOpen) {
-      setAdjustmentType(StockMovementType.WASTAGE_OUT);
-      setDirection("SUBTRACT");
-      setQuantity("1");
-      setReason("");
-      setError("");
-    }
-  }, [isOpen]);
+  const [quantityError, setQuantityError] = useState("");
 
   if (!item) return null;
 
@@ -54,13 +44,13 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
     const qtyVal = parseFloat(quantity);
 
     if (isNaN(qtyVal) || qtyVal <= 0) {
-      setError("Please enter a valid positive quantity.");
+      setQuantityError("Enter a valid positive quantity.");
       return;
     }
 
     const finalChange = direction === "ADD" ? qtyVal : -qtyVal;
 
-    setError("");
+    setQuantityError("");
     await onSave({
       inventoryItemId: item.id,
       quantityChange: finalChange,
@@ -91,25 +81,19 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-slate-500 font-medium">Projected Stock</p>
+            <p className="text-xs text-slate-500 font-medium">
+              Projected Stock
+            </p>
             <p className="text-lg font-bold text-(--color-primary)">
               {projectQty.toLocaleString()} {item.unit}
             </p>
           </div>
         </div>
 
-        {error && (
-          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 ">
-            {error}
-          </div>
-        )}
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Adjustment Type *
-            </label>
             <Select
+              label="Adjustment Type"
               value={adjustmentType}
               onChange={(e) => {
                 const val = e.target.value as StockMovementType;
@@ -123,19 +107,25 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
               options={[
                 { label: "Wastage (-)", value: StockMovementType.WASTAGE_OUT },
                 { label: "Damaged (-)", value: StockMovementType.SPOILAGE_OUT },
-                { label: "Stock Intake(+)", value: StockMovementType.PURCHASE_IN },
-                { label: "Manual Correction", value: StockMovementType.MANUAL_ADJUSTMENT },
+                {
+                  label: "Stock Intake(+)",
+                  value: StockMovementType.PURCHASE_IN,
+                },
+                {
+                  label: "Manual Correction",
+                  value: StockMovementType.MANUAL_ADJUSTMENT,
+                },
               ]}
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Action *
-            </label>
             <Select
+              label="Action"
               value={direction}
-              onChange={(e) => setDirection(e.target.value as "ADD" | "SUBTRACT")}
+              onChange={(e) =>
+                setDirection(e.target.value as "ADD" | "SUBTRACT")
+              }
               options={[
                 { label: "Deduct from stock (-)", value: "SUBTRACT" },
                 { label: "Add to stock (+)", value: "ADD" },
@@ -145,15 +135,14 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
         </div>
 
         <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Quantity ({item.unit}) *
-          </label>
           <Input
+            label={`Quantity (${item.unit})`}
             type="number"
             step="any"
             min="0.01"
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
+            error={quantityError}
             required
           />
         </div>

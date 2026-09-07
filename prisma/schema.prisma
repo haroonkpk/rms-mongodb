@@ -247,6 +247,39 @@ enum SalaryPaymentMethod {
   CHEQUE
 }
 
+enum ExpensePaymentMethod {
+  CASH
+  BANK_TRANSFER
+  CARD
+  OTHER
+}
+
+model ExpenseType {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("expense_types")
+}
+
+model Expense {
+  id            String               @id @default(uuid()) @db.Uuid
+  title         String
+  expenseType   String   @map("expense_type")
+  amount        Decimal              @db.Decimal(10, 2)
+  expenseDate   DateTime             @map("expense_date") @db.Date
+  paymentMethod ExpensePaymentMethod @default(CASH) @map("payment_method")
+  notes         String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("expenses")
+  @@index([expenseDate])
+  @@index([expenseType])
+}
+
 model Payroll {
   id             String   @id @default(uuid()) @db.Uuid
   userId         String   @map("user_id") @db.Uuid

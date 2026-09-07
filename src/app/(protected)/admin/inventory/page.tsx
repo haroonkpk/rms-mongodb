@@ -570,6 +570,7 @@ export default function AdminInventoryPage() {
       />
 
       <StockAdjustmentModal
+        key={`${isAdjustModalOpen}-${adjustingItem?.id ?? "none"}`}
         isOpen={isAdjustModalOpen}
         onClose={() => setIsAdjustModalOpen(false)}
         item={adjustingItem}

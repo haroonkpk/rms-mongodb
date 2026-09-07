@@ -30,11 +30,11 @@ const InventoryItemModalContent: React.FC<InventoryItemModalProps> = ({
   editingItem,
   categories,
   onSave,
-  isPending
+  isPending,
 }) => {
   const [name, setName] = useState(editingItem?.name ?? "");
   const [categoryId, setCategoryId] = useState(
-    editingItem?.categoryId ?? (categories[0]?.id ?? ""),
+    editingItem?.categoryId ?? categories[0]?.id ?? "",
   );
   const [unit, setUnit] = useState<InventoryUnit>(
     editingItem?.unit ?? InventoryUnit.KG,
@@ -48,20 +48,28 @@ const InventoryItemModalContent: React.FC<InventoryItemModalProps> = ({
   const [unitCost, setUnitCost] = useState(
     editingItem?.unitCost.toString() ?? "0",
   );
-  const [error, setError] = useState("");
+  const [errors, setErrors] = useState<{
+    name?: string;
+    categoryId?: string;
+    minStockLevel?: string;
+    unitCost?: string;
+  }>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError("Item name is required.");
-      return;
+    const nextErrors: typeof errors = {};
+    if (!name.trim()) nextErrors.name = "Item name is required.";
+    if (!categoryId) nextErrors.categoryId = "Category is required.";
+    const minLevel = Number(minStockLevel);
+    const cost = Number(unitCost);
+    if (!minStockLevel.trim() || Number.isNaN(minLevel) || minLevel < 0) {
+      nextErrors.minStockLevel = "Enter a valid minimum stock level.";
     }
-    if (!categoryId) {
-      setError("Please select a category.");
-      return;
+    if (!unitCost.trim() || Number.isNaN(cost) || cost < 0) {
+      nextErrors.unitCost = "Enter a valid unit cost.";
     }
-
-    setError("");
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
     await onSave({
       name: name.trim(),
       categoryId,
@@ -90,44 +98,32 @@ const InventoryItemModalContent: React.FC<InventoryItemModalProps> = ({
       className="max-w-xl"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
-        {error && (
-          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-sm">
-            {error}
-          </div>
-        )}
-
-          <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Item Name *
-            </label>
-            <Input
-              placeholder="e.g. Tomatoes"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-            />
-          </div>
+        <Input
+          label="Item Name"
+          placeholder="e.g. Tomatoes"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          error={errors.name}
+          required
+        />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Category *
-            </label>
             <Select
+              label="Category"
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
               options={[
                 ...categories.map((c) => ({ label: c.name, value: c.id })),
               ]}
+              error={errors.categoryId}
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Measurement Unit *
-            </label>
             <Select
+              label="Measurement Unit"
               value={unit}
               onChange={(e) => setUnit(e.target.value as InventoryUnit)}
               options={unitOptions}
@@ -138,10 +134,8 @@ const InventoryItemModalContent: React.FC<InventoryItemModalProps> = ({
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {!editingItem && (
             <div>
-              <label className="text-xs font-semibold text-slate-700 block mb-1">
-                Initial Stock Qty
-              </label>
               <Input
+                label="Initial Stock Qty"
                 type="number"
                 step="any"
                 min="0"
@@ -152,29 +146,27 @@ const InventoryItemModalContent: React.FC<InventoryItemModalProps> = ({
           )}
 
           <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Min Reorder Level *
-            </label>
             <Input
+              label="Min Reorder Level"
               type="number"
               step="any"
               min="0"
               value={minStockLevel}
               onChange={(e) => setMinStockLevel(e.target.value)}
+              error={errors.minStockLevel}
               required
             />
           </div>
 
           <div>
-            <label className="text-xs font-semibold text-slate-700 block mb-1">
-              Unit Cost (PKR) *
-            </label>
             <Input
+              label="Unit Cost (PKR)"
               type="number"
               step="any"
               min="0"
               value={unitCost}
               onChange={(e) => setUnitCost(e.target.value)}
+              error={errors.unitCost}
               required
             />
           </div>
@@ -197,7 +189,9 @@ const InventoryItemModalContent: React.FC<InventoryItemModalProps> = ({
   );
 };
 
-export const InventoryItemModal: React.FC<InventoryItemModalProps> = (props) => (
+export const InventoryItemModal: React.FC<InventoryItemModalProps> = (
+  props,
+) => (
   <InventoryItemModalContent
     key={`${props.isOpen}-${props.editingItem?.id ?? "new"}`}
     {...props}

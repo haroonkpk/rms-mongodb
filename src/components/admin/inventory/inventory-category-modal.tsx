@@ -51,23 +51,14 @@ export const InventoryCategoryModal: React.FC<InventoryCategoryModalProps> = ({
       className="max-w-md"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
-        {error && (
-          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-sm">
-            {error}
-          </div>
-        )}
-
-        <div>
-          <label className="text-xs font-semibold text-slate-700 block mb-1">
-            Category Name *
-          </label>
-          <Input
-            placeholder="e.g. Dairy, Meat, Spices, Packaging"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-        </div>
+        <Input
+          label="Category Name"
+          placeholder="e.g. Dairy, Meat, Spices, Packaging"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          error={error}
+          required
+        />
 
         <div className="flex justify-end gap-3 mt-4 pt-3 border-t border-slate-200">
           <Button variant="outline" onClick={handleClose} type="button">

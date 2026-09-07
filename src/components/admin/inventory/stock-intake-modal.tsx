@@ -5,13 +5,19 @@ import { Modal } from "@/components/ui/modal";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Plus, Trash2, PackagePlus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { InventoryItemData } from "@/actions/inventory";
 
 interface StockIntakeItemRow {
   inventoryItemId: string;
   quantity: string;
   unitCost: string;
+}
+
+interface StockIntakeRowErrors {
+  inventoryItemId?: string;
+  quantity?: string;
+  unitCost?: string;
 }
 
 interface StockIntakeModalProps {
@@ -39,34 +45,33 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
   const [notes, setNotes] = useState("");
   const [items, setItems] = useState<StockIntakeItemRow[]>([
     {
-      inventoryItemId: inventoryItems[0]?.id ?? "",
+      inventoryItemId: "",
       quantity: "1",
-      unitCost: inventoryItems[0]?.unitCost.toString() ?? "0",
+      unitCost: "0",
     },
   ]);
-  const [error, setError] = useState("");
+  const [rowErrors, setRowErrors] = useState<StockIntakeRowErrors[]>([]);
 
   const handleClose = () => {
     setNotes("");
     setItems([
       {
-        inventoryItemId: inventoryItems[0]?.id ?? "",
+        inventoryItemId: "",
         quantity: "1",
-        unitCost: inventoryItems[0]?.unitCost.toString() ?? "0",
+        unitCost: "0",
       },
     ]);
-    setError("");
+    setRowErrors([]);
     onClose();
   };
 
   const handleAddItemRow = () => {
-    const defaultItem = inventoryItems.length > 0 ? inventoryItems[0] : null;
     setItems((prev) => [
       ...prev,
       {
-        inventoryItemId: defaultItem ? defaultItem.id : "",
+        inventoryItemId: "",
         quantity: "1",
-        unitCost: defaultItem ? defaultItem.unitCost.toString() : "0",
+        unitCost: "0",
       },
     ]);
   };
@@ -86,6 +91,11 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
               unitCost: selectedItem ? selectedItem.unitCost.toString() : "0",
             }
           : row,
+      ),
+    );
+    setRowErrors((prev) =>
+      prev.map((row, idx) =>
+        idx === index ? { ...row, inventoryItemId: undefined } : row,
       ),
     );
   };
@@ -112,10 +122,7 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (items.length === 0) {
-      setError("Please add at least one raw material item to restock.");
-      return;
-    }
+    if (items.length === 0) return;
 
     const validItems: Array<{
       inventoryItemId: string;
@@ -123,21 +130,26 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
       unitCost: number;
     }> = [];
 
+    const nextErrors: StockIntakeRowErrors[] = items.map(() => ({}));
     for (let i = 0; i < items.length; i++) {
       const row = items[i];
       if (!row.inventoryItemId) {
-        setError(`Please select an item for row #${i + 1}.`);
-        return;
+        nextErrors[i].inventoryItemId = "Select an inventory item.";
       }
       const q = parseFloat(row.quantity);
       const c = parseFloat(row.unitCost);
       if (isNaN(q) || q <= 0) {
-        setError(`Please enter a valid quantity for row #${i + 1}.`);
-        return;
+        nextErrors[i].quantity = "Enter a valid quantity greater than zero.";
       }
       if (isNaN(c) || c < 0) {
-        setError(`Please enter a valid unit cost for row #${i + 1}.`);
-        return;
+        nextErrors[i].unitCost = "Enter a valid unit cost.";
+      }
+      if (
+        nextErrors[i].inventoryItemId ||
+        nextErrors[i].quantity ||
+        nextErrors[i].unitCost
+      ) {
+        continue;
       }
       validItems.push({
         inventoryItemId: row.inventoryItemId,
@@ -146,7 +158,8 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
       });
     }
 
-    setError("");
+    setRowErrors(nextErrors);
+    if (nextErrors.some((row) => Object.keys(row).length > 0)) return;
     await onSave({
       notes: notes.trim() || undefined,
       items: validItems,
@@ -161,11 +174,6 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
       className="max-w-2xl"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 mt-2">
-        {error && (
-          <div className="p-3 text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 ">
-            {error}
-          </div>
-        )}
         <div className="w-full">
           <label className="text-xs font-semibold text-slate-700 block mb-1">
             Intake Notes (Optional)
@@ -211,11 +219,13 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
                       value={row.inventoryItemId}
                       onChange={(e) => handleItemSelect(index, e.target.value)}
                       options={[
+                        { label: "Select item...", value: "" },
                         ...inventoryItems.map((i) => ({
                           label: `${i.name} (${i.unit})`,
                           value: i.id,
                         })),
                       ]}
+                      error={rowErrors[index]?.inventoryItemId}
                     />
                   </div>
 
@@ -229,6 +239,7 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
                       onChange={(e) =>
                         handleRowChange(index, "quantity", e.target.value)
                       }
+                      error={rowErrors[index]?.quantity}
                     />
                     <span className="text-xs font-bold text-slate-500 shrink-0">
                       {selectedItem?.unit || ""}
@@ -245,6 +256,7 @@ export const StockIntakeModal: React.FC<StockIntakeModalProps> = ({
                       onChange={(e) =>
                         handleRowChange(index, "unitCost", e.target.value)
                       }
+                      error={rowErrors[index]?.unitCost}
                     />
                   </div>
 

@@ -227,6 +227,25 @@ exports.Prisma.LeaveScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.ExpenseTypeScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.ExpenseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  expenseType: 'expenseType',
+  amount: 'amount',
+  expenseDate: 'expenseDate',
+  paymentMethod: 'paymentMethod',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PayrollScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
@@ -385,6 +404,13 @@ exports.LeaveStatus = exports.$Enums.LeaveStatus = {
   REJECTED: 'REJECTED'
 };
 
+exports.ExpensePaymentMethod = exports.$Enums.ExpensePaymentMethod = {
+  CASH: 'CASH',
+  BANK_TRANSFER: 'BANK_TRANSFER',
+  CARD: 'CARD',
+  OTHER: 'OTHER'
+};
+
 exports.PayrollStatus = exports.$Enums.PayrollStatus = {
   DRAFT: 'DRAFT',
   PAID: 'PAID'
@@ -430,6 +456,8 @@ exports.Prisma.ModelName = {
   OrderItem: 'OrderItem',
   Attendance: 'Attendance',
   Leave: 'Leave',
+  ExpenseType: 'ExpenseType',
+  Expense: 'Expense',
   Payroll: 'Payroll',
   SalaryAdvance: 'SalaryAdvance',
   InventoryCategory: 'InventoryCategory',
