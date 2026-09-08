@@ -9,6 +9,7 @@ import {
   FileText,
   RefreshCw,
   WalletCards,
+  Scale,
 } from "lucide-react";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
@@ -32,8 +33,28 @@ const tabs: Array<{
   { id: "inventory", label: "Inventory", icon: Boxes },
   { id: "payroll", label: "Payroll", icon: ClipboardList },
   { id: "operations", label: "Operations", icon: FileText },
+  { id: "profit-loss", label: "Profit & Loss", icon: Scale },
 ];
 const money = (value: number) => `PKR ${Math.round(value).toLocaleString()}`;
+const countLabels = new Set([
+  "Orders",
+  "Outstanding orders",
+  "Entries",
+  "Items sold",
+  "Best sellers",
+  "Total orders",
+  "Completed",
+  "Active queue",
+  "Low stock",
+  "Out of stock",
+]);
+
+function formatKpiValue(label: string, value: number | string) {
+  if (typeof value !== "number") return value;
+  if (label === "Margin") return `${value.toFixed(1)}%`;
+  if (countLabels.has(label)) return Math.round(value).toLocaleString();
+  return money(value);
+}
 const empty: ReportData = {
   tab: "sales",
   range: { start: "", end: "" },
@@ -86,7 +107,7 @@ export default function AdminReportsPage() {
       <Header title="Reports & Analytics" />
       <main className="mt-4 flex flex-col gap-6">
         <div className="flex items-center justify-end ">
-          <div className="flex flex-wrap items-end gap-3 w-fit max-w-xs  border border-slate-200 bg-white p-4 shadow-2xs">
+          <div className="flex flex-wrap sm:flex-nowrap items-end gap-3 w-fit border border-slate-200 bg-white p-4 shadow-2xs">
             <Select
               label="Period"
               value={filters.period}
@@ -141,13 +162,17 @@ export default function AdminReportsPage() {
           {data.kpis.map((kpi) => (
             <Card
               key={kpi.label}
-              className="border border-slate-200 bg-white p-5 shadow-2xs"
+              className={`border bg-white p-5 shadow-2xs ${tab === "profit-loss" && kpi.label === "Profit" ? "border-emerald-200 bg-emerald-50/60" : tab === "profit-loss" && kpi.label === "Loss" ? "border-rose-200 bg-rose-50/60" : "border-slate-200"}`}
             >
-              <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+              <p
+                className={`text-xs font-bold uppercase tracking-wide ${tab === "profit-loss" && kpi.label === "Profit" ? "text-emerald-700" : tab === "profit-loss" && kpi.label === "Loss" ? "text-rose-700" : "text-slate-500"}`}
+              >
                 {kpi.label}
               </p>
-              <p className="mt-2 text-2xl font-black text-slate-900">
-                {typeof kpi.value === "number" ? money(kpi.value) : kpi.value}
+              <p
+                className={`mt-2 text-2xl font-black ${tab === "profit-loss" && kpi.label === "Profit" ? "text-emerald-800" : tab === "profit-loss" && kpi.label === "Loss" ? "text-rose-800" : "text-slate-900"}`}
+              >
+                {formatKpiValue(kpi.label, kpi.value)}
               </p>
               {kpi.detail && (
                 <p className="mt-1 text-xs text-slate-500">{kpi.detail}</p>

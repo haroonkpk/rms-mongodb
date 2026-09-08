@@ -74,6 +74,88 @@ export async function getReportData(
 ): Promise<ReportData> {
   await requireAdmin();
   const { start, end } = rangeFor(filters);
+  if (tab === "profit-loss") {
+    const [orders, expenses, purchases] = await Promise.all([
+      prisma.order.findMany({
+        where: { createdAt: { gte: start, lte: end }, status: "COMPLETED" },
+        select: { totalAmount: true, createdAt: true },
+      }),
+      prisma.expense.findMany({
+        where: { expenseDate: { gte: start, lte: end } },
+        select: { expenseType: true, amount: true, expenseDate: true },
+      }),
+      prisma.stockMovement.findMany({
+        where: { createdAt: { gte: start, lte: end }, type: "PURCHASE_IN" },
+        include: { inventoryItem: { select: { unitCost: true } } },
+      }),
+    ]);
+    const revenue = orders.reduce(
+      (sum, order) => sum + number(order.totalAmount),
+      0,
+    );
+    const salaryExpenses = expenses
+      .filter((expense) => expense.expenseType.toLowerCase() === "salaries")
+      .reduce((sum, expense) => sum + number(expense.amount), 0);
+    const otherExpenses = expenses
+      .filter((expense) => expense.expenseType.toLowerCase() !== "salaries")
+      .reduce((sum, expense) => sum + number(expense.amount), 0);
+    const inventoryPurchases = purchases.reduce(
+      (sum, movement) =>
+        sum +
+        Math.abs(number(movement.quantityChange)) *
+          number(movement.inventoryItem.unitCost),
+      0,
+    );
+    const totalCosts = salaryExpenses + otherExpenses + inventoryPurchases;
+    const operatingResult = revenue - totalCosts;
+    const lines: BreakdownPoint[] = [
+      { label: "Revenue", amount: revenue, count: orders.length },
+      {
+        label: "Salaries",
+        amount: salaryExpenses,
+        count: expenses.filter(
+          (expense) => expense.expenseType.toLowerCase() === "salaries",
+        ).length,
+      },
+      {
+        label: "Other Expenses",
+        amount: otherExpenses,
+        count: expenses.filter(
+          (expense) => expense.expenseType.toLowerCase() !== "salaries",
+        ).length,
+      },
+      {
+        label: "Inventory Purchases (Estimated)",
+        amount: inventoryPurchases,
+        count: purchases.length,
+      },
+      { label: "Operating Result", amount: operatingResult, count: 1 },
+    ];
+    const profit = Math.max(operatingResult, 0);
+    const loss = Math.max(-operatingResult, 0);
+    return {
+      tab,
+      range: { start: start.toISOString(), end: end.toISOString() },
+      kpis: [
+        { label: "Revenue", value: revenue },
+        { label: "Total costs", value: totalCosts },
+        { label: "Profit", value: profit },
+        { label: "Loss", value: loss },
+      ],
+      trend: trend(
+        orders.map((order) => ({
+          date: order.createdAt,
+          amount: number(order.totalAmount),
+        })),
+      ),
+      breakdown: lines.filter((line) => line.label !== "Operating Result"),
+      rows: lines.map((line) => ({
+        line: line.label,
+        amount: line.amount,
+        entries: line.count,
+      })),
+    };
+  }
   if (tab === "sales" || tab === "menu" || tab === "operations") {
     const orders = await prisma.order.findMany({
       where: {
@@ -82,9 +164,14 @@ export async function getReportData(
         ...(filters.paymentMethod && filters.paymentMethod !== "ALL"
           ? { paymentMethod: filters.paymentMethod as never }
           : {}),
-        ...(filters.orderStatus && filters.orderStatus !== "ALL"
+        ...(tab !== "sales" &&
+        tab !== "menu" &&
+        filters.orderStatus &&
+        filters.orderStatus !== "ALL"
           ? { status: filters.orderStatus as never }
-          : {}),
+          : tab === "sales" || tab === "menu"
+            ? { status: "COMPLETED" }
+            : {}),
       },
       include: { items: true, cashier: { select: { fullName: true } } },
     });
@@ -195,11 +282,12 @@ export async function getReportData(
         { label: "Sales", value: sales },
         { label: "Orders", value: completed.length },
         {
-          label: "Average order",
-          value: completed.length ? sales / completed.length : 0,
+          label: "Outstanding orders",
+          value: orders.filter((order) => order.paymentStatus === "UNPAID")
+            .length,
         },
         {
-          label: "Outstanding",
+          label: "Ledgers outstanding",
           value: orders
             .filter((order) => order.paymentStatus === "UNPAID")
             .reduce((sum, order) => sum + number(order.dueAmount), 0),
@@ -367,6 +455,96 @@ export async function getReportData(
       net: number(item.netSalary),
       paid: number(item.paidAmount),
       status: item.status,
+    })),
+  };
+}
+
+export async function getCompletedOrderReport(filters: ReportFilters) {
+  await requireAdmin();
+  const { start, end } = rangeFor(filters);
+  const orders = await prisma.order.findMany({
+    where: {
+      createdAt: { gte: start, lte: end },
+      status: "COMPLETED",
+      ...(filters.paymentMethod && filters.paymentMethod !== "ALL"
+        ? { paymentMethod: filters.paymentMethod as never }
+        : {}),
+    },
+    orderBy: { createdAt: "desc" },
+    include: {
+      items: { include: { menuItem: { select: { imageUrl: true } } } },
+      cashier: { select: { fullName: true } },
+    },
+  });
+
+  return orders.map((order) => ({
+    order: order.orderNumber,
+    date: order.createdAt.toISOString().slice(0, 10),
+    cashier: order.cashier?.fullName ?? "Unassigned",
+    payment: order.paymentMethod.replaceAll("_", " "),
+    total: number(order.totalAmount),
+    paid: order.paymentStatus === "PAID" ? "Yes" : "No",
+    due: number(order.dueAmount),
+    orderDetails: JSON.stringify({
+      orderNumber: order.orderNumber,
+      date: order.createdAt.toISOString(),
+      customerName: order.customerName,
+      customerPhone: order.customerPhone,
+      cashier: order.cashier?.fullName ?? "Unassigned",
+      status: order.status,
+      paymentMethod: order.paymentMethod,
+      paymentStatus: order.paymentStatus,
+      subtotal: number(order.subtotal),
+      totalAmount: number(order.totalAmount),
+      dueAmount: number(order.dueAmount),
+      items: order.items.map((item) => ({
+        name: item.itemName,
+        variant: item.variant,
+        quantity: item.quantity,
+        unitPrice: number(item.unitPrice),
+        totalPrice: number(item.totalPrice),
+        addOns: item.addOns,
+        notes: item.notes,
+        imageUrl: item.menuItem?.imageUrl ?? null,
+      })),
+    }),
+  }));
+}
+
+export async function getOrderDetails(orderNumber: string) {
+  await requireAdmin();
+  const order = await prisma.order.findUnique({
+    where: { orderNumber },
+    include: {
+      items: { include: { menuItem: { select: { imageUrl: true } } } },
+      cashier: { select: { fullName: true, email: true } },
+    },
+  });
+  if (!order) return null;
+  return {
+    orderNumber: order.orderNumber,
+    date: order.createdAt.toISOString(),
+    customerName: order.customerName,
+    customerPhone: order.customerPhone,
+    cashier: order.cashier?.fullName ?? order.cashier?.email ?? "Unassigned",
+    status: order.status,
+    paymentMethod: order.paymentMethod,
+    paymentStatus: order.paymentStatus,
+    subtotal: number(order.subtotal),
+    totalAmount: number(order.totalAmount),
+    cashReceived: number(order.cashReceived),
+    changeGiven: number(order.changeGiven),
+    dueAmount: number(order.dueAmount),
+    notes: order.notes,
+    items: order.items.map((item) => ({
+      name: item.itemName,
+      variant: item.variant,
+      quantity: item.quantity,
+      unitPrice: number(item.unitPrice),
+      totalPrice: number(item.totalPrice),
+      addOns: item.addOns,
+      notes: item.notes,
+      imageUrl: item.menuItem?.imageUrl ?? null,
     })),
   };
 }

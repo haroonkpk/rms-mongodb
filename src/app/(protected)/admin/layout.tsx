@@ -9,6 +9,7 @@ import {
   BarChart3,
   ShoppingCart,
   Banknote,
+  ClipboardList,
 } from "lucide-react";
 
 const adminNavItems = [
@@ -48,6 +49,11 @@ const adminNavItems = [
     icon: <BarChart3 size={18} />,
   },
   {
+    label: "Orders",
+    href: "/admin/orders",
+    icon: <ClipboardList size={18} />,
+  },
+  {
     label: "POS Terminal",
     href: "/pos",
     icon: <ShoppingCart size={18} />,
@@ -63,7 +69,12 @@ export default async function AdminLayout({
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar items={adminNavItems} brandName="RMS" brandTier="Admin" user={user}/>
+      <Sidebar
+        items={adminNavItems}
+        brandName="RMS"
+        brandTier="Admin"
+        user={user}
+      />
 
       <main className="flex-1 overflow-y-auto scrollbar-none pt-14 md:pt-0 pb-10 md:pb-0 md:pl-14">
         <div className="max-w-400 mx-auto w-full">{children}</div>

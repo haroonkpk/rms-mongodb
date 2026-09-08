@@ -5,7 +5,8 @@ export type ReportTab =
   | "expenses"
   | "inventory"
   | "payroll"
-  | "operations";
+  | "operations"
+  | "profit-loss";
 
 export interface DateRangeFilter {
   period: ReportPeriod;

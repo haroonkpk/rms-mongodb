@@ -186,7 +186,7 @@ export function PayrollTab() {
         isOpen={!!editPayrollModal}
         onClose={() => setEditPayrollModal(null)}
         title={`Update Payroll - ${editPayrollModal?.employeeName || ""}`}
-        className="max-w-2xl"
+        className="max-w-2xl h-[94vh] overflow-y-auto"
       >
         {editPayrollModal && (
           <form
@@ -209,45 +209,27 @@ export function PayrollTab() {
                 setIsSavingPayroll(false);
               }
             }}
-            className="p-4 space-y-4"
+            className="space-y-4"
           >
-            <div className="grid grid-cols-2 gap-3 text-xs sm:text-sm bg-slate-50 p-4 border border-slate-200/80 mb-2">
-              <div>
-                <span className="text-slate-500">Working Days:</span>{" "}
-                <span className="font-semibold text-slate-900">
-                  {editPayrollModal.workingDays}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-500">Present Days:</span>{" "}
-                <span className="font-semibold text-slate-900">
-                  {editPayrollModal.presentDays}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-500">Absent Days:</span>{" "}
-                <span className="font-semibold text-slate-900">
-                  {editPayrollModal.absentDays}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-500">Leave Days:</span>{" "}
-                <span className="font-semibold text-slate-900">
-                  {editPayrollModal.leaveDays}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-500">Already Paid:</span>{" "}
-                <span className="font-bold text-blue-700">
-                  {editPayrollModal.alreadyPaid}
-                </span>
-              </div>
-              <div>
-                <span className="text-slate-500">OT Hours:</span>{" "}
-                <span className="font-semibold text-slate-900">
-                  {editPayrollModal.totalOvertimeHours}
-                </span>
-              </div>
+            <div className="divide-y divide-slate-200 bg-slate-50 px-4 text-xs sm:text-sm">
+              {[
+                ["Working Days", editPayrollModal.workingDays],
+                ["Present Days", editPayrollModal.presentDays],
+                ["Absent Days", editPayrollModal.absentDays],
+                ["Leave Days", editPayrollModal.leaveDays],
+                ["Already Paid", editPayrollModal.alreadyPaid],
+                ["OT Hours", editPayrollModal.totalOvertimeHours],
+              ].map(([label, value]) => (
+                <div
+                  key={String(label)}
+                  className="flex items-center justify-between gap-4 py-3"
+                >
+                  <span className="font-bold uppercase tracking-wider text-slate-500">
+                    {label}
+                  </span>
+                  <span className="font-semibold text-slate-900">{value}</span>
+                </div>
+              ))}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -386,40 +368,30 @@ export function PayrollTab() {
             }}
             className="space-y-4"
           >
-            <div className="bg-slate-50 p-4 border border-slate-200/80 space-y-3 text-xs sm:text-sm">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 font-medium">
-                  Employee Name:
-                </span>
-                <span className="font-bold text-slate-900">
-                  {payPayrollModal.employeeName}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 font-medium">
-                  Month / Year:
-                </span>
-                <span className="font-semibold text-slate-800">
-                  {new Date(year, month - 1).toLocaleString("default", {
-                    month: "long",
-                  })}{" "}
-                  {year}
-                </span>
-              </div>
-              <div className="flex items-center justify-between text-slate-600">
-                <span>Already Paid So Far:</span>
-                <span className="font-semibold text-blue-700">
-                  {payPayrollModal.alreadyPaid}
-                </span>
-              </div>
-              <div className="flex items-center justify-between border-t border-slate-200 pt-2">
-                <span className="text-slate-600 font-bold">
-                  Net Salary Payable:
-                </span>
-                <span className="font-extrabold text-emerald-700 text-lg">
-                  {payPayrollModal.netSalary}
-                </span>
-              </div>
+            <div className="divide-y divide-slate-200 bg-slate-50 px-4 text-xs sm:text-sm">
+              {[
+                ["Employee Name", payPayrollModal.employeeName],
+                [
+                  "Month / Year",
+                  `${new Date(year, month - 1).toLocaleString("default", { month: "long" })} ${year}`,
+                ],
+                ["Already Paid So Far", payPayrollModal.alreadyPaid],
+                ["Net Salary Payable", payPayrollModal.netSalary],
+              ].map(([label, value]) => (
+                <div
+                  key={String(label)}
+                  className="flex items-center justify-between gap-4 py-3"
+                >
+                  <span className="font-bold uppercase tracking-wider text-slate-500">
+                    {label}
+                  </span>
+                  <span
+                    className={`text-right font-semibold ${label === "Net Salary Payable" ? "text-lg text-emerald-700" : "text-slate-900"}`}
+                  >
+                    {value}
+                  </span>
+                </div>
+              ))}
             </div>
 
             <Input
@@ -460,7 +432,7 @@ export function PayrollTab() {
               ]}
             />
 
-            <div className="pt-4 flex justify-end gap-3 border-t border-slate-100">
+            <div className="pt-4 flex flex-wrap justify-end gap-3 border-t border-slate-100">
               <Button
                 type="button"
                 variant="outline"
@@ -477,7 +449,7 @@ export function PayrollTab() {
                 isLoading={isProcessingPay}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white"
               >
-                Confirm & Mark Paid
+                Confirm
               </Button>
             </div>
           </form>

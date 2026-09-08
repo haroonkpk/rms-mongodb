@@ -20,9 +20,7 @@ export function ReportTrendChart({ data }: { data: TrendPoint[] }) {
   return (
     <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
       <h2 className="text-lg font-bold text-slate-900">Trend</h2>
-      <p className="mb-4 text-xs text-slate-500">
-        Daily activity in selected period
-      </p>
+    
       {data.length ? (
         <div className="mt-4 h-64 w-full sm:h-72">
           <ResponsiveContainer width="100%" height="100%">
