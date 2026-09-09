@@ -2,9 +2,9 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/actions/auth";
+import { isMenuItemAvailable } from "@/lib/menu-availability";
 import { revalidatePath, revalidateTag } from "next/cache";
 import {
-  POSAddOn,
   POSMenuItem,
   POSCategory,
   POSOrderPayload,
@@ -32,6 +32,26 @@ export async function getPOSCatalog() {
     },
   });
 
+  const inventoryItemIds = dbMenuItems.flatMap((item) => {
+    if (!Array.isArray(item.ingredients)) return [];
+    return item.ingredients.flatMap((ingredient) => {
+      if (!ingredient || typeof ingredient !== "object") return [];
+      const inventoryItemId = (ingredient as { inventoryItemId?: unknown })
+        .inventoryItemId;
+      return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
+    });
+  });
+  const inventoryItems = await prisma.inventoryItem.findMany({
+    where: { id: { in: inventoryItemIds } },
+    select: { id: true, quantity: true },
+  });
+  const stockByInventoryId = new Map(
+    inventoryItems.map((inventoryItem) => [
+      inventoryItem.id,
+      Number(inventoryItem.quantity),
+    ]),
+  );
+
   const categories: POSCategory[] = dbCategories.map((c) => ({
     id: c.id,
     name: c.name,
@@ -44,7 +64,11 @@ export async function getPOSCatalog() {
     description: item.description,
     basePrice: Number(item.basePrice),
     imageUrl: item.imageUrl,
-    isAvailable: item.isAvailable,
+    isAvailable: isMenuItemAvailable(
+      item.isAvailable,
+      item.ingredients,
+      stockByInventoryId,
+    ),
     categoryId: item.categoryId,
     categoryName: item.category.name,
     hasSizes: item.hasSizes ?? false,

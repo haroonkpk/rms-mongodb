@@ -16,6 +16,7 @@ const countLabels = new Set([
   "Sold items",
   "Wasted items",
   "Expired items",
+  "Wasted + expired items",
   "Paid employees",
 ]);
 

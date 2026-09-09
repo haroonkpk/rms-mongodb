@@ -447,7 +447,7 @@ export default function AdminMenuPage() {
           </div>
         </div>
 
-        {/* Navigation Tabs (POS Style) */}
+        {/* Navigation Tabs */}
         <div className="w-full">
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-hide py-1 px-0.5">
             {navTabs.map((tab) => {

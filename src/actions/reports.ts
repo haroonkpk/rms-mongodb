@@ -108,7 +108,7 @@ export async function getReportData(
         where: {
           createdAt: { gte: start, lte: end },
           type: {
-            in: ["SALE_DEDUCTION", "WASTAGE_OUT", "SPOILAGE_OUT"] as never,
+            in: ["WASTAGE_OUT", "SPOILAGE_OUT"] as never,
           },
         },
         include: { inventoryItem: { select: { unitCost: true } } },
@@ -498,7 +498,10 @@ export async function getReportData(
         include: { inventoryItem: { include: { category: true } } },
         orderBy: { createdAt: "desc" },
       }),
-      prisma.stockMovement.findMany({ where: movementWhere }),
+      prisma.stockMovement.findMany({
+        where: movementWhere,
+        include: { inventoryItem: { select: { unitCost: true } } },
+      }),
     ]);
     const value = items.reduce(
       (sum, item) => sum + number(item.quantity) * number(item.unitCost),
@@ -525,14 +528,29 @@ export async function getReportData(
             total + Math.abs(number(movement.quantityChange)),
           0,
         );
+    const movementCost = (type: string) =>
+      allMovements
+        .filter((movement) => movement.type === type)
+        .reduce(
+          (total, movement) =>
+            total +
+            Math.abs(number(movement.quantityChange)) *
+              number(movement.inventoryItem.unitCost),
+          0,
+        );
+    const wastedQuantity = movementQuantity("WASTAGE_OUT");
+    const expiredQuantity = movementQuantity("SPOILAGE_OUT");
     return {
       tab,
       range: { start: start.toISOString(), end: end.toISOString() },
       kpis: [
         { label: "Inventory value", value },
-        { label: "Sold items", value: movementQuantity("SALE_DEDUCTION") },
-        { label: "Wasted items", value: movementQuantity("WASTAGE_OUT") },
-        { label: "Expired items", value: movementQuantity("SPOILAGE_OUT") },
+        {
+          label: "Wasted + expired items",
+          value: wastedQuantity + expiredQuantity,
+        },
+        { label: "Wasted cost", value: movementCost("WASTAGE_OUT") },
+        { label: "Expired cost", value: movementCost("SPOILAGE_OUT") },
       ],
       trend: [],
       breakdown: breakdown(movementMap),

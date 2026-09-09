@@ -7934,6 +7934,7 @@ export namespace Prisma {
     updatedAt?: boolean
     cashier?: boolean | Order$cashierArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
+    cogsExpense?: boolean | Order$cogsExpenseArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["order"]>
 
@@ -8003,6 +8004,7 @@ export namespace Prisma {
   export type OrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cashier?: boolean | Order$cashierArgs<ExtArgs>
     items?: boolean | Order$itemsArgs<ExtArgs>
+    cogsExpense?: boolean | Order$cogsExpenseArgs<ExtArgs>
     _count?: boolean | OrderCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -8017,6 +8019,7 @@ export namespace Prisma {
     objects: {
       cashier: Prisma.$UserPayload<ExtArgs> | null
       items: Prisma.$OrderItemPayload<ExtArgs>[]
+      cogsExpense: Prisma.$ExpensePayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -8432,6 +8435,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     cashier<T extends Order$cashierArgs<ExtArgs> = {}>(args?: Subset<T, Order$cashierArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     items<T extends Order$itemsArgs<ExtArgs> = {}>(args?: Subset<T, Order$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    cogsExpense<T extends Order$cogsExpenseArgs<ExtArgs> = {}>(args?: Subset<T, Order$cogsExpenseArgs<ExtArgs>>): Prisma__ExpenseClient<$Result.GetResult<Prisma.$ExpensePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -8919,6 +8923,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: OrderItemScalarFieldEnum | OrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * Order.cogsExpense
+   */
+  export type Order$cogsExpenseArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Expense
+     */
+    select?: ExpenseSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Expense
+     */
+    omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    where?: ExpenseWhereInput
   }
 
   /**
@@ -13428,6 +13451,7 @@ export namespace Prisma {
     amount: Decimal | null
     expenseDate: Date | null
     paymentMethod: $Enums.ExpensePaymentMethod | null
+    orderId: string | null
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -13440,6 +13464,7 @@ export namespace Prisma {
     amount: Decimal | null
     expenseDate: Date | null
     paymentMethod: $Enums.ExpensePaymentMethod | null
+    orderId: string | null
     notes: string | null
     createdAt: Date | null
     updatedAt: Date | null
@@ -13452,6 +13477,7 @@ export namespace Prisma {
     amount: number
     expenseDate: number
     paymentMethod: number
+    orderId: number
     notes: number
     createdAt: number
     updatedAt: number
@@ -13474,6 +13500,7 @@ export namespace Prisma {
     amount?: true
     expenseDate?: true
     paymentMethod?: true
+    orderId?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -13486,6 +13513,7 @@ export namespace Prisma {
     amount?: true
     expenseDate?: true
     paymentMethod?: true
+    orderId?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -13498,6 +13526,7 @@ export namespace Prisma {
     amount?: true
     expenseDate?: true
     paymentMethod?: true
+    orderId?: true
     notes?: true
     createdAt?: true
     updatedAt?: true
@@ -13597,6 +13626,7 @@ export namespace Prisma {
     amount: Decimal
     expenseDate: Date
     paymentMethod: $Enums.ExpensePaymentMethod
+    orderId: string | null
     notes: string | null
     createdAt: Date
     updatedAt: Date
@@ -13628,9 +13658,11 @@ export namespace Prisma {
     amount?: boolean
     expenseDate?: boolean
     paymentMethod?: boolean
+    orderId?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    order?: boolean | Expense$orderArgs<ExtArgs>
   }, ExtArgs["result"]["expense"]>
 
   export type ExpenseSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13640,9 +13672,11 @@ export namespace Prisma {
     amount?: boolean
     expenseDate?: boolean
     paymentMethod?: boolean
+    orderId?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    order?: boolean | Expense$orderArgs<ExtArgs>
   }, ExtArgs["result"]["expense"]>
 
   export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -13652,9 +13686,11 @@ export namespace Prisma {
     amount?: boolean
     expenseDate?: boolean
     paymentMethod?: boolean
+    orderId?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    order?: boolean | Expense$orderArgs<ExtArgs>
   }, ExtArgs["result"]["expense"]>
 
   export type ExpenseSelectScalar = {
@@ -13664,16 +13700,28 @@ export namespace Prisma {
     amount?: boolean
     expenseDate?: boolean
     paymentMethod?: boolean
+    orderId?: boolean
     notes?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ExpenseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "expenseType" | "amount" | "expenseDate" | "paymentMethod" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+  export type ExpenseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "expenseType" | "amount" | "expenseDate" | "paymentMethod" | "orderId" | "notes" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+  export type ExpenseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | Expense$orderArgs<ExtArgs>
+  }
+  export type ExpenseIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | Expense$orderArgs<ExtArgs>
+  }
+  export type ExpenseIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | Expense$orderArgs<ExtArgs>
+  }
 
   export type $ExpensePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Expense"
-    objects: {}
+    objects: {
+      order: Prisma.$OrderPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       title: string
@@ -13681,6 +13729,7 @@ export namespace Prisma {
       amount: Prisma.Decimal
       expenseDate: Date
       paymentMethod: $Enums.ExpensePaymentMethod
+      orderId: string | null
       notes: string | null
       createdAt: Date
       updatedAt: Date
@@ -14078,6 +14127,7 @@ export namespace Prisma {
    */
   export interface Prisma__ExpenseClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    order<T extends Expense$orderArgs<ExtArgs> = {}>(args?: Subset<T, Expense$orderArgs<ExtArgs>>): Prisma__OrderClient<$Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -14113,6 +14163,7 @@ export namespace Prisma {
     readonly amount: FieldRef<"Expense", 'Decimal'>
     readonly expenseDate: FieldRef<"Expense", 'DateTime'>
     readonly paymentMethod: FieldRef<"Expense", 'ExpensePaymentMethod'>
+    readonly orderId: FieldRef<"Expense", 'String'>
     readonly notes: FieldRef<"Expense", 'String'>
     readonly createdAt: FieldRef<"Expense", 'DateTime'>
     readonly updatedAt: FieldRef<"Expense", 'DateTime'>
@@ -14133,6 +14184,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter, which Expense to fetch.
      */
     where: ExpenseWhereUniqueInput
@@ -14151,6 +14206,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter, which Expense to fetch.
      */
     where: ExpenseWhereUniqueInput
@@ -14168,6 +14227,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
     /**
      * Filter, which Expense to fetch.
      */
@@ -14217,6 +14280,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter, which Expense to fetch.
      */
     where?: ExpenseWhereInput
@@ -14264,6 +14331,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
     /**
      * Filter, which Expenses to fetch.
      */
@@ -14313,6 +14384,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * The data needed to create a Expense.
      */
     data: XOR<ExpenseCreateInput, ExpenseUncheckedCreateInput>
@@ -14346,6 +14421,10 @@ export namespace Prisma {
      */
     data: ExpenseCreateManyInput | ExpenseCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -14360,6 +14439,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
     /**
      * The data needed to update a Expense.
      */
@@ -14412,6 +14495,10 @@ export namespace Prisma {
      * Limit how many Expenses to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -14426,6 +14513,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
     /**
      * The filter to search for the Expense to update in case it exists.
      */
@@ -14453,6 +14544,10 @@ export namespace Prisma {
      */
     omit?: ExpenseOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
+    /**
      * Filter which Expense to delete.
      */
     where: ExpenseWhereUniqueInput
@@ -14473,6 +14568,25 @@ export namespace Prisma {
   }
 
   /**
+   * Expense.order
+   */
+  export type Expense$orderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Order
+     */
+    select?: OrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Order
+     */
+    omit?: OrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderInclude<ExtArgs> | null
+    where?: OrderWhereInput
+  }
+
+  /**
    * Expense without action
    */
   export type ExpenseDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -14484,6 +14598,10 @@ export namespace Prisma {
      * Omit specific fields from the Expense
      */
     omit?: ExpenseOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ExpenseInclude<ExtArgs> | null
   }
 
 
@@ -22845,6 +22963,7 @@ export namespace Prisma {
     amount: 'amount',
     expenseDate: 'expenseDate',
     paymentMethod: 'paymentMethod',
+    orderId: 'orderId',
     notes: 'notes',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
@@ -23647,6 +23766,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     cashier?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     items?: OrderItemListRelationFilter
+    cogsExpense?: XOR<ExpenseNullableScalarRelationFilter, ExpenseWhereInput> | null
   }
 
   export type OrderOrderByWithRelationInput = {
@@ -23669,6 +23789,7 @@ export namespace Prisma {
     updatedAt?: SortOrder
     cashier?: UserOrderByWithRelationInput
     items?: OrderItemOrderByRelationAggregateInput
+    cogsExpense?: ExpenseOrderByWithRelationInput
   }
 
   export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -23694,6 +23815,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"Order"> | Date | string
     cashier?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
     items?: OrderItemListRelationFilter
+    cogsExpense?: XOR<ExpenseNullableScalarRelationFilter, ExpenseWhereInput> | null
   }, "id" | "orderNumber">
 
   export type OrderOrderByWithAggregationInput = {
@@ -24044,9 +24166,11 @@ export namespace Prisma {
     amount?: DecimalFilter<"Expense"> | Decimal | DecimalJsLike | number | string
     expenseDate?: DateTimeFilter<"Expense"> | Date | string
     paymentMethod?: EnumExpensePaymentMethodFilter<"Expense"> | $Enums.ExpensePaymentMethod
+    orderId?: UuidNullableFilter<"Expense"> | string | null
     notes?: StringNullableFilter<"Expense"> | string | null
     createdAt?: DateTimeFilter<"Expense"> | Date | string
     updatedAt?: DateTimeFilter<"Expense"> | Date | string
+    order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
   }
 
   export type ExpenseOrderByWithRelationInput = {
@@ -24056,13 +24180,16 @@ export namespace Prisma {
     amount?: SortOrder
     expenseDate?: SortOrder
     paymentMethod?: SortOrder
+    orderId?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    order?: OrderOrderByWithRelationInput
   }
 
   export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
     id?: string
+    orderId?: string
     AND?: ExpenseWhereInput | ExpenseWhereInput[]
     OR?: ExpenseWhereInput[]
     NOT?: ExpenseWhereInput | ExpenseWhereInput[]
@@ -24074,7 +24201,8 @@ export namespace Prisma {
     notes?: StringNullableFilter<"Expense"> | string | null
     createdAt?: DateTimeFilter<"Expense"> | Date | string
     updatedAt?: DateTimeFilter<"Expense"> | Date | string
-  }, "id">
+    order?: XOR<OrderNullableScalarRelationFilter, OrderWhereInput> | null
+  }, "id" | "orderId">
 
   export type ExpenseOrderByWithAggregationInput = {
     id?: SortOrder
@@ -24083,6 +24211,7 @@ export namespace Prisma {
     amount?: SortOrder
     expenseDate?: SortOrder
     paymentMethod?: SortOrder
+    orderId?: SortOrderInput | SortOrder
     notes?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -24103,6 +24232,7 @@ export namespace Prisma {
     amount?: DecimalWithAggregatesFilter<"Expense"> | Decimal | DecimalJsLike | number | string
     expenseDate?: DateTimeWithAggregatesFilter<"Expense"> | Date | string
     paymentMethod?: EnumExpensePaymentMethodWithAggregatesFilter<"Expense"> | $Enums.ExpensePaymentMethod
+    orderId?: UuidNullableWithAggregatesFilter<"Expense"> | string | null
     notes?: StringNullableWithAggregatesFilter<"Expense"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Expense"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Expense"> | Date | string
@@ -25057,6 +25187,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     cashier?: UserCreateNestedOneWithoutOrdersInput
     items?: OrderItemCreateNestedManyWithoutOrderInput
+    cogsExpense?: ExpenseCreateNestedOneWithoutOrderInput
   }
 
   export type OrderUncheckedCreateInput = {
@@ -25078,6 +25209,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    cogsExpense?: ExpenseUncheckedCreateNestedOneWithoutOrderInput
   }
 
   export type OrderUpdateInput = {
@@ -25099,6 +25231,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cashier?: UserUpdateOneWithoutOrdersNestedInput
     items?: OrderItemUpdateManyWithoutOrderNestedInput
+    cogsExpense?: ExpenseUpdateOneWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateInput = {
@@ -25120,6 +25253,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    cogsExpense?: ExpenseUncheckedUpdateOneWithoutOrderNestedInput
   }
 
   export type OrderCreateManyInput = {
@@ -25502,6 +25636,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    order?: OrderCreateNestedOneWithoutCogsExpenseInput
   }
 
   export type ExpenseUncheckedCreateInput = {
@@ -25511,6 +25646,7 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     expenseDate: Date | string
     paymentMethod?: $Enums.ExpensePaymentMethod
+    orderId?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25526,6 +25662,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    order?: OrderUpdateOneWithoutCogsExpenseNestedInput
   }
 
   export type ExpenseUncheckedUpdateInput = {
@@ -25535,6 +25672,7 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     expenseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: EnumExpensePaymentMethodFieldUpdateOperationsInput | $Enums.ExpensePaymentMethod
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -25547,6 +25685,7 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     expenseDate: Date | string
     paymentMethod?: $Enums.ExpensePaymentMethod
+    orderId?: string | null
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
@@ -25571,6 +25710,7 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     expenseDate?: DateTimeFieldUpdateOperationsInput | Date | string
     paymentMethod?: EnumExpensePaymentMethodFieldUpdateOperationsInput | $Enums.ExpensePaymentMethod
+    orderId?: NullableStringFieldUpdateOperationsInput | string | null
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -26780,6 +26920,11 @@ export namespace Prisma {
     isNot?: UserWhereInput | null
   }
 
+  export type ExpenseNullableScalarRelationFilter = {
+    is?: ExpenseWhereInput | null
+    isNot?: ExpenseWhereInput | null
+  }
+
   export type OrderCountOrderByAggregateInput = {
     id?: SortOrder
     orderNumber?: SortOrder
@@ -27179,6 +27324,11 @@ export namespace Prisma {
     not?: NestedEnumExpensePaymentMethodFilter<$PrismaModel> | $Enums.ExpensePaymentMethod
   }
 
+  export type OrderNullableScalarRelationFilter = {
+    is?: OrderWhereInput | null
+    isNot?: OrderWhereInput | null
+  }
+
   export type ExpenseCountOrderByAggregateInput = {
     id?: SortOrder
     title?: SortOrder
@@ -27186,6 +27336,7 @@ export namespace Prisma {
     amount?: SortOrder
     expenseDate?: SortOrder
     paymentMethod?: SortOrder
+    orderId?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -27202,6 +27353,7 @@ export namespace Prisma {
     amount?: SortOrder
     expenseDate?: SortOrder
     paymentMethod?: SortOrder
+    orderId?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -27214,6 +27366,7 @@ export namespace Prisma {
     amount?: SortOrder
     expenseDate?: SortOrder
     paymentMethod?: SortOrder
+    orderId?: SortOrder
     notes?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
@@ -28155,11 +28308,23 @@ export namespace Prisma {
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
   }
 
+  export type ExpenseCreateNestedOneWithoutOrderInput = {
+    create?: XOR<ExpenseCreateWithoutOrderInput, ExpenseUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: ExpenseCreateOrConnectWithoutOrderInput
+    connect?: ExpenseWhereUniqueInput
+  }
+
   export type OrderItemUncheckedCreateNestedManyWithoutOrderInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
     createMany?: OrderItemCreateManyOrderInputEnvelope
     connect?: OrderItemWhereUniqueInput | OrderItemWhereUniqueInput[]
+  }
+
+  export type ExpenseUncheckedCreateNestedOneWithoutOrderInput = {
+    create?: XOR<ExpenseCreateWithoutOrderInput, ExpenseUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: ExpenseCreateOrConnectWithoutOrderInput
+    connect?: ExpenseWhereUniqueInput
   }
 
   export type NullableIntFieldUpdateOperationsInput = {
@@ -28206,6 +28371,16 @@ export namespace Prisma {
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
   }
 
+  export type ExpenseUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<ExpenseCreateWithoutOrderInput, ExpenseUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: ExpenseCreateOrConnectWithoutOrderInput
+    upsert?: ExpenseUpsertWithoutOrderInput
+    disconnect?: ExpenseWhereInput | boolean
+    delete?: ExpenseWhereInput | boolean
+    connect?: ExpenseWhereUniqueInput
+    update?: XOR<XOR<ExpenseUpdateToOneWithWhereWithoutOrderInput, ExpenseUpdateWithoutOrderInput>, ExpenseUncheckedUpdateWithoutOrderInput>
+  }
+
   export type OrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
     create?: XOR<OrderItemCreateWithoutOrderInput, OrderItemUncheckedCreateWithoutOrderInput> | OrderItemCreateWithoutOrderInput[] | OrderItemUncheckedCreateWithoutOrderInput[]
     connectOrCreate?: OrderItemCreateOrConnectWithoutOrderInput | OrderItemCreateOrConnectWithoutOrderInput[]
@@ -28218,6 +28393,16 @@ export namespace Prisma {
     update?: OrderItemUpdateWithWhereUniqueWithoutOrderInput | OrderItemUpdateWithWhereUniqueWithoutOrderInput[]
     updateMany?: OrderItemUpdateManyWithWhereWithoutOrderInput | OrderItemUpdateManyWithWhereWithoutOrderInput[]
     deleteMany?: OrderItemScalarWhereInput | OrderItemScalarWhereInput[]
+  }
+
+  export type ExpenseUncheckedUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<ExpenseCreateWithoutOrderInput, ExpenseUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: ExpenseCreateOrConnectWithoutOrderInput
+    upsert?: ExpenseUpsertWithoutOrderInput
+    disconnect?: ExpenseWhereInput | boolean
+    delete?: ExpenseWhereInput | boolean
+    connect?: ExpenseWhereUniqueInput
+    update?: XOR<XOR<ExpenseUpdateToOneWithWhereWithoutOrderInput, ExpenseUpdateWithoutOrderInput>, ExpenseUncheckedUpdateWithoutOrderInput>
   }
 
   export type OrderCreateNestedOneWithoutItemsInput = {
@@ -28298,8 +28483,24 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutLeavesInput, UserUpdateWithoutLeavesInput>, UserUncheckedUpdateWithoutLeavesInput>
   }
 
+  export type OrderCreateNestedOneWithoutCogsExpenseInput = {
+    create?: XOR<OrderCreateWithoutCogsExpenseInput, OrderUncheckedCreateWithoutCogsExpenseInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutCogsExpenseInput
+    connect?: OrderWhereUniqueInput
+  }
+
   export type EnumExpensePaymentMethodFieldUpdateOperationsInput = {
     set?: $Enums.ExpensePaymentMethod
+  }
+
+  export type OrderUpdateOneWithoutCogsExpenseNestedInput = {
+    create?: XOR<OrderCreateWithoutCogsExpenseInput, OrderUncheckedCreateWithoutCogsExpenseInput>
+    connectOrCreate?: OrderCreateOrConnectWithoutCogsExpenseInput
+    upsert?: OrderUpsertWithoutCogsExpenseInput
+    disconnect?: OrderWhereInput | boolean
+    delete?: OrderWhereInput | boolean
+    connect?: OrderWhereUniqueInput
+    update?: XOR<XOR<OrderUpdateToOneWithWhereWithoutCogsExpenseInput, OrderUpdateWithoutCogsExpenseInput>, OrderUncheckedUpdateWithoutCogsExpenseInput>
   }
 
   export type UserCreateNestedOneWithoutPayrollsInput = {
@@ -29158,6 +29359,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemCreateNestedManyWithoutOrderInput
+    cogsExpense?: ExpenseCreateNestedOneWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutCashierInput = {
@@ -29178,6 +29380,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+    cogsExpense?: ExpenseUncheckedCreateNestedOneWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutCashierInput = {
@@ -29896,6 +30099,35 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ExpenseCreateWithoutOrderInput = {
+    id?: string
+    title: string
+    expenseType: string
+    amount: Decimal | DecimalJsLike | number | string
+    expenseDate: Date | string
+    paymentMethod?: $Enums.ExpensePaymentMethod
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExpenseUncheckedCreateWithoutOrderInput = {
+    id?: string
+    title: string
+    expenseType: string
+    amount: Decimal | DecimalJsLike | number | string
+    expenseDate: Date | string
+    paymentMethod?: $Enums.ExpensePaymentMethod
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ExpenseCreateOrConnectWithoutOrderInput = {
+    where: ExpenseWhereUniqueInput
+    create: XOR<ExpenseCreateWithoutOrderInput, ExpenseUncheckedCreateWithoutOrderInput>
+  }
+
   export type UserUpsertWithoutOrdersInput = {
     update: XOR<UserUpdateWithoutOrdersInput, UserUncheckedUpdateWithoutOrdersInput>
     create: XOR<UserCreateWithoutOrdersInput, UserUncheckedCreateWithoutOrdersInput>
@@ -29963,6 +30195,41 @@ export namespace Prisma {
     data: XOR<OrderItemUpdateManyMutationInput, OrderItemUncheckedUpdateManyWithoutOrderInput>
   }
 
+  export type ExpenseUpsertWithoutOrderInput = {
+    update: XOR<ExpenseUpdateWithoutOrderInput, ExpenseUncheckedUpdateWithoutOrderInput>
+    create: XOR<ExpenseCreateWithoutOrderInput, ExpenseUncheckedCreateWithoutOrderInput>
+    where?: ExpenseWhereInput
+  }
+
+  export type ExpenseUpdateToOneWithWhereWithoutOrderInput = {
+    where?: ExpenseWhereInput
+    data: XOR<ExpenseUpdateWithoutOrderInput, ExpenseUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type ExpenseUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    expenseType?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    expenseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMethod?: EnumExpensePaymentMethodFieldUpdateOperationsInput | $Enums.ExpensePaymentMethod
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ExpenseUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    expenseType?: StringFieldUpdateOperationsInput | string
+    amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    expenseDate?: DateTimeFieldUpdateOperationsInput | Date | string
+    paymentMethod?: EnumExpensePaymentMethodFieldUpdateOperationsInput | $Enums.ExpensePaymentMethod
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrderCreateWithoutItemsInput = {
     id?: string
     orderNumber: string
@@ -29981,6 +30248,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cashier?: UserCreateNestedOneWithoutOrdersInput
+    cogsExpense?: ExpenseCreateNestedOneWithoutOrderInput
   }
 
   export type OrderUncheckedCreateWithoutItemsInput = {
@@ -30001,6 +30269,7 @@ export namespace Prisma {
     notes?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    cogsExpense?: ExpenseUncheckedCreateNestedOneWithoutOrderInput
   }
 
   export type OrderCreateOrConnectWithoutItemsInput = {
@@ -30074,6 +30343,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cashier?: UserUpdateOneWithoutOrdersNestedInput
+    cogsExpense?: ExpenseUpdateOneWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutItemsInput = {
@@ -30094,6 +30364,7 @@ export namespace Prisma {
     notes?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cogsExpense?: ExpenseUncheckedUpdateOneWithoutOrderNestedInput
   }
 
   export type MenuItemUpsertWithoutOrderItemsInput = {
@@ -30329,6 +30600,106 @@ export namespace Prisma {
     attendances?: AttendanceUncheckedUpdateManyWithoutUserNestedInput
     payrolls?: PayrollUncheckedUpdateManyWithoutUserNestedInput
     salaryAdvances?: SalaryAdvanceUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type OrderCreateWithoutCogsExpenseInput = {
+    id?: string
+    orderNumber: string
+    kotNumber?: number | null
+    status?: $Enums.OrderStatus
+    paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    subtotal: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    cashReceived?: Decimal | DecimalJsLike | number | string | null
+    changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cashier?: UserCreateNestedOneWithoutOrdersInput
+    items?: OrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderUncheckedCreateWithoutCogsExpenseInput = {
+    id?: string
+    orderNumber: string
+    kotNumber?: number | null
+    cashierId?: string | null
+    status?: $Enums.OrderStatus
+    paymentMethod?: $Enums.PaymentMethod
+    paymentStatus?: $Enums.PaymentStatus
+    subtotal: Decimal | DecimalJsLike | number | string
+    totalAmount: Decimal | DecimalJsLike | number | string
+    cashReceived?: Decimal | DecimalJsLike | number | string | null
+    changeGiven?: Decimal | DecimalJsLike | number | string | null
+    dueAmount?: Decimal | DecimalJsLike | number | string | null
+    customerName?: string | null
+    customerPhone?: string | null
+    notes?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: OrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type OrderCreateOrConnectWithoutCogsExpenseInput = {
+    where: OrderWhereUniqueInput
+    create: XOR<OrderCreateWithoutCogsExpenseInput, OrderUncheckedCreateWithoutCogsExpenseInput>
+  }
+
+  export type OrderUpsertWithoutCogsExpenseInput = {
+    update: XOR<OrderUpdateWithoutCogsExpenseInput, OrderUncheckedUpdateWithoutCogsExpenseInput>
+    create: XOR<OrderCreateWithoutCogsExpenseInput, OrderUncheckedCreateWithoutCogsExpenseInput>
+    where?: OrderWhereInput
+  }
+
+  export type OrderUpdateToOneWithWhereWithoutCogsExpenseInput = {
+    where?: OrderWhereInput
+    data: XOR<OrderUpdateWithoutCogsExpenseInput, OrderUncheckedUpdateWithoutCogsExpenseInput>
+  }
+
+  export type OrderUpdateWithoutCogsExpenseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    kotNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cashier?: UserUpdateOneWithoutOrdersNestedInput
+    items?: OrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrderUncheckedUpdateWithoutCogsExpenseInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderNumber?: StringFieldUpdateOperationsInput | string
+    kotNumber?: NullableIntFieldUpdateOperationsInput | number | null
+    cashierId?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumOrderStatusFieldUpdateOperationsInput | $Enums.OrderStatus
+    paymentMethod?: EnumPaymentMethodFieldUpdateOperationsInput | $Enums.PaymentMethod
+    paymentStatus?: EnumPaymentStatusFieldUpdateOperationsInput | $Enums.PaymentStatus
+    subtotal?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    totalAmount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    cashReceived?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    changeGiven?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dueAmount?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    customerName?: NullableStringFieldUpdateOperationsInput | string | null
+    customerPhone?: NullableStringFieldUpdateOperationsInput | string | null
+    notes?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
   }
 
   export type UserCreateWithoutPayrollsInput = {
@@ -31075,6 +31446,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUpdateManyWithoutOrderNestedInput
+    cogsExpense?: ExpenseUpdateOneWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateWithoutCashierInput = {
@@ -31095,6 +31467,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     items?: OrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    cogsExpense?: ExpenseUncheckedUpdateOneWithoutOrderNestedInput
   }
 
   export type OrderUncheckedUpdateManyWithoutCashierInput = {

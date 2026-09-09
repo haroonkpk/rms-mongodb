@@ -241,6 +241,7 @@ exports.Prisma.ExpenseScalarFieldEnum = {
   amount: 'amount',
   expenseDate: 'expenseDate',
   paymentMethod: 'paymentMethod',
+  orderId: 'orderId',
   notes: 'notes',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

@@ -45,16 +45,25 @@ export function InventoryReportTab({
     total.amount += Math.abs(movement.quantityChange);
     total.count += 1;
   });
+  const sold = movementTotals.get("SALE_DEDUCTION")!;
+  const wastedAndExpired = movementTotals.get("WASTAGE_OUT")!;
+  const expired = movementTotals.get("SPOILAGE_OUT")!;
   const chartData = {
     ...data,
-    breakdown: [...movementTotals.values()].filter((item) => item.amount > 0),
+    breakdown: [
+      sold,
+      {
+        label: "Wasted + Expired",
+        amount: wastedAndExpired.amount + expired.amount,
+        count: wastedAndExpired.count + expired.count,
+      },
+    ].filter((item) => item.amount > 0),
   };
 
   return (
     <>
       <ReportKpiGrid data={data} label={label} isLoading={isLoading} />
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.35fr_1fr]">
-       
         <ReportBreakdownChart
           data={chartData.breakdown}
           title={`${label} breakdown`}

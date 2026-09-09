@@ -52,14 +52,23 @@ export function ItemModal({
   );
   const [prevIsOpen, setPrevIsOpen] = useState<boolean>(isOpen);
 
-  const [rawInventoryItems, setRawInventoryItems] = useState<Array<{ id: string; name: string; unit: string }>>([]);
+  const [rawInventoryItems, setRawInventoryItems] = useState<
+    Array<{ id: string; name: string; unit: string; unitCost: number }>
+  >([]);
 
   useEffect(() => {
     if (isOpen) {
       import("@/actions/inventory").then((mod) => {
         mod.getInventoryItems(1, 100).then((res) => {
           if (res.success && res.items) {
-            setRawInventoryItems(res.items.map(i => ({ id: i.id, name: i.name, unit: i.unit })));
+            setRawInventoryItems(
+              res.items.map((i) => ({
+                id: i.id,
+                name: i.name,
+                unit: i.unit,
+                unitCost: i.unitCost,
+              })),
+            );
           }
         });
       });
@@ -145,8 +154,23 @@ export function ItemModal({
       value: cat.id,
       label: cat.name,
     }));
-    return [{ value: "", label: "Select Category..." }, ...opts];
+    return [{ value: "", label: "Select Category" }, ...opts];
   }, [categories]);
+
+  const actualCost = React.useMemo(
+    () =>
+      formData.ingredients.reduce((total, ingredient) => {
+        const inventoryItem = rawInventoryItems.find(
+          (item) => item.id === ingredient.inventoryItemId,
+        );
+        return (
+          total +
+          (inventoryItem?.unitCost ?? 0) *
+            Math.max(0, Number(ingredient.quantityRequired) || 0)
+        );
+      }, 0),
+    [formData.ingredients, rawInventoryItems],
+  );
 
   // Size option handlers
   const handleAddSizeOption = () => {
@@ -327,7 +351,7 @@ export function ItemModal({
           />
 
           {/* Stock Availability Toggle Switch */}
-          <div className="flex flex-col gap-2 p-3 bg-slate-50 border border-slate-200 rounded-md">
+          <div className="flex flex-col gap-2 p-3 bg-slate-50 border border-slate-200">
             <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">
               Stock Availability
             </span>
@@ -353,7 +377,7 @@ export function ItemModal({
 
         <Textarea
           label="Description"
-          placeholder="Describe ingredients, taste, or serving details..."
+          placeholder="Describe the food item"
           value={formData.description}
           onChange={(e) =>
             setFormData({ ...formData, description: e.target.value })
@@ -362,18 +386,13 @@ export function ItemModal({
         />
 
         {/* Dynamic Sizes Section */}
-        <div className="p-4 bg-slate-50 border border-slate-200 rounded-lg flex flex-col gap-3">
+        <div className="p-4 bg-slate-50 border border-slate-200  flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Layers size={18} className="text-[var(--color-primary)]" />
               <div>
                 <h4 className="text-sm font-bold text-slate-900">
                   Item Sizing & Portions
                 </h4>
-                <p className="text-xs text-slate-500">
-                  Enable if this item has multiple sizes (e.g. Small, Medium,
-                  Large, Half, Full)
-                </p>
               </div>
             </div>
 
@@ -456,17 +475,13 @@ export function ItemModal({
         </div>
 
         {/* Recipe Ingredients Mapping */}
-        <div className="p-4 bg-emerald-50/60 border border-emerald-200 rounded-lg flex flex-col gap-3">
+        <div className="p-4 bg-emerald-50/60 border border-emerald-200  flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Utensils size={18} className="text-emerald-700" />
               <div>
                 <h4 className="text-sm font-bold text-slate-900">
-                  Recipe Ingredients & Raw Materials
+                  Raw Materials
                 </h4>
-                <p className="text-xs text-slate-500">
-                  Raw materials automatically deducted from stock when Chef starts cooking (Status: Preparing)
-                </p>
               </div>
             </div>
             <Button
@@ -474,15 +489,15 @@ export function ItemModal({
               variant="outline"
               onClick={handleAddIngredientRow}
               icon={<Plus size={14} />}
-              className="text-xs py-1 px-2.5 bg-white border-emerald-300 text-emerald-800 hover:bg-emerald-100"
             >
-              Add Ingredient
+              Add
             </Button>
           </div>
 
           {formData.ingredients.length === 0 ? (
             <p className="text-xs text-slate-400 italic">
-              No recipe ingredients added yet. Click &quot;Add Ingredient&quot; to link raw materials to this dish.
+              No recipe ingredients added yet. Click &quot;Add&quot; to link raw
+              materials to this dish.
             </p>
           ) : (
             <div className="flex flex-col gap-2 pt-2 border-t border-emerald-200/60">
@@ -497,7 +512,10 @@ export function ItemModal({
                   (i) => i.id === ing.inventoryItemId,
                 );
                 return (
-                  <div key={idx} className="grid grid-cols-12 gap-2 items-center">
+                  <div
+                    key={idx}
+                    className="grid grid-cols-12 gap-2 items-center"
+                  >
                     <div className="col-span-7">
                       <Select
                         options={rawInventoryItems.map((item) => ({
@@ -547,6 +565,19 @@ export function ItemModal({
               })}
             </div>
           )}
+
+          <div className="flex items-center justify-between border-t border-emerald-200 pt-3">
+            <span className="text-sm font-bold text-slate-700">
+              Actual Cost per Serving
+            </span>
+            <span className="text-lg font-bold text-emerald-700">
+              Rs{" "}
+              {actualCost.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
+          </div>
         </div>
 
         {/* Linked Add-Ons / Modifiers Section */}

@@ -192,15 +192,21 @@ export async function updateKitchenOrderStatus(
       return { success: false, error: "Order not found" };
     }
 
+    if (status === "COMPLETED" && currentOrder.status !== "COMPLETED") {
+      const { deductInventoryForOrder } = await import("@/actions/inventory");
+      const deductionResult = await deductInventoryForOrder(orderId);
+      if (!deductionResult.success) {
+        return {
+          success: false,
+          error: deductionResult.error || "Unable to record order food cost",
+        };
+      }
+    }
+
     await prisma.order.update({
       where: { id: orderId },
       data: { status },
     });
-
-    if (currentOrder.status === "PREPARING" && status === "READY") {
-      const { deductInventoryForOrder } = await import("@/actions/inventory");
-      await deductInventoryForOrder(orderId);
-    }
 
     revalidatePath("/kitchen");
     revalidatePath("/pos");

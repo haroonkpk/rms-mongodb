@@ -1,12 +1,18 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import {
   InventoryUnit,
   StockMovementType,
   Prisma,
 } from "../../prisma/generated";
+
+function revalidateMenuAvailability() {
+  revalidatePath("/admin/menu");
+  revalidatePath("/pos");
+  revalidateTag("pos-data", "max");
+}
 
 export interface InventoryCategoryData {
   id: string;
@@ -69,7 +75,6 @@ export interface InventoryStats {
   lowStockCount: number;
   outOfStockCount: number;
 }
-
 
 // ----------------------------------------------------
 // INVENTORY CATEGORIES ACTIONS
@@ -371,6 +376,7 @@ export async function deleteInventoryItem(id: string) {
   try {
     await prisma.inventoryItem.delete({ where: { id } });
     revalidatePath("/admin/inventory");
+    revalidateMenuAvailability();
     return { success: true };
   } catch (error) {
     console.error("Error deleting inventory item:", error);
@@ -431,6 +437,7 @@ export async function adjustStock(data: {
     });
 
     revalidatePath("/admin/inventory");
+    revalidateMenuAvailability();
     return { success: true, newQuantity: Number(result.updatedItem.quantity) };
   } catch (error: unknown) {
     console.error("Error adjusting stock:", error);
@@ -618,6 +625,7 @@ export async function createStockIntakeBatch(data: {
     });
 
     revalidatePath("/admin/inventory");
+    revalidateMenuAvailability();
     return {
       success: true,
       batchId: result.id,
@@ -650,6 +658,12 @@ export async function deductInventoryForOrder(
 
     if (!order || !order.items || order.items.length === 0)
       return { success: true };
+
+    const existingCogsExpense = await prisma.expense.findUnique({
+      where: { orderId },
+      select: { id: true },
+    });
+    if (existingCogsExpense) return { success: true };
 
     // Map to aggregate deduction totals: inventoryItemId -> { totalRequired: number, reasons: string[] }
     const deductionsMap: Record<
@@ -763,6 +777,8 @@ export async function deductInventoryForOrder(
     if (inventoryItemIds.length === 0) return { success: true };
 
     await prisma.$transaction(async (tx) => {
+      let cogsAmount = 0;
+
       for (const invId of inventoryItemIds) {
         const data = deductionsMap[invId];
         const invItem = await tx.inventoryItem.findUnique({
@@ -772,6 +788,7 @@ export async function deductInventoryForOrder(
         if (invItem) {
           const prevQty = Number(invItem.quantity);
           const newQty = Math.max(0, prevQty - data.totalRequired);
+          cogsAmount += data.totalRequired * Number(invItem.unitCost);
 
           await tx.inventoryItem.update({
             where: { id: invId },
@@ -790,9 +807,30 @@ export async function deductInventoryForOrder(
           });
         }
       }
+
+      if (cogsAmount > 0) {
+        const cogsType = await tx.expenseType.upsert({
+          where: { name: "COGS" },
+          update: {},
+          create: { name: "COGS" },
+        });
+
+        await tx.expense.create({
+          data: {
+            title: `COGS - Order ${order.orderNumber}`,
+            expenseType: cogsType.name,
+            amount: cogsAmount,
+            expenseDate: order.createdAt,
+            paymentMethod: "OTHER",
+            orderId: order.id,
+            notes: `Cost of ingredients consumed for order ${order.orderNumber}`,
+          },
+        });
+      }
     });
 
     revalidatePath("/admin/inventory");
+    revalidateMenuAvailability();
     return { success: true };
   } catch (error) {
     console.error("Error deducting inventory for order:", error);
