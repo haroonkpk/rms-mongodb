@@ -2,7 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/actions/auth";
-import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import {
   POSAddOn,
   POSMenuItem,
@@ -12,67 +12,60 @@ import {
   POSOrderResult,
 } from "@/types/pos";
 
-export const getCachedPOSCatalog = unstable_cache(
-  async () => {
-    // Categories
-    const dbCategories = await prisma.category.findMany({
-      orderBy: { name: "asc" },
-      include: {
-        _count: {
-          select: { menuItems: true },
-        },
+export async function getPOSCatalog() {
+  // Categories
+  const dbCategories = await prisma.category.findMany({
+    orderBy: { name: "asc" },
+    include: {
+      _count: {
+        select: { menuItems: true },
       },
-    });
+    },
+  });
 
-    // Menu Items
-    const dbMenuItems = await prisma.menuItem.findMany({
-      orderBy: { name: "asc" },
-      include: {
-        category: true,
-        addOns: true,
-      },
-    });
+  // Menu Items
+  const dbMenuItems = await prisma.menuItem.findMany({
+    orderBy: { name: "asc" },
+    include: {
+      category: true,
+      addOns: true,
+    },
+  });
 
-    const categories: POSCategory[] = dbCategories.map((c) => ({
-      id: c.id,
-      name: c.name,
-      itemCount: c._count.menuItems,
-    }));
+  const categories: POSCategory[] = dbCategories.map((c) => ({
+    id: c.id,
+    name: c.name,
+    itemCount: c._count.menuItems,
+  }));
 
-    const menuItems: POSMenuItem[] = dbMenuItems.map((item) => ({
-      id: item.id,
-      name: item.name,
-      description: item.description,
-      basePrice: Number(item.basePrice),
-      imageUrl: item.imageUrl,
-      isAvailable: item.isAvailable,
-      categoryId: item.categoryId,
-      categoryName: item.category.name,
-      hasSizes: item.hasSizes ?? false,
-      sizes: Array.isArray(item.sizes)
-        ? (item.sizes as unknown as { name: string; price: number }[])
-        : [],
-      addOns: item.addOns.map((addon) => ({
-        id: addon.id,
-        name: addon.name,
-        price: Number(addon.price),
-        isAvailable: addon.isAvailable,
-      })),
-    }));
+  const menuItems: POSMenuItem[] = dbMenuItems.map((item) => ({
+    id: item.id,
+    name: item.name,
+    description: item.description,
+    basePrice: Number(item.basePrice),
+    imageUrl: item.imageUrl,
+    isAvailable: item.isAvailable,
+    categoryId: item.categoryId,
+    categoryName: item.category.name,
+    hasSizes: item.hasSizes ?? false,
+    sizes: Array.isArray(item.sizes)
+      ? (item.sizes as unknown as { name: string; price: number }[])
+      : [],
+    addOns: item.addOns.map((addon) => ({
+      id: addon.id,
+      name: addon.name,
+      price: Number(addon.price),
+      isAvailable: addon.isAvailable,
+    })),
+  }));
 
-    return { categories, menuItems };
-  },
-  ["pos-catalog-data"],
-  {
-    tags: ["pos-data"],
-    revalidate: 3600, // 1 hour server cache window
-  },
-);
+  return { categories, menuItems };
+}
 
 export async function getPOSInitData(): Promise<POSInitDataResponse> {
   try {
     const user = await getCurrentUser();
-    const { categories, menuItems } = await getCachedPOSCatalog();
+    const { categories, menuItems } = await getPOSCatalog();
 
     return {
       success: true,

@@ -71,8 +71,8 @@ export const PosLiveOrderCard = memo(function PosLiveOrderCard({
     }
   };
 
-  const isDelayed = !isClosed && elapsedMinutes >= 15;
-  const isSlow = !isClosed && elapsedMinutes >= 10 && elapsedMinutes < 15;
+  const isDelayed = !isClosed && elapsedMinutes >= 30;
+  const isSlow = !isClosed && elapsedMinutes >= 10 && elapsedMinutes < 30;
 
   /* --------------------------------
      TIMER
