@@ -5,14 +5,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
 import { ConfirmModal } from "@/components/ui/confirm-modal";
-import {
-  Boxes,
-  Plus,
-  Layers,
-  History,
-  FolderPlus,
-  PackagePlus,
-} from "lucide-react";
+import { Boxes, Plus, Layers, FolderPlus, PackagePlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   getInventoryItems,
@@ -20,7 +13,6 @@ import {
   updateInventoryItem,
   deleteInventoryItem,
   adjustStock,
-  getStockMovements,
   getStockIntakeBatches,
   createStockIntakeBatch,
   getInventoryCategories,
@@ -28,7 +20,6 @@ import {
   updateInventoryCategory,
   deleteInventoryCategory,
   InventoryItemData,
-  StockMovementData,
   StockIntakeBatchData,
   InventoryCategoryData,
 } from "@/actions/inventory";
@@ -40,7 +31,6 @@ import {
 import { InventoryItemsTable } from "@/components/admin/inventory/inventory-items-table";
 import { InventoryItemModal } from "@/components/admin/inventory/inventory-item-modal";
 import { StockAdjustmentModal } from "@/components/admin/inventory/stock-adjustment-modal";
-import { StockMovementsTable } from "@/components/admin/inventory/stock-movements-table";
 import { StockIntakeTable } from "@/components/admin/inventory/stock-intake-table";
 import { StockIntakeModal } from "@/components/admin/inventory/stock-intake-modal";
 import { InventoryCategoriesTable } from "@/components/admin/inventory/inventory-categories-table";
@@ -56,13 +46,11 @@ export default function AdminInventoryPage() {
   const [items, setItems] = useState<InventoryItemData[]>([]);
   const [allAllItems, setAllItems] = useState<InventoryItemData[]>([]);
   const [batches, setBatches] = useState<StockIntakeBatchData[]>([]);
-  const [movements, setMovements] = useState<StockMovementData[]>([]);
   const [categories, setCategories] = useState<InventoryCategoryData[]>([]);
 
   // Loading States
   const [isItemsLoading, setIsItemsLoading] = useState(true);
   const [isBatchesLoading, setIsBatchesLoading] = useState(true);
-  const [isMovementsLoading, setIsMovementsLoading] = useState(true);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
 
   // Filters & Pagination for Items
@@ -74,12 +62,6 @@ export default function AdminInventoryPage() {
   const [itemsPage, setItemsPage] = useState(1);
   const [itemsTotalPages, setItemsTotalPages] = useState(1);
   const [itemsTotalEntries, setItemsTotalEntries] = useState(0);
-
-  // Filters & Pagination for Movements
-  const [movementTypeFilter, setMovementTypeFilter] = useState("ALL");
-  const [movementsPage, setMovementsPage] = useState(1);
-  const [movementsTotalPages, setMovementsTotalPages] = useState(1);
-  const [movementsTotalEntries, setMovementsTotalEntries] = useState(0);
 
   // Modal Visibility States
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
@@ -160,20 +142,6 @@ export default function AdminInventoryPage() {
     }
   };
 
-  const fetchMovements = async (page: number, typeFilter: string) => {
-    setIsMovementsLoading(true);
-    try {
-      const res = await getStockMovements(page, 15, typeFilter);
-      if (res.success && res.movements) {
-        setMovements(res.movements);
-        setMovementsTotalPages(res.totalPages || 1);
-        setMovementsTotalEntries(res.total || 0);
-      }
-    } finally {
-      setIsMovementsLoading(false);
-    }
-  };
-
   // Initial Load
   useEffect(() => {
     void Promise.resolve().then(() =>
@@ -197,13 +165,6 @@ export default function AdminInventoryPage() {
     );
   }, [itemsPage, searchQuery, selectedCategoryFilter, stockStatusFilter]);
 
-  // Movements Filter Effect
-  useEffect(() => {
-    void Promise.resolve().then(() =>
-      fetchMovements(movementsPage, movementTypeFilter),
-    );
-  }, [movementsPage, movementTypeFilter]);
-
   const refreshAllData = async () => {
     await Promise.all([
       fetchCategories(),
@@ -215,7 +176,6 @@ export default function AdminInventoryPage() {
         selectedCategoryFilter,
         stockStatusFilter,
       ),
-      fetchMovements(movementsPage, movementTypeFilter),
     ]);
   };
 
@@ -234,24 +194,13 @@ export default function AdminInventoryPage() {
         count: batches.length,
       },
       {
-        id: "movements" as const,
-        label: "Stock Audit & History",
-        icon: History,
-        count: movementsTotalEntries,
-      },
-      {
         id: "categories" as const,
         label: "Categories",
         icon: Layers,
         count: categories.length,
       },
     ],
-    [
-      itemsTotalEntries,
-      batches.length,
-      movementsTotalEntries,
-      categories.length,
-    ],
+    [itemsTotalEntries, batches.length, categories.length],
   );
 
   // ---------------------------------------------------------
@@ -531,22 +480,6 @@ export default function AdminInventoryPage() {
 
         {activeTab === "intakes" && (
           <StockIntakeTable batches={batches} isLoading={isBatchesLoading} />
-        )}
-
-        {activeTab === "movements" && (
-          <StockMovementsTable
-            movements={movements}
-            movementTypeFilter={movementTypeFilter}
-            onMovementTypeFilterChange={(type) => {
-              setMovementTypeFilter(type);
-              setMovementsPage(1);
-            }}
-            currentPage={movementsPage}
-            totalPages={movementsTotalPages}
-            totalEntries={movementsTotalEntries}
-            isLoading={isMovementsLoading}
-            onPageChange={(page) => setMovementsPage(page)}
-          />
         )}
 
         {activeTab === "categories" && (

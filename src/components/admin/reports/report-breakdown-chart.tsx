@@ -31,7 +31,17 @@ function getSliceColor(index: number, isLargest: boolean) {
   return `hsl(${hue} 68% 45%)`;
 }
 
-export function ReportBreakdownChart({ data }: { data: BreakdownPoint[] }) {
+export function ReportBreakdownChart({
+  data,
+  title,
+  valueFormat = "money",
+  isLoading = false,
+}: {
+  data: BreakdownPoint[];
+  title: string;
+  valueFormat?: "money" | "quantity";
+  isLoading?: boolean;
+}) {
   const breakdownData = data;
   const largest = breakdownData.reduce(
     (current, item) => (item.amount > current.amount ? item : current),
@@ -40,8 +50,10 @@ export function ReportBreakdownChart({ data }: { data: BreakdownPoint[] }) {
 
   return (
     <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
-      <h2 className="text-lg font-bold text-slate-900">Breakdown</h2>
-      {breakdownData.length ? (
+      <h2 className="text-lg font-bold text-slate-900">{title}</h2>
+      {isLoading ? (
+        <div className="mt-4 h-56 w-full animate-pulse rounded-sm bg-slate-100" />
+      ) : breakdownData.length ? (
         <ResponsiveContainer width="100%" height={220}>
           <PieChart>
             <Pie
@@ -65,7 +77,13 @@ export function ReportBreakdownChart({ data }: { data: BreakdownPoint[] }) {
                 />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => money(Number(value))} />
+            <Tooltip
+              formatter={(value) =>
+                valueFormat === "quantity"
+                  ? [`${Number(value).toLocaleString()} quantity`, "Items"]
+                  : money(Number(value))
+              }
+            />
           </PieChart>
         </ResponsiveContainer>
       ) : (

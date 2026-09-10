@@ -1,91 +1,95 @@
-import { type NextRequest, NextResponse } from 'next/server'
-import { decrypt, encrypt } from '@/lib/auth'
+import { type NextRequest, NextResponse } from "next/server";
+import { decrypt, encrypt } from "@/lib/auth";
 
-const SESSION_DURATION_MS = 24 * 60 * 60 * 1000
-const REFRESH_THRESHOLD_MS = 6 * 60 * 60 * 1000
+const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+const REFRESH_THRESHOLD_MS = 6 * 60 * 60 * 1000;
 
 export async function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl
-  const sessionCookie = request.cookies.get('session')?.value
+  const { pathname } = request.nextUrl;
+  const sessionCookie = request.cookies.get("session")?.value;
 
-  let sessionPayload: Record<string, unknown> | null = null
+  let sessionPayload: Record<string, unknown> | null = null;
   if (sessionCookie) {
     try {
-      sessionPayload = await decrypt(sessionCookie)
+      sessionPayload = await decrypt(sessionCookie);
     } catch {
-      sessionPayload = null
+      sessionPayload = null;
     }
   }
 
-  const isAuthenticated = !!(sessionPayload && sessionPayload.userId)
-  const isAuthRoute = pathname.startsWith('/auth')
+  const isAuthenticated = !!(sessionPayload && sessionPayload.userId);
+  const isAuthRoute = pathname.startsWith("/auth");
 
-  if (pathname === '/auth' || pathname === '/auth/') {
-    return NextResponse.redirect(new URL(isAuthenticated ? '/pos' : '/auth/login', request.url))
+  if (pathname === "/auth" || pathname === "/auth/") {
+    return NextResponse.redirect(
+      new URL(isAuthenticated ? "/pos" : "/auth/login", request.url),
+    );
   }
 
   // 1. If user is NOT authenticated:
   if (!isAuthenticated) {
     // Allow access to public auth sub-routes (/auth/login, /auth/sign-up, etc.)
     if (isAuthRoute) {
-      return NextResponse.next()
+      return NextResponse.next();
     }
     // Redirect all other requests to /auth/login
-    const loginUrl = new URL('/auth/login', request.url)
-    if (pathname !== '/') {
-      loginUrl.searchParams.set('next', pathname)
+    const loginUrl = new URL("/auth/login", request.url);
+    if (pathname !== "/") {
+      loginUrl.searchParams.set("next", pathname);
     }
-    return NextResponse.redirect(loginUrl)
+    return NextResponse.redirect(loginUrl);
   }
 
   // 2. If user IS authenticated:
-  if (isAuthRoute || pathname === '/') {
+  if (isAuthRoute || pathname === "/") {
     // Redirect CHEF to /kitchen, others to /pos
-    const defaultRoute = sessionPayload?.role === 'CHEF' ? '/kitchen' : '/pos'
-    return NextResponse.redirect(new URL(defaultRoute, request.url))
+    const defaultRoute = sessionPayload?.role === "CHEF" ? "/kitchen" : "/pos";
+    return NextResponse.redirect(new URL(defaultRoute, request.url));
   }
 
   // 3. Fast Edge Guard for role-restricted routes:
-  if (pathname.startsWith('/admin') && sessionPayload?.role !== 'ADMIN') {
-    const fallbackRoute = sessionPayload?.role === 'CHEF' ? '/kitchen' : '/pos'
-    return NextResponse.redirect(new URL(fallbackRoute, request.url))
+  if (pathname.startsWith("/admin") && sessionPayload?.role !== "ADMIN") {
+    const fallbackRoute = sessionPayload?.role === "CHEF" ? "/kitchen" : "/pos";
+    return NextResponse.redirect(new URL(fallbackRoute, request.url));
   }
 
-  if (sessionPayload?.role === 'CHEF' && pathname.startsWith('/pos')) {
-    return NextResponse.redirect(new URL('/kitchen', request.url))
+  if (sessionPayload?.role === "CHEF" && pathname.startsWith("/pos")) {
+    return NextResponse.redirect(new URL("/kitchen", request.url));
   }
 
-  if (sessionPayload?.role === 'CASHIER' && pathname.startsWith('/kitchen')) {
-    return NextResponse.redirect(new URL('/pos', request.url))
+  if (sessionPayload?.role === "CASHIER" && pathname.startsWith("/kitchen")) {
+    return NextResponse.redirect(new URL("/pos", request.url));
   }
 
   // 3. For authenticated users accessing protected routes: extend session if threshold met
   if (sessionPayload && sessionPayload.expires) {
-    const currentExpiry = new Date(sessionPayload.expires as string | number | Date).getTime()
-    const timeLeft = currentExpiry - Date.now()
+    const currentExpiry = new Date(
+      sessionPayload.expires as string | number | Date,
+    ).getTime();
+    const timeLeft = currentExpiry - Date.now();
 
     if (timeLeft > 0 && timeLeft <= REFRESH_THRESHOLD_MS) {
       try {
-        const newExpires = new Date(Date.now() + SESSION_DURATION_MS)
-        sessionPayload.expires = newExpires
-        const res = NextResponse.next()
+        const newExpires = new Date(Date.now() + SESSION_DURATION_MS);
+        sessionPayload.expires = newExpires;
+        const res = NextResponse.next();
         res.cookies.set({
-          name: 'session',
+          name: "session",
           value: await encrypt(sessionPayload),
           httpOnly: true,
-          secure: process.env.NODE_ENV === 'production',
+          secure: process.env.NODE_ENV === "production",
           expires: newExpires,
-          sameSite: 'lax',
-          path: '/',
-        })
-        return res
+          sameSite: "lax",
+          path: "/",
+        });
+        return res;
       } catch (error) {
-        console.error('Session refresh failed:', error)
+        console.error("Session refresh failed:", error);
       }
     }
   }
 
-  return NextResponse.next()
+  return NextResponse.next();
 }
 
 export const config = {
@@ -97,6 +101,6 @@ export const config = {
      * - favicon.ico (favicon file)
      * - images - .svg, .png, .jpg, .jpeg, .gif, .webp
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
-}
+};

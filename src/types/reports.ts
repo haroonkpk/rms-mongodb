@@ -1,3 +1,5 @@
+import type { InventoryUnit, StockMovementType } from "../../prisma/generated";
+
 export type ReportPeriod = "TODAY" | "THIS_WEEK" | "THIS_MONTH" | "CUSTOM";
 export type ReportTab =
   | "sales"
@@ -29,10 +31,34 @@ export interface TrendPoint {
   count: number;
 }
 
+export interface TrendChartPoint {
+  label: string;
+  [key: string]: string | number;
+}
+
+export interface TrendSeries {
+  key: string;
+  label: string;
+  color: string;
+}
+
 export interface BreakdownPoint {
   label: string;
   amount: number;
   count: number;
+}
+
+export interface ReportInventoryMovement {
+  id: string;
+  inventoryItemId: string;
+  inventoryItemName: string;
+  unit: InventoryUnit;
+  type: StockMovementType;
+  quantityChange: number;
+  previousQuantity: number;
+  newQuantity: number;
+  reason: string | null;
+  createdAt: string;
 }
 
 export interface DashboardData {
@@ -69,6 +95,11 @@ export interface ReportData {
   range: { start: string; end: string };
   kpis: Array<{ label: string; value: number; detail?: string }>;
   trend: TrendPoint[];
+  trendSeries?: {
+    data: TrendChartPoint[];
+    series: TrendSeries[];
+  };
   breakdown: BreakdownPoint[];
+  inventoryMovements?: ReportInventoryMovement[];
   rows: Array<Record<string, string | number>>;
 }

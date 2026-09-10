@@ -1,105 +1,106 @@
-import { SignJWT, jwtVerify } from 'jose'
-import { cookies } from 'next/headers'
-import { NextRequest, NextResponse } from 'next/server'
+import { SignJWT, jwtVerify } from "jose";
+import { cookies } from "next/headers";
+import { NextRequest, NextResponse } from "next/server";
 
-const secretKey = process.env.JWT_SECRET
+const secretKey = process.env.JWT_SECRET;
 
 if (!secretKey) {
-  throw new Error('Please set JWT_SECRET environment variable')
+  throw new Error("Please set JWT_SECRET environment variable");
 }
 
-const key = new TextEncoder().encode(secretKey)
+const key = new TextEncoder().encode(secretKey);
 
-
-const SESSION_DURATION_MS = 24 * 60 * 60 * 1000
-const REFRESH_THRESHOLD_MS = 6 * 60 * 60 * 1000
+const SESSION_DURATION_MS = 7 * 24 * 60 * 60 * 1000;
+const REFRESH_THRESHOLD_MS = 6 * 60 * 60 * 1000;
 
 export async function encrypt(payload: Record<string, unknown>) {
   return await new SignJWT(payload)
-    .setProtectedHeader({ alg: 'HS256' })
+    .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime('1d')
-    .sign(key)
+    .setExpirationTime("7d")
+    .sign(key);
 }
 
 export async function decrypt(input: string): Promise<Record<string, unknown>> {
   const { payload } = await jwtVerify(input, key, {
-    algorithms: ['HS256'],
-  })
-  return payload
+    algorithms: ["HS256"],
+  });
+  return payload;
 }
 
 export async function createSession(userId: string, role?: string) {
-  const expires = new Date(Date.now() + 24 * 60 * 60 * 1000)
-  const session = await encrypt({ userId, role, expires })
+  const expires = new Date(Date.now() + SESSION_DURATION_MS);
+  const session = await encrypt({ userId, role, expires });
 
-  const cookieStore = await cookies()
-  cookieStore.set('session', session, {
+  const cookieStore = await cookies();
+  cookieStore.set("session", session, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === "production",
     expires,
-    sameSite: 'lax',
-    path: '/',
-  })
+    sameSite: "lax",
+    path: "/",
+  });
 }
 
 export async function destroySession() {
-  const cookieStore = await cookies()
-  cookieStore.set('session', '', {
+  const cookieStore = await cookies();
+  cookieStore.set("session", "", {
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.NODE_ENV === "production",
     expires: new Date(0),
-    sameSite: 'lax',
-    path: '/',
-  })
+    sameSite: "lax",
+    path: "/",
+  });
 }
 
 export async function getSession() {
-  const cookieStore = await cookies()
-  const session = cookieStore.get('session')?.value
-  if (!session) return null
+  const cookieStore = await cookies();
+  const session = cookieStore.get("session")?.value;
+  if (!session) return null;
   try {
-    return await decrypt(session)
+    return await decrypt(session);
   } catch {
-    return null
+    return null;
   }
 }
 
 export async function updateSession(request: NextRequest) {
-  const session = request.cookies.get('session')?.value
-  if (!session) return NextResponse.next()
+  const session = request.cookies.get("session")?.value;
+  if (!session) return NextResponse.next();
 
   try {
-    const parsed = await decrypt(session)
-    if (!parsed || !parsed.expires) return NextResponse.next()
+    const parsed = await decrypt(session);
+    if (!parsed || !parsed.expires) return NextResponse.next();
 
-    const currentExpiry = new Date(parsed.expires as string | number | Date).getTime()
-    const timeLeft = currentExpiry - Date.now()
+    const currentExpiry = new Date(
+      parsed.expires as string | number | Date,
+    ).getTime();
+    const timeLeft = currentExpiry - Date.now();
 
     if (timeLeft > REFRESH_THRESHOLD_MS) {
-      return NextResponse.next()
+      return NextResponse.next();
     }
 
     if (timeLeft <= 0) {
-      return NextResponse.next()
+      return NextResponse.next();
     }
 
-    const newExpires = new Date(Date.now() + SESSION_DURATION_MS)
-    parsed.expires = newExpires
+    const newExpires = new Date(Date.now() + SESSION_DURATION_MS);
+    parsed.expires = newExpires;
 
-    const res = NextResponse.next()
+    const res = NextResponse.next();
     res.cookies.set({
-      name: 'session',
+      name: "session",
       value: await encrypt(parsed),
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === "production",
       expires: newExpires,
-      sameSite: 'lax',
-      path: '/',
-    })
-    return res
+      sameSite: "lax",
+      path: "/",
+    });
+    return res;
   } catch (error) {
-    console.error('Session refresh failed:', error)
-    return NextResponse.next()
+    console.error("Session refresh failed:", error);
+    return NextResponse.next();
   }
 }

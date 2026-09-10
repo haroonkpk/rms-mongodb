@@ -126,7 +126,8 @@ export function ReportDetailTable({
               {
                 icon: <Eye size={15} />,
                 text: "View details",
-                className: "bg-sky-50 text-sky-700 border border-sky-200",
+                className:
+                  "bg-(--color-page-bg) text-(--color-primary) border border-(--color-secondary-bg)",
                 onClick: (row) => onView(row.rawRow),
               },
             ]

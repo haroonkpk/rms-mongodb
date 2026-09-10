@@ -19,7 +19,7 @@ export const Button = ({
 }: ButtonProps) => {
   const baseClasses = `
     inline-flex items-center justify-center font-medium  transition-all duration-200 cursor-pointer outline-none
-    hover:opacity-90 active:scale-95
+    hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 disabled:active:scale-100
     text-[clamp(0.875rem,1vw+0.5rem,1rem)]
     px-[clamp(1rem,2.5vw,1.5rem)]
     py-[clamp(0.6rem,1.5vw,0.875rem)]
@@ -32,10 +32,11 @@ export const Button = ({
     success:
       "bg-[var(--color-success-bg)] text-[var(--color-success-text)] focus:ring-[var(--color-success-bg)]",
     danger: "bg-red-600 text-white focus:ring-red-500",
-    outline: "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50",
+    outline:
+      "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50",
   };
 
-  return ( 
+  return (
     <button
       className={`${baseClasses} ${variants[variant]} ${className}`}
       disabled={disabled || isLoading}
@@ -44,9 +45,7 @@ export const Button = ({
       {isLoading ? (
         <Loader2 className="animate-spin" size={20} />
       ) : (
-        icon && (
-          <span className="flex-shrink-0 flex items-center">{icon}</span>
-        )
+        icon && <span className="flex-shrink-0 flex items-center">{icon}</span>
       )}
       {children && <span>{children}</span>}
     </button>

@@ -6,21 +6,23 @@ import {
   Boxes,
   CircleDollarSign,
   ClipboardList,
-  FileText,
-  RefreshCw,
+  Filter,
   WalletCards,
   Scale,
+  X,
 } from "lucide-react";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 import { Select } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { getReportData } from "@/actions/reports";
 import { ReportData, ReportFilters, ReportTab } from "@/types/reports";
-import { ReportBreakdownChart } from "@/components/admin/reports/report-breakdown-chart";
-import { ReportDetailTable } from "@/components/admin/reports/report-detail-table";
-import { ReportTrendChart } from "@/components/admin/reports/report-trend-chart";
+import { SalesReportTab } from "@/components/admin/reports/tabs/sales-report-tab";
+import { MenuReportTab } from "@/components/admin/reports/tabs/menu-report-tab";
+import { ExpensesReportTab } from "@/components/admin/reports/tabs/expenses-report-tab";
+import { InventoryReportTab } from "@/components/admin/reports/tabs/inventory-report-tab";
+import { PayrollReportTab } from "@/components/admin/reports/tabs/payroll-report-tab";
+import { ProfitLossReportTab } from "@/components/admin/reports/tabs/profit-loss-report-tab";
 
 const tabs: Array<{
   id: ReportTab;
@@ -32,35 +34,20 @@ const tabs: Array<{
   { id: "expenses", label: "Expenses", icon: WalletCards },
   { id: "inventory", label: "Inventory", icon: Boxes },
   { id: "payroll", label: "Payroll", icon: ClipboardList },
-  { id: "operations", label: "Operations", icon: FileText },
   { id: "profit-loss", label: "Profit & Loss", icon: Scale },
 ];
-const money = (value: number) => `PKR ${Math.round(value).toLocaleString()}`;
-const countLabels = new Set([
-  "Orders",
-  "Outstanding orders",
-  "Entries",
-  "Items sold",
-  "Best sellers",
-  "Total orders",
-  "Completed",
-  "Active queue",
-  "Low stock",
-  "Out of stock",
-]);
-
-function formatKpiValue(label: string, value: number | string) {
-  if (typeof value !== "number") return value;
-  if (label === "Margin") return `${value.toFixed(1)}%`;
-  if (countLabels.has(label)) return Math.round(value).toLocaleString();
-  return money(value);
-}
+const trendValueLabels: Partial<Record<ReportTab, string>> = {
+  sales: "Revenue",
+  expenses: "Expenses",
+  "profit-loss": "Revenue",
+};
 const empty: ReportData = {
   tab: "sales",
   range: { start: "", end: "" },
   kpis: [],
   trend: [],
   breakdown: [],
+  inventoryMovements: [],
   rows: [],
 };
 
@@ -73,8 +60,11 @@ export default function AdminReportsPage() {
     expenseType: "ALL",
     movementType: "ALL",
   });
+  const [draftFilters, setDraftFilters] = useState<ReportFilters>(filters);
   const [data, setData] = useState<ReportData>(empty);
   const [isLoading, setIsLoading] = useState(true);
+  const [inventoryMovementsPage, setInventoryMovementsPage] = useState(1);
+  const inventoryMovementPageSize = 15;
   const load = async () => {
     setIsLoading(true);
     try {
@@ -101,6 +91,115 @@ export default function AdminReportsPage() {
   /* eslint-enable react-hooks/exhaustive-deps */
   const update = (key: keyof ReportFilters, value: string) =>
     setFilters((current) => ({ ...current, [key]: value }));
+  const updateDraft = (key: keyof ReportFilters, value: string) =>
+    setDraftFilters((current) => ({ ...current, [key]: value }));
+  const clearCustomFilter = () => {
+    const defaultFilters: ReportFilters = {
+      period: "THIS_MONTH",
+      paymentMethod: "ALL",
+      orderStatus: "ALL",
+      expenseType: "ALL",
+      movementType: "ALL",
+    };
+    setDraftFilters(defaultFilters);
+    setFilters(defaultFilters);
+  };
+  const applyCustomFilter = () => {
+    if (
+      draftFilters.period === "CUSTOM" &&
+      draftFilters.startDate &&
+      draftFilters.endDate
+    ) {
+      setFilters(draftFilters);
+    }
+  };
+  const canApplyCustomFilter = Boolean(
+    draftFilters.startDate && draftFilters.endDate,
+  );
+  const inventoryMovements = data.inventoryMovements ?? [];
+  const inventoryMovementTotalPages = Math.max(
+    1,
+    Math.ceil(inventoryMovements.length / inventoryMovementPageSize),
+  );
+  const inventoryMovementPage = Math.min(
+    inventoryMovementsPage,
+    inventoryMovementTotalPages,
+  );
+  const inventoryMovementRows = inventoryMovements.slice(
+    (inventoryMovementPage - 1) * inventoryMovementPageSize,
+    inventoryMovementPage * inventoryMovementPageSize,
+  );
+  const activeTabLabel = tabs.find((item) => item.id === tab)?.label ?? tab;
+
+  const renderTabContent = () => {
+    switch (tab) {
+      case "sales":
+        return (
+          <SalesReportTab
+            data={data}
+            label={activeTabLabel}
+            trendValueLabel={trendValueLabels[tab] ?? "Amount"}
+            isLoading={isLoading}
+          />
+        );
+      case "menu":
+        return (
+          <MenuReportTab
+            data={data}
+            label={activeTabLabel}
+            trendValueLabel={trendValueLabels[tab] ?? "Amount"}
+            isLoading={isLoading}
+          />
+        );
+      case "expenses":
+        return (
+          <ExpensesReportTab
+            data={data}
+            label={activeTabLabel}
+            trendValueLabel={trendValueLabels[tab] ?? "Amount"}
+            isLoading={isLoading}
+          />
+        );
+      case "inventory":
+        return (
+          <InventoryReportTab
+            movements={inventoryMovementRows}
+            allMovements={inventoryMovements}
+            data={data}
+            label={activeTabLabel}
+            trendValueLabel={trendValueLabels[tab] ?? "Amount"}
+            movementTypeFilter={filters.movementType ?? "ALL"}
+            onMovementTypeFilterChange={(type) => {
+              update("movementType", type);
+              setInventoryMovementsPage(1);
+            }}
+            currentPage={inventoryMovementPage}
+            totalPages={inventoryMovementTotalPages}
+            totalEntries={inventoryMovements.length}
+            isLoading={isLoading}
+            onPageChange={setInventoryMovementsPage}
+          />
+        );
+      case "payroll":
+        return (
+          <PayrollReportTab
+            data={data}
+            label={activeTabLabel}
+            trendValueLabel={trendValueLabels[tab] ?? "Amount"}
+            isLoading={isLoading}
+          />
+        );
+      case "profit-loss":
+        return (
+          <ProfitLossReportTab
+            data={data}
+            label={activeTabLabel}
+            trendValueLabel={trendValueLabels[tab] ?? "Amount"}
+            isLoading={isLoading}
+          />
+        );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
@@ -110,37 +209,60 @@ export default function AdminReportsPage() {
           <div className="flex flex-wrap sm:flex-nowrap items-end gap-3 w-fit border border-slate-200 bg-white p-4 shadow-2xs">
             <Select
               label="Period"
-              value={filters.period}
-              onChange={(event) => update("period", event.target.value)}
+              value={draftFilters.period}
+              onChange={(event) => {
+                if (event.target.value === "THIS_MONTH") {
+                  clearCustomFilter();
+                } else {
+                  updateDraft("period", event.target.value);
+                }
+              }}
               options={[
                 { value: "THIS_MONTH", label: "This Month" },
                 { value: "CUSTOM", label: "Custom range" },
               ]}
             />
-            {filters.period === "CUSTOM" && (
+            {draftFilters.period === "CUSTOM" && (
               <>
                 <Input
                   label="From"
                   type="date"
-                  value={filters.startDate ?? ""}
-                  onChange={(event) => update("startDate", event.target.value)}
+                  value={draftFilters.startDate ?? ""}
+                  onChange={(event) =>
+                    updateDraft("startDate", event.target.value)
+                  }
                 />
                 <Input
                   label="To"
                   type="date"
-                  value={filters.endDate ?? ""}
-                  onChange={(event) => update("endDate", event.target.value)}
+                  value={draftFilters.endDate ?? ""}
+                  onChange={(event) =>
+                    updateDraft("endDate", event.target.value)
+                  }
                 />
               </>
             )}
-            <Button
-              variant="outline"
-              icon={<RefreshCw size={16} />}
-              onClick={() => void load()}
-              isLoading={isLoading}
-            >
-              Refresh
-            </Button>
+            {filters.period === "CUSTOM" ? (
+              <Button
+                variant="outline"
+                icon={<X size={16} />}
+                onClick={clearCustomFilter}
+                className="sm:h-13"
+              >
+                Clear
+              </Button>
+            ) : draftFilters.period === "CUSTOM" ? (
+              <Button
+                variant="primary"
+                icon={<Filter size={16} />}
+                onClick={applyCustomFilter}
+                isLoading={isLoading}
+                disabled={!canApplyCustomFilter}
+                className="sm:h-13"
+              >
+                Apply
+              </Button>
+            ) : null}
           </div>
         </div>
         <div className="flex gap-2 overflow-x-auto py-1 scrollbar-hide">
@@ -157,42 +279,8 @@ export default function AdminReportsPage() {
           ))}
         </div>
 
-        {/* KPIs */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          {data.kpis.map((kpi) => (
-            <Card
-              key={kpi.label}
-              className={`border bg-white p-5 shadow-2xs ${tab === "profit-loss" && kpi.label === "Profit" ? "border-emerald-200 bg-emerald-50/60" : tab === "profit-loss" && kpi.label === "Loss" ? "border-rose-200 bg-rose-50/60" : "border-slate-200"}`}
-            >
-              <p
-                className={`text-xs font-bold uppercase tracking-wide ${tab === "profit-loss" && kpi.label === "Profit" ? "text-emerald-700" : tab === "profit-loss" && kpi.label === "Loss" ? "text-rose-700" : "text-slate-500"}`}
-              >
-                {kpi.label}
-              </p>
-              <p
-                className={`mt-2 text-2xl font-black ${tab === "profit-loss" && kpi.label === "Profit" ? "text-emerald-800" : tab === "profit-loss" && kpi.label === "Loss" ? "text-rose-800" : "text-slate-900"}`}
-              >
-                {formatKpiValue(kpi.label, kpi.value)}
-              </p>
-              {kpi.detail && (
-                <p className="mt-1 text-xs text-slate-500">{kpi.detail}</p>
-              )}
-            </Card>
-          ))}
-        </div>
-
-        {/* Charts */}
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.35fr_1fr]">
-          <ReportTrendChart data={data.trend} />
-          <ReportBreakdownChart data={data.breakdown} />
-        </div>
-
-        {/* Detail Table */}
-        <ReportDetailTable
-          heading={`${tabs.find((item) => item.id === tab)?.label} detail`}
-          rows={data.rows}
-          isLoading={isLoading}
-        />
+        {/* Active tab UI */}
+        {renderTabContent()}
       </main>
     </div>
   );

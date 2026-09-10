@@ -12,20 +12,45 @@ import {
   YAxis,
 } from "recharts";
 import { Card } from "@/components/ui/card";
-import { TrendPoint } from "@/types/reports";
+import { TrendChartPoint, TrendPoint, TrendSeries } from "@/types/reports";
 
 const money = (value: number) => `PKR ${Math.round(value).toLocaleString()}`;
 
-export function ReportTrendChart({ data }: { data: TrendPoint[] }) {
+export function ReportTrendChart({
+  data,
+  title,
+  valueLabel,
+  valueFormat = "money",
+  seriesData,
+  series,
+  isLoading = false,
+}: {
+  data: TrendPoint[];
+  title: string;
+  valueLabel: string;
+  valueFormat?: "money" | "quantity";
+  seriesData?: TrendChartPoint[];
+  series?: TrendSeries[];
+  isLoading?: boolean;
+}) {
+  const chartData: TrendPoint[] = seriesData?.length
+    ? seriesData.map((point) => ({
+        ...point,
+        amount: Number(point.amount ?? 0),
+        count: Number(point.count ?? 0),
+      }))
+    : data;
   return (
-    <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
-      <h2 className="text-lg font-bold text-slate-900">Trend</h2>
-    
-      {data.length ? (
+    <Card className="w-full min-w-4xl border border-slate-200 bg-white p-5 shadow-2xs">
+      <h2 className="text-lg font-bold text-slate-900">{title}</h2>
+
+      {isLoading ? (
+        <div className="mt-4 h-64 w-full animate-pulse rounded-sm bg-slate-100 sm:h-72" />
+      ) : chartData.length ? (
         <div className="mt-4 h-64 w-full sm:h-72">
           <ResponsiveContainer width="100%" height="100%">
             <AreaChart
-              data={data}
+              data={chartData}
               margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
             >
               <defs>
@@ -66,11 +91,18 @@ export function ReportTrendChart({ data }: { data: TrendPoint[] }) {
                 axisLine={false}
                 tickMargin={10}
                 tick={{ fontSize: 12, fill: "#64748B" }}
-                tickFormatter={(value) => `Rs ${value}`}
+                tickFormatter={(value) =>
+                  valueFormat === "quantity" ? value : `Rs ${value}`
+                }
                 width={85}
               />
               <Tooltip
-                formatter={(value) => [money(Number(value)), "Revenue"]}
+                formatter={(value, name) => [
+                  valueFormat === "quantity"
+                    ? `${Number(value).toLocaleString()} items`
+                    : money(Number(value)),
+                  series?.length ? String(name ?? valueLabel) : valueLabel,
+                ]}
                 contentStyle={{
                   borderRadius: "8px",
                   border: "none",
@@ -90,15 +122,31 @@ export function ReportTrendChart({ data }: { data: TrendPoint[] }) {
                 }}
                 iconType="circle"
               />
-              <Area
-                type="monotone"
-                dataKey="amount"
-                name="Revenue"
-                stroke="var(--color-primary)"
-                strokeWidth={3}
-                fillOpacity={1}
-                fill="url(#reportTrendFill)"
-              />
+              {series?.length ? (
+                series.map((item) => (
+                  <Area
+                    key={item.key}
+                    type="monotone"
+                    dataKey={item.key}
+                    name={item.label}
+                    stroke={item.color}
+                    strokeWidth={2}
+                    fill={item.color}
+                    fillOpacity={0.12}
+                    connectNulls
+                  />
+                ))
+              ) : (
+                <Area
+                  type="monotone"
+                  dataKey="amount"
+                  name={valueLabel}
+                  stroke="var(--color-primary)"
+                  strokeWidth={3}
+                  fillOpacity={1}
+                  fill="url(#reportTrendFill)"
+                />
+              )}
             </AreaChart>
           </ResponsiveContainer>
         </div>
