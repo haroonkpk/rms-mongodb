@@ -25,11 +25,11 @@ export async function getDashboardData(): Promise<DashboardData> {
     orders,
     expenses,
     lowStock,
-    outOfStock,
     kitchenOrders,
     attendance,
     payroll,
     recentExpenses,
+    latestCompletedOrders,
   ] = await Promise.all([
     prisma.order.findMany({
       where: { createdAt: { gte: start, lt: end } },
@@ -49,9 +49,14 @@ export async function getDashboardData(): Promise<DashboardData> {
       take: 8,
     }),
     prisma.inventoryItem.findMany({
-      select: { quantity: true, minStockLevel: true },
+      select: {
+        id: true,
+        name: true,
+        unit: true,
+        quantity: true,
+        minStockLevel: true,
+      },
     }),
-    prisma.inventoryItem.count({ where: { quantity: { lte: 0 } } }),
     prisma.order.count({
       where: { status: { in: ["PENDING", "PREPARING", "READY"] } },
     }),
@@ -65,7 +70,25 @@ export async function getDashboardData(): Promise<DashboardData> {
       _sum: { netSalary: true },
     }),
     prisma.expense.findMany({ orderBy: { createdAt: "desc" }, take: 5 }),
+    prisma.order.findMany({
+      where: { status: "COMPLETED" },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+      select: {
+        id: true,
+        orderNumber: true,
+        totalAmount: true,
+        createdAt: true,
+      },
+    }),
   ]);
+
+  const lowStockItems = lowStock.filter(
+    (item) =>
+      money(item.quantity) > 0 &&
+      money(item.quantity) <= money(item.minStockLevel),
+  );
+  const outOfStockItems = lowStock.filter((item) => money(item.quantity) <= 0);
 
   const completed = orders.filter((order) => order.status === "COMPLETED");
   const sales = completed.reduce(
@@ -145,16 +168,6 @@ export async function getDashboardData(): Promise<DashboardData> {
       .sort((a, b) => b.amount - a.amount)
       .slice(0, 8),
     alerts: [
-      {
-        label: "Low stock items",
-        value: lowStock.filter(
-          (item) =>
-            money(item.quantity) > 0 &&
-            money(item.quantity) <= money(item.minStockLevel),
-        ).length,
-        tone: "warning",
-      },
-      { label: "Out of stock items", value: outOfStock, tone: "danger" },
       { label: "Active kitchen orders", value: kitchenOrders, tone: "info" },
       {
         label: "Draft payroll records",
@@ -162,6 +175,26 @@ export async function getDashboardData(): Promise<DashboardData> {
         tone: "warning",
       },
     ],
+    stock: {
+      low: lowStockItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: money(item.quantity),
+        unit: item.unit,
+      })),
+      out: outOfStockItems.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: money(item.quantity),
+        unit: item.unit,
+      })),
+    },
+    latestCompletedOrders: latestCompletedOrders.map((order) => ({
+      id: order.id,
+      orderNumber: order.orderNumber,
+      amount: money(order.totalAmount),
+      createdAt: order.createdAt.toISOString(),
+    })),
     workforce: {
       present,
       absent,

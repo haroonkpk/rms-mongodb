@@ -32,7 +32,7 @@ export const StockMovementsTable: React.FC<StockMovementsTableProps> = ({
   const movementLabel = (type: StockMovementData["type"]) => {
     if (type === "PURCHASE_IN") return "Purchase IN";
     if (type === "WASTAGE_OUT") return "Wastage OUT";
-    if (type === "SPOILAGE_OUT") return "Spoilage / Expired";
+    if (type === "SPOILAGE_OUT") return "Expired";
     if (type === "MANUAL_ADJUSTMENT") return "Audit Correction";
     if (type === "SALE_DEDUCTION") return "Order Sale";
     return "Stock Intake";

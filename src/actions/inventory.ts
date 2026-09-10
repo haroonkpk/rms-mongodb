@@ -413,7 +413,14 @@ export async function adjustStock(data: {
 
       const prevQty = Number(currentItem.quantity);
       const change = Number(data.quantityChange);
-      const newQty = Math.max(0, prevQty + change);
+
+      if (change < 0 && Math.abs(change) > prevQty) {
+        throw new Error(
+          `Cannot deduct more than the available stock (${prevQty} ${currentItem.unit})`,
+        );
+      }
+
+      const newQty = prevQty + change;
 
       const updatedItem = await tx.inventoryItem.update({
         where: { id: data.inventoryItemId },

@@ -48,6 +48,13 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
       return;
     }
 
+    if (direction === "SUBTRACT" && qtyVal > item.quantity) {
+      setQuantityError(
+        `You can deduct a maximum of ${item.quantity} ${item.unit}.`,
+      );
+      return;
+    }
+
     const finalChange = direction === "ADD" ? qtyVal : -qtyVal;
 
     setQuantityError("");
@@ -140,6 +147,7 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
             type="number"
             step="any"
             min="0.01"
+            max={direction === "SUBTRACT" ? currentQty : undefined}
             value={quantity}
             onChange={(e) => setQuantity(e.target.value)}
             error={quantityError}

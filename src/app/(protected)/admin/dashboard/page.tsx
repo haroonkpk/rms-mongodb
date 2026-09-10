@@ -3,32 +3,18 @@
 import React, { useEffect, useState } from "react";
 import {
   AlertTriangle,
-  ArrowDownRight,
-  ArrowUpRight,
-  BarChart3,
   CircleDollarSign,
   ClipboardList,
-  PackageCheck,
+  CookingPot,
+  PackageX,
   RefreshCw,
-  Users,
 } from "lucide-react";
 import { Header } from "@/components/layouts";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { DataTable } from "@/components/ui/data-table";
 import { getDashboardData } from "@/actions/dashboard";
 import { DashboardData } from "@/types/reports";
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from "recharts";
 
 const emptyData: DashboardData = {
   range: { start: "", end: "" },
@@ -45,10 +31,19 @@ const emptyData: DashboardData = {
   orderStatus: [],
   topItems: [],
   alerts: [],
+  stock: { low: [], out: [] },
+  latestCompletedOrders: [],
   workforce: { present: 0, absent: 0, payrollOutstanding: 0 },
   recentExpenses: [],
 };
 const money = (value: number) => `PKR ${Math.round(value).toLocaleString()}`;
+
+type CompletedOrderRow = {
+  id: string;
+  order: React.ReactNode;
+  date: React.ReactNode;
+  value: React.ReactNode;
+};
 
 function Kpi({
   label,
@@ -103,6 +98,26 @@ export default function AdminDashboardPage() {
     (sum, item) => sum + item.count,
     0,
   );
+  const activeKitchenOrders =
+    data.alerts.find((alert) => alert.label === "Active kitchen orders")
+      ?.value ?? 0;
+  const completedOrderRows: CompletedOrderRow[] =
+    data.latestCompletedOrders.map((order) => ({
+      id: order.id,
+      order: (
+        <span className="font-semibold text-slate-800">
+          {order.orderNumber}
+        </span>
+      ),
+      date: (
+        <span className="text-slate-600">
+          {new Date(order.createdAt).toLocaleString()}
+        </span>
+      ),
+      value: (
+        <span className="font-bold text-slate-900">{money(order.amount)}</span>
+      ),
+    }));
 
   return (
     <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
@@ -126,7 +141,7 @@ export default function AdminDashboardPage() {
             Refresh
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
           <Kpi
             label="Sales"
             value={money(data.kpis.sales)}
@@ -141,108 +156,21 @@ export default function AdminDashboardPage() {
             icon={ClipboardList}
           />
           <Kpi
+            label="Kitchen orders"
+            value={String(activeKitchenOrders)}
+            detail="Pending, preparing or ready"
+            icon={CookingPot}
+            tone={activeKitchenOrders ? "warning" : "good"}
+          />
+          <Kpi
             label="Outstanding"
             value={money(data.kpis.outstanding)}
             detail="Unpaid ledger balance"
-            icon={ArrowDownRight}
-            tone="warning"
-          />
-          <Kpi
-            label="Expenses"
-            value={money(data.kpis.expenses)}
-            detail="Recorded today"
-            icon={ArrowUpRight}
-          />
-          <Kpi
-            label="Operating result"
-            value={money(data.kpis.operatingResult)}
-            detail="Sales minus expenses"
-            icon={BarChart3}
-            tone={data.kpis.operatingResult >= 0 ? "good" : "warning"}
-          />
-          <Kpi
-            label="Payroll due"
-            value={money(data.workforce.payrollOutstanding)}
-            detail="Draft payroll records"
-            icon={Users}
+            icon={ClipboardList}
             tone="warning"
           />
         </div>
-        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.7fr_1fr]">
-          <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
-            <div className="mb-5 flex items-center justify-between">
-              <div>
-                <h2 className="text-lg font-bold text-slate-900">
-                  Sales trend
-                </h2>
-                <p className="text-xs text-slate-500">
-                  Completed sales by hour
-                </p>
-              </div>
-              <span className="text-xs font-bold text-emerald-700">
-                {money(data.kpis.sales)} today
-              </span>
-            </div>
-            {data.salesTrend.length ? (
-              <ResponsiveContainer width="100%" height={220}>
-                <BarChart data={data.salesTrend}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="label" tick={{ fontSize: 10 }} />
-                  <YAxis
-                    tick={{ fontSize: 10 }}
-                    tickFormatter={(value) => `Rs ${value}`}
-                  />
-                  <Tooltip formatter={(value) => money(Number(value))} />
-                  <Bar
-                    dataKey="amount"
-                    fill="var(--color-primary)"
-                    radius={[3, 3, 0, 0]}
-                  />
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex h-56 items-center justify-center text-sm text-slate-500">
-                No completed sales today.
-              </div>
-            )}
-          </Card>
-          <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
-            <h2 className="text-lg font-bold text-slate-900">Payment mix</h2>
-            <p className="mb-3 text-xs text-slate-500">
-              Completed order value by method
-            </p>
-            {data.paymentMix.length ? (
-              <ResponsiveContainer width="100%" height={220}>
-                <PieChart>
-                  <Pie
-                    data={data.paymentMix}
-                    dataKey="amount"
-                    nameKey="label"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={75}
-                    label={({ name, percent: share }) =>
-                      `${name} ${Math.round((share ?? 0) * 100)}%`
-                    }
-                  >
-                    {data.paymentMix.map((item, index) => (
-                      <Cell
-                        key={item.label}
-                        fill={index % 2 ? "#f59e0b" : "var(--color-primary)"}
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value) => money(Number(value))} />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <div className="flex h-56 items-center justify-center text-sm text-slate-500">
-                No payment data yet.
-              </div>
-            )}
-          </Card>
-        </div>
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
             <h2 className="text-lg font-bold text-slate-900">
               Operational alerts
@@ -275,33 +203,6 @@ export default function AdminDashboardPage() {
                   </strong>
                 </div>
               ))}
-            </div>
-          </Card>
-          <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
-            <h2 className="text-lg font-bold text-slate-900">Top menu items</h2>
-            <div className="mt-4 flex flex-col gap-3">
-              {data.topItems.length ? (
-                data.topItems.slice(0, 5).map((item, index) => (
-                  <div
-                    key={item.label}
-                    className="flex items-center justify-between border-b border-slate-100 pb-3"
-                  >
-                    <div className="flex items-center gap-3">
-                      <span className="flex h-7 w-7 items-center justify-center bg-rose-50 text-xs font-black text-(--color-primary)">
-                        {index + 1}
-                      </span>
-                      <span className="text-sm font-semibold text-slate-700">
-                        {item.label}
-                      </span>
-                    </div>
-                    <span className="text-sm font-bold text-slate-900">
-                      {money(item.amount)}
-                    </span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-slate-500">No menu sales today.</p>
-              )}
             </div>
           </Card>
           <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
@@ -338,39 +239,77 @@ export default function AdminDashboardPage() {
           </Card>
         </div>
         <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
-          <div className="mb-4 flex items-center gap-2">
-            <PackageCheck size={19} className="text-(--color-primary)" />
-            <h2 className="text-lg font-bold text-slate-900">
-              Recent expenses
-            </h2>
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-bold text-slate-900">
+                Stock details
+              </h2>
+              <p className="text-xs text-slate-500">
+                Items that need attention right now
+              </p>
+            </div>
+            <PackageX size={20} className="text-(--color-primary)" />
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px] text-left text-sm">
-              <thead className="border-y border-slate-200 bg-slate-50 text-xs uppercase text-slate-500">
-                <tr>
-                  <th className="px-3 py-3">Title</th>
-                  <th className="px-3 py-3">Type</th>
-                  <th className="px-3 py-3">Date</th>
-                  <th className="px-3 py-3 text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.recentExpenses.map((expense) => (
-                  <tr key={expense.id} className="border-b border-slate-100">
-                    <td className="px-3 py-3 font-semibold text-slate-800">
-                      {expense.title}
-                    </td>
-                    <td className="px-3 py-3 text-slate-600">{expense.type}</td>
-                    <td className="px-3 py-3 text-slate-600">{expense.date}</td>
-                    <td className="px-3 py-3 text-right font-bold text-slate-900">
-                      {money(expense.amount)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2">
+            <div>
+              <h3 className="text-sm font-bold text-rose-700">Out of stock</h3>
+              <div className="mt-2 flex flex-col gap-2">
+                {data.stock.out.length ? (
+                  data.stock.out.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex justify-between border-b border-slate-100 pb-2 text-sm"
+                    >
+                      <span className="font-semibold text-slate-800">
+                        {item.name}
+                      </span>
+                      <span className="text-rose-700">0 {item.unit}</span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-slate-500">
+                    No items out of stock.
+                  </p>
+                )}
+              </div>
+            </div>
+            <div>
+              <h3 className="text-sm font-bold text-amber-700">Low stock</h3>
+              <div className="mt-2 flex flex-col gap-2">
+                {data.stock.low.length ? (
+                  data.stock.low.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex justify-between border-b border-slate-100 pb-2 text-sm"
+                    >
+                      <span className="font-semibold text-slate-800">
+                        {item.name}
+                      </span>
+                      <span className="text-amber-700">
+                        {item.quantity} {item.unit}
+                      </span>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-sm text-slate-500">No low stock items.</p>
+                )}
+              </div>
+            </div>
           </div>
         </Card>
+        <DataTable
+          heading="Latest completed orders"
+          TableHeaders={[
+            { key: "order", label: "Order" },
+            { key: "date", label: "Date" },
+            { key: "value", label: "Value" },
+          ]}
+          TableData={completedOrderRows}
+          currentPage={1}
+          totalPages={1}
+          onPageChange={() => undefined}
+          totalEntries={completedOrderRows.length}
+        />
       </main>
     </div>
   );

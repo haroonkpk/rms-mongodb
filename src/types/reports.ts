@@ -80,6 +80,16 @@ export interface DashboardData {
     value: number;
     tone: "danger" | "warning" | "info";
   }>;
+  stock: {
+    low: Array<{ id: string; name: string; quantity: number; unit: string }>;
+    out: Array<{ id: string; name: string; quantity: number; unit: string }>;
+  };
+  latestCompletedOrders: Array<{
+    id: string;
+    orderNumber: string;
+    amount: number;
+    createdAt: string;
+  }>;
   workforce: { present: number; absent: number; payrollOutstanding: number };
   recentExpenses: Array<{
     id: string;
