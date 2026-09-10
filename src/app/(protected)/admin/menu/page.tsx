@@ -4,6 +4,7 @@ import React, { useEffect, useState, useTransition, useMemo } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
+import { ConfirmModal } from "@/components/ui/confirm-modal";
 import { Utensils, Plus, Layers, Sliders, FolderPlus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -68,9 +69,17 @@ export default function AdminMenuPage() {
   const [editingCategory, setEditingCategory] = useState<CategoryData | null>(
     null,
   );
+  const [categoryToDelete, setCategoryToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   const [isAddOnModalOpen, setIsAddOnModalOpen] = useState(false);
   const [editingAddOn, setEditingAddOn] = useState<AddOnData | null>(null);
+  const [addOnToDelete, setAddOnToDelete] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
 
   // Data fetchers
   const fetchCategories = async () => {
@@ -183,12 +192,11 @@ export default function AdminMenuPage() {
         }
       });
 
-    getInventoryItems(1, 200)
-      .then((res) => {
-        if (isMounted && res.success && res.items) {
-          setInventoryItems(res.items);
-        }
-      });
+    getInventoryItems(1, 200).then((res) => {
+      if (isMounted && res.success && res.items) {
+        setInventoryItems(res.items);
+      }
+    });
 
     return () => {
       isMounted = false;
@@ -337,13 +345,16 @@ export default function AdminMenuPage() {
     });
   };
 
-  const handleDeleteCategory = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete category "${name}"?`)) return;
+  const handleDeleteCategory = (id: string, name: string) => {
+    setCategoryToDelete({ id, name });
+  };
 
+  const handleConfirmDeleteCategory = async (id: string, name: string) => {
     startTransition(async () => {
       const res = await deleteCategory(id);
       if (res.success) {
         toast.success(`Category "${name}" deleted.`);
+        setCategoryToDelete(null);
         await Promise.all([
           fetchCategories(),
           fetchItems(
@@ -396,13 +407,16 @@ export default function AdminMenuPage() {
     });
   };
 
-  const handleDeleteAddOn = async (id: string, name: string) => {
-    if (!confirm(`Are you sure you want to delete add-on "${name}"?`)) return;
+  const handleDeleteAddOn = (id: string, name: string) => {
+    setAddOnToDelete({ id, name });
+  };
 
+  const handleConfirmDeleteAddOn = async (id: string, name: string) => {
     startTransition(async () => {
       const res = await deleteAddOn(id);
       if (res.success) {
         toast.success(`Add-on "${name}" deleted.`);
+        setAddOnToDelete(null);
         await fetchAddOns();
       } else {
         toast.error(res.error || "Failed to delete add-on.");
@@ -558,6 +572,37 @@ export default function AdminMenuPage() {
         inventoryItems={inventoryItems}
         onSave={handleSaveAddOn}
         isPending={isPending}
+      />
+
+      <ConfirmModal
+        isOpen={addOnToDelete !== null}
+        onClose={() => setAddOnToDelete(null)}
+        onConfirm={() => {
+          if (addOnToDelete) {
+            void handleConfirmDeleteAddOn(addOnToDelete.id, addOnToDelete.name);
+          }
+        }}
+        title="Delete Add-On"
+        message={`Are you sure you want to delete add-on "${addOnToDelete?.name ?? ""}"?`}
+        confirmText="Delete Add-On"
+        isLoading={isPending}
+      />
+
+      <ConfirmModal
+        isOpen={categoryToDelete !== null}
+        onClose={() => setCategoryToDelete(null)}
+        onConfirm={() => {
+          if (categoryToDelete) {
+            void handleConfirmDeleteCategory(
+              categoryToDelete.id,
+              categoryToDelete.name,
+            );
+          }
+        }}
+        title="Delete Category"
+        message={`Are you sure you want to delete category "${categoryToDelete?.name ?? ""}"?`}
+        confirmText="Delete Category"
+        isLoading={isPending}
       />
     </div>
   );

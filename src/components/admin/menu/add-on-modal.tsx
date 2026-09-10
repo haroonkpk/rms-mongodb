@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Modal } from "@/components/ui/modal";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,9 @@ export function AddOnModal({
   onSave,
   isPending,
 }: AddOnModalProps) {
-  const [prevEditingAddOn, setPrevEditingAddOn] = useState<AddOnData | null>(editingAddOn);
+  const [prevEditingAddOn, setPrevEditingAddOn] = useState<AddOnData | null>(
+    editingAddOn,
+  );
   const [prevIsOpen, setPrevIsOpen] = useState<boolean>(isOpen);
 
   const [formData, setFormData] = useState({
@@ -41,9 +43,9 @@ export function AddOnModal({
     isAvailable: true,
   });
 
-  const [recipeIngredients, setRecipeIngredients] = useState<RecipeIngredient[]>([]);
-  const [selectedInvId, setSelectedInvId] = useState<string>("");
-  const [requiredQtyInput, setRequiredQtyInput] = useState<string>("");
+  const [recipeIngredients, setRecipeIngredients] = useState<
+    RecipeIngredient[]
+  >([]);
 
   if (editingAddOn !== prevEditingAddOn || isOpen !== prevIsOpen) {
     setPrevEditingAddOn(editingAddOn);
@@ -60,41 +62,58 @@ export function AddOnModal({
               name: "",
               price: "",
               isAvailable: true,
-            }
+            },
       );
       setRecipeIngredients(editingAddOn?.ingredients || []);
-      setSelectedInvId("");
-      setRequiredQtyInput("");
     }
   }
 
   const handleAddIngredientRow = () => {
-    if (!selectedInvId) {
-      toast.error("Please select a raw material ingredient.");
+    if (inventoryItems.length === 0) {
+      toast.error("No inventory raw items available.");
       return;
     }
-    const qty = parseFloat(requiredQtyInput);
-    if (isNaN(qty) || qty <= 0) {
-      toast.error("Please enter a valid positive quantity required.");
-      return;
-    }
-
-    if (recipeIngredients.some((ing) => ing.inventoryItemId === selectedInvId)) {
-      toast.error("This raw material is already in the add-on recipe.");
-      return;
-    }
-
     setRecipeIngredients([
       ...recipeIngredients,
-      { inventoryItemId: selectedInvId, quantityRequired: qty },
+      { inventoryItemId: inventoryItems[0].id, quantityRequired: 1 },
     ]);
-    setSelectedInvId("");
-    setRequiredQtyInput("");
   };
 
-  const handleRemoveIngredientRow = (invId: string) => {
-    setRecipeIngredients(recipeIngredients.filter((ing) => ing.inventoryItemId !== invId));
+  const handleRemoveIngredientRow = (index: number) => {
+    setRecipeIngredients(recipeIngredients.filter((_, i) => i !== index));
   };
+
+  const handleIngredientChange = (
+    index: number,
+    field: "inventoryItemId" | "quantityRequired",
+    value: string,
+  ) => {
+    setRecipeIngredients((current) => {
+      const updated = [...current];
+      if (field === "inventoryItemId") {
+        updated[index] = { ...updated[index], inventoryItemId: value };
+      } else {
+        updated[index] = {
+          ...updated[index],
+          quantityRequired: parseFloat(value) || 0,
+        };
+      }
+      return updated;
+    });
+  };
+
+  const actualCost = useMemo(
+    () =>
+      recipeIngredients.reduce((total, ingredient) => {
+        const inventoryItem = inventoryItems.find(
+          (item) => item.id === ingredient.inventoryItemId,
+        );
+        return (
+          total + (inventoryItem?.unitCost ?? 0) * ingredient.quantityRequired
+        );
+      }, 0),
+    [inventoryItems, recipeIngredients],
+  );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -116,19 +135,13 @@ export function AddOnModal({
     });
   };
 
-  const inventoryOptions = [
-    { label: "-- Select Raw Material --", value: "" },
-    ...inventoryItems.map((inv) => ({
-      label: `${inv.name} (${inv.unit})`,
-      value: inv.id,
-    })),
-  ];
-
   return (
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title={editingAddOn ? "Edit Add-On / Modifier" : "Create New Add-On / Modifier"}
+      title={
+        editingAddOn ? "Edit Add-On / Modifier" : "Create New Add-On / Modifier"
+      }
       className="max-w-xl"
     >
       <form onSubmit={handleSubmit} className="flex flex-col gap-4 p-4">
@@ -150,77 +163,109 @@ export function AddOnModal({
           required
         />
 
-        {/* Recipe Ingredients for AddOn */}
-        <div className="flex flex-col gap-2 p-3.5 bg-slate-50 border border-slate-200 rounded-lg">
-          <div className="flex items-center gap-2">
-            <Utensils size={16} className="text-emerald-700" />
-            <span className="text-xs font-bold text-slate-800 uppercase tracking-wide">
-              Add-On Recipe Raw Materials (Stock Decrement)
-            </span>
-          </div>
-
-          <div className="flex items-center gap-2 mt-1">
-            <div className="flex-1">
-              <Select
-                value={selectedInvId}
-                onChange={(e) => setSelectedInvId(e.target.value)}
-                options={inventoryOptions}
-              />
-            </div>
-            <div className="w-28">
-              <Input
-                type="number"
-                step="0.001"
-                placeholder="Qty Req."
-                value={requiredQtyInput}
-                onChange={(e) => setRequiredQtyInput(e.target.value)}
-              />
+        {/* Recipe Ingredients Mapping */}
+        <div className="p-4 bg-emerald-50/60 border border-emerald-200 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Utensils size={16} className="text-emerald-700" />
+              <h4 className="text-sm font-bold text-slate-900">
+                Raw Materials
+              </h4>
             </div>
             <Button
               type="button"
               variant="outline"
-              icon={<Plus size={16} />}
               onClick={handleAddIngredientRow}
+              icon={<Plus size={14} />}
             >
               Add
             </Button>
           </div>
 
-          {recipeIngredients.length > 0 ? (
-            <div className="flex flex-col gap-1.5 mt-2">
-              {recipeIngredients.map((ing) => {
-                const invItem = inventoryItems.find(
-                  (item) => item.id === ing.inventoryItemId
+          {recipeIngredients.length === 0 ? (
+            <p className="text-xs text-slate-400 italic">
+              No recipe ingredients added yet. Click &quot;Add&quot; to link raw
+              materials to this add-on.
+            </p>
+          ) : (
+            <div className="flex flex-col gap-2 pt-2 border-t border-emerald-200/60">
+              <div className="grid grid-cols-12 gap-2 text-xs font-bold text-slate-600 px-1">
+                <span className="col-span-7">Raw Material Item</span>
+                <span className="col-span-4">Qty per Add-On</span>
+                <span className="col-span-1 text-center">Action</span>
+              </div>
+              {recipeIngredients.map((ingredient, index) => {
+                const selectedInventoryItem = inventoryItems.find(
+                  (item) => item.id === ingredient.inventoryItemId,
                 );
                 return (
                   <div
-                    key={ing.inventoryItemId}
-                    className="flex justify-between items-center bg-white px-3 py-1.5 border border-slate-200 text-xs rounded-md"
+                    key={`${ingredient.inventoryItemId}-${index}`}
+                    className="grid grid-cols-12 gap-2 items-center"
                   >
-                    <span className="font-semibold text-slate-800">
-                      {invItem?.name || "Raw Material"} ({invItem?.unit || "unit"})
-                    </span>
-                    <div className="flex items-center gap-3">
-                      <span className="font-bold text-emerald-800">
-                        {ing.quantityRequired} {invItem?.unit}
+                    <div className="col-span-7">
+                      <Select
+                        options={inventoryItems.map((item) => ({
+                          value: item.id,
+                          label: `${item.name} (${item.unit})`,
+                        }))}
+                        value={ingredient.inventoryItemId}
+                        onChange={(event) =>
+                          handleIngredientChange(
+                            index,
+                            "inventoryItemId",
+                            event.target.value,
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="col-span-4 flex items-center gap-1.5">
+                      <Input
+                        type="number"
+                        step="0.001"
+                        min="0"
+                        placeholder="Qty"
+                        value={ingredient.quantityRequired.toString()}
+                        onChange={(event) =>
+                          handleIngredientChange(
+                            index,
+                            "quantityRequired",
+                            event.target.value,
+                          )
+                        }
+                      />
+                      <span className="text-xs font-bold text-slate-500 shrink-0">
+                        {selectedInventoryItem?.unit || ""}
                       </span>
+                    </div>
+                    <div className="col-span-1 flex justify-center">
                       <button
                         type="button"
-                        onClick={() => handleRemoveIngredientRow(ing.inventoryItemId)}
-                        className="text-rose-600 hover:text-rose-800 p-1 cursor-pointer"
+                        onClick={() => handleRemoveIngredientRow(index)}
+                        className="p-2 text-rose-600 hover:bg-rose-50 rounded-md transition-colors"
+                        title="Remove Ingredient"
                       >
-                        <Trash2 size={14} />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </div>
                 );
               })}
             </div>
-          ) : (
-            <p className="text-[11px] text-slate-500 italic mt-1">
-              No raw materials mapped to this add-on yet.
-            </p>
           )}
+
+          <div className="flex items-center justify-between border-t border-emerald-200 pt-3">
+            <span className="text-sm font-bold text-slate-700">
+              Actual Cost per Add-On
+            </span>
+            <span className="text-lg font-bold text-emerald-700">
+              Rs{" "}
+              {actualCost.toLocaleString(undefined, {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
+          </div>
         </div>
 
         <div className="flex flex-col gap-2 p-3 bg-slate-50 border border-slate-200 rounded-md">
@@ -239,7 +284,7 @@ export function AddOnModal({
               }
               className="sr-only peer"
             />
-            <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 relative"></div>
+            <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600 relative"></div>
             <span className="text-sm font-semibold text-slate-800">
               {formData.isAvailable ? "Available ON POS" : "Disabled"}
             </span>

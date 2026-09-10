@@ -224,13 +224,29 @@ export async function getMenuItems(
     });
 
     const inventoryItemIds = items.flatMap((item) => {
-      if (!Array.isArray(item.ingredients)) return [];
-      return item.ingredients.flatMap((ingredient) => {
-        if (!ingredient || typeof ingredient !== "object") return [];
-        const inventoryItemId = (ingredient as { inventoryItemId?: unknown })
-          .inventoryItemId;
-        return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
-      });
+      const itemIngredientIds = Array.isArray(item.ingredients)
+        ? item.ingredients.flatMap((ingredient) => {
+            if (!ingredient || typeof ingredient !== "object") return [];
+            const inventoryItemId = (
+              ingredient as { inventoryItemId?: unknown }
+            ).inventoryItemId;
+            return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
+          })
+        : [];
+      const addOnIngredientIds = item.addOns.flatMap((addOn) =>
+        Array.isArray(addOn.ingredients)
+          ? addOn.ingredients.flatMap((ingredient) => {
+              if (!ingredient || typeof ingredient !== "object") return [];
+              const inventoryItemId = (
+                ingredient as { inventoryItemId?: unknown }
+              ).inventoryItemId;
+              return typeof inventoryItemId === "string"
+                ? [inventoryItemId]
+                : [];
+            })
+          : [],
+      );
+      return [...itemIngredientIds, ...addOnIngredientIds];
     });
     const inventoryItems = await prisma.inventoryItem.findMany({
       where: { id: { in: inventoryItemIds } },
@@ -273,7 +289,11 @@ export async function getMenuItems(
           id: a.id,
           name: a.name,
           price: Number(a.price),
-          isAvailable: a.isAvailable,
+          isAvailable: isMenuItemAvailable(
+            a.isAvailable,
+            a.ingredients,
+            stockByInventoryId,
+          ),
           ingredients: a.ingredients
             ? (a.ingredients as unknown as RecipeIngredient[])
             : [],

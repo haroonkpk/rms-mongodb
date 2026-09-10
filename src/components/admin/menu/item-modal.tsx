@@ -535,7 +535,7 @@ export function ItemModal({
                     <div className="col-span-4 flex items-center gap-1.5">
                       <Input
                         type="number"
-                        step="0.01"
+                        step="0.001"
                         placeholder="Qty"
                         value={ing.quantityRequired.toString()}
                         onChange={(e) =>

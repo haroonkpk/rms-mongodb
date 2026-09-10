@@ -33,13 +33,26 @@ export async function getPOSCatalog() {
   });
 
   const inventoryItemIds = dbMenuItems.flatMap((item) => {
-    if (!Array.isArray(item.ingredients)) return [];
-    return item.ingredients.flatMap((ingredient) => {
-      if (!ingredient || typeof ingredient !== "object") return [];
-      const inventoryItemId = (ingredient as { inventoryItemId?: unknown })
-        .inventoryItemId;
-      return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
-    });
+    const itemIngredientIds = Array.isArray(item.ingredients)
+      ? item.ingredients.flatMap((ingredient) => {
+          if (!ingredient || typeof ingredient !== "object") return [];
+          const inventoryItemId = (ingredient as { inventoryItemId?: unknown })
+            .inventoryItemId;
+          return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
+        })
+      : [];
+    const addOnIngredientIds = item.addOns.flatMap((addOn) =>
+      Array.isArray(addOn.ingredients)
+        ? addOn.ingredients.flatMap((ingredient) => {
+            if (!ingredient || typeof ingredient !== "object") return [];
+            const inventoryItemId = (
+              ingredient as { inventoryItemId?: unknown }
+            ).inventoryItemId;
+            return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
+          })
+        : [],
+    );
+    return [...itemIngredientIds, ...addOnIngredientIds];
   });
   const inventoryItems = await prisma.inventoryItem.findMany({
     where: { id: { in: inventoryItemIds } },
@@ -79,7 +92,11 @@ export async function getPOSCatalog() {
       id: addon.id,
       name: addon.name,
       price: Number(addon.price),
-      isAvailable: addon.isAvailable,
+      isAvailable: isMenuItemAvailable(
+        addon.isAvailable,
+        addon.ingredients,
+        stockByInventoryId,
+      ),
     })),
   }));
 

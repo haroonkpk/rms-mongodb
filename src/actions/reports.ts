@@ -151,11 +151,10 @@ export async function getReportData(
         ).length,
       },
       {
-        label: "Inventory Used / Lost",
+        label: "Inventory Lost",
         amount: inventoryUsedCost,
         count: stockMovements.length,
       },
-      { label: "Operating Result", amount: operatingResult, count: 1 },
     ];
     const profit = Math.max(operatingResult, 0);
     const loss = Math.max(-operatingResult, 0);
@@ -622,9 +621,6 @@ export async function getCompletedOrderReport(filters: ReportFilters) {
     where: {
       createdAt: { gte: start, lte: end },
       status: "COMPLETED",
-      ...(filters.paymentMethod && filters.paymentMethod !== "ALL"
-        ? { paymentMethod: filters.paymentMethod as never }
-        : {}),
     },
     orderBy: { createdAt: "desc" },
     include: {
@@ -638,6 +634,7 @@ export async function getCompletedOrderReport(filters: ReportFilters) {
     date: order.createdAt.toISOString().slice(0, 10),
     cashier: order.cashier?.fullName ?? "Unassigned",
     payment: order.paymentMethod.replaceAll("_", " "),
+    status: order.status,
     total: number(order.totalAmount),
     paid: order.paymentStatus === "PAID" ? "Yes" : "No",
     due: number(order.dueAmount),

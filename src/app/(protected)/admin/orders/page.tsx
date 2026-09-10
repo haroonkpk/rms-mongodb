@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { RefreshCw } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
+import { Filter, X } from "lucide-react";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
 import { Select } from "@/components/ui/select";
@@ -19,7 +19,10 @@ export default function AdminOrdersPage() {
     period: "THIS_MONTH",
     paymentMethod: "ALL",
   });
-  const [rows, setRows] = useState<Array<Record<string, string | number>>>([]);
+  const [draftFilters, setDraftFilters] = useState<ReportFilters>(filters);
+  const [allRows, setAllRows] = useState<
+    Array<Record<string, string | number>>
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetails | null>(null);
 
@@ -27,7 +30,7 @@ export default function AdminOrdersPage() {
     setIsLoading(true);
     try {
       const result = await getCompletedOrderReport(filters);
-      setRows(result);
+      setAllRows(result);
     } finally {
       setIsLoading(false);
     }
@@ -36,12 +39,39 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     void Promise.resolve().then(() => load());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    filters.period,
-    filters.paymentMethod,
-    filters.startDate,
-    filters.endDate,
-  ]);
+  }, [filters.period, filters.startDate, filters.endDate]);
+
+  const updateDraft = (key: keyof ReportFilters, value: string) =>
+    setDraftFilters((current) => ({ ...current, [key]: value }));
+
+  const clearCustomFilter = () => {
+    const defaultFilters: ReportFilters = {
+      period: "THIS_MONTH",
+      paymentMethod: "ALL",
+    };
+    setDraftFilters(defaultFilters);
+    setFilters(defaultFilters);
+  };
+
+  const applyCustomFilter = () => {
+    if (
+      draftFilters.period === "CUSTOM" &&
+      draftFilters.startDate &&
+      draftFilters.endDate
+    ) {
+      setFilters(draftFilters);
+    }
+  };
+
+  const rows = useMemo(
+    () =>
+      allRows.filter(
+        (row) =>
+          filters.paymentMethod === "ALL" ||
+          row.payment === filters.paymentMethod?.replaceAll("_", " "),
+      ),
+    [allRows, filters.paymentMethod],
+  );
 
   return (
     <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
@@ -51,57 +81,60 @@ export default function AdminOrdersPage() {
           <div className="flex flex-wrap sm:flex-nowrap items-end gap-3 justify-between w-fit border border-slate-200 bg-white p-4 shadow-2xs">
             <Select
               label="Period"
-              value={filters.period}
+              value={draftFilters.period}
               onChange={(event) =>
-                setFilters((current) => ({
-                  ...current,
-                  period: event.target.value as ReportFilters["period"],
-                }))
+                event.target.value === "THIS_MONTH"
+                  ? clearCustomFilter()
+                  : updateDraft("period", event.target.value)
               }
               options={[
                 { value: "THIS_MONTH", label: "This Month" },
                 { value: "CUSTOM", label: "Custom range" },
               ]}
             />
-            {filters.period === "CUSTOM" && (
+            {draftFilters.period === "CUSTOM" && (
               <>
                 <Input
                   label="From"
                   type="date"
-                  value={filters.startDate ?? ""}
+                  value={draftFilters.startDate ?? ""}
                   onChange={(event) =>
-                    setFilters((current) => ({
-                      ...current,
-                      startDate: event.target.value,
-                    }))
+                    updateDraft("startDate", event.target.value)
                   }
                 />
                 <Input
                   label="To"
                   type="date"
-                  value={filters.endDate ?? ""}
+                  value={draftFilters.endDate ?? ""}
                   onChange={(event) =>
-                    setFilters((current) => ({
-                      ...current,
-                      endDate: event.target.value,
-                    }))
+                    updateDraft("endDate", event.target.value)
                   }
                 />
               </>
             )}
-            <Button
-              variant="outline"
-              icon={<RefreshCw size={16} />}
-              onClick={() => void load()}
-              isLoading={isLoading}
-            >
-              Refresh
-            </Button>
+            {filters.period === "CUSTOM" ? (
+              <Button
+                variant="outline"
+                icon={<X size={16} />}
+                onClick={clearCustomFilter}
+              >
+                Clear
+              </Button>
+            ) : draftFilters.period === "CUSTOM" ? (
+              <Button
+                variant="primary"
+                icon={<Filter size={16} />}
+                onClick={applyCustomFilter}
+                disabled={!draftFilters.startDate || !draftFilters.endDate}
+              >
+                Apply
+              </Button>
+            ) : null}
           </div>
         </div>
 
         <ReportDetailTable
-          heading="Completed Orders"
+          heading="Orders"
           rows={rows}
           isLoading={isLoading}
           onView={(row) => {
@@ -111,22 +144,24 @@ export default function AdminOrdersPage() {
             }
           }}
           headerActions={
-            <Select
-              aria-label="Filter orders by payment method"
-              value={filters.paymentMethod ?? "ALL"}
-              onChange={(event) =>
-                setFilters((current) => ({
-                  ...current,
-                  paymentMethod: event.target.value,
-                }))
-              }
-              options={[
-                { value: "ALL", label: "All Payments" },
-                { value: "CASH", label: "Cash" },
-                { value: "QR_CODE", label: "QR Code" },
-                { value: "LEDGER", label: "Ledger" },
-              ]}
-            />
+            <div className="flex items-center gap-2">
+              <Select
+                aria-label="Filter orders by payment method"
+                value={filters.paymentMethod ?? "ALL"}
+                onChange={(event) =>
+                  setFilters((current) => ({
+                    ...current,
+                    paymentMethod: event.target.value,
+                  }))
+                }
+                options={[
+                  { value: "ALL", label: "All Payments" },
+                  { value: "CASH", label: "Cash" },
+                  { value: "QR_CODE", label: "QR Code" },
+                  { value: "LEDGER", label: "Ledger" },
+                ]}
+              />
+            </div>
           }
         />
         <OrderDetailsModal

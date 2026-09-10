@@ -169,11 +169,14 @@ export function CustomizationModal({
               {item.addOns.map((addon) => {
                 const isChecked = selectedAddOns.some((a) => a.id === addon.id);
                 return (
-                  <div
+                  <button
                     key={addon.id}
-                    onClick={() => addon.isAvailable && toggleAddOn(addon)}
+                    type="button"
+                    onClick={() => toggleAddOn(addon)}
+                    disabled={!addon.isAvailable}
+                    aria-label={`${addon.name}${addon.isAvailable ? "" : " (Out of Stock)"}`}
                     className={cn(
-                      "flex items-center justify-between p-2.5  text-xs cursor-pointer transition-all",
+                      "flex items-center justify-between p-2.5 text-xs text-left cursor-pointer transition-all w-full",
                       !addon.isAvailable &&
                         "opacity-50 cursor-not-allowed bg-slate-50",
                       isChecked
@@ -194,14 +197,21 @@ export function CustomizationModal({
                       </div>
                       <span>{addon.name}</span>
                     </div>
-                    <span
-                      className={cn(
-                        isChecked ? "text-white" : "text-slate-900",
+                    <span className="flex items-center gap-2">
+                      {!addon.isAvailable && (
+                        <span className="text-[0.65rem] font-bold text-rose-600 uppercase">
+                          Out of Stock
+                        </span>
                       )}
-                    >
-                      +Rs {addon.price.toLocaleString()}
+                      <span
+                        className={cn(
+                          isChecked ? "text-white" : "text-slate-900",
+                        )}
+                      >
+                        +Rs {addon.price.toLocaleString()}
+                      </span>
                     </span>
-                  </div>
+                  </button>
                 );
               })}
             </div>

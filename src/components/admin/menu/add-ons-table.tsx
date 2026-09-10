@@ -59,7 +59,7 @@ export function AddOnsTable({
   return (
     <div className="flex flex-col gap-4">
       <DataTable
-        heading="Add-Ons & Extra Modifiers (e.g. Cheese, Sauces, Extra Patty)"
+        heading="Add-Ons & Extra Modifiers "
         TableHeaders={addOnTableHeaders}
         TableData={formattedAddOns}
         currentPage={1}

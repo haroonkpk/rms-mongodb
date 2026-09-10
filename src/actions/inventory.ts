@@ -776,58 +776,69 @@ export async function deductInventoryForOrder(
     const inventoryItemIds = Object.keys(deductionsMap);
     if (inventoryItemIds.length === 0) return { success: true };
 
-    await prisma.$transaction(async (tx) => {
-      let cogsAmount = 0;
-
-      for (const invId of inventoryItemIds) {
-        const data = deductionsMap[invId];
-        const invItem = await tx.inventoryItem.findUnique({
-          where: { id: invId },
+    await prisma.$transaction(
+      async (tx) => {
+        let cogsAmount = 0;
+        const inventoryItems = await tx.inventoryItem.findMany({
+          where: { id: { in: inventoryItemIds } },
+          select: { id: true, quantity: true, unitCost: true },
         });
+        const inventoryItemMap = new Map(
+          inventoryItems.map((inventoryItem) => [
+            inventoryItem.id,
+            inventoryItem,
+          ]),
+        );
 
-        if (invItem) {
-          const prevQty = Number(invItem.quantity);
-          const newQty = Math.max(0, prevQty - data.totalRequired);
-          cogsAmount += data.totalRequired * Number(invItem.unitCost);
+        for (const invId of inventoryItemIds) {
+          const data = deductionsMap[invId];
+          const invItem = inventoryItemMap.get(invId);
 
-          await tx.inventoryItem.update({
-            where: { id: invId },
-            data: { quantity: newQty },
+          if (invItem) {
+            const prevQty = Number(invItem.quantity);
+            const newQty = Math.max(0, prevQty - data.totalRequired);
+            cogsAmount += data.totalRequired * Number(invItem.unitCost);
+
+            await tx.inventoryItem.update({
+              where: { id: invId },
+              data: { quantity: newQty },
+            });
+
+            await tx.stockMovement.create({
+              data: {
+                inventoryItemId: invId,
+                type: StockMovementType.SALE_DEDUCTION,
+                quantityChange: -data.totalRequired,
+                previousQuantity: prevQty,
+                newQuantity: newQty,
+                reason: `Cooking Order: ${data.reasons.join(", ")}`,
+              },
+            });
+          }
+        }
+
+        if (cogsAmount > 0) {
+          const cogsType = await tx.expenseType.upsert({
+            where: { name: "COGS" },
+            update: {},
+            create: { name: "COGS" },
           });
 
-          await tx.stockMovement.create({
+          await tx.expense.create({
             data: {
-              inventoryItemId: invId,
-              type: StockMovementType.SALE_DEDUCTION,
-              quantityChange: -data.totalRequired,
-              previousQuantity: prevQty,
-              newQuantity: newQty,
-              reason: `Cooking Order: ${data.reasons.join(", ")}`,
+              title: `COGS - Order ${order.orderNumber}`,
+              expenseType: cogsType.name,
+              amount: cogsAmount,
+              expenseDate: order.createdAt,
+              paymentMethod: "OTHER",
+              orderId: order.id,
+              notes: `Cost of ingredients consumed for order ${order.orderNumber}`,
             },
           });
         }
-      }
-
-      if (cogsAmount > 0) {
-        const cogsType = await tx.expenseType.upsert({
-          where: { name: "COGS" },
-          update: {},
-          create: { name: "COGS" },
-        });
-
-        await tx.expense.create({
-          data: {
-            title: `COGS - Order ${order.orderNumber}`,
-            expenseType: cogsType.name,
-            amount: cogsAmount,
-            expenseDate: order.createdAt,
-            paymentMethod: "OTHER",
-            orderId: order.id,
-            notes: `Cost of ingredients consumed for order ${order.orderNumber}`,
-          },
-        });
-      }
-    });
+      },
+      { maxWait: 10000, timeout: 15000 },
+    );
 
     revalidatePath("/admin/inventory");
     revalidateMenuAvailability();
