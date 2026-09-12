@@ -21,6 +21,36 @@ export function OrderDetailsModal({
 }) {
   if (!order) return null;
 
+  const customerDetailRows = [
+    {
+      label: "Customer",
+      value: order.customerName || "Walk-in",
+      className: "font-semibold text-slate-800",
+    },
+    {
+      label: "Phone",
+      value: order.customerPhone || "-",
+      className: "font-semibold text-slate-800",
+    },
+  ];
+  const orderDetailRows = [
+    {
+      label: "Order Date",
+      value: new Date(order.date).toLocaleString("en-GB"),
+      className: "text-slate-800",
+    },
+    {
+      label: "Cashier",
+      value: order.cashier,
+      className: "font-semibold text-slate-800",
+    },
+    {
+      label: "Payment",
+      value: `${order.paymentMethod} / ${order.paymentStatus}`,
+      className: "font-semibold text-slate-800",
+    },
+  ];
+
   return (
     <Modal
       isOpen
@@ -34,22 +64,9 @@ export function OrderDetailsModal({
             Customer Details
           </h4>
           <div className="divide-y divide-slate-200 bg-slate-50 px-4">
-            <div className="flex items-center justify-between gap-4 px-2 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Customer
-              </span>
-              <span className="text-right font-semibold text-slate-800">
-                {order.customerName || "Walk-in"}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-4 px-2 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Phone
-              </span>
-              <span className="text-right font-semibold text-slate-800">
-                {order.customerPhone || "-"}
-              </span>
-            </div>
+            {customerDetailRows.map((row) => (
+              <DetailRow key={row.label} {...row} />
+            ))}
           </div>
         </section>
 
@@ -58,33 +75,12 @@ export function OrderDetailsModal({
             Order Details
           </h4>
           <div className="mb-4 divide-y divide-slate-200 bg-slate-50 px-4">
-            <div className="flex items-center justify-between gap-4 px-2 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Order Date
-              </span>
-              <span className="text-right text-slate-800">
-                {new Date(order.date).toLocaleString("en-GB")}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-4 px-2 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Cashier
-              </span>
-              <span className="text-right font-semibold text-slate-800">
-                {order.cashier}
-              </span>
-            </div>
-            <div className="flex items-center justify-between gap-4 px-2 py-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Payment
-              </span>
-              <span className="text-right font-semibold text-slate-800">
-                {order.paymentMethod} / {order.paymentStatus}
-              </span>
-            </div>
+            {orderDetailRows.map((row) => (
+              <DetailRow key={row.label} {...row} />
+            ))}
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[620px] text-left">
+            <table className="w-full min-w-155 text-left">
               <thead className="border-y border-(--color-secondary-bg) bg-(--color-page-bg) text-xs uppercase text-slate-500">
                 <tr>
                   <th className="px-3 py-2">Item</th>
@@ -167,5 +163,24 @@ export function OrderDetailsModal({
         </div>
       </div>
     </Modal>
+  );
+}
+
+function DetailRow({
+  label,
+  value,
+  className,
+}: {
+  label: string;
+  value: string;
+  className: string;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 px-2 py-3">
+      <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+        {label}
+      </span>
+      <span className={`text-right ${className}`}>{value}</span>
+    </div>
   );
 }

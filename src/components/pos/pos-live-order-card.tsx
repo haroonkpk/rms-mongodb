@@ -7,7 +7,8 @@ import { updateKitchenOrderStatus } from "@/actions/kitchen";
 import { KitchenOrder, KitchenOrderItem, OrderStatus } from "@/types";
 import { formatKotDisplay } from "@/lib/kot";
 import { cn } from "@/lib/utils";
-import { Clock, CheckCircle2, User, Phone } from "lucide-react";
+import { Clock, CheckCircle2, User, Phone, XCircle } from "lucide-react";
+import toast from "react-hot-toast";
 
 interface PosLiveOrderCardProps {
   order: KitchenOrder;
@@ -63,9 +64,12 @@ export const PosLiveOrderCard = memo(function PosLiveOrderCard({
       const res = await updateKitchenOrderStatus(order.id, nextStatus);
       if (res.success) {
         onStatusChange(order.id, nextStatus);
+      } else if (res.error) {
+        toast.error(res.error);
       }
     } catch (err) {
       console.error("Failed to update status:", err);
+      toast.error("Unable to update order status.");
     } finally {
       setIsUpdating(false);
     }
@@ -359,16 +363,30 @@ export const PosLiveOrderCard = memo(function PosLiveOrderCard({
         )}
 
         {!isReady && !isClosed && (
-          <Button
-            type="button"
-            variant="outline"
-            isLoading={isUpdating}
-            icon={<CheckCircle2 size={16} className="text-slate-500" />}
-            onClick={() => handleStatusTransition("COMPLETED")}
-            className="w-full text-xs py-2.5 border-slate-300 text-slate-700 hover:bg-slate-100 font-bold"
-          >
-            Mark Complete
-          </Button>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              isLoading={isUpdating}
+              icon={<CheckCircle2 size={16} className="text-slate-500" />}
+              onClick={() => handleStatusTransition("COMPLETED")}
+              className="flex-1 text-xs py-2.5 border-slate-300 text-slate-700 hover:bg-slate-100 font-bold"
+            >
+              Mark Complete
+            </Button>
+            {order.status === "PENDING" && (
+              <Button
+                type="button"
+                variant="outline"
+                isLoading={isUpdating}
+                icon={<XCircle size={16} className="text-rose-600" />}
+                onClick={() => handleStatusTransition("CANCELLED")}
+                className="flex-1 text-xs py-2.5 border-rose-200 text-rose-700 hover:bg-rose-50 font-bold"
+              >
+                Cancel
+              </Button>
+            )}
+          </div>
         )}
 
         {isClosed && (

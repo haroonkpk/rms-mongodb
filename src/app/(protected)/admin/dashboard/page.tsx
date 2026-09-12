@@ -5,8 +5,6 @@ import {
   AlertTriangle,
   CircleDollarSign,
   ClipboardList,
-  CookingPot,
-  PackageX,
   RefreshCw,
 } from "lucide-react";
 import { Header } from "@/components/layouts";
@@ -45,35 +43,68 @@ type CompletedOrderRow = {
   value: React.ReactNode;
 };
 
+type StockRow = {
+  id: string;
+  item: React.ReactNode;
+  quantity: React.ReactNode;
+};
+
 function Kpi({
   label,
   value,
   detail,
   icon: Icon,
-  tone = "default",
+  tone = "neutral",
 }: {
   label: string;
   value: string;
   detail: string;
   icon: React.ComponentType<{ size?: number }>;
-  tone?: "default" | "good" | "warning";
+  tone?: "success" | "neutral" | "warning" | "danger";
 }) {
+  const toneStyles = {
+    success: {
+      card: "border-slate-200 bg-emerald-600 text-white",
+      label: "text-emerald-200",
+      value: "text-white font-extrabold!",
+      icon: "text-emerald-100",
+    },
+    neutral: {
+      card: "border-slate-200 bg-white text-slate-900",
+      label: "text-slate-600",
+      value: "text-slate-900",
+      icon: "bg-(--color-secondary-bg) text-slate-700",
+    },
+    warning: {
+      card: "border-slate-200 bg-white text-slate-900",
+      label: "text-slate-500",
+      value: "text-(--color-pending)",
+      icon: "bg-(--color-pending-bg) text-white",
+    },
+    danger: {
+      card: "border-slate-200 bg-white text-slate-900",
+      label: "text-slate-500",
+      value: "text-(--color-primary)",
+      icon: "bg-rose-50 text-(--color-primary)",
+    },
+  }[tone];
+
   return (
-    <Card className="flex items-start justify-between border border-slate-200 bg-white p-5 shadow-2xs">
+    <Card
+      className={`flex h-full min-h-[8.5rem] items-start justify-between border p-5 shadow-2xs ${toneStyles.card}`}
+    >
       <div>
-        <p className="text-xs font-bold uppercase tracking-wide text-slate-500">
+        <p
+          className={`text-xs font-bold uppercase tracking-wide ${toneStyles.label}`}
+        >
           {label}
         </p>
-        <p className="mt-2 text-2xl font-black text-slate-900">{value}</p>
-        <p
-          className={`mt-1 text-xs ${tone === "good" ? "text-emerald-700" : tone === "warning" ? "text-amber-700" : "text-slate-500"}`}
-        >
-          {detail}
+        <p className={`mt-2 text-2xl font-black ${toneStyles.value}`}>
+          {value}
         </p>
+        <p className={`mt-1 text-xs ${toneStyles.label}`}>{detail}</p>
       </div>
-      <span
-        className={`p-3 ${tone === "good" ? "bg-emerald-50 text-emerald-700" : tone === "warning" ? "bg-amber-50 text-amber-700" : "bg-rose-50 text-(--color-primary)"}`}
-      >
+      <span className={`p-3 ${toneStyles.icon}`}>
         <Icon size={21} />
       </span>
     </Card>
@@ -98,9 +129,6 @@ export default function AdminDashboardPage() {
     (sum, item) => sum + item.count,
     0,
   );
-  const activeKitchenOrders =
-    data.alerts.find((alert) => alert.label === "Active kitchen orders")
-      ?.value ?? 0;
   const completedOrderRows: CompletedOrderRow[] =
     data.latestCompletedOrders.map((order) => ({
       id: order.id,
@@ -118,6 +146,20 @@ export default function AdminDashboardPage() {
         <span className="font-bold text-slate-900">{money(order.amount)}</span>
       ),
     }));
+  const lowStockRows: StockRow[] = data.stock.low.map((item) => ({
+    id: item.id,
+    item: <span className="font-semibold text-slate-800">{item.name}</span>,
+    quantity: (
+      <span className="font-bold text-amber-700">
+        {item.quantity} {item.unit}
+      </span>
+    ),
+  }));
+  const outOfStockRows: StockRow[] = data.stock.out.map((item) => ({
+    id: item.id,
+    item: <span className="font-semibold text-slate-800">{item.name}</span>,
+    quantity: <span className="font-bold text-rose-700">0 {item.unit}</span>,
+  }));
 
   return (
     <div className="min-h-screen bg-(--color-page-bg) p-[clamp(1rem,3vw,2.5rem)] pb-24">
@@ -141,33 +183,27 @@ export default function AdminDashboardPage() {
             Refresh
           </Button>
         </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="grid grid-cols-1 items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
           <Kpi
             label="Sales"
             value={money(data.kpis.sales)}
             detail={`${data.kpis.orders} completed orders`}
             icon={CircleDollarSign}
-            tone="good"
+            tone="success"
           />
           <Kpi
             label="Orders"
             value={String(data.kpis.orders)}
             detail={`Avg ${money(data.kpis.averageOrder)}`}
             icon={ClipboardList}
-          />
-          <Kpi
-            label="Kitchen orders"
-            value={String(activeKitchenOrders)}
-            detail="Pending, preparing or ready"
-            icon={CookingPot}
-            tone={activeKitchenOrders ? "warning" : "good"}
+            tone="neutral"
           />
           <Kpi
             label="Outstanding"
             value={money(data.kpis.outstanding)}
             detail="Unpaid ledger balance"
             icon={ClipboardList}
-            tone="warning"
+            tone="danger"
           />
         </div>
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -238,65 +274,36 @@ export default function AdminDashboardPage() {
             ))}
           </Card>
         </div>
-        <Card className="border border-slate-200 bg-white p-5 shadow-2xs">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <h2 className="text-lg font-bold text-slate-900">
-                Stock details
-              </h2>
-              <p className="text-xs text-slate-500">
-                Items that need attention right now
-              </p>
-            </div>
-            <PackageX size={20} className="text-(--color-primary)" />
-          </div>
-          <div className="mt-4 grid grid-cols-1 gap-5 md:grid-cols-2">
-            <div>
-              <h3 className="text-sm font-bold text-rose-700">Out of stock</h3>
-              <div className="mt-2 flex flex-col gap-2">
-                {data.stock.out.length ? (
-                  data.stock.out.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex justify-between border-b border-slate-100 pb-2 text-sm"
-                    >
-                      <span className="font-semibold text-slate-800">
-                        {item.name}
-                      </span>
-                      <span className="text-rose-700">0 {item.unit}</span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-slate-500">
-                    No items out of stock.
-                  </p>
-                )}
-              </div>
-            </div>
-            <div>
-              <h3 className="text-sm font-bold text-amber-700">Low stock</h3>
-              <div className="mt-2 flex flex-col gap-2">
-                {data.stock.low.length ? (
-                  data.stock.low.map((item) => (
-                    <div
-                      key={item.id}
-                      className="flex justify-between border-b border-slate-100 pb-2 text-sm"
-                    >
-                      <span className="font-semibold text-slate-800">
-                        {item.name}
-                      </span>
-                      <span className="text-amber-700">
-                        {item.quantity} {item.unit}
-                      </span>
-                    </div>
-                  ))
-                ) : (
-                  <p className="text-sm text-slate-500">No low stock items.</p>
-                )}
-              </div>
-            </div>
-          </div>
-        </Card>
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <DataTable
+            heading="Low stock items"
+            HeaderBgColor="bg-amber-100"
+            BorderColor="border-amber-200"
+            TableHeaders={[
+              { key: "item", label: "Item" },
+              { key: "quantity", label: "Available" },
+            ]}
+            TableData={lowStockRows}
+            currentPage={1}
+            totalPages={1}
+            onPageChange={() => undefined}
+            totalEntries={lowStockRows.length}
+          />
+          <DataTable
+            heading="Out of stock items"
+            HeaderBgColor="bg-rose-100"
+            BorderColor="border-rose-200"
+            TableHeaders={[
+              { key: "item", label: "Item" },
+              { key: "quantity", label: "Available" },
+            ]}
+            TableData={outOfStockRows}
+            currentPage={1}
+            totalPages={1}
+            onPageChange={() => undefined}
+            totalEntries={outOfStockRows.length}
+          />
+        </div>
         <DataTable
           heading="Latest completed orders"
           TableHeaders={[

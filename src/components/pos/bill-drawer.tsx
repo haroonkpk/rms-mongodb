@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { CartItem, POSOrderPayload } from "@/types/pos";
 import { createPOSOrder } from "@/actions/pos";
+import { createCustomer, searchCustomers } from "@/actions/customers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Modal } from "@/components/ui/modal";
 import {
   Receipt,
   X,
@@ -46,6 +48,14 @@ export function BillDrawer({
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
+  const [customerId, setCustomerId] = useState<string | undefined>();
+  const [customerLookup, setCustomerLookup] = useState("");
+  const [customerMatches, setCustomerMatches] = useState<
+    Array<{ id: string; name: string; phone: string }>
+  >([]);
+  const [isRegisterCustomerOpen, setIsRegisterCustomerOpen] = useState(false);
+  const [newCustomerName, setNewCustomerName] = useState("");
+  const [newCustomerPhone, setNewCustomerPhone] = useState("");
   const [customerNotes, setCustomerNotes] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -58,7 +68,7 @@ export function BillDrawer({
   } | null>(null);
 
   useEffect(() => {
-    setMountedPortal(true);
+    void Promise.resolve().then(() => setMountedPortal(true));
   }, []);
 
   const totalAmount = billItems.reduce((acc, item) => acc + item.itemTotal, 0);
@@ -85,11 +95,55 @@ export function BillDrawer({
     },
   ] as const;
 
+  const handleCustomerLookup = async (value: string) => {
+    setCustomerLookup(value);
+    const result = await searchCustomers(value);
+    if (result.success) setCustomerMatches(result.customers);
+  };
+
+  const handleCreateCustomer = async () => {
+    if (!newCustomerName.trim() || !newCustomerPhone.trim()) {
+      setValidationError(
+        "Enter the customer name and phone to register a customer.",
+      );
+      return;
+    }
+    const result = await createCustomer({
+      name: newCustomerName,
+      phone: newCustomerPhone,
+    });
+    if (!result.success || !result.customer) {
+      setValidationError(result.error ?? "Unable to create customer.");
+      return;
+    }
+    setCustomerId(result.customer.id);
+    setCustomerName(result.customer.name);
+    setCustomerPhone(result.customer.phone);
+    setCustomerLookup(result.customer.name);
+    setCustomerMatches((current) => [result.customer!, ...current]);
+    setNewCustomerName("");
+    setNewCustomerPhone("");
+    setIsRegisterCustomerOpen(false);
+    setValidationError(null);
+    toast.success("Customer created and selected");
+  };
+
+  const loadCustomersForLedger = async () => {
+    const result = await searchCustomers("");
+    if (result.success) setCustomerMatches(result.customers);
+  };
+
   const handlePlaceOrderAndPrint = async () => {
     if (billItems.length === 0) return;
 
     // Validation for Full Ledger Orders
     if (paymentMethod === "LEDGER") {
+      if (!customerId) {
+        setValidationError(
+          "Select an existing customer or create a new one first.",
+        );
+        return;
+      }
       if (!customerName.trim()) {
         setValidationError(
           "Customer Full Name is required for Customer Ledger (Qarza) orders.",
@@ -120,6 +174,7 @@ export function BillDrawer({
         cashReceived: isLedger ? 0 : totalAmount,
         changeGiven: 0,
         dueAmount: isLedger ? totalAmount : 0,
+        customerId: isLedger ? customerId : undefined,
         customerName: isLedger ? customerName.trim() : undefined,
         customerPhone: isLedger ? customerPhone.trim() : undefined,
         notes: customerNotes.trim() || undefined,
@@ -153,8 +208,12 @@ export function BillDrawer({
           totalAmount,
         });
 
-        const displayKot = res.kotNumber ? String(res.kotNumber) : res.orderNumber;
-        toast.success(`Order KOT #${displayKot} sent to Kitchen!`, { icon: null });
+        const displayKot = res.kotNumber
+          ? String(res.kotNumber)
+          : res.orderNumber;
+        toast.success(`Order KOT #${displayKot} sent to Kitchen!`, {
+          icon: null,
+        });
 
         // 2. Allow 200ms for React Portal DOM update, then trigger print & reset
         setTimeout(() => {
@@ -163,17 +222,24 @@ export function BillDrawer({
           // 3. Reset form inputs, clear bill & close drawer
           setCustomerName("");
           setCustomerPhone("");
+          setCustomerId(undefined);
+          setCustomerLookup("");
+          setCustomerMatches([]);
           setCustomerNotes("");
           setPaymentMethod("CASH");
           onClearBill();
           onClose();
         }, 200);
       } else {
-        toast.error(res.error || "Failed to place order.");
+        const message = res.error || "Failed to place order.";
+        setValidationError(message);
+        toast.error(message);
       }
     } catch (err) {
       console.error("Order placement error:", err);
-      toast.error("An error occurred while placing order.");
+      const message = "An error occurred while placing order.";
+      setValidationError(message);
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -184,7 +250,7 @@ export function BillDrawer({
 
   useEffect(() => {
     if (isOpen) {
-      setIsMounted(true);
+      void Promise.resolve().then(() => setIsMounted(true));
       const raf = requestAnimationFrame(() => {
         requestAnimationFrame(() => {
           setIsVisible(true);
@@ -192,7 +258,7 @@ export function BillDrawer({
       });
       return () => cancelAnimationFrame(raf);
     } else {
-      setIsVisible(false);
+      void Promise.resolve().then(() => setIsVisible(false));
       const timer = setTimeout(() => {
         setIsMounted(false);
       }, 300);
@@ -251,7 +317,7 @@ export function BillDrawer({
             {/* Drawer Header */}
             <div className="flex items-center justify-between px-[clamp(1rem,1.5vw,1.25rem)] py-[clamp(0.875rem,1.2vw,1rem)] border-b border-slate-100 bg-slate-50/50 shrink-0">
               <div className="flex items-center gap-2">
-                <div className="w-12 h-12 text-[var(--color-primary)] flex items-center justify-center font-bold">
+                <div className="w-12 h-12 text-(--color-primary) flex items-center justify-center font-bold">
                   <Receipt size={26} />
                 </div>
                 <div>
@@ -339,13 +405,15 @@ export function BillDrawer({
                           onClick={() => {
                             setPaymentMethod(method.value);
                             setValidationError(null);
+                            if (method.value === "LEDGER")
+                              void loadCustomersForLedger();
                           }}
                           className={cn(
                             "p-2.5 border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer text-[0.72rem] font-bold text-center",
                             isSelected
                               ? isLedger
                                 ? "border-rose-600 bg-rose-600 text-white shadow-2xs"
-                                : "border-[var(--color-primary)] bg-[var(--color-primary)] text-white shadow-2xs"
+                                : "border-(--color-primary) bg-(--color-primary) text-white shadow-2xs"
                               : isLedger
                                 ? "border-rose-200 bg-rose-50/50 text-rose-700 hover:bg-rose-100/60"
                                 : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
@@ -370,35 +438,47 @@ export function BillDrawer({
                         </span>
                       </div>
 
-                      {/* Customer Full Name */}
-                      <Input
-                        label="Customer Full Name"
-                        required
-                        type="text"
-                        value={customerName}
-                        onChange={(e) => {
-                          setCustomerName(e.target.value);
-                          if (validationError) setValidationError(null);
-                        }}
-                        placeholder="e.g. Muhammad Ali"
-                      />
+                      <div className="flex items-center justify-between gap-3">
+                        <span className="text-[0.68rem] font-bold uppercase tracking-wide text-slate-500">
+                          Registered customer
+                        </span>
+                        <button
+                          type="button"
+                          className="text-[0.7rem] font-bold text-(--color-primary) underline underline-offset-2"
+                          onClick={() => {
+                            setValidationError(null);
+                            setIsRegisterCustomerOpen(true);
+                          }}
+                        >
+                          Register new customer
+                        </button>
+                      </div>
 
-                      {/* Customer Phone Number */}
-                      <Input
-                        label="Customer Phone Number"
-                        required
-                        type="tel"
-                        value={customerPhone}
-                        onChange={(e) => {
-                          setCustomerPhone(e.target.value);
-                          if (validationError) setValidationError(null);
+                      <select
+                        aria-label="Select registered customer"
+                        value={customerId ?? ""}
+                        onChange={(event) => {
+                          const customer = customerMatches.find(
+                            (item) => item.id === event.target.value,
+                          );
+                          setCustomerId(customer?.id);
+                          setCustomerName(customer?.name ?? "");
+                          setCustomerPhone(customer?.phone ?? "");
+                          setCustomerLookup(customer?.name ?? "");
+                          setValidationError(null);
                         }}
-                        placeholder="e.g. 0300-1234567"
-                      />
+                        className="w-full border border-slate-200 bg-(--color-page-bg) p-[clamp(0.6rem,1.5vw,0.875rem)] text-sm font-medium text-slate-800 outline-none focus:border-(--color-primary) focus:bg-white"
+                      >
+                        <option value="">Select a customer</option>
+                        {customerMatches.map((customer) => (
+                          <option key={customer.id} value={customer.id}>
+                            {customer.name} - {customer.phone}
+                          </option>
+                        ))}
+                      </select>
 
-                      {/* Ledger Note */}
                       <Textarea
-                        label="Ledger / Credit Note (Optional)"
+                        label="Ledger / Note (Optional)"
                         rows={2}
                         value={customerNotes}
                         onChange={(e) => setCustomerNotes(e.target.value)}
@@ -422,11 +502,17 @@ export function BillDrawer({
 
             {/* Drawer Footer */}
             <div className="p-[clamp(1rem,1.5vw,1.25rem)] border-t border-slate-200 bg-white space-y-3 shrink-0">
+              {validationError && (
+                <div className="flex items-start gap-2 border border-rose-200 bg-rose-50 p-3 text-sm font-semibold text-rose-700">
+                  <AlertCircle size={17} className="mt-0.5 shrink-0" />
+                  <span>{validationError}</span>
+                </div>
+              )}
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
                   Total Bill
                 </span>
-                <span className="text-2xl font-black text-[var(--color-primary)]">
+                <span className="text-2xl font-black text-(--color-primary)">
                   Rs. {totalAmount.toLocaleString()}
                 </span>
               </div>
@@ -452,6 +538,47 @@ export function BillDrawer({
           </aside>
         </>
       )}
+
+      <Modal
+        isOpen={isRegisterCustomerOpen}
+        onClose={() => setIsRegisterCustomerOpen(false)}
+        title="Register New Customer"
+        className="max-w-md"
+      >
+        <form
+          className="space-y-4 py-2"
+          onSubmit={(event) => {
+            event.preventDefault();
+            void handleCreateCustomer();
+          }}
+        >
+          <Input
+            label="Customer Full Name"
+            required
+            value={newCustomerName}
+            onChange={(event) => setNewCustomerName(event.target.value)}
+            placeholder="e.g. Muhammad Ali"
+          />
+          <Input
+            label="Customer Phone Number"
+            required
+            type="tel"
+            value={newCustomerPhone}
+            onChange={(event) => setNewCustomerPhone(event.target.value)}
+            placeholder="e.g. 0300-1234567"
+          />
+          <div className="flex justify-end gap-2 border-t border-slate-100 pt-4">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setIsRegisterCustomerOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit">Register customer</Button>
+          </div>
+        </form>
+      </Modal>
     </>
   );
 }

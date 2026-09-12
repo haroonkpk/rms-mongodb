@@ -8,6 +8,7 @@ import React, {
   useRef,
 } from "react";
 import { getKitchenOrders } from "@/actions/kitchen";
+import { getKotSequence, resetKotSequence } from "@/actions/pos";
 import { KitchenOrder, KitchenStats, OrderStatus } from "@/types";
 import { getSupabaseClient } from "@/lib/supabase-client";
 import {
@@ -39,6 +40,11 @@ export default function PosLivePage() {
   const [realtimeStatus, setRealtimeStatus] = useState<
     "connected" | "connecting" | "polling" | "disconnected"
   >("connecting");
+  const [currentKotNumber, setCurrentKotNumber] = useState(0);
+  const [kotWindowStartedAt, setKotWindowStartedAt] = useState<string | null>(
+    null,
+  );
+  const [isResettingKot, setIsResettingKot] = useState(false);
 
   const isSoundEnabledRef = useRef(isSoundEnabled);
   useEffect(() => {
@@ -87,7 +93,10 @@ export default function PosLivePage() {
   // Core Order Fetcher
   const fetchOrders = useCallback(async () => {
     try {
-      const res = await getKitchenOrders();
+      const [res, sequence] = await Promise.all([
+        getKitchenOrders(),
+        getKotSequence(),
+      ]);
       if (res.success && res.orders) {
         const fetchedOrders = res.orders;
 
@@ -124,6 +133,8 @@ export default function PosLivePage() {
 
         setOrders(fetchedOrders);
         setStats(res.stats);
+        setCurrentKotNumber(sequence.currentNumber);
+        setKotWindowStartedAt(sequence.windowStartedAt);
       } else if (res.error) {
         toast.error(res.error);
       }
@@ -194,6 +205,23 @@ export default function PosLivePage() {
     fetchOrders();
   }, [fetchOrders]);
 
+  const handleResetKot = useCallback(async () => {
+    setIsResettingKot(true);
+    try {
+      await resetKotSequence();
+      setCurrentKotNumber(0);
+      setKotWindowStartedAt(new Date().toISOString());
+      toast.success("KOT sequence reset. Next order will be KOT #1.", {
+        icon: null,
+      });
+      await fetchOrders();
+    } catch {
+      toast.error("Unable to reset KOT sequence.");
+    } finally {
+      setIsResettingKot(false);
+    }
+  }, [fetchOrders]);
+
   const handleStatusChange = useCallback(
     (orderId: string, newStatus: OrderStatus) => {
       setOrders((prev) =>
@@ -208,7 +236,9 @@ export default function PosLivePage() {
   const filteredOrders = useMemo(() => {
     const list = orders.filter((order) => {
       // 1. Status Filter
-      if (statusFilter === "READY") {
+      if (statusFilter === "PENDING") {
+        if (order.status !== "PENDING") return false;
+      } else if (statusFilter === "READY") {
         if (order.status !== "READY") return false;
       } else if (statusFilter === "COMPLETED") {
         if (order.status !== "COMPLETED") return false;
@@ -242,6 +272,10 @@ export default function PosLivePage() {
         realtimeStatus={realtimeStatus}
         activeFilter={statusFilter}
         onFilterChange={setStatusFilter}
+        currentKotNumber={currentKotNumber}
+        kotWindowStartedAt={kotWindowStartedAt}
+        onResetKot={handleResetKot}
+        isResettingKot={isResettingKot}
       />
 
       {/* Main Live Orders Grid */}

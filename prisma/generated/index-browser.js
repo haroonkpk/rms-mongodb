@@ -169,11 +169,33 @@ exports.Prisma.AddOnScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CustomerScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  phone: 'phone',
+  email: 'email',
+  notes: 'notes',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CustomerLedgerEntryScalarFieldEnum = {
+  id: 'id',
+  customerId: 'customerId',
+  orderId: 'orderId',
+  type: 'type',
+  amount: 'amount',
+  note: 'note',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.OrderScalarFieldEnum = {
   id: 'id',
   orderNumber: 'orderNumber',
   kotNumber: 'kotNumber',
   cashierId: 'cashierId',
+  customerId: 'customerId',
   status: 'status',
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
@@ -200,6 +222,13 @@ exports.Prisma.OrderItemScalarFieldEnum = {
   totalPrice: 'totalPrice',
   addOns: 'addOns',
   notes: 'notes'
+};
+
+exports.Prisma.KotSequenceScalarFieldEnum = {
+  id: 'id',
+  currentNumber: 'currentNumber',
+  windowStartedAt: 'windowStartedAt',
+  updatedAt: 'updatedAt'
 };
 
 exports.Prisma.AttendanceScalarFieldEnum = {
@@ -369,6 +398,16 @@ exports.ShiftTiming = exports.$Enums.ShiftTiming = {
   DUAL: 'DUAL'
 };
 
+exports.CustomerStatus = exports.$Enums.CustomerStatus = {
+  ACTIVE: 'ACTIVE',
+  INACTIVE: 'INACTIVE'
+};
+
+exports.CustomerLedgerEntryType = exports.$Enums.CustomerLedgerEntryType = {
+  CHARGE: 'CHARGE',
+  PAYMENT: 'PAYMENT'
+};
+
 exports.OrderStatus = exports.$Enums.OrderStatus = {
   PENDING: 'PENDING',
   PREPARING: 'PREPARING',
@@ -453,8 +492,11 @@ exports.Prisma.ModelName = {
   Category: 'Category',
   MenuItem: 'MenuItem',
   AddOn: 'AddOn',
+  Customer: 'Customer',
+  CustomerLedgerEntry: 'CustomerLedgerEntry',
   Order: 'Order',
   OrderItem: 'OrderItem',
+  KotSequence: 'KotSequence',
   Attendance: 'Attendance',
   Leave: 'Leave',
   ExpenseType: 'ExpenseType',

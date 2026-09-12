@@ -1,13 +1,6 @@
 import { getCurrentUser } from "@/actions/auth";
 import { Sidebar } from "@/components/layouts";
-import {
-  ShoppingCart,
-  Clock,
-  ChefHat,
-  ShieldCheck,
-  ShieldCheckIcon,
-  Shield,
-} from "lucide-react";
+import { ShoppingCart, Clock, ChefHat, Shield, Users } from "lucide-react";
 
 export default async function StaffLayout({
   children,
@@ -42,6 +35,12 @@ export default async function StaffLayout({
         label: "Live Orders",
         href: "/pos/live",
         icon: <Clock size={18} />,
+        exact: true,
+      },
+      {
+        label: "Customers",
+        href: "/customers",
+        icon: <Users size={18} />,
         exact: true,
       },
     ];

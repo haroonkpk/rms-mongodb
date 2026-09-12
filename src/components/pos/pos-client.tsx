@@ -1,14 +1,20 @@
 "use client";
 
-import React, { useState, useTransition } from "react";
+import React, { useEffect, useRef, useState, useTransition } from "react";
 import { CategoryTabs } from "@/components/pos/category-tabs";
 import { ItemGrid } from "@/components/pos/item-grid";
 import { CustomizationModal } from "@/components/pos/customization-modal";
 import { BillDrawer } from "@/components/pos/bill-drawer";
 import { Receipt, RefreshCw } from "lucide-react";
 import { Header } from "@/components/layouts";
-import { CartItem, POSCategory, POSMenuItem, POSInitDataResponse } from "@/types";
+import {
+  CartItem,
+  POSCategory,
+  POSMenuItem,
+  POSInitDataResponse,
+} from "@/types";
 import { getPOSInitData } from "@/actions/pos";
+import { getSupabaseClient } from "@/lib/supabase-client";
 
 interface POSClientProps {
   initialData: POSInitDataResponse;
@@ -17,10 +23,10 @@ interface POSClientProps {
 export function POSClient({ initialData }: POSClientProps) {
   const [cashier, setCashier] = useState(initialData.cashier);
   const [categories, setCategories] = useState<POSCategory[]>(
-    initialData.categories || []
+    initialData.categories || [],
   );
   const [menuItems, setMenuItems] = useState<POSMenuItem[]>(
-    initialData.menuItems || []
+    initialData.menuItems || [],
   );
   const [selectedCategoryId, setSelectedCategoryId] = useState<string>("ALL");
 
@@ -29,13 +35,55 @@ export function POSClient({ initialData }: POSClientProps) {
 
   // Modal & Side Drawer States
   const [customizingItem, setCustomizingItem] = useState<POSMenuItem | null>(
-    null
+    null,
   );
   const [isCustomizationOpen, setIsCustomizationOpen] = useState(false);
   const [isBillDrawerOpen, setIsBillDrawerOpen] = useState(false);
 
   // Background refresh state transition
   const [isPending, startTransition] = useTransition();
+  const syncTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const syncPOSData = () => {
+    if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
+    syncTimeoutRef.current = setTimeout(() => {
+      startTransition(async () => {
+        const data = await getPOSInitData();
+        if (data.success) {
+          setCashier(data.cashier);
+          setCategories(data.categories);
+          setMenuItems(data.menuItems);
+        }
+      });
+    }, 250);
+  };
+
+  useEffect(() => {
+    const supabase = getSupabaseClient();
+    let realtimeConnected = false;
+    const channel = supabase
+      ?.channel("pos-inventory-availability")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "inventory_items" },
+        () => syncPOSData(),
+      )
+      .subscribe((status) => {
+        realtimeConnected = status === "SUBSCRIBED";
+        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
+          console.warn("POS inventory realtime unavailable:", status);
+        }
+      });
+
+    const fallbackSync = setInterval(() => {
+      if (!realtimeConnected) syncPOSData();
+    }, 15000);
+
+    return () => {
+      clearInterval(fallbackSync);
+      if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
+      if (supabase && channel) void supabase.removeChannel(channel);
+    };
+  }, []);
 
   const handleRefresh = () => {
     startTransition(async () => {
@@ -55,7 +103,7 @@ export function POSClient({ initialData }: POSClientProps) {
   // Calculate Bill Total
   const billTotalAmount = billItems.reduce(
     (acc, item) => acc + item.itemTotal,
-    0
+    0,
   );
   const billItemCount = billItems.reduce((acc, item) => acc + item.quantity, 0);
 
@@ -74,7 +122,7 @@ export function POSClient({ initialData }: POSClientProps) {
           ci.variant?.name === newItem.variant?.name &&
           ci.notes === newItem.notes &&
           JSON.stringify(ci.addOns.map((a) => a.id).sort()) ===
-            JSON.stringify(newItem.addOns.map((a) => a.id).sort())
+            JSON.stringify(newItem.addOns.map((a) => a.id).sort()),
       );
 
       if (existingIndex > -1) {
@@ -108,15 +156,15 @@ export function POSClient({ initialData }: POSClientProps) {
               quantity: newQuantity,
               itemTotal: item.unitPrice * newQuantity,
             }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
   // Remove single item from bill
   const handleRemoveBillItem = (cartItemId: string) => {
     setBillItems((prev) =>
-      prev.filter((item) => item.cartItemId !== cartItemId)
+      prev.filter((item) => item.cartItemId !== cartItemId),
     );
   };
 

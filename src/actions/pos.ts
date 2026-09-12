@@ -126,6 +126,25 @@ export async function getPOSInitData(): Promise<POSInitDataResponse> {
   }
 }
 
+export async function getKotSequence() {
+  const sequence = await prisma.kotSequence.findUnique({ where: { id: 1 } });
+  return {
+    currentNumber: sequence?.currentNumber ?? 0,
+    windowStartedAt: sequence?.windowStartedAt?.toISOString() ?? null,
+  };
+}
+
+export async function resetKotSequence() {
+  await prisma.kotSequence.upsert({
+    where: { id: 1 },
+    update: { currentNumber: 0, windowStartedAt: new Date() },
+    create: { id: 1, currentNumber: 0, windowStartedAt: new Date() },
+  });
+  revalidatePath("/pos/live");
+  revalidatePath("/pos");
+  return { success: true };
+}
+
 export async function createPOSOrder(
   payload: POSOrderPayload,
 ): Promise<POSOrderResult> {
@@ -138,47 +157,143 @@ export async function createPOSOrder(
       return { success: false, error: "Bill is empty" };
     }
 
+    const requestedMenuItemIds = payload.items
+      .map((item) => item.itemId)
+      .filter((id) => !id.startsWith("item-"));
+    const requestedAddOnIds = payload.items.flatMap((item) =>
+      item.addOns.map((addOn) => addOn.id),
+    );
+    const [menuItems, addOns] = await Promise.all([
+      prisma.menuItem.findMany({
+        where: { id: { in: requestedMenuItemIds } },
+        select: { id: true, ingredients: true },
+      }),
+      prisma.addOn.findMany({
+        where: { id: { in: requestedAddOnIds } },
+        select: { id: true, ingredients: true },
+      }),
+    ]);
+    const menuItemMap = new Map(
+      menuItems.map((item) => [item.id, item.ingredients]),
+    );
+    const addOnMap = new Map(
+      addOns.map((addOn) => [addOn.id, addOn.ingredients]),
+    );
+    const requiredByInventoryId = new Map<string, number>();
+
+    const addRequirements = (rawIngredients: unknown, multiplier: number) => {
+      if (!Array.isArray(rawIngredients)) return;
+      for (const ingredient of rawIngredients) {
+        if (!ingredient || typeof ingredient !== "object") continue;
+        const value = ingredient as {
+          inventoryItemId?: unknown;
+          quantityRequired?: unknown;
+        };
+        const inventoryItemId = value.inventoryItemId;
+        const quantityRequired = Number(value.quantityRequired);
+        if (
+          typeof inventoryItemId !== "string" ||
+          !inventoryItemId ||
+          !Number.isFinite(quantityRequired) ||
+          quantityRequired <= 0
+        ) {
+          continue;
+        }
+        requiredByInventoryId.set(
+          inventoryItemId,
+          (requiredByInventoryId.get(inventoryItemId) ?? 0) +
+            quantityRequired * multiplier,
+        );
+      }
+    };
+
+    for (const item of payload.items) {
+      addRequirements(menuItemMap.get(item.itemId), item.quantity);
+      for (const addOn of item.addOns) {
+        addRequirements(addOnMap.get(addOn.id), item.quantity);
+      }
+    }
+
+    if (requiredByInventoryId.size > 0) {
+      const inventoryItems = await prisma.inventoryItem.findMany({
+        where: { id: { in: [...requiredByInventoryId.keys()] } },
+        select: { id: true, name: true, quantity: true, unit: true },
+      });
+      const loadedInventoryIds = new Set(
+        inventoryItems.map((inventoryItem) => inventoryItem.id),
+      );
+      const missingInventoryId = [...requiredByInventoryId.keys()].find(
+        (inventoryItemId) => !loadedInventoryIds.has(inventoryItemId),
+      );
+      if (missingInventoryId) {
+        return {
+          success: false,
+          error:
+            "This order has an ingredient that is not available in inventory.",
+        };
+      }
+      const unavailable = inventoryItems.find(
+        (inventoryItem) =>
+          Number(inventoryItem.quantity) <
+          (requiredByInventoryId.get(inventoryItem.id) ?? 0),
+      );
+      if (unavailable) {
+        return {
+          success: false,
+          error: `${unavailable.name} does not have enough stock to place this order.`,
+        };
+      }
+    }
+
     let savedOrderId = null;
     let savedKotNumber: number | null = null;
     try {
       const isLedger = payload.paymentMethod === "LEDGER";
 
-      // Calculate daily resetting KOT number (resets every night at 12 AM midnight)
-      const now = new Date();
-      const startOfToday = new Date(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        0,
-        0,
-        0,
-        0,
-      );
+      if (isLedger) {
+        if (!payload.customerId) {
+          return {
+            success: false,
+            error: "Select or create a customer before placing a ledger order.",
+          };
+        }
+        const customer = await prisma.customer.findUnique({
+          where: { id: payload.customerId },
+          select: { id: true, name: true, phone: true, status: true },
+        });
+        if (!customer || customer.status !== "ACTIVE") {
+          return { success: false, error: "Select an active customer." };
+        }
+        payload.customerName = customer.name;
+        payload.customerPhone = customer.phone;
+      }
 
-      const lastOrderToday = await prisma.order.findFirst({
-        where: {
-          createdAt: {
-            gte: startOfToday,
-          },
-          kotNumber: {
-            not: null,
-          },
-        },
-        orderBy: {
-          createdAt: "desc",
-        },
-        select: {
-          kotNumber: true,
+      const now = new Date();
+      const sequence = await prisma.kotSequence.upsert({
+        where: { id: 1 },
+        update: {},
+        create: { id: 1, currentNumber: 0, windowStartedAt: now },
+      });
+      const windowExpired =
+        !sequence.windowStartedAt ||
+        now.getTime() - sequence.windowStartedAt.getTime() >=
+          24 * 60 * 60 * 1000;
+      const nextKotNumber = windowExpired ? 1 : sequence.currentNumber + 1;
+
+      await prisma.kotSequence.update({
+        where: { id: 1 },
+        data: {
+          currentNumber: nextKotNumber,
+          ...(windowExpired ? { windowStartedAt: now } : {}),
         },
       });
-
-      const nextKotNumber = (lastOrderToday?.kotNumber ?? 0) + 1;
 
       const dbOrder = await prisma.order.create({
         data: {
           orderNumber,
           kotNumber: nextKotNumber,
           cashierId: user?.id || null,
+          customerId: isLedger ? payload.customerId : null,
           status: payload.status || "PENDING",
           paymentMethod: payload.paymentMethod,
           paymentStatus:
@@ -192,6 +307,16 @@ export async function createPOSOrder(
           customerName: payload.customerName || null,
           customerPhone: payload.customerPhone || null,
           notes: payload.notes || null,
+          ledgerEntries: isLedger
+            ? {
+                create: {
+                  customerId: payload.customerId!,
+                  type: "CHARGE",
+                  amount: payload.totalAmount,
+                  note: payload.notes || null,
+                },
+              }
+            : undefined,
           items: {
             create: payload.items.map((item) => ({
               menuItemId: item.itemId.startsWith("item-") ? null : item.itemId,

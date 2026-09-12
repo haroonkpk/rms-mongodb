@@ -54,6 +54,11 @@ const adminNavItems = [
     icon: <ClipboardList size={18} />,
   },
   {
+    label: "Customers",
+    href: "/customers",
+    icon: <Users size={18} />,
+  },
+  {
     label: "POS Terminal",
     href: "/pos",
     icon: <ShoppingCart size={18} />,

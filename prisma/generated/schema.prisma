@@ -133,29 +133,76 @@ enum PaymentStatus {
   UNPAID
 }
 
+enum CustomerStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum CustomerLedgerEntryType {
+  CHARGE
+  PAYMENT
+}
+
+model Customer {
+  id            String                @id @default(uuid()) @db.Uuid
+  name          String
+  phone         String                @unique
+  email         String?
+  notes         String?
+  status        CustomerStatus        @default(ACTIVE)
+  orders        Order[]
+  ledgerEntries CustomerLedgerEntry[]
+  createdAt     DateTime              @default(now()) @map("created_at")
+  updatedAt     DateTime              @updatedAt @map("updated_at")
+
+  @@index([name])
+  @@index([status])
+  @@map("customers")
+}
+
+model CustomerLedgerEntry {
+  id         String                  @id @default(uuid()) @db.Uuid
+  customerId String                  @map("customer_id") @db.Uuid
+  customer   Customer                @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  orderId    String?                 @map("order_id") @db.Uuid
+  order      Order?                  @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  type       CustomerLedgerEntryType
+  amount     Decimal                 @db.Decimal(10, 2)
+  note       String?
+  createdAt  DateTime                @default(now()) @map("created_at")
+
+  @@index([customerId, createdAt])
+  @@index([orderId])
+  @@map("customer_ledger_entries")
+}
+
 model Order {
-  id            String        @id @default(uuid()) @db.Uuid
-  orderNumber   String        @unique @map("order_number")
-  kotNumber     Int?          @map("kot_number")
-  cashierId     String?       @map("cashier_id") @db.Uuid
-  cashier       User?         @relation(fields: [cashierId], references: [id], onDelete: SetNull)
-  status        OrderStatus   @default(COMPLETED)
-  paymentMethod PaymentMethod @default(CASH)
-  paymentStatus PaymentStatus @default(PAID) @map("payment_status")
-  subtotal      Decimal       @db.Decimal(10, 2)
-  totalAmount   Decimal       @map("total_amount") @db.Decimal(10, 2)
-  cashReceived  Decimal?      @map("cash_received") @db.Decimal(10, 2)
-  changeGiven   Decimal?      @map("change_given") @db.Decimal(10, 2)
-  dueAmount     Decimal?      @default(0) @map("due_amount") @db.Decimal(10, 2)
-  customerName  String?       @map("customer_name")
-  customerPhone String?       @map("customer_phone")
+  id            String                @id @default(uuid()) @db.Uuid
+  orderNumber   String                @unique @map("order_number")
+  kotNumber     Int?                  @map("kot_number")
+  cashierId     String?               @map("cashier_id") @db.Uuid
+  cashier       User?                 @relation(fields: [cashierId], references: [id], onDelete: SetNull)
+  customerId    String?               @map("customer_id") @db.Uuid
+  customer      Customer?             @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  ledgerEntries CustomerLedgerEntry[]
+  status        OrderStatus           @default(COMPLETED)
+  paymentMethod PaymentMethod         @default(CASH)
+  paymentStatus PaymentStatus         @default(PAID) @map("payment_status")
+  subtotal      Decimal               @db.Decimal(10, 2)
+  totalAmount   Decimal               @map("total_amount") @db.Decimal(10, 2)
+  cashReceived  Decimal?              @map("cash_received") @db.Decimal(10, 2)
+  changeGiven   Decimal?              @map("change_given") @db.Decimal(10, 2)
+  dueAmount     Decimal?              @default(0) @map("due_amount") @db.Decimal(10, 2)
+  customerName  String?               @map("customer_name")
+  customerPhone String?               @map("customer_phone")
   notes         String?
   items         OrderItem[]
   cogsExpense   Expense?
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime      @updatedAt @map("updated_at")
+  createdAt     DateTime              @default(now()) @map("created_at")
+  updatedAt     DateTime              @updatedAt @map("updated_at")
 
   @@index([cashierId])
+  @@index([customerId])
   @@index([status])
   @@index([paymentMethod])
   @@index([paymentStatus])
@@ -180,6 +227,15 @@ model OrderItem {
 
   @@index([orderId])
   @@map("order_items")
+}
+
+model KotSequence {
+  id              Int       @id @default(1)
+  currentNumber   Int       @default(0) @map("current_number")
+  windowStartedAt DateTime? @map("window_started_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@map("kot_sequences")
 }
 
 // ------------------------------------------

@@ -4,8 +4,9 @@ export function isMenuItemAvailable(
   stockByInventoryId: ReadonlyMap<string, number>,
 ) {
   if (!manuallyAvailable) return false;
-  if (!rawIngredients) return true;
+  if (rawIngredients === null || rawIngredients === undefined) return true;
   if (!Array.isArray(rawIngredients)) return false;
+  if (rawIngredients.length === 0) return true;
 
   return rawIngredients.every((ingredient) => {
     if (!ingredient || typeof ingredient !== "object") return false;
@@ -13,12 +14,17 @@ export function isMenuItemAvailable(
     const inventoryItemId = (ingredient as { inventoryItemId?: unknown })
       .inventoryItemId;
     const quantityRequired = Number(
-      (ingredient as { quantityRequired?: unknown }).quantityRequired,
+      (
+        ingredient as {
+          quantityRequired?: unknown;
+        }
+      ).quantityRequired,
     );
 
     if (
       typeof inventoryItemId !== "string" ||
       !inventoryItemId ||
+      !Number.isFinite(quantityRequired) ||
       quantityRequired <= 0
     ) {
       return false;
@@ -26,7 +32,9 @@ export function isMenuItemAvailable(
 
     const availableQuantity = stockByInventoryId.get(inventoryItemId);
     return (
-      availableQuantity !== undefined && availableQuantity >= quantityRequired
+      availableQuantity !== undefined &&
+      Number.isFinite(availableQuantity) &&
+      availableQuantity >= quantityRequired
     );
   });
 }

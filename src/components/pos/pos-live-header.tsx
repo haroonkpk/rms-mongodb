@@ -3,8 +3,14 @@
 import React, { memo } from "react";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Volume2, VolumeX, RefreshCw, Wifi, WifiOff, Search, CheckCircle2, Flame, Clock } from "lucide-react";
+import {
+  Volume2,
+  VolumeX,
+  RefreshCw,
+  Wifi,
+  WifiOff,
+  RotateCcw,
+} from "lucide-react";
 import { KitchenStats } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -17,6 +23,10 @@ interface PosLiveHeaderProps {
   realtimeStatus: "connected" | "connecting" | "polling" | "disconnected";
   activeFilter: string;
   onFilterChange: (status: string) => void;
+  currentKotNumber: number;
+  kotWindowStartedAt: string | null;
+  onResetKot: () => void;
+  isResettingKot: boolean;
 }
 
 export const PosLiveHeader = memo(function PosLiveHeader({
@@ -28,6 +38,10 @@ export const PosLiveHeader = memo(function PosLiveHeader({
   realtimeStatus,
   activeFilter,
   onFilterChange,
+  currentKotNumber,
+  kotWindowStartedAt,
+  onResetKot,
+  isResettingKot,
 }: PosLiveHeaderProps) {
   const getRealtimeBadge = () => {
     switch (realtimeStatus) {
@@ -68,6 +82,11 @@ export const PosLiveHeader = memo(function PosLiveHeader({
 
   const filterOptions = [
     {
+      id: "PENDING",
+      label: "Pending",
+      count: stats.pendingCount,
+    },
+    {
       id: "READY",
       label: "Ready Orders",
       count: stats.readyCount,
@@ -84,6 +103,29 @@ export const PosLiveHeader = memo(function PosLiveHeader({
       {/* Top Heading */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <Header title="POS Live Order Monitor" />
+        <div className="flex items-center gap-2 text-xs">
+          <span className="border border-slate-200 bg-white px-3 py-2 font-bold text-slate-700">
+            Current KOT:{" "}
+            <strong className="text-[var(--color-primary)]">
+              #{currentKotNumber || 0}
+            </strong>
+          </span>
+          {kotWindowStartedAt && (
+            <span className="hidden border border-slate-200 bg-white px-3 py-2 text-slate-500 lg:inline-flex">
+              Resets after 24h window
+            </span>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={onResetKot}
+            isLoading={isResettingKot}
+            icon={<RotateCcw size={14} />}
+            className="!px-3 !py-1.5 text-xs"
+          >
+            Reset KOT
+          </Button>
+        </div>
       </div>
 
       {/* Control Ribbon */}

@@ -192,6 +192,14 @@ export async function updateKitchenOrderStatus(
       return { success: false, error: "Order not found" };
     }
 
+    if (status === "CANCELLED" && currentOrder.status !== "PENDING") {
+      return {
+        success: false,
+        error:
+          "Only pending orders can be cancelled before kitchen preparation starts.",
+      };
+    }
+
     if (status === "COMPLETED" && currentOrder.status !== "COMPLETED") {
       const { deductInventoryForOrder } = await import("@/actions/inventory");
       const deductionResult = await deductInventoryForOrder(orderId);
@@ -205,7 +213,16 @@ export async function updateKitchenOrderStatus(
 
     await prisma.order.update({
       where: { id: orderId },
-      data: { status },
+      data:
+        status === "CANCELLED"
+          ? {
+              status,
+              paymentStatus: "UNPAID",
+              cashReceived: 0,
+              changeGiven: 0,
+              dueAmount: 0,
+            }
+          : { status },
     });
 
     revalidatePath("/kitchen");
