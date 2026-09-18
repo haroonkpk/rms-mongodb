@@ -60,6 +60,7 @@ export interface POSOrderPayload {
   items: CartItem[];
   subtotal: number;
   totalAmount: number;
+  orderType: "DINE_IN" | "TAKEAWAY" | "DELIVERY";
   paymentMethod: "CASH" | "QR_CODE" | "LEDGER";
   paymentStatus?: "PAID" | "UNPAID";
   cashReceived?: number;

@@ -294,6 +294,7 @@ export async function createPOSOrder(
           kotNumber: nextKotNumber,
           cashierId: user?.id || null,
           customerId: isLedger ? payload.customerId : null,
+          orderType: payload.orderType,
           status: payload.status || "PENDING",
           paymentMethod: payload.paymentMethod,
           paymentStatus:

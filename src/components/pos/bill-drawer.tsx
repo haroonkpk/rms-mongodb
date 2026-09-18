@@ -12,6 +12,9 @@ import { Modal } from "@/components/ui/modal";
 import {
   Receipt,
   X,
+  Utensils,
+  ShoppingBag,
+  Truck,
   Banknote,
   QrCode,
   Printer,
@@ -45,6 +48,9 @@ export function BillDrawer({
   const [paymentMethod, setPaymentMethod] = useState<
     "CASH" | "QR_CODE" | "LEDGER"
   >("CASH");
+  const [orderType, setOrderType] = useState<
+    "DINE_IN" | "TAKEAWAY" | "DELIVERY"
+  >("DINE_IN");
 
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -169,6 +175,7 @@ export function BillDrawer({
         items: billItems,
         subtotal: totalAmount,
         totalAmount: totalAmount,
+        orderType,
         paymentMethod: paymentMethod,
         paymentStatus: isLedger ? "UNPAID" : "PAID",
         cashReceived: isLedger ? 0 : totalAmount,
@@ -227,6 +234,7 @@ export function BillDrawer({
           setCustomerMatches([]);
           setCustomerNotes("");
           setPaymentMethod("CASH");
+          setOrderType("DINE_IN");
           onClearBill();
           onClose();
         }, 200);
@@ -380,6 +388,42 @@ export function BillDrawer({
               {/* Integrated Payment Method & Ledger Section */}
               {billItems.length > 0 && (
                 <div className="pt-4 border-t border-slate-200 space-y-3.5">
+                  <div className="space-y-2">
+                    <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
+                      Order Type
+                    </label>
+                    <div className="grid grid-cols-3 gap-2">
+                      {[
+                        { value: "DINE_IN", label: "Dine-In", icon: Utensils },
+                        {
+                          value: "TAKEAWAY",
+                          label: "Takeaway",
+                          icon: ShoppingBag,
+                        },
+                        { value: "DELIVERY", label: "Delivery", icon: Truck },
+                      ].map((type) => {
+                        const Icon = type.icon;
+                        const isSelected = orderType === type.value;
+                        return (
+                          <button
+                            key={type.value}
+                            type="button"
+                            onClick={() => setOrderType(type.value as typeof orderType)}
+                            className={cn(
+                              "p-2.5 border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer text-[0.72rem] font-bold text-center",
+                              isSelected
+                                ? "border-(--color-primary) bg-(--color-primary) text-white shadow-2xs"
+                                : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50",
+                            )}
+                          >
+                            <Icon size={18} />
+                            {type.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <div className="flex items-center justify-between">
                     <label className="block text-xs font-bold uppercase tracking-wider text-slate-600">
                       Payment Method

@@ -11,6 +11,45 @@ export type OrderDetails = NonNullable<
 >;
 
 const money = (value: number) => `PKR ${Math.round(value).toLocaleString()}`;
+const formatOrderTypeLabel = (value: string | null | undefined) => {
+  switch (value) {
+    case "DINE_IN":
+      return "Dine-In";
+    case "TAKEAWAY":
+      return "Takeaway";
+    case "DELIVERY":
+      return "Delivery";
+    default:
+      return value || "Walk-in";
+  }
+};
+const formatAddOns = (value: string | null | undefined) => {
+  if (!value) return "-";
+  try {
+    const parsed = JSON.parse(value);
+    if (Array.isArray(parsed)) {
+      return parsed
+        .map((item) => {
+          if (typeof item === "string") return item;
+          if (item && typeof item === "object") {
+            return (
+              ("name" in item && typeof item.name === "string" && item.name) ||
+              ("label" in item &&
+                typeof item.label === "string" &&
+                item.label) ||
+              JSON.stringify(item)
+            );
+          }
+          return String(item);
+        })
+        .filter(Boolean)
+        .join(", ");
+    }
+    return String(parsed);
+  } catch {
+    return value;
+  }
+};
 
 export function OrderDetailsModal({
   order,
@@ -42,6 +81,11 @@ export function OrderDetailsModal({
     {
       label: "Cashier",
       value: order.cashier,
+      className: "font-semibold text-slate-800",
+    },
+    {
+      label: "Order Type",
+      value: formatOrderTypeLabel(order.orderType),
       className: "font-semibold text-slate-800",
     },
     {
@@ -122,7 +166,7 @@ export function OrderDetailsModal({
                           </p>
                           {item.addOns && (
                             <p className="text-xs text-slate-500">
-                              Add-ons: {item.addOns}
+                              Add-ons: {formatAddOns(item.addOns)}
                             </p>
                           )}
                           {item.notes && (

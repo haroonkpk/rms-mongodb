@@ -128,6 +128,12 @@ enum PaymentMethod {
   LEDGER
 }
 
+enum OrderType {
+  DINE_IN
+  TAKEAWAY
+  DELIVERY
+}
+
 enum PaymentStatus {
   PAID
   UNPAID
@@ -185,6 +191,7 @@ model Order {
   customerId    String?        @map("customer_id") @db.Uuid
   customer      Customer?      @relation(fields: [customerId], references: [id], onDelete: SetNull)
   ledgerEntries CustomerLedgerEntry[]
+  orderType     OrderType      @default(DINE_IN) @map("order_type")
   status        OrderStatus   @default(COMPLETED)
   paymentMethod PaymentMethod @default(CASH)
   paymentStatus PaymentStatus @default(PAID) @map("payment_status")

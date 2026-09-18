@@ -196,6 +196,7 @@ exports.Prisma.OrderScalarFieldEnum = {
   kotNumber: 'kotNumber',
   cashierId: 'cashierId',
   customerId: 'customerId',
+  orderType: 'orderType',
   status: 'status',
   paymentMethod: 'paymentMethod',
   paymentStatus: 'paymentStatus',
@@ -406,6 +407,12 @@ exports.CustomerStatus = exports.$Enums.CustomerStatus = {
 exports.CustomerLedgerEntryType = exports.$Enums.CustomerLedgerEntryType = {
   CHARGE: 'CHARGE',
   PAYMENT: 'PAYMENT'
+};
+
+exports.OrderType = exports.$Enums.OrderType = {
+  DINE_IN: 'DINE_IN',
+  TAKEAWAY: 'TAKEAWAY',
+  DELIVERY: 'DELIVERY'
 };
 
 exports.OrderStatus = exports.$Enums.OrderStatus = {

@@ -54,6 +54,18 @@ function rangeFor(filters: ReportFilters) {
 }
 
 const number = (value: unknown) => Number(value ?? 0);
+const formatOrderType = (value: string | null | undefined) => {
+  switch (value) {
+    case "DINE_IN":
+      return "Dine-In";
+    case "TAKEAWAY":
+      return "Takeaway";
+    case "DELIVERY":
+      return "Delivery";
+    default:
+      return value ?? "Walk-in";
+  }
+};
 const trendColors = [
   "#2563EB",
   "#F59E0B",
@@ -224,6 +236,9 @@ export async function getReportData(
         ...(filters.paymentMethod && filters.paymentMethod !== "ALL"
           ? { paymentMethod: filters.paymentMethod as never }
           : {}),
+        ...(filters.orderType && filters.orderType !== "ALL"
+          ? { orderType: filters.orderType as never }
+          : {}),
         ...(tab !== "sales" &&
         tab !== "menu" &&
         filters.orderStatus &&
@@ -240,16 +255,22 @@ export async function getReportData(
       (sum, order) => sum + number(order.totalAmount),
       0,
     );
-    const paymentMap = new Map<string, BreakdownPoint>();
+    const orderTypeMap = new Map<string, BreakdownPoint>();
     completed.forEach((order) => {
-      const item = paymentMap.get(order.paymentMethod) ?? {
-        label: order.paymentMethod,
+      const label =
+        order.orderType === "DINE_IN"
+          ? "Dine-In"
+          : order.orderType === "TAKEAWAY"
+            ? "Takeaway"
+            : "Delivery";
+      const item = orderTypeMap.get(order.orderType) ?? {
+        label,
         amount: 0,
         count: 0,
       };
       item.amount += number(order.totalAmount);
       item.count += 1;
-      paymentMap.set(order.paymentMethod, item);
+      orderTypeMap.set(order.orderType, item);
     });
     if (tab === "menu") {
       const items = new Map<string, BreakdownPoint>();
@@ -390,7 +411,7 @@ export async function getReportData(
           amount: number(order.totalAmount),
         })),
       ),
-      breakdown: breakdown(paymentMap),
+      breakdown: breakdown(orderTypeMap),
       rows: breakdown(cashierMap).map((item) => ({
         cashier: item.label,
         orders: item.count,
@@ -634,6 +655,7 @@ export async function getCompletedOrderReport(filters: ReportFilters) {
     date: order.createdAt.toISOString().slice(0, 10),
     cashier: order.cashier?.fullName ?? "Unassigned",
     payment: order.paymentMethod.replaceAll("_", " "),
+    orderType: formatOrderType(order.orderType),
     status: order.status,
     total: number(order.totalAmount),
     paid: order.paymentStatus === "PAID" ? "Yes" : "No",
@@ -646,6 +668,7 @@ export async function getCompletedOrderReport(filters: ReportFilters) {
       cashier: order.cashier?.fullName ?? "Unassigned",
       status: order.status,
       paymentMethod: order.paymentMethod,
+      orderType: order.orderType,
       paymentStatus: order.paymentStatus,
       subtotal: number(order.subtotal),
       totalAmount: number(order.totalAmount),
@@ -682,6 +705,7 @@ export async function getOrderDetails(orderNumber: string) {
     cashier: order.cashier?.fullName ?? order.cashier?.email ?? "Unassigned",
     status: order.status,
     paymentMethod: order.paymentMethod,
+    orderType: formatOrderType(order.orderType),
     paymentStatus: order.paymentStatus,
     subtotal: number(order.subtotal),
     totalAmount: number(order.totalAmount),

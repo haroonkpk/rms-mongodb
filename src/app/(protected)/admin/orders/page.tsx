@@ -18,6 +18,7 @@ export default function AdminOrdersPage() {
   const [filters, setFilters] = useState<ReportFilters>({
     period: "THIS_MONTH",
     paymentMethod: "ALL",
+    orderType: "ALL",
   });
   const [draftFilters, setDraftFilters] = useState<ReportFilters>(filters);
   const [allRows, setAllRows] = useState<
@@ -39,7 +40,13 @@ export default function AdminOrdersPage() {
   useEffect(() => {
     void Promise.resolve().then(() => load());
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters.period, filters.startDate, filters.endDate]);
+  }, [
+    filters.period,
+    filters.startDate,
+    filters.endDate,
+    filters.paymentMethod,
+    filters.orderType,
+  ]);
 
   const updateDraft = (key: keyof ReportFilters, value: string) =>
     setDraftFilters((current) => ({ ...current, [key]: value }));
@@ -48,6 +55,7 @@ export default function AdminOrdersPage() {
     const defaultFilters: ReportFilters = {
       period: "THIS_MONTH",
       paymentMethod: "ALL",
+      orderType: "ALL",
     };
     setDraftFilters(defaultFilters);
     setFilters(defaultFilters);
@@ -65,12 +73,15 @@ export default function AdminOrdersPage() {
 
   const rows = useMemo(
     () =>
-      allRows.filter(
-        (row) =>
+      allRows.filter((row) => {
+        const matchesPayment =
           filters.paymentMethod === "ALL" ||
-          row.payment === filters.paymentMethod?.replaceAll("_", " "),
-      ),
-    [allRows, filters.paymentMethod],
+          row.payment === filters.paymentMethod?.replaceAll("_", " ");
+        const matchesOrderType =
+          filters.orderType === "ALL" || row.orderType === filters.orderType;
+        return matchesPayment && matchesOrderType;
+      }),
+    [allRows, filters.paymentMethod, filters.orderType],
   );
 
   return (
@@ -159,6 +170,22 @@ export default function AdminOrdersPage() {
                   { value: "CASH", label: "Cash" },
                   { value: "QR_CODE", label: "QR Code" },
                   { value: "LEDGER", label: "Ledger" },
+                ]}
+              />
+              <Select
+                aria-label="Filter orders by order type"
+                value={filters.orderType ?? "ALL"}
+                onChange={(event) =>
+                  setFilters((current) => ({
+                    ...current,
+                    orderType: event.target.value,
+                  }))
+                }
+                options={[
+                  { value: "ALL", label: "All Order Types" },
+                  { value: "DINE_IN", label: "Dine-In" },
+                  { value: "TAKEAWAY", label: "Takeaway" },
+                  { value: "DELIVERY", label: "Delivery" },
                 ]}
               />
             </div>
