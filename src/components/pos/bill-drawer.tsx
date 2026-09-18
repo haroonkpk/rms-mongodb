@@ -81,9 +81,11 @@ export function BillDrawer({
   useEffect(() => {
     if (!isOpen || billItems.length === 0) return;
 
-    void getNextKotNumber().then(setNextKotNumber).catch(() => {
-      setNextKotNumber(null);
-    });
+    void getNextKotNumber()
+      .then(setNextKotNumber)
+      .catch(() => {
+        setNextKotNumber(null);
+      });
   }, [billItems.length, isOpen]);
 
   const totalAmount = billItems.reduce((acc, item) => acc + item.itemTotal, 0);
@@ -337,7 +339,7 @@ export function BillDrawer({
                 <div className="w-12 h-12 text-(--color-primary) flex items-center justify-center font-bold">
                   {billItems.length > 0 && nextKotNumber !== null && (
                     <div className="w-12 h-12  bg-emerald-600 text-white flex items-center justify-center text-lg font-bold ">
-                     #{nextKotNumber}
+                      #{nextKotNumber}
                     </div>
                   )}
                 </div>
@@ -349,7 +351,6 @@ export function BillDrawer({
                     {totalItemCount} {totalItemCount === 1 ? "item" : "items"}{" "}
                     in bill
                   </p>
-                  
                 </div>
               </div>
 
@@ -422,7 +423,9 @@ export function BillDrawer({
                           <button
                             key={type.value}
                             type="button"
-                            onClick={() => setOrderType(type.value as typeof orderType)}
+                            onClick={() =>
+                              setOrderType(type.value as typeof orderType)
+                            }
                             className={cn(
                               "p-2.5 border flex flex-col items-center justify-center gap-1 transition-all cursor-pointer text-[0.72rem] font-bold text-center",
                               isSelected
