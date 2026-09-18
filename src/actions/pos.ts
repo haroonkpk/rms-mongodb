@@ -126,6 +126,23 @@ export async function getPOSInitData(): Promise<POSInitDataResponse> {
   }
 }
 
+export async function getNextKotNumber(): Promise<number> {
+  const sequence = await prisma.kotSequence.findUnique({
+    where: { id: 1 },
+  });
+  const now = new Date();
+
+  if (
+    !sequence ||
+    !sequence.windowStartedAt ||
+    now.getTime() - sequence.windowStartedAt.getTime() >= 24 * 60 * 60 * 1000
+  ) {
+    return 1;
+  }
+
+  return sequence.currentNumber + 1;
+}
+
 export async function getKotSequence() {
   const sequence = await prisma.kotSequence.findUnique({ where: { id: 1 } });
   return {

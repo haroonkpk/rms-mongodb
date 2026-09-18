@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { CartItem, POSOrderPayload } from "@/types/pos";
-import { createPOSOrder } from "@/actions/pos";
+import { createPOSOrder, getNextKotNumber } from "@/actions/pos";
 import { createCustomer, searchCustomers } from "@/actions/customers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -65,6 +65,7 @@ export function BillDrawer({
   const [customerNotes, setCustomerNotes] = useState("");
   const [validationError, setValidationError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [nextKotNumber, setNextKotNumber] = useState<number | null>(null);
   const [mountedPortal, setMountedPortal] = useState(false);
 
   const [lastOrderReceipt, setLastOrderReceipt] = useState<{
@@ -76,6 +77,14 @@ export function BillDrawer({
   useEffect(() => {
     void Promise.resolve().then(() => setMountedPortal(true));
   }, []);
+
+  useEffect(() => {
+    if (!isOpen || billItems.length === 0) return;
+
+    void getNextKotNumber().then(setNextKotNumber).catch(() => {
+      setNextKotNumber(null);
+    });
+  }, [billItems.length, isOpen]);
 
   const totalAmount = billItems.reduce((acc, item) => acc + item.itemTotal, 0);
   const totalItemCount = billItems.reduce(
@@ -326,7 +335,11 @@ export function BillDrawer({
             <div className="flex items-center justify-between px-[clamp(1rem,1.5vw,1.25rem)] py-[clamp(0.875rem,1.2vw,1rem)] border-b border-slate-100 bg-slate-50/50 shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-12 h-12 text-(--color-primary) flex items-center justify-center font-bold">
-                  <Receipt size={26} />
+                  {billItems.length > 0 && nextKotNumber !== null && (
+                    <div className="w-12 h-12  bg-emerald-600 text-white flex items-center justify-center text-lg font-bold ">
+                     #{nextKotNumber}
+                    </div>
+                  )}
                 </div>
                 <div>
                   <h2 className="text-[1rem] font-bold text-slate-900 leading-tight">
@@ -336,6 +349,7 @@ export function BillDrawer({
                     {totalItemCount} {totalItemCount === 1 ? "item" : "items"}{" "}
                     in bill
                   </p>
+                  
                 </div>
               </div>
 

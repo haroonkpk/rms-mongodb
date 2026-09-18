@@ -19,7 +19,7 @@ import { PosLiveHeader } from "@/components/pos/pos-live-header";
 import { PosLiveOrderCard } from "@/components/pos/pos-live-order-card";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { RefreshCw, UtensilsCrossed } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 
 export default function PosLivePage() {

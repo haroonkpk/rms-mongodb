@@ -363,16 +363,15 @@ export const PosLiveOrderCard = memo(function PosLiveOrderCard({
         )}
 
         {!isReady && !isClosed && (
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap ">
             <Button
               type="button"
               variant="outline"
               isLoading={isUpdating}
               icon={<CheckCircle2 size={16} className="text-slate-500" />}
               onClick={() => handleStatusTransition("COMPLETED")}
-              className="flex-1 text-xs py-2.5 border-slate-300 text-slate-700 hover:bg-slate-100 font-bold"
             >
-              Mark Complete
+              Complete
             </Button>
             {order.status === "PENDING" && (
               <Button
@@ -381,7 +380,6 @@ export const PosLiveOrderCard = memo(function PosLiveOrderCard({
                 isLoading={isUpdating}
                 icon={<XCircle size={16} className="text-rose-600" />}
                 onClick={() => handleStatusTransition("CANCELLED")}
-                className="flex-1 text-xs py-2.5 border-rose-200 text-rose-700 hover:bg-rose-50 font-bold"
               >
                 Cancel
               </Button>
