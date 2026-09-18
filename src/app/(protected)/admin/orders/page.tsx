@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Filter, X } from "lucide-react";
 import { Header } from "@/components/layouts";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,8 @@ import { ReportFilters } from "@/types/reports";
 export default function AdminOrdersPage() {
   const [filters, setFilters] = useState<ReportFilters>({
     period: "THIS_MONTH",
+  });
+  const [clientFilters, setClientFilters] = useState({
     paymentMethod: "ALL",
     orderType: "ALL",
   });
@@ -26,11 +28,12 @@ export default function AdminOrdersPage() {
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState<OrderDetails | null>(null);
+  const hasLoadedInitialData = useRef(false);
 
-  const load = async () => {
+  const load = async (requestFilters: ReportFilters) => {
     setIsLoading(true);
     try {
-      const result = await getCompletedOrderReport(filters);
+      const result = await getCompletedOrderReport(requestFilters);
       setAllRows(result);
     } finally {
       setIsLoading(false);
@@ -38,15 +41,10 @@ export default function AdminOrdersPage() {
   };
 
   useEffect(() => {
-    void Promise.resolve().then(() => load());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [
-    filters.period,
-    filters.startDate,
-    filters.endDate,
-    filters.paymentMethod,
-    filters.orderType,
-  ]);
+    if (hasLoadedInitialData.current) return;
+    hasLoadedInitialData.current = true;
+    void load({ period: "THIS_MONTH" });
+  }, []);
 
   const updateDraft = (key: keyof ReportFilters, value: string) =>
     setDraftFilters((current) => ({ ...current, [key]: value }));
@@ -59,6 +57,8 @@ export default function AdminOrdersPage() {
     };
     setDraftFilters(defaultFilters);
     setFilters(defaultFilters);
+    setClientFilters({ paymentMethod: "ALL", orderType: "ALL" });
+    void load(defaultFilters);
   };
 
   const applyCustomFilter = () => {
@@ -68,6 +68,7 @@ export default function AdminOrdersPage() {
       draftFilters.endDate
     ) {
       setFilters(draftFilters);
+      void load(draftFilters);
     }
   };
 
@@ -75,13 +76,19 @@ export default function AdminOrdersPage() {
     () =>
       allRows.filter((row) => {
         const matchesPayment =
-          filters.paymentMethod === "ALL" ||
-          row.payment === filters.paymentMethod?.replaceAll("_", " ");
+          clientFilters.paymentMethod === "ALL" ||
+          row.payment === clientFilters.paymentMethod.replaceAll("_", " ");
+        const orderTypeLabels: Record<string, string> = {
+          DINE_IN: "Dine-In",
+          TAKEAWAY: "Takeaway",
+          DELIVERY: "Delivery",
+        };
         const matchesOrderType =
-          filters.orderType === "ALL" || row.orderType === filters.orderType;
+          clientFilters.orderType === "ALL" ||
+          row.orderType === orderTypeLabels[clientFilters.orderType];
         return matchesPayment && matchesOrderType;
       }),
-    [allRows, filters.paymentMethod, filters.orderType],
+    [allRows, clientFilters],
   );
 
   return (
@@ -158,9 +165,9 @@ export default function AdminOrdersPage() {
             <div className="flex items-center gap-2">
               <Select
                 aria-label="Filter orders by payment method"
-                value={filters.paymentMethod ?? "ALL"}
+                value={clientFilters.paymentMethod}
                 onChange={(event) =>
-                  setFilters((current) => ({
+                  setClientFilters((current) => ({
                     ...current,
                     paymentMethod: event.target.value,
                   }))
@@ -174,9 +181,9 @@ export default function AdminOrdersPage() {
               />
               <Select
                 aria-label="Filter orders by order type"
-                value={filters.orderType ?? "ALL"}
+                value={clientFilters.orderType}
                 onChange={(event) =>
-                  setFilters((current) => ({
+                  setClientFilters((current) => ({
                     ...current,
                     orderType: event.target.value,
                   }))
