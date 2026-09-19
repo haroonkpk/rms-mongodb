@@ -144,14 +144,14 @@ export default function AdminDashboardPage() {
       ),
       value: (
         <span className="font-bold text-slate-900">{money(order.amount)}</span>
-      ),
+      ), 
     }));
   const lowStockRows: StockRow[] = data.stock.low.map((item) => ({
     id: item.id,
     item: <span className="font-semibold text-slate-800">{item.name}</span>,
     quantity: (
       <span className="font-bold text-amber-700">
-        {item.quantity} {item.unit}
+        {item.quantity.toFixed(2)} {item.unit}
       </span>
     ),
   }));
