@@ -76,7 +76,7 @@ export const InventoryItemsTable: React.FC<InventoryItemsTableProps> = ({
       categoryName: item.categoryName,
       quantityFormatted: (
         <span className="font-bold text-slate-900">
-          {item.quantity.toLocaleString()}{" "}
+          {item.quantity.toFixed(2)}{" "}
           <span className="text-xs font-normal text-slate-500">
             {item.unit}
           </span>

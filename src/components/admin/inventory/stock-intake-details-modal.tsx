@@ -74,7 +74,7 @@ export const StockIntakeDetailsModal: React.FC<
                       {item.inventoryItemName}
                     </span>
                     <span className="text-xs text-slate-500">
-                      Qty {item.quantity} | Unit cost PKR{" "}
+                      Qty {item.quantity.toFixed(2)} | Unit cost PKR{" "}
                       {item.unitCost.toLocaleString()}
                     </span>
                   </div>

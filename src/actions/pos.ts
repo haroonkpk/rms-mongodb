@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getCurrentUser } from "@/actions/auth";
 import { isMenuItemAvailable } from "@/lib/menu-availability";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { emitDataChanged } from "@/lib/socket-server";
 import {
   POSMenuItem,
   POSCategory,
@@ -28,9 +29,13 @@ export async function getPOSCatalog() {
     orderBy: { name: "asc" },
     include: {
       category: true,
-      addOns: true,
     },
   });
+  const addOnIds = dbMenuItems.flatMap((item) => item.addOnIds);
+  const dbAddOns = await prisma.addOn.findMany({
+    where: { id: { in: [...new Set(addOnIds)] } },
+  });
+  const addOnById = new Map(dbAddOns.map((addOn) => [addOn.id, addOn]));
 
   const inventoryItemIds = dbMenuItems.flatMap((item) => {
     const itemIngredientIds = Array.isArray(item.ingredients)
@@ -41,17 +46,22 @@ export async function getPOSCatalog() {
           return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
         })
       : [];
-    const addOnIngredientIds = item.addOns.flatMap((addOn) =>
-      Array.isArray(addOn.ingredients)
-        ? addOn.ingredients.flatMap((ingredient) => {
-            if (!ingredient || typeof ingredient !== "object") return [];
-            const inventoryItemId = (
-              ingredient as { inventoryItemId?: unknown }
-            ).inventoryItemId;
-            return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
-          })
-        : [],
-    );
+    const addOnIngredientIds = item.addOnIds
+      .map((addOnId) => addOnById.get(addOnId))
+      .filter((addOn): addOn is NonNullable<typeof addOn> => Boolean(addOn))
+      .flatMap((addOn) =>
+        Array.isArray(addOn.ingredients)
+          ? addOn.ingredients.flatMap((ingredient) => {
+              if (!ingredient || typeof ingredient !== "object") return [];
+              const inventoryItemId = (
+                ingredient as { inventoryItemId?: unknown }
+              ).inventoryItemId;
+              return typeof inventoryItemId === "string"
+                ? [inventoryItemId]
+                : [];
+            })
+          : [],
+      );
     return [...itemIngredientIds, ...addOnIngredientIds];
   });
   const inventoryItems = await prisma.inventoryItem.findMany({
@@ -88,16 +98,22 @@ export async function getPOSCatalog() {
     sizes: Array.isArray(item.sizes)
       ? (item.sizes as unknown as { name: string; price: number }[])
       : [],
-    addOns: item.addOns.map((addon) => ({
-      id: addon.id,
-      name: addon.name,
-      price: Number(addon.price),
-      isAvailable: isMenuItemAvailable(
-        addon.isAvailable,
-        addon.ingredients,
-        stockByInventoryId,
-      ),
-    })),
+    addOns: item.addOnIds.flatMap((addOnId) => {
+      const addon = addOnById.get(addOnId);
+      if (!addon) return [];
+      return [
+        {
+          id: addon.id,
+          name: addon.name,
+          price: Number(addon.price),
+          isAvailable: isMenuItemAvailable(
+            addon.isAvailable,
+            addon.ingredients,
+            stockByInventoryId,
+          ),
+        },
+      ];
+    }),
   }));
 
   return { categories, menuItems };
@@ -159,6 +175,7 @@ export async function resetKotSequence() {
   });
   revalidatePath("/pos/live");
   revalidatePath("/pos");
+  emitDataChanged("orders");
   return { success: true };
 }
 
@@ -358,6 +375,7 @@ export async function createPOSOrder(
 
     revalidatePath("/pos");
     revalidateTag("pos-data", "max");
+    emitDataChanged("orders");
 
     return {
       success: true,

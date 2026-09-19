@@ -1,11 +1,206 @@
 import "dotenv/config";
 import { prisma } from "../src/lib/prisma";
 import { InventoryUnit, StockMovementType } from "./generated";
+import bcrypt from "bcryptjs";
+
+async function seedAdmin() {
+  const email = process.env.ADMIN_EMAIL || "admin@restaurant.local";
+  const password = process.env.ADMIN_PASSWORD || "Admin@12345";
+  const fullName = process.env.ADMIN_NAME || "Restaurant Admin";
+  const existingAdmin = await prisma.user.findUnique({ where: { email } });
+
+  if (existingAdmin) {
+    await prisma.user.update({
+      where: { id: existingAdmin.id },
+      data: { role: "ADMIN", fullName },
+    });
+    console.log(`✅ Verified admin user: ${email}`);
+    return;
+  }
+
+  await prisma.user.create({
+    data: {
+      email,
+      fullName,
+      password: await bcrypt.hash(password, 10),
+      role: "ADMIN",
+    },
+  });
+  console.log(`✅ Created admin user: ${email}`);
+}
+
+async function seedMenu() {
+  const categoryNames = ["Burgers", "Pizza", "Sides", "Drinks"];
+  const categoryMap = new Map<string, string>();
+
+  for (const name of categoryNames) {
+    const existing = await prisma.category.findUnique({ where: { name } });
+    const category =
+      existing || (await prisma.category.create({ data: { name } }));
+    categoryMap.set(name, category.id);
+  }
+
+  const addOnData = [
+    { name: "Extra Cheese", price: 180 },
+    { name: "Extra Chicken", price: 300 },
+    { name: "Jalapenos", price: 80 },
+    { name: "Mushrooms", price: 120 },
+    { name: "Extra Patty", price: 350 },
+  ];
+  const addOnMap = new Map<string, string>();
+
+  for (const addOn of addOnData) {
+    const existing = await prisma.addOn.findFirst({
+      where: { name: addOn.name },
+    });
+    const record =
+      existing ||
+      (await prisma.addOn.create({
+        data: { ...addOn, isAvailable: true, menuItemIds: [] },
+      }));
+    addOnMap.set(addOn.name, record.id);
+  }
+
+  const menuItems = [
+    {
+      name: "Classic Chicken Burger",
+      category: "Burgers",
+      basePrice: 650,
+      description: "Crispy chicken fillet with lettuce and house sauce.",
+      addOns: ["Extra Cheese", "Extra Chicken", "Jalapenos"],
+    },
+    {
+      name: "Zinger Burger",
+      category: "Burgers",
+      basePrice: 750,
+      description: "Spicy crispy chicken burger with signature sauce.",
+      addOns: ["Extra Cheese", "Extra Patty", "Jalapenos"],
+    },
+    {
+      name: "Beef Smash Burger",
+      category: "Burgers",
+      basePrice: 900,
+      description: "Double beef smash patty with cheese and onions.",
+      addOns: ["Extra Cheese", "Extra Patty", "Mushrooms"],
+    },
+    {
+      name: "Chicken Tikka Pizza",
+      category: "Pizza",
+      basePrice: 1400,
+      description: "Chicken tikka, mozzarella, onions and peppers.",
+      hasSizes: true,
+      sizes: [
+        { name: "Small", price: 0 },
+        { name: "Medium", price: 500 },
+        { name: "Large", price: 1000 },
+      ],
+      addOns: ["Extra Cheese", "Extra Chicken", "Jalapenos"],
+    },
+    {
+      name: "Fajita Pizza",
+      category: "Pizza",
+      basePrice: 1500,
+      description: "Fajita chicken, mushrooms, peppers and mozzarella.",
+      hasSizes: true,
+      sizes: [
+        { name: "Small", price: 0 },
+        { name: "Medium", price: 550 },
+        { name: "Large", price: 1100 },
+      ],
+      addOns: ["Extra Cheese", "Extra Chicken", "Mushrooms"],
+    },
+    {
+      name: "Loaded Fries",
+      category: "Sides",
+      basePrice: 550,
+      description: "Crispy fries loaded with cheese and chicken.",
+      addOns: ["Extra Cheese", "Extra Chicken", "Jalapenos"],
+    },
+    {
+      name: "Regular Fries",
+      category: "Sides",
+      basePrice: 300,
+      description: "Golden crispy seasoned fries.",
+      addOns: ["Jalapenos"],
+    },
+    {
+      name: "Chicken Wings",
+      category: "Sides",
+      basePrice: 700,
+      description: "Crispy chicken wings with your choice of sauce.",
+      addOns: ["Extra Chicken", "Jalapenos"],
+    },
+    {
+      name: "Mint Margarita",
+      category: "Drinks",
+      basePrice: 350,
+      description: "Refreshing mint and lemon cooler.",
+      addOns: [],
+    },
+    {
+      name: "Cold Drink",
+      category: "Drinks",
+      basePrice: 180,
+      description: "Chilled carbonated soft drink.",
+      addOns: [],
+    },
+  ];
+
+  const menuItemIdsByAddOn = new Map<string, string[]>();
+  for (const item of menuItems) {
+    const categoryId = categoryMap.get(item.category);
+    if (!categoryId) continue;
+    const addOnIds = item.addOns.flatMap((name) => {
+      const id = addOnMap.get(name);
+      if (!id) return [];
+      const ids = menuItemIdsByAddOn.get(name) || [];
+      menuItemIdsByAddOn.set(name, ids);
+      return [id];
+    });
+    const existing = await prisma.menuItem.findFirst({
+      where: { name: item.name },
+    });
+    const data = {
+      categoryId,
+      description: item.description,
+      basePrice: item.basePrice,
+      isAvailable: true,
+      hasSizes: item.hasSizes ?? false,
+      sizes: item.sizes ?? null,
+      addOnIds,
+    };
+    const record = existing
+      ? await prisma.menuItem.update({ where: { id: existing.id }, data })
+      : await prisma.menuItem.create({ data: { name: item.name, ...data } });
+
+    for (const addOnName of item.addOns) {
+      const ids = menuItemIdsByAddOn.get(addOnName) || [];
+      ids.push(record.id);
+      menuItemIdsByAddOn.set(addOnName, ids);
+    }
+  }
+
+  for (const [name, itemIds] of menuItemIdsByAddOn) {
+    const addOnId = addOnMap.get(name);
+    if (addOnId) {
+      await prisma.addOn.update({
+        where: { id: addOnId },
+        data: { menuItemIds: [...new Set(itemIds)] },
+      });
+    }
+  }
+
+  console.log(
+    `✅ Created/verified ${categoryMap.size} menu categories, ${addOnMap.size} add-ons, and ${menuItems.length} menu items.`,
+  );
+}
 
 async function seedInventory() {
   console.log(
     "🌱 Seeding Inventory, Recipes & Stock Management sample data...",
   );
+
+  await seedAdmin();
 
   // 1. Inventory Raw Material Categories
   const categoriesData = [
@@ -214,6 +409,8 @@ async function seedInventory() {
     }
   }
   console.log(`✅ Created/verified ${itemMap.size} inventory items.`);
+
+  await seedMenu();
 
   // 3. Create Sample Stock Intake Batch
   const existingBatch = await prisma.stockIntakeBatch.findFirst({

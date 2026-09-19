@@ -1,8 +1,11 @@
+This is a Next.js restaurant management system using MongoDB Atlas for persistence and Socket.IO for POS/KDS realtime updates.
+
+Set `DATABASE_URL` to your MongoDB Atlas connection string before starting the app. The Node server listens on `PORT` (default `3000`) and binds to `HOSTNAME` (default `0.0.0.0`).
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
 
-First, run the development server:
+Run the development server:
 
 ```bash
 npm run dev

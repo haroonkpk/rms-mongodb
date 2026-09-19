@@ -10,7 +10,7 @@ import React, {
 import { getKitchenOrders } from "@/actions/kitchen";
 import { getKotSequence, resetKotSequence } from "@/actions/pos";
 import { KitchenOrder, KitchenStats, OrderStatus } from "@/types";
-import { getSupabaseClient } from "@/lib/supabase-client";
+import { getSocketClient } from "@/lib/socket-client";
 import {
   playPOSReadyNotification,
   requestNotificationPermission,
@@ -151,39 +151,28 @@ export default function PosLivePage() {
     fetchOrders();
   }, [fetchOrders]);
 
-  // Supabase Realtime Subscription Setup
+  // Socket.IO realtime subscription setup
   useEffect(() => {
-    const supabase = getSupabaseClient();
-    if (!supabase) {
+    const socket = getSocketClient();
+    if (!socket) {
       setRealtimeStatus("polling");
       return;
     }
 
     setRealtimeStatus("connecting");
-
-    const channel = supabase
-      .channel("realtime-pos-live-orders")
-      .on(
-        "postgres_changes",
-        {
-          event: "*",
-          schema: "public",
-          table: "orders",
-        },
-        () => {
-          fetchOrders();
-        },
-      )
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          setRealtimeStatus("connected");
-        } else if (status === "CLOSED" || status === "CHANNEL_ERROR") {
-          setRealtimeStatus("polling");
-        }
-      });
+    const handleDataChanged = ({ scope }: { scope: string }) => {
+      if (scope === "orders") fetchOrders();
+    };
+    socket.on("connect", () => setRealtimeStatus("connected"));
+    socket.on("disconnect", () => setRealtimeStatus("polling"));
+    socket.on("restaurant:data-changed", handleDataChanged);
+    socket.connect();
 
     return () => {
-      supabase.removeChannel(channel);
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("restaurant:data-changed", handleDataChanged);
+      socket.disconnect();
     };
   }, [fetchOrders]);
 

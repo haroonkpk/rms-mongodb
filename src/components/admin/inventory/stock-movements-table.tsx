@@ -96,14 +96,17 @@ export const StockMovementsTable: React.FC<StockMovementsTableProps> = ({
             isPositive ? "text-emerald-600" : "text-rose-600"
           }`}
         >
-          {isPositive ? `+${m.quantityChange}` : m.quantityChange} {m.unit}
+          {isPositive
+            ? `+${m.quantityChange.toFixed(2)}`
+            : m.quantityChange.toFixed(2)}{" "}
+          {m.unit}
         </span>
       ),
       stockAuditFormatted: (
         <span className="text-xs text-slate-500 font-mono">
-          {m.previousQuantity} {m.unit} →{" "}
+          {m.previousQuantity.toFixed(2)} {m.unit} →{" "}
           <strong className="text-slate-900">
-            {m.newQuantity} {m.unit}
+            {m.newQuantity.toFixed(2)} {m.unit}
           </strong>
         </span>
       ),
@@ -144,8 +147,8 @@ export const StockMovementsTable: React.FC<StockMovementsTableProps> = ({
           date: new Date(movement.createdAt).toLocaleString("en-GB"),
           item: movement.inventoryItemName,
           movement: movementLabel(movement.type),
-          quantity: `${movement.quantityChange > 0 ? "+" : ""}${movement.quantityChange} ${movement.unit}`,
-          audit: `${movement.previousQuantity} ${movement.unit} -> ${movement.newQuantity} ${movement.unit}`,
+          quantity: `${movement.quantityChange > 0 ? "+" : ""}${movement.quantityChange.toFixed(2)} ${movement.unit}`,
+          audit: `${movement.previousQuantity.toFixed(2)} ${movement.unit} -> ${movement.newQuantity.toFixed(2)} ${movement.unit}`,
           reason: movement.reason || "No notes",
         }))}
         title="Stock Audit & Movements History"

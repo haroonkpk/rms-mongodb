@@ -4,7 +4,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
 }
 
 // ------------------------------------------
@@ -28,7 +29,7 @@ enum ShiftTiming {
 // ------------------------------------------
 
 model User {
-  id String @id @default(uuid()) @db.Uuid
+  id String @id @default(uuid()) @map("_id")
 
   email    String  @unique
   phone    String? @unique
@@ -38,9 +39,9 @@ model User {
   role     Role    @default(CASHIER)
 
   // Employee & Staff Management Page fields
-  monthlyBaseSalary Decimal?     @map("monthly_base_salary") @db.Decimal(10, 2)
+  monthlyBaseSalary Float?       @map("monthly_base_salary")
   shiftTiming       ShiftTiming? @map("shift_timing")
-  dailyShiftHours   Decimal?     @default(8.00) @map("daily_shift_hours") @db.Decimal(4, 2)
+  dailyShiftHours   Float?       @default(8.00) @map("daily_shift_hours")
   hiredAt           DateTime?    @map("hired_at")
 
   avatarUrl String? @map("avatar_url")
@@ -63,7 +64,7 @@ model User {
 // ------------------------------------------
 
 model Category {
-  id          String     @id @default(uuid()) @db.Uuid
+  id          String     @id @default(uuid()) @map("_id")
   name        String     @unique
   description String?
   menuItems   MenuItem[]
@@ -74,20 +75,21 @@ model Category {
 }
 
 model MenuItem {
-  id          String  @id @default(uuid()) @db.Uuid
+  id          String  @id @default(uuid()) @map("_id")
   name        String
   description String?
-  basePrice   Decimal @map("base_price") @db.Decimal(10, 2)
+  basePrice   Float   @map("base_price")
   imageUrl    String? @map("image_url")
   isAvailable Boolean @default(true) @map("is_available")
   hasSizes    Boolean @default(false) @map("has_sizes")
   sizes       Json?
   ingredients Json?
 
-  categoryId String   @map("category_id") @db.Uuid
+  categoryId String   @map("category_id")
   category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 
-  addOns     AddOn[]     @relation("MenuItemToAddOn")
+  addOnIds   String[]    @map("add_on_ids")
+  addOns     AddOn[]     @relation("MenuItemToAddOn", fields: [addOnIds], references: [id])
   orderItems OrderItem[]
   createdAt  DateTime    @default(now()) @map("created_at")
   updatedAt  DateTime    @updatedAt @map("updated_at")
@@ -98,12 +100,13 @@ model MenuItem {
 }
 
 model AddOn {
-  id          String     @id @default(uuid()) @db.Uuid
+  id          String     @id @default(uuid()) @map("_id")
   name        String
-  price       Decimal    @db.Decimal(10, 2)
+  price       Float
   isAvailable Boolean    @default(true) @map("is_available")
   ingredients Json?
-  menuItems   MenuItem[] @relation("MenuItemToAddOn")
+  menuItemIds String[]   @map("menu_item_ids")
+  menuItems   MenuItem[] @relation("MenuItemToAddOn", fields: [menuItemIds], references: [id])
   createdAt   DateTime   @default(now()) @map("created_at")
   updatedAt   DateTime   @updatedAt @map("updated_at")
 
@@ -150,7 +153,7 @@ enum CustomerLedgerEntryType {
 }
 
 model Customer {
-  id            String                @id @default(uuid()) @db.Uuid
+  id            String                @id @default(uuid()) @map("_id")
   name          String
   phone         String                @unique
   email         String?
@@ -167,13 +170,13 @@ model Customer {
 }
 
 model CustomerLedgerEntry {
-  id         String                  @id @default(uuid()) @db.Uuid
-  customerId String                  @map("customer_id") @db.Uuid
+  id         String                  @id @default(uuid()) @map("_id")
+  customerId String                  @map("customer_id")
   customer   Customer                @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  orderId    String?                 @map("order_id") @db.Uuid
+  orderId    String?                 @map("order_id")
   order      Order?                  @relation(fields: [orderId], references: [id], onDelete: SetNull)
   type       CustomerLedgerEntryType
-  amount     Decimal                 @db.Decimal(10, 2)
+  amount     Float
   note       String?
   createdAt  DateTime                @default(now()) @map("created_at")
 
@@ -183,23 +186,23 @@ model CustomerLedgerEntry {
 }
 
 model Order {
-  id            String                @id @default(uuid()) @db.Uuid
+  id            String                @id @default(uuid()) @map("_id")
   orderNumber   String                @unique @map("order_number")
   kotNumber     Int?                  @map("kot_number")
-  cashierId     String?               @map("cashier_id") @db.Uuid
+  cashierId     String?               @map("cashier_id")
   cashier       User?                 @relation(fields: [cashierId], references: [id], onDelete: SetNull)
-  customerId    String?               @map("customer_id") @db.Uuid
+  customerId    String?               @map("customer_id")
   customer      Customer?             @relation(fields: [customerId], references: [id], onDelete: SetNull)
   ledgerEntries CustomerLedgerEntry[]
   orderType     OrderType             @default(DINE_IN) @map("order_type")
   status        OrderStatus           @default(COMPLETED)
   paymentMethod PaymentMethod         @default(CASH)
   paymentStatus PaymentStatus         @default(PAID) @map("payment_status")
-  subtotal      Decimal               @db.Decimal(10, 2)
-  totalAmount   Decimal               @map("total_amount") @db.Decimal(10, 2)
-  cashReceived  Decimal?              @map("cash_received") @db.Decimal(10, 2)
-  changeGiven   Decimal?              @map("change_given") @db.Decimal(10, 2)
-  dueAmount     Decimal?              @default(0) @map("due_amount") @db.Decimal(10, 2)
+  subtotal      Float
+  totalAmount   Float                 @map("total_amount")
+  cashReceived  Float?                @map("cash_received")
+  changeGiven   Float?                @map("change_given")
+  dueAmount     Float?                @default(0) @map("due_amount")
   customerName  String?               @map("customer_name")
   customerPhone String?               @map("customer_phone")
   notes         String?
@@ -219,16 +222,16 @@ model Order {
 }
 
 model OrderItem {
-  id         String    @id @default(uuid()) @db.Uuid
-  orderId    String    @map("order_id") @db.Uuid
+  id         String    @id @default(uuid()) @map("_id")
+  orderId    String    @map("order_id")
   order      Order     @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  menuItemId String?   @map("menu_item_id") @db.Uuid
+  menuItemId String?   @map("menu_item_id")
   menuItem   MenuItem? @relation(fields: [menuItemId], references: [id], onDelete: SetNull)
   itemName   String    @map("item_name")
   variant    String?
   quantity   Int
-  unitPrice  Decimal   @map("unit_price") @db.Decimal(10, 2)
-  totalPrice Decimal   @map("total_price") @db.Decimal(10, 2)
+  unitPrice  Float     @map("unit_price")
+  totalPrice Float     @map("total_price")
   addOns     String?   @map("add_ons")
   notes      String?
 
@@ -237,7 +240,7 @@ model OrderItem {
 }
 
 model KotSequence {
-  id              Int       @id @default(1)
+  id              Int       @id @default(1) @map("_id")
   currentNumber   Int       @default(0) @map("current_number")
   windowStartedAt DateTime? @map("window_started_at")
   updatedAt       DateTime  @updatedAt @map("updated_at")
@@ -255,14 +258,14 @@ enum AttendanceStatus {
 }
 
 model Attendance {
-  id            String           @id @default(uuid()) @db.Uuid
-  userId        String           @map("user_id") @db.Uuid
+  id            String           @id @default(uuid()) @map("_id")
+  userId        String           @map("user_id")
   user          User             @relation(fields: [userId], references: [id], onDelete: Cascade)
-  date          DateTime         @db.Date
+  date          DateTime
   status        AttendanceStatus
-  checkIn       DateTime?        @map("check_in") @db.Time
-  checkOut      DateTime?        @map("check_out") @db.Time
-  overtimeHours Decimal?         @map("overtime_hours") @db.Decimal(5, 2)
+  checkIn       DateTime?        @map("check_in")
+  checkOut      DateTime?        @map("check_out")
+  overtimeHours Float?           @map("overtime_hours")
   notes         String?
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -285,11 +288,11 @@ enum LeaveType {
 }
 
 model Leave {
-  id        String      @id @default(uuid()) @db.Uuid
-  userId    String      @map("user_id") @db.Uuid
+  id        String      @id @default(uuid()) @map("_id")
+  userId    String      @map("user_id")
   user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  startDate DateTime    @map("start_date") @db.Date
-  endDate   DateTime    @map("end_date") @db.Date
+  startDate DateTime    @map("start_date")
+  endDate   DateTime    @map("end_date")
   reason    String
   type      LeaveType   @default(CASUAL)
   status    LeaveStatus @default(PENDING)
@@ -319,7 +322,7 @@ enum ExpensePaymentMethod {
 }
 
 model ExpenseType {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String   @id @default(uuid()) @map("_id")
   name      String   @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -328,13 +331,13 @@ model ExpenseType {
 }
 
 model Expense {
-  id            String               @id @default(uuid()) @db.Uuid
+  id            String               @id @default(uuid()) @map("_id")
   title         String
   expenseType   String               @map("expense_type")
-  amount        Decimal              @db.Decimal(10, 2)
-  expenseDate   DateTime             @map("expense_date") @db.Date
+  amount        Float
+  expenseDate   DateTime             @map("expense_date")
   paymentMethod ExpensePaymentMethod @default(CASH) @map("payment_method")
-  orderId       String?              @unique @map("order_id") @db.Uuid
+  orderId       String?              @unique @map("order_id")
   order         Order?               @relation(fields: [orderId], references: [id], onDelete: SetNull)
   notes         String?
 
@@ -347,28 +350,28 @@ model Expense {
 }
 
 model Payroll {
-  id     String @id @default(uuid()) @db.Uuid
-  userId String @map("user_id") @db.Uuid
+  id     String @id @default(uuid()) @map("_id")
+  userId String @map("user_id")
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   month  Int // 1-12
   year   Int
 
   // Snapshot fields
-  workingDays        Int?     @default(0) @map("working_days")
-  presentDays        Int?     @default(0) @map("present_days")
-  absentDays         Int?     @default(0) @map("absent_days")
-  leaveDays          Int?     @default(0) @map("leave_days")
-  totalOvertimeHours Decimal? @default(0) @map("total_overtime_hours") @db.Decimal(5, 2)
+  workingDays        Int?   @default(0) @map("working_days")
+  presentDays        Int?   @default(0) @map("present_days")
+  absentDays         Int?   @default(0) @map("absent_days")
+  leaveDays          Int?   @default(0) @map("leave_days")
+  totalOvertimeHours Float? @default(0) @map("total_overtime_hours")
 
-  basicSalary        Decimal  @map("basic_salary") @db.Decimal(10, 2)
-  overtimePay        Decimal? @default(0) @map("overtime_pay") @db.Decimal(10, 2)
-  bonus              Decimal? @default(0) @db.Decimal(10, 2)
-  deductions         Decimal? @default(0) @db.Decimal(10, 2)
-  advance            Decimal? @default(0) @db.Decimal(10, 2)
-  carriedOverBalance Decimal? @default(0) @map("carried_over_balance") @db.Decimal(10, 2)
-  paidAmount         Decimal? @default(0) @map("paid_amount") @db.Decimal(10, 2)
+  basicSalary        Float  @map("basic_salary")
+  overtimePay        Float? @default(0) @map("overtime_pay")
+  bonus              Float? @default(0)
+  deductions         Float? @default(0)
+  advance            Float? @default(0)
+  carriedOverBalance Float? @default(0) @map("carried_over_balance")
+  paidAmount         Float? @default(0) @map("paid_amount")
 
-  netSalary     Decimal              @map("net_salary") @db.Decimal(10, 2)
+  netSalary     Float                @map("net_salary")
   status        PayrollStatus        @default(DRAFT)
   paymentDate   DateTime?            @map("payment_date")
   paymentMethod SalaryPaymentMethod? @map("payment_method")
@@ -388,13 +391,13 @@ enum AdvanceStatus {
 }
 
 model SalaryAdvance {
-  id             String        @id @default(uuid()) @db.Uuid
-  userId         String        @map("user_id") @db.Uuid
+  id             String        @id @default(uuid()) @map("_id")
+  userId         String        @map("user_id")
   user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  amount         Decimal       @db.Decimal(10, 2)
+  amount         Float
   reason         String?
   status         AdvanceStatus @default(PENDING)
-  deductedAmount Decimal       @default(0) @map("deducted_amount") @db.Decimal(10, 2)
+  deductedAmount Float         @default(0) @map("deducted_amount")
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -425,7 +428,7 @@ enum InventoryUnit {
 }
 
 model InventoryCategory {
-  id        String          @id @default(uuid()) @db.Uuid
+  id        String          @id @default(uuid()) @map("_id")
   name      String          @unique
   items     InventoryItem[]
   createdAt DateTime        @default(now()) @map("created_at")
@@ -435,14 +438,14 @@ model InventoryCategory {
 }
 
 model InventoryItem {
-  id            String            @id @default(uuid()) @db.Uuid
+  id            String            @id @default(uuid()) @map("_id")
   name          String
-  categoryId    String            @map("category_id") @db.Uuid
+  categoryId    String            @map("category_id")
   category      InventoryCategory @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   unit          InventoryUnit     @default(KG)
-  quantity      Decimal           @default(0) @db.Decimal(10, 3)
-  minStockLevel Decimal           @default(10) @map("min_stock_level") @db.Decimal(10, 3)
-  unitCost      Decimal           @default(0) @map("unit_cost") @db.Decimal(10, 2)
+  quantity      Float             @default(0)
+  minStockLevel Float             @default(10) @map("min_stock_level")
+  unitCost      Float             @default(0) @map("unit_cost")
 
   movements        StockMovement[]
   stockIntakeItems StockIntakeBatchItem[]
@@ -456,15 +459,15 @@ model InventoryItem {
 }
 
 model StockMovement {
-  id               String            @id @default(uuid()) @db.Uuid
-  inventoryItemId  String            @map("inventory_item_id") @db.Uuid
+  id               String            @id @default(uuid()) @map("_id")
+  inventoryItemId  String            @map("inventory_item_id")
   inventoryItem    InventoryItem     @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
   type             StockMovementType
-  quantityChange   Decimal           @map("quantity_change") @db.Decimal(10, 3)
-  previousQuantity Decimal           @map("previous_quantity") @db.Decimal(10, 3)
-  newQuantity      Decimal           @map("new_quantity") @db.Decimal(10, 3)
+  quantityChange   Float             @map("quantity_change")
+  previousQuantity Float             @map("previous_quantity")
+  newQuantity      Float             @map("new_quantity")
   reason           String?
-  createdById      String?           @map("created_by_id") @db.Uuid
+  createdById      String?           @map("created_by_id")
 
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -474,10 +477,10 @@ model StockMovement {
 }
 
 model StockIntakeBatch {
-  id          String                 @id @default(uuid()) @db.Uuid
+  id          String                 @id @default(uuid()) @map("_id")
   batchNumber String                 @unique @map("batch_number")
   notes       String?
-  totalAmount Decimal                @map("total_amount") @db.Decimal(10, 2)
+  totalAmount Float                  @map("total_amount")
   items       StockIntakeBatchItem[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -487,14 +490,14 @@ model StockIntakeBatch {
 }
 
 model StockIntakeBatchItem {
-  id                 String           @id @default(uuid()) @db.Uuid
-  stockIntakeBatchId String           @map("stock_intake_batch_id") @db.Uuid
+  id                 String           @id @default(uuid()) @map("_id")
+  stockIntakeBatchId String           @map("stock_intake_batch_id")
   stockIntakeBatch   StockIntakeBatch @relation(fields: [stockIntakeBatchId], references: [id], onDelete: Cascade)
-  inventoryItemId    String           @map("inventory_item_id") @db.Uuid
+  inventoryItemId    String           @map("inventory_item_id")
   inventoryItem      InventoryItem    @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
-  quantity           Decimal          @db.Decimal(10, 3)
-  unitCost           Decimal          @map("unit_cost") @db.Decimal(10, 2)
-  totalPrice         Decimal          @map("total_price") @db.Decimal(10, 2)
+  quantity           Float
+  unitCost           Float            @map("unit_cost")
+  totalPrice         Float            @map("total_price")
 
   @@index([stockIntakeBatchId])
   @@index([inventoryItemId])

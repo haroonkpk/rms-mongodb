@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+import { emitDataChanged } from "@/lib/socket-server";
 import {
   KitchenAddOnItem,
   KitchenOrder,
@@ -229,6 +230,7 @@ export async function updateKitchenOrderStatus(
     revalidatePath("/pos");
     revalidatePath("/pos/live");
     revalidatePath("/admin/inventory");
+    emitDataChanged("orders");
 
     return { success: true };
   } catch (error) {

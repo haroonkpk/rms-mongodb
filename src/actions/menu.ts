@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { emitDataChanged } from "@/lib/socket-server";
 import { Prisma } from "../../prisma/generated";
 import { isMenuItemAvailable } from "@/lib/menu-availability";
 
@@ -122,6 +123,7 @@ export async function createCategory(name: string) {
     revalidatePath("/admin/menu");
     revalidatePath("/pos");
     revalidateTag("pos-data", "max");
+    emitDataChanged("menu");
     return { success: true, categoryId: category.id };
   } catch (error) {
     console.error("Error creating category:", error);
@@ -217,11 +219,13 @@ export async function getMenuItems(
     const items = await prisma.menuItem.findMany({
       where: whereClause,
       orderBy: { createdAt: "desc" },
-      include: {
-        category: true,
-        addOns: true,
-      },
+      include: { category: true },
     });
+    const addOnIds = items.flatMap((item) => item.addOnIds);
+    const addOns = await prisma.addOn.findMany({
+      where: { id: { in: [...new Set(addOnIds)] } },
+    });
+    const addOnById = new Map(addOns.map((addOn) => [addOn.id, addOn]));
 
     const inventoryItemIds = items.flatMap((item) => {
       const itemIngredientIds = Array.isArray(item.ingredients)
@@ -233,19 +237,25 @@ export async function getMenuItems(
             return typeof inventoryItemId === "string" ? [inventoryItemId] : [];
           })
         : [];
-      const addOnIngredientIds = item.addOns.flatMap((addOn) =>
-        Array.isArray(addOn.ingredients)
-          ? addOn.ingredients.flatMap((ingredient) => {
-              if (!ingredient || typeof ingredient !== "object") return [];
-              const inventoryItemId = (
-                ingredient as { inventoryItemId?: unknown }
-              ).inventoryItemId;
-              return typeof inventoryItemId === "string"
-                ? [inventoryItemId]
-                : [];
-            })
-          : [],
-      );
+      const addOnIngredientIds = item.addOnIds
+        .flatMap((addOnId) => {
+          const addOn = addOnById.get(addOnId);
+          if (!addOn) return [];
+          return [addOn];
+        })
+        .flatMap((addOn) =>
+          Array.isArray(addOn.ingredients)
+            ? addOn.ingredients.flatMap((ingredient) => {
+                if (!ingredient || typeof ingredient !== "object") return [];
+                const inventoryItemId = (
+                  ingredient as { inventoryItemId?: unknown }
+                ).inventoryItemId;
+                return typeof inventoryItemId === "string"
+                  ? [inventoryItemId]
+                  : [];
+              })
+            : [],
+        );
       return [...itemIngredientIds, ...addOnIngredientIds];
     });
     const inventoryItems = await prisma.inventoryItem.findMany({
@@ -285,19 +295,25 @@ export async function getMenuItems(
         sizes: parsedSizes,
         categoryId: item.categoryId,
         categoryName: item.category.name,
-        addOns: item.addOns.map((a) => ({
-          id: a.id,
-          name: a.name,
-          price: Number(a.price),
-          isAvailable: isMenuItemAvailable(
-            a.isAvailable,
-            a.ingredients,
-            stockByInventoryId,
-          ),
-          ingredients: a.ingredients
-            ? (a.ingredients as unknown as RecipeIngredient[])
-            : [],
-        })),
+        addOns: item.addOnIds.flatMap((addOnId) => {
+          const a = addOnById.get(addOnId);
+          if (!a) return [];
+          return [
+            {
+              id: a.id,
+              name: a.name,
+              price: Number(a.price),
+              isAvailable: isMenuItemAvailable(
+                a.isAvailable,
+                a.ingredients,
+                stockByInventoryId,
+              ),
+              ingredients: a.ingredients
+                ? (a.ingredients as unknown as RecipeIngredient[])
+                : [],
+            },
+          ];
+        }),
         ingredients: parsedIngredients,
         createdAt: item.createdAt.toISOString(),
         updatedAt: item.updatedAt.toISOString(),
@@ -351,11 +367,11 @@ export async function createMenuItem(data: CreateMenuItemInput) {
         sizes:
           data.hasSizes && data.sizes
             ? (data.sizes as unknown as Prisma.InputJsonValue)
-            : Prisma.JsonNull,
+            : null,
         ingredients:
           data.ingredients && data.ingredients.length > 0
             ? (data.ingredients as unknown as Prisma.InputJsonValue)
-            : Prisma.JsonNull,
+            : null,
         addOns: {
           connect: data.addOnIds ? data.addOnIds.map((id) => ({ id })) : [],
         },
@@ -394,11 +410,11 @@ export async function updateMenuItem(id: string, data: CreateMenuItemInput) {
         sizes:
           data.hasSizes && data.sizes
             ? (data.sizes as unknown as Prisma.InputJsonValue)
-            : Prisma.JsonNull,
+            : null,
         ingredients:
           data.ingredients && data.ingredients.length > 0
             ? (data.ingredients as unknown as Prisma.InputJsonValue)
-            : Prisma.JsonNull,
+            : null,
         addOns: {
           set: data.addOnIds ? data.addOnIds.map((id) => ({ id })) : [],
         },
@@ -509,7 +525,7 @@ export async function createAddOn(data: {
         ingredients:
           data.ingredients && data.ingredients.length > 0
             ? (data.ingredients as unknown as Prisma.InputJsonValue)
-            : Prisma.JsonNull,
+            : null,
       },
     });
 
@@ -549,7 +565,7 @@ export async function updateAddOn(
         ingredients:
           data.ingredients && data.ingredients.length > 0
             ? (data.ingredients as unknown as Prisma.InputJsonValue)
-            : Prisma.JsonNull,
+            : null,
       },
     });
 

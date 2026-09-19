@@ -14,7 +14,7 @@ import {
   POSInitDataResponse,
 } from "@/types";
 import { getPOSInitData } from "@/actions/pos";
-import { getSupabaseClient } from "@/lib/supabase-client";
+import { getSocketClient } from "@/lib/socket-client";
 
 interface POSClientProps {
   initialData: POSInitDataResponse;
@@ -58,21 +58,19 @@ export function POSClient({ initialData }: POSClientProps) {
   };
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
+    const socket = getSocketClient();
     let realtimeConnected = false;
-    const channel = supabase
-      ?.channel("pos-inventory-availability")
-      .on(
-        "postgres_changes",
-        { event: "*", schema: "public", table: "inventory_items" },
-        () => syncPOSData(),
-      )
-      .subscribe((status) => {
-        realtimeConnected = status === "SUBSCRIBED";
-        if (status === "CHANNEL_ERROR" || status === "TIMED_OUT") {
-          console.warn("POS inventory realtime unavailable:", status);
-        }
-      });
+    const handleDataChanged = ({ scope }: { scope: string }) => {
+      if (scope === "inventory" || scope === "menu") syncPOSData();
+    };
+    socket?.on("connect", () => {
+      realtimeConnected = true;
+    });
+    socket?.on("disconnect", () => {
+      realtimeConnected = false;
+    });
+    socket?.on("restaurant:data-changed", handleDataChanged);
+    socket?.connect();
 
     const fallbackSync = setInterval(() => {
       if (!realtimeConnected) syncPOSData();
@@ -81,7 +79,10 @@ export function POSClient({ initialData }: POSClientProps) {
     return () => {
       clearInterval(fallbackSync);
       if (syncTimeoutRef.current) clearTimeout(syncTimeoutRef.current);
-      if (supabase && channel) void supabase.removeChannel(channel);
+      socket?.off("connect");
+      socket?.off("disconnect");
+      socket?.off("restaurant:data-changed", handleDataChanged);
+      socket?.disconnect();
     };
   }, []);
 

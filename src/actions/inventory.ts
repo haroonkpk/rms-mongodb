@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { emitDataChanged } from "@/lib/socket-server";
 import {
   InventoryUnit,
   StockMovementType,
@@ -12,6 +13,7 @@ function revalidateMenuAvailability() {
   revalidatePath("/admin/menu");
   revalidatePath("/pos");
   revalidateTag("pos-data", "max");
+  emitDataChanged("inventory");
 }
 
 export interface InventoryCategoryData {

@@ -50,7 +50,7 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
 
     if (direction === "SUBTRACT" && qtyVal > item.quantity) {
       setQuantityError(
-        `You can deduct a maximum of ${item.quantity} ${item.unit}.`,
+        `You can deduct a maximum of ${item.quantity.toFixed(2)} ${item.unit}.`,
       );
       return;
     }
@@ -84,7 +84,7 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
           <div>
             <p className="text-xs text-slate-500 font-medium">Current Stock</p>
             <p className="text-lg font-bold text-slate-900">
-              {currentQty.toLocaleString()} {item.unit}
+              {currentQty.toFixed(2)} {item.unit}
             </p>
           </div>
           <div className="text-right">
@@ -92,7 +92,7 @@ export const StockAdjustmentModal: React.FC<StockAdjustmentModalProps> = ({
               Projected Stock
             </p>
             <p className="text-lg font-bold text-(--color-primary)">
-              {projectQty.toLocaleString()} {item.unit}
+              {projectQty.toFixed(2)} {item.unit}
             </p>
           </div>
         </div>
