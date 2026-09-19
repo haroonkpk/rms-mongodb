@@ -64,35 +64,6 @@ export function SalaryAdvancesTab() {
 
   return (
     <div className="flex flex-col gap-4">
-      <ActivityFilters>
-        <div className="flex items-end gap-2">
-          <div className="flex gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200/80 w-full sm:w-auto">
-            <button
-              type="button"
-              onClick={() => setAdvanceSubTab("PENDING")}
-              className={cn(
-                "flex-1 sm:flex-initial px-3 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer outline-none",
-                advanceSubTab === "PENDING"
-                  ? "bg-white text-slate-900 shadow-2xs font-bold"
-                  : "text-slate-600 hover:text-slate-900"
-              )}
-            >
-              Pending Advances
-            </button>
-            <button
-              type="button"
-              onClick={() => setAdvanceSubTab("DEDUCTED")}
-              className={cn(
-                "flex-1 sm:flex-initial px-3 py-2 text-xs font-semibold rounded-lg transition-all cursor-pointer outline-none",
-                advanceSubTab === "DEDUCTED"
-                  ? "bg-white text-slate-900 shadow-2xs font-bold"
-                  : "text-slate-600 hover:text-slate-900"
-              )}
-            >
-              Deducted Advances
-            </button>
-          </div>
-        </div>
 
         <div className="flex items-end justify-end">
           <Button
@@ -104,7 +75,6 @@ export function SalaryAdvancesTab() {
             Issue Salary Advance
           </Button>
         </div>
-      </ActivityFilters>
 
       <DataTable
         heading={

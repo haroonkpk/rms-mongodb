@@ -66,6 +66,9 @@ export function PayrollTab() {
   };
 
   const formattedPayrolls = useMemo(() => {
+    const formatAmount = (value: unknown) =>
+      `Rs ${Number(value || 0).toFixed(2)}`;
+
     return payrolls.map((p) => {
       const paid = Number(p.paidAmount || 0);
       const isPaidFull = p.status === "PAID";
@@ -77,14 +80,14 @@ export function PayrollTab() {
       return {
         ...p,
         employeeName: p.user?.fullName || "N/A",
-        basicSalary: `Rs ${p.basicSalary}`,
-        overtimePay: `Rs ${p.overtimePay || 0}`,
-        bonus: `Rs ${p.bonus || 0}`,
-        carriedOverBalance: `Rs ${p.carriedOverBalance || 0}`,
-        deductions: `Rs ${p.deductions || 0}`,
-        advance: `Rs ${p.advance || 0}`,
-        alreadyPaid: `Rs ${paid}`,
-        netSalary: `Rs ${p.netSalary}`,
+        basicSalary: formatAmount(p.basicSalary),
+        overtimePay: formatAmount(p.overtimePay),
+        bonus: formatAmount(p.bonus),
+        carriedOverBalance: formatAmount(p.carriedOverBalance),
+        deductions: formatAmount(p.deductions),
+        advance: formatAmount(p.advance),
+        alreadyPaid: formatAmount(paid),
+        netSalary: formatAmount(p.netSalary),
         status: displayStatus,
       };
     });
