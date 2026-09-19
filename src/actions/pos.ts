@@ -175,7 +175,7 @@ export async function resetKotSequence() {
   });
   revalidatePath("/pos/live");
   revalidatePath("/pos");
-  emitDataChanged("orders");
+  await emitDataChanged("orders");
   return { success: true };
 }
 
@@ -375,7 +375,7 @@ export async function createPOSOrder(
 
     revalidatePath("/pos");
     revalidateTag("pos-data", "max");
-    emitDataChanged("orders");
+    await emitDataChanged("orders");
 
     return {
       success: true,

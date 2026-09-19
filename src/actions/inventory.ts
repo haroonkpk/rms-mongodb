@@ -9,11 +9,11 @@ import {
   Prisma,
 } from "../../prisma/generated";
 
-function revalidateMenuAvailability() {
+async function revalidateMenuAvailability() {
   revalidatePath("/admin/menu");
   revalidatePath("/pos");
   revalidateTag("pos-data", "max");
-  emitDataChanged("inventory");
+  await emitDataChanged("inventory");
 }
 
 export interface InventoryCategoryData {
@@ -378,7 +378,7 @@ export async function deleteInventoryItem(id: string) {
   try {
     await prisma.inventoryItem.delete({ where: { id } });
     revalidatePath("/admin/inventory");
-    revalidateMenuAvailability();
+    await revalidateMenuAvailability();
     return { success: true };
   } catch (error) {
     console.error("Error deleting inventory item:", error);
@@ -446,7 +446,7 @@ export async function adjustStock(data: {
     });
 
     revalidatePath("/admin/inventory");
-    revalidateMenuAvailability();
+    await revalidateMenuAvailability();
     return { success: true, newQuantity: Number(result.updatedItem.quantity) };
   } catch (error: unknown) {
     console.error("Error adjusting stock:", error);
@@ -634,7 +634,7 @@ export async function createStockIntakeBatch(data: {
     });
 
     revalidatePath("/admin/inventory");
-    revalidateMenuAvailability();
+    await revalidateMenuAvailability();
     return {
       success: true,
       batchId: result.id,
@@ -850,7 +850,7 @@ export async function deductInventoryForOrder(
     );
 
     revalidatePath("/admin/inventory");
-    revalidateMenuAvailability();
+    await revalidateMenuAvailability();
     return { success: true };
   } catch (error) {
     console.error("Error deducting inventory for order:", error);

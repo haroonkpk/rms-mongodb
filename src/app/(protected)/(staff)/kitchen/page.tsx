@@ -138,7 +138,7 @@ export default function KitchenPage() {
     fetchOrders();
   }, [fetchOrders]);
 
-  // Socket.IO realtime subscription setup
+  // Realtime subscription setup
   useEffect(() => {
     const socket = getSocketClient();
     if (!socket) {
@@ -167,7 +167,7 @@ export default function KitchenPage() {
     };
   }, [fetchOrders]);
 
-  // Fallback polling is active when Socket.IO is not connected.
+  // Fallback polling is active when realtime is not connected.
   useEffect(() => {
     if (realtimeStatus === "connected") {
       return;

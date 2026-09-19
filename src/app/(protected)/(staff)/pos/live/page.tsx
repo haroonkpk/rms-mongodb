@@ -151,7 +151,7 @@ export default function PosLivePage() {
     fetchOrders();
   }, [fetchOrders]);
 
-  // Socket.IO realtime subscription setup
+  // Realtime subscription setup
   useEffect(() => {
     const socket = getSocketClient();
     if (!socket) {

@@ -71,7 +71,8 @@ export async function login(formData: FormData) {
 
     await createSession(user.id, user.role);
     return { success: true };
-  } catch {
+  } catch (error) {
+    console.error("Login error:", error);
     return { success: false, error: "An error occurred during login" };
   }
 }

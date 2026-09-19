@@ -123,7 +123,7 @@ export async function createCategory(name: string) {
     revalidatePath("/admin/menu");
     revalidatePath("/pos");
     revalidateTag("pos-data", "max");
-    emitDataChanged("menu");
+    await emitDataChanged("menu");
     return { success: true, categoryId: category.id };
   } catch (error) {
     console.error("Error creating category:", error);

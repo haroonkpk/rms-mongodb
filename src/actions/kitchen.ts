@@ -230,7 +230,7 @@ export async function updateKitchenOrderStatus(
     revalidatePath("/pos");
     revalidatePath("/pos/live");
     revalidatePath("/admin/inventory");
-    emitDataChanged("orders");
+    await emitDataChanged("orders");
 
     return { success: true };
   } catch (error) {
