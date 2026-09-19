@@ -137,6 +137,7 @@ export default function CreateEmployeePage() {
                   name="monthlyBaseSalary"
                   type="number"
                   step="0.01"
+                  required
                   placeholder="e.g. 45000"
                 />
                 <Input
