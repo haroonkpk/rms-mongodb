@@ -638,10 +638,13 @@ export async function getReportData(
 export async function getCompletedOrderReport(filters: ReportFilters) {
   await requireAdmin();
   const { start, end } = rangeFor(filters);
+  const orderNumber = filters.orderNumber?.trim();
   const orders = await prisma.order.findMany({
     where: {
-      createdAt: { gte: start, lte: end },
       status: "COMPLETED",
+      ...(orderNumber
+        ? { orderNumber }
+        : { createdAt: { gte: start, lte: end } }),
     },
     orderBy: { createdAt: "desc" },
     include: {

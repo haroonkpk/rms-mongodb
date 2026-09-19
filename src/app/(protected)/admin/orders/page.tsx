@@ -22,6 +22,7 @@ export default function AdminOrdersPage() {
     paymentMethod: "ALL",
     orderType: "ALL",
   });
+  const [orderSearch, setOrderSearch] = useState("");
   const [draftFilters, setDraftFilters] = useState<ReportFilters>(filters);
   const [allRows, setAllRows] = useState<
     Array<Record<string, string | number>>
@@ -59,6 +60,22 @@ export default function AdminOrdersPage() {
     setFilters(defaultFilters);
     setClientFilters({ paymentMethod: "ALL", orderType: "ALL" });
     void load(defaultFilters);
+  };
+
+  useEffect(() => {
+    const orderNumber = orderSearch.trim();
+    if (!orderNumber) return;
+
+    const timeout = window.setTimeout(() => {
+      void load({ ...filters, orderNumber });
+    }, 400);
+
+    return () => window.clearTimeout(timeout);
+  }, [orderSearch, filters]);
+
+  const handleOrderSearchChange = (value: string) => {
+    setOrderSearch(value);
+    if (!value.trim()) void load(filters);
   };
 
   const applyCustomFilter = () => {
@@ -163,6 +180,15 @@ export default function AdminOrdersPage() {
           }}
           headerActions={
             <div className="flex items-center gap-2">
+              <Input
+                aria-label="Search by order ID"
+                className="w-48!"
+                placeholder="ORD-20260919-6583"
+                value={orderSearch}
+                onChange={(event) =>
+                  handleOrderSearchChange(event.target.value)
+                }
+              />
               <Select
                 aria-label="Filter orders by payment method"
                 value={clientFilters.paymentMethod}

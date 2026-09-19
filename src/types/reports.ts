@@ -17,6 +17,7 @@ export interface DateRangeFilter {
 }
 
 export interface ReportFilters extends DateRangeFilter {
+  orderNumber?: string;
   cashierId?: string;
   paymentMethod?: string;
   orderType?: string;
